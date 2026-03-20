@@ -1,0 +1,13 @@
+{
+  "id": "002",
+  "name": "NECF",
+  "full_name": "Non Equilibrium Cognitive Field",
+  "type": "conceptual-framework",
+  "status": "active",
+  "created": "2026",
+  "tags": [
+    "ai",
+    "conceptual"
+  ],
+  "source_repo": "https://github.com/Devanik21/Non-Equilibrium-Cognitive-Field"
+}

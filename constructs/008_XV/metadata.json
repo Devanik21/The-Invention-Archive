@@ -1,0 +1,13 @@
+{
+  "id": "008",
+  "name": "XV",
+  "full_name": "xylia vision",
+  "type": "conceptual-framework",
+  "status": "active",
+  "created": "2026",
+  "tags": [
+    "ai",
+    "conceptual"
+  ],
+  "source_repo": "https://github.com/Devanik21/xylia-vision"
+}
