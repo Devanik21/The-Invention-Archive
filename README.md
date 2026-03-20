@@ -1,6 +1,6 @@
 # The Invention Archive
 
-A long-term (100+ years), structured archival system designed to catalog, organize, and preserve conceptual constructs, theoretical frameworks, and AI repositories.
+A long-term, structured archival system designed to catalog, organize, and preserve conceptual constructs, theoretical frameworks, and AI repositories.
 
 ## Purpose
 
