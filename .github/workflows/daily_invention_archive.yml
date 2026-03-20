@@ -44,6 +44,10 @@ on:
     - cron: '0 7 * * *'
   workflow_dispatch:
 
+concurrency:
+  group: invention-archive-daily
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -71,7 +75,7 @@ jobs:
         shell: python3 {0}
         run: |
           import numpy as np
-          from scipy.stats import linregress, ttest_ind
+          from scipy.stats import linregress
           from scipy.signal import find_peaks
           from datetime import date
           import os, json, textwrap, math
@@ -305,73 +309,73 @@ jobs:
                                f"top_pair={pairs[0][1]}/{pairs[0][2]} "
                                f"J={pairs[0][0]:.4f}")
 
-              doc = rf"""---
-session_id: {SESSION_ID}
-date: {DATE_STR}
-topic: Construct Topology
-constructs_present: {N_CONSTRUCTS}
-seed: {SEED}
----
+              doc = rf"""--
+          session_id: {SESSION_ID}
+          date: {DATE_STR}
+          topic: Construct Topology
+          constructs_present: {N_CONSTRUCTS}
+          seed: {SEED}
+          ---
 
-# Invention Archive — Daily Session {DATE_STR}
+          # Invention Archive — Daily Session {DATE_STR}
 
-**Session ID:** `{SESSION_ID}`
-**Topic:** {TITLE}
+          **Session ID:** `{SESSION_ID}`
+          **Topic:** {TITLE}
 
----
+          ---
 
-## 1. Method
+          ## 1. Method
 
-Each construct in the archive is represented as a binary vector
-$\mathbf{{v}}_i \in \{{0,1\}}^D$ over a shared tag vocabulary of
-$D = {D}$ terms.  The pairwise **Jaccard similarity** is
+          Each construct in the archive is represented as a binary vector
+          $\mathbf{{v}}_i \in \{{0,1\}}^D$ over a shared tag vocabulary of
+          $D = {D}$ terms.  The pairwise **Jaccard similarity** is
 
-$$J(i,j) = \frac{{|\mathbf{{v}}_i \cap \mathbf{{v}}_j|}}{{|\mathbf{{v}}_i \cup \mathbf{{v}}_j|}}$$
+          $$J(i,j) = \frac{{|\mathbf{{v}}_i \cap \mathbf{{v}}_j|}}{{|\mathbf{{v}}_i \cup \mathbf{{v}}_j|}}$$
 
-A construct graph $G = (V, E)$ is formed by thresholding at $J > {thresh}$.
-The **clustering coefficient** $C = T / P$ where $T$ is the number of
-closed triangles and $P$ is the number of connected triples measures the
-tendency of related constructs to form cohesive clusters.
+          A construct graph $G = (V, E)$ is formed by thresholding at $J > {thresh}$.
+          The **clustering coefficient** $C = T / P$ where $T$ is the number of
+          closed triangles and $P$ is the number of connected triples measures the
+          tendency of related constructs to form cohesive clusters.
 
----
+          ---
 
-## 2. Results — {today.strftime('%B %d, %Y')}
+          ## 2. Results — {today.strftime('%B %d, %Y')}
 
-**Archive state:** {N_CONSTRUCTS} constructs · {D} distinct tags
+          **Archive state:** {N_CONSTRUCTS} constructs · {D} distinct tags
 
-### 2.1 Top Pairwise Similarities
+          ### 2.1 Top Pairwise Similarities
 
-| Construct A | Construct B | J(A,B) |
-|---|---|:---:|
-{top5_rows.strip()}
+          | Construct A | Construct B | J(A,B) |
+          |---|---|:---:|
+          {top5_rows.strip()}
 
-### 2.2 Graph Statistics (threshold J > {thresh})
+          ### 2.2 Graph Statistics (threshold J > {thresh})
 
-| Metric | Value |
-|---|---|
-| Constructs (nodes) | {N_CONSTRUCTS} |
-| Tag vocabulary size | {D} |
-| Mean degree | {mean_deg:.3f} |
-| Clustering coefficient | **{CC:.5f}** |
-| Isolated constructs | {n_isolated} |
-| Degree entropy | {H_deg:.4f} bits |
+          | Metric | Value |
+          |---|---|
+          | Constructs (nodes) | {N_CONSTRUCTS} |
+          | Tag vocabulary size | {D} |
+          | Mean degree | {mean_deg:.3f} |
+          | Clustering coefficient | **{CC:.5f}** |
+          | Isolated constructs | {n_isolated} |
+          | Degree entropy | {H_deg:.4f} bits |
 
----
+          ---
 
-## 3. Interpretation
+          ## 3. Interpretation
 
-The clustering coefficient $C = {CC:.5f}$ indicates that the construct
-graph is currently
-{'sparsely connected — constructs operate in largely independent domains' if CC < 0.1 else 'moderately clustered — several domain cohorts are forming' if CC < 0.4 else 'highly clustered — strong inter-domain coupling'}.
-The most similar pair is **{pairs[0][1]}** and **{pairs[0][2]}**
-($J = {pairs[0][0]:.4f}$), consistent with their shared tags.
-The degree entropy $H = {H_deg:.4f}$ bits characterises the heterogeneity
-of construct connectivity; as the archive grows, this is expected to
-increase toward $\log_2(N) = {np.log2(N_CONSTRUCTS):.3f}$ bits.
+          The clustering coefficient $C = {CC:.5f}$ indicates that the construct
+          graph is currently
+          {'sparsely connected — constructs operate in largely independent domains' if CC < 0.1 else 'moderately clustered — several domain cohorts are forming' if CC < 0.4 else 'highly clustered — strong inter-domain coupling'}.
+          The most similar pair is **{pairs[0][1]}** and **{pairs[0][2]}**
+          ($J = {pairs[0][0]:.4f}$), consistent with their shared tags.
+          The degree entropy $H = {H_deg:.4f}$ bits characterises the heterogeneity
+          of construct connectivity; as the archive grows, this is expected to
+          increase toward $\log_2(N) = {np.log2(N_CONSTRUCTS):.3f}$ bits.
 
----
-*{SESSION_ID} · {DATE_STR} · seed {SEED}*
-"""
+          ---
+          *{SESSION_ID} · {DATE_STR} · seed {SEED}*
+          """
               return doc.strip(), commit_suffix
 
           # ──────────────────────────────────────────────────────────────────
@@ -428,88 +432,88 @@ increase toward $\log_2(N) = {np.log2(N_CONSTRUCTS):.3f}$ bits.
                                f"resonant_pairs={n_resonant} "
                                f"C={C_chan:.1f}bits SNR={SNR_db:.1f}dB")
 
-              doc = rf"""---
-session_id: {SESSION_ID}
-date: {DATE_STR}
-topic: Harmonic Interference
-seed: {SEED}
-HRF_dimensions: {d}
----
+              doc = rf"""--
+          session_id: {SESSION_ID}
+          date: {DATE_STR}
+          topic: Harmonic Interference
+          seed: {SEED}
+          HRF_dimensions: {d}
+          ---
 
-# Invention Archive — Daily Session {DATE_STR}
+          # Invention Archive — Daily Session {DATE_STR}
 
-**Session ID:** `{SESSION_ID}`
-**Topic:** {TITLE}
+          **Session ID:** `{SESSION_ID}`
+          **Topic:** {TITLE}
 
----
+          ---
 
-## 1. Resonance-Domain Constructs
+          ## 1. Resonance-Domain Constructs
 
-{res_list}
+          {res_list}
 
----
+          ---
 
-## 2. Harmonic Series — HRF {d}-Dimensional Substrate
+          ## 2. Harmonic Series — HRF {d}-Dimensional Substrate
 
-The Harmonic Resonance Forest models each of its $d = {d}$ dimensions as an
-oscillator tuned to a harmonic of the fundamental $f_0 = {f0:.4f}$:
+          The Harmonic Resonance Forest models each of its $d = {d}$ dimensions as an
+          oscillator tuned to a harmonic of the fundamental $f_0 = {f0:.4f}$:
 
-$$f_k = k \cdot f_0, \quad k = 1, 2, \ldots, {d}$$
+          $$f_k = k \cdot f_0, \quad k = 1, 2, \ldots, {d}$$
 
-### 2.1 Spectral Weight Distribution
+          ### 2.1 Spectral Weight Distribution
 
-Under a $1/f$ (pink noise) amplitude weighting $A_k = 1/k$ (normalised):
+          Under a $1/f$ (pink noise) amplitude weighting $A_k = 1/k$ (normalised):
 
-$$H_{\rm spec} = -\sum_{{k=1}}^{{{d}}} A_k \log_2 A_k = {H_spec:.5f} \text{{ bits}}$$
+          $$H_{{\rm spec}} = -\sum_{{k=1}}^{{{d}}} A_k \log_2 A_k = {H_spec:.5f} \text{{ bits}}$$
 
-compared with the uniform maximum $\log_2 {d} = {H_max:.5f}$ bits.
-The spectral efficiency is $\eta = {eff_pct:.2f}\%$.
+          compared with the uniform maximum $\log_2 {d} = {H_max:.5f}$ bits.
+          The spectral efficiency is $\eta = {eff_pct:.2f}\%$.
 
-### 2.2 Resonant Dimension Pairs
+          ### 2.2 Resonant Dimension Pairs
 
-Two dimensions $i, j$ are **resonant** when their frequency ratio is a
-simple rational $p/q$ with $q \leq 8$ (within 2% tolerance):
+          Two dimensions $i, j$ are **resonant** when their frequency ratio is a
+          simple rational $p/q$ with $q \leq 8$ (within 2% tolerance):
 
-$$\frac{{f_i}}{{f_j}} \approx \frac{{p}}{{q}}, \quad q \leq 8$$
+          $$\frac{{f_i}}{{f_j}} \approx \frac{{p}}{{q}}, \quad q \leq 8$$
 
-In $d = {d}$ dimensions: **{n_resonant} resonant pairs** detected.
-First five: {', '.join(f'dim{a}/{b}={p}/{q}' for a,b,p,q in resonant[:5])}.
+          In $d = {d}$ dimensions: **{n_resonant} resonant pairs** detected.
+          First five: {', '.join(f'dim{a}/{b}={p}/{q}' for a,b,p,q in resonant[:5])}.
 
-### 2.3 Shannon Channel Capacity
+          ### 2.3 Shannon Channel Capacity
 
-Treating the harmonic series as a multi-channel communication system with
-total bandwidth $B = \sum_k f_k = {B_total:.2f}$ (normalised units) and
-SNR $= {SNR_db:.2f}$ dB:
+          Treating the harmonic series as a multi-channel communication system with
+          total bandwidth $B = \sum_k f_k = {B_total:.2f}$ (normalised units) and
+          SNR $= {SNR_db:.2f}$ dB:
 
-$$C = B \cdot \log_2(1 + \text{{SNR}}) = {B_total:.2f} \cdot \log_2(1 + {SNR_lin:.1f}) = {C_chan:.2f} \text{{ bits/s}}$$
+          $$C = B \cdot \log_2(1 + \text{{SNR}}) = {B_total:.2f} \cdot \log_2(1 + {SNR_lin:.1f}) = {C_chan:.2f} \text{{ bits/s}}$$
 
-### 2.4 Minimum Beat Frequency
+          ### 2.4 Minimum Beat Frequency
 
-$$\Delta f_{{\rm min}} = \min_{{i \neq j}} |f_i - f_j| = {min_beat:.4f}$$
+          $$\Delta f_{{\rm min}} = \min_{{i \neq j}} |f_i - f_j| = {min_beat:.4f}$$
 
-### 2.5 Angular Geometry of Harmonic Dimensions
+          ### 2.5 Angular Geometry of Harmonic Dimensions
 
-In $d = {d}$ dimensions, the expected angle between two random unit vectors is:
+          In $d = {d}$ dimensions, the expected angle between two random unit vectors is:
 
-$$\mathbb{{E}}[\cos\theta] = \sqrt{{\frac{{2}}{{\pi d}}}} = {expected_cos:.5f}
-  \implies \mathbb{{E}}[\theta] \approx {expected_deg:.2f}^\circ$$
+          $$\mathbb{{E}}[\cos\theta] = \sqrt{{\frac{{2}}{{\pi d}}}} = {expected_cos:.5f}
+            \implies \mathbb{{E}}[\theta] \approx {expected_deg:.2f}^\circ$$
 
-Dimensions are near-orthogonal, confirming the representational independence
-assumption underlying HRF's hierarchical decomposition.
+          Dimensions are near-orthogonal, confirming the representational independence
+          assumption underlying HRF's hierarchical decomposition.
 
----
+          ---
 
-## 3. Interpretation
+          ## 3. Interpretation
 
-The $1/f$ spectral weighting achieves {eff_pct:.1f}% of maximum entropy,
-consistent with efficient natural coding (Field, 1987). With {n_resonant}
-resonant dimension pairs, HRF's 26D space contains substantial harmonic
-structure — these pairs can exhibit constructive interference, creating
-emergent higher-level representations from simpler harmonic components.
+          The $1/f$ spectral weighting achieves {eff_pct:.1f}% of maximum entropy,
+          consistent with efficient natural coding (Field, 1987). With {n_resonant}
+          resonant dimension pairs, HRF's 26D space contains substantial harmonic
+          structure — these pairs can exhibit constructive interference, creating
+          emergent higher-level representations from simpler harmonic components.
 
----
-*{SESSION_ID} · {DATE_STR} · seed {SEED}*
-"""
+          ---
+          *{SESSION_ID} · {DATE_STR} · seed {SEED}*
+          """
               return doc.strip(), commit_suffix
 
           # ──────────────────────────────────────────────────────────────────
@@ -558,99 +562,99 @@ emergent higher-level representations from simpler harmonic components.
                                f"E_reprog={E_reprog:.3e}J "
                                f"n_ATP={n_ATP:.2e}")
 
-              doc = rf"""---
-session_id: {SESSION_ID}
-date: {DATE_STR}
-topic: Genomic Information Theory
-seed: {SEED}
----
+              doc = rf"""--
+          session_id: {SESSION_ID}
+          date: {DATE_STR}
+          topic: Genomic Information Theory
+          seed: {SEED}
+          ---
 
-# Invention Archive — Daily Session {DATE_STR}
+          # Invention Archive — Daily Session {DATE_STR}
 
-**Session ID:** `{SESSION_ID}`
-**Topic:** {TITLE}
+          **Session ID:** `{SESSION_ID}`
+          **Topic:** {TITLE}
 
----
+          ---
 
-## 1. Constructs — Longevity Domain
+          ## 1. Constructs — Longevity Domain
 
-- **AION**: Algorithmic reversal of genomic entropy (biological clock)
-- **EternaSeq**: Genomic sequencing for longevity
-- **EternaHeart**: Cardiovascular longevity modelling
-- **HSU**: Holographic Soul Unit — non-monotonic kernel analysis
+          - **AION**: Algorithmic reversal of genomic entropy (biological clock)
+          - **EternaSeq**: Genomic sequencing for longevity
+          - **EternaHeart**: Cardiovascular longevity modelling
+          - **HSU**: Holographic Soul Unit — non-monotonic kernel analysis
 
----
+          ---
 
-## 2. Shannon Entropy of the DNA Alphabet
+          ## 2. Shannon Entropy of the DNA Alphabet
 
-With empirical base frequencies $(f_A, f_T, f_G, f_C) =
-({bases[0]:.3f}, {bases[1]:.3f}, {bases[2]:.3f}, {bases[3]:.3f})$:
+          With empirical base frequencies $(f_A, f_T, f_G, f_C) =
+          ({bases[0]:.3f}, {bases[1]:.3f}, {bases[2]:.3f}, {bases[3]:.3f})$:
 
-$$H_{\rm DNA} = -\sum_b f_b \log_2 f_b = {H_DNA:.5f} \text{{ bits/base}}$$
+          $$H_{{\rm DNA}} = -\sum_b f_b \log_2 f_b = {H_DNA:.5f} \text{{ bits/base}}$$
 
-versus the theoretical maximum $\log_2 4 = 2.0000$ bits/base for a uniform
-alphabet. The human genome ($G = 3.2 \times 10^9$ bases) carries:
+          versus the theoretical maximum $\log_2 4 = 2.0000$ bits/base for a uniform
+          alphabet. The human genome ($G = 3.2 \times 10^9$ bases) carries:
 
-$$I_{\rm genome} = G \cdot H_{\rm DNA} = {I_genome/1e9:.3f} \text{{ Gbits}}$$
+          $$I_{{\rm genome}} = G \cdot H_{{\rm DNA}} = {I_genome/1e9:.3f} \text{{ Gbits}}$$
 
-of which approximately $f_{\rm coding} = {coding_frac:.1%}$ is protein-coding:
+          of which approximately $f_{{\rm coding}} = {coding_frac:.1%}$ is protein-coding:
 
-$$I_{\rm coding} = {I_coding/1e6:.2f} \text{{ Mbits}}$$
+          $$I_{{\rm coding}} = {I_coding/1e6:.2f} \text{{ Mbits}}$$
 
----
+          ---
 
-## 3. Information Loss Rate
+          ## 3. Information Loss Rate
 
-The somatic mutation rate is approximately $\mu \approx {mu_rate:.2f}$
-substitutions per cell division (Alexandrov et al., 2013). Each substitution
-destroys $\log_2 G$ bits of positional information:
+          The somatic mutation rate is approximately $\mu \approx {mu_rate:.2f}$
+          substitutions per cell division (Alexandrov et al., 2013). Each substitution
+          destroys $\log_2 G$ bits of positional information:
 
-$$\Delta I_{\rm div} = \mu \cdot \log_2 G = {mu_rate:.2f} \times {np.log2(G):.3f} = {H_loss_div:.3f} \text{{ bits/division}}$$
+          $$\Delta I_{{\rm div}} = \mu \cdot \log_2 G = {mu_rate:.2f} \times {np.log2(G):.3f} = {H_loss_div:.3f} \text{{ bits/division}}$$
 
----
+          ---
 
-## 4. Hayflick Limit — Telomere Information Budget
+          ## 4. Hayflick Limit — Telomere Information Budget
 
-Over $n_H = {hayflick}$ cell divisions (Hayflick limit), telomeres shorten
-by $\approx {telomere_bp_loss}$ bp/division from an initial length of
-${telomere_length}$ bp. Total telomere information erased:
+          Over $n_H = {hayflick}$ cell divisions (Hayflick limit), telomeres shorten
+          by $\approx {telomere_bp_loss}$ bp/division from an initial length of
+          ${telomere_length}$ bp. Total telomere information erased:
 
-$$\Delta I_{\rm telomere} = n_H \cdot \ell_{\rm loss} \cdot H_{\rm DNA}
-  = {hayflick} \times {telomere_bp_loss} \times {H_DNA:.5f}
-  = {H_telomere_lost:.3f} \text{{ bits}}$$
+          $$\Delta I_{{\rm telomere}} = n_H \cdot \ell_{{\rm loss}} \cdot H_{{\rm DNA}}
+            = {hayflick} \times {telomere_bp_loss} \times {H_DNA:.5f}
+            = {H_telomere_lost:.3f} \text{{ bits}}$$
 
----
+          ---
 
-## 5. Landauer Cost of AION Reversal
+          ## 5. Landauer Cost of AION Reversal
 
-Landauer's principle sets the minimum thermodynamic cost of erasing one bit
-at temperature $T$:
+          Landauer's principle sets the minimum thermodynamic cost of erasing one bit
+          at temperature $T$:
 
-$$E_{\rm bit} = k_B T \ln 2 = {E_per_bit:.4e} \text{{ J}}$$
+          $$E_{{\rm bit}} = k_B T \ln 2 = {E_per_bit:.4e} \text{{ J}}$$
 
-At $T = {T_body}$ K (body temperature), restoring $\Delta I = {H_telomere_lost:.2f}$
-bits requires at minimum:
+          At $T = {T_body}$ K (body temperature), restoring $\Delta I = {H_telomere_lost:.2f}$
+          bits requires at minimum:
 
-$$E_{\rm AION} = \Delta I \cdot k_B T \ln 2 = {E_reprog:.4e} \text{{ J}}$$
+          $$E_{{\rm AION}} = \Delta I \cdot k_B T \ln 2 = {E_reprog:.4e} \text{{ J}}$$
 
-equivalent to approximately $\mathbf{{{n_ATP:.2e}}}$ **ATP hydrolysis events**
-(using $\Delta G_{\rm ATP} \approx 30.5$ kJ/mol). For a target recovery of
-{aion_target_pct:.1f}%: $E_{\rm target} = {E_aion:.4e}$ J.
+          equivalent to approximately $\mathbf{{{n_ATP:.2e}}}$ **ATP hydrolysis events**
+          (using $\Delta G_{{\rm ATP}} \approx 30.5$ kJ/mol). For a target recovery of
+          {aion_target_pct:.1f}%: $E_{{\rm target}} = {E_aion:.4e}$ J.
 
----
+          ---
 
-## 6. Genetic Code Redundancy
+          ## 6. Genetic Code Redundancy
 
-The standard genetic code maps 64 codons to 20 amino acids. The redundancy:
+          The standard genetic code maps 64 codons to 20 amino acids. The redundancy:
 
-$$R = \log_2 64 - \log_2 20 = 6.000 - 4.322 = {code_redundancy:.4f} \text{{ bits/codon}}$$
+          $$R = \log_2 64 - \log_2 20 = 6.000 - 4.322 = {code_redundancy:.4f} \text{{ bits/codon}}$$
 
-This $\approx 1.68$ bits/codon of built-in redundancy provides error-correction
-capacity that AION and EternaSeq leverage for restoration strategies.
+          This $\approx 1.68$ bits/codon of built-in redundancy provides error-correction
+          capacity that AION and EternaSeq leverage for restoration strategies.
 
----
-*{SESSION_ID} · {DATE_STR} · seed {SEED}*
-"""
+          ---
+          *{SESSION_ID} · {DATE_STR} · seed {SEED}*
+          """
               return doc.strip(), commit_suffix
 
           # ──────────────────────────────────────────────────────────────────
@@ -702,88 +706,88 @@ capacity that AION and EternaSeq leverage for restoration strategies.
                                f"mu_c={mu_c:.4f} "
                                f"BSHDER_H_diff={H_diff:.3f}bits")
 
-              doc = rf"""---
-session_id: {SESSION_ID}
-date: {DATE_STR}
-topic: Evolutionary Dynamics
-seed: {SEED}
-N_pop: {N_pop}
-N_gen: {N_gen}
----
+              doc = rf"""--
+          session_id: {SESSION_ID}
+          date: {DATE_STR}
+          topic: Evolutionary Dynamics
+          seed: {SEED}
+          N_pop: {N_pop}
+          N_gen: {N_gen}
+          ---
 
-# Invention Archive — Daily Session {DATE_STR}
+          # Invention Archive — Daily Session {DATE_STR}
 
-**Session ID:** `{SESSION_ID}`
-**Topic:** {TITLE}
+          **Session ID:** `{SESSION_ID}`
+          **Topic:** {TITLE}
 
----
+          ---
 
-## 1. Constructs — Evolutionary and Self-Healing Domain
+          ## 1. Constructs — Evolutionary and Self-Healing Domain
 
-- **GENEVO**: Genetic Evolutionary Organoid — gradient + evolution hybrid
-- **BSHDER**: Bionic Self-Healing Dual-state Encoder — fragile/protected weights
-- **Cytomorphic**: Cellular structural biology-inspired neural design
+          - **GENEVO**: Genetic Evolutionary Organoid — gradient + evolution hybrid
+          - **BSHDER**: Bionic Self-Healing Dual-state Encoder — fragile/protected weights
+          - **Cytomorphic**: Cellular structural biology-inspired neural design
 
----
+          ---
 
-## 2. Fisher's Fundamental Theorem of Natural Selection
+          ## 2. Fisher's Fundamental Theorem of Natural Selection
 
-Fisher (1930) proved that the rate of increase of mean fitness equals the
-additive genetic variance in fitness:
+          Fisher (1930) proved that the rate of increase of mean fitness equals the
+          additive genetic variance in fitness:
 
-$$\frac{d\bar{{W}}}{{dt}} = \frac{{\mathrm{{Var}}(W)}}{{\bar{{W}}}}$$
+          $$\frac{{d\bar{{W}}}}{{dt}} = \frac{{\mathrm{{Var}}(W)}}{{\bar{{W}}}}$$
 
-**Numerical verification** ($N = {N_pop}$, $T = {N_gen}$ generations,
-$d = {d_genome}$-dimensional genome, $\mu = {mu_rate}$, $\sigma_{\rm mut} = {sigma_mut}$):
+          **Numerical verification** ($N = {N_pop}$, $T = {N_gen}$ generations,
+          $d = {d_genome}$-dimensional genome, $\mu = {mu_rate}$, $\sigma_{{\rm mut}} = {sigma_mut}$):
 
-| Metric | Value |
-|---|---|
-| Initial $\bar{{W}}$ | {W_arr[0]:.6f} |
-| Final $\bar{{W}}$ | {W_arr[-1]:.6f} |
-| Fitness gain | **{fitness_gain:+.2f}%** |
-| Fisher regression slope | {sl:.4f} |
-| $R^2$ (Fisher verification) | **{r_fish**2:.4f}** |
-| $p$-value | {p_fish:.3e} |
+          | Metric | Value |
+          |---|---|
+          | Initial $\bar{{W}}$ | {W_arr[0]:.6f} |
+          | Final $\bar{{W}}$ | {W_arr[-1]:.6f} |
+          | Fitness gain | **{fitness_gain:+.2f}%** |
+          | Fisher regression slope | {sl:.4f} |
+          | $R^2$ (Fisher verification) | **{r_fish**2:.4f}** |
+          | $p$-value | {p_fish:.3e} |
 
-The $R^2 = {r_fish**2:.4f}$ confirms Fisher's theorem to high accuracy in
-this simulation: variance predicts gain.
+          The $R^2 = {r_fish**2:.4f}$ confirms Fisher's theorem to high accuracy in
+          this simulation: variance predicts gain.
 
----
+          ---
 
-## 3. Eigen's Error Threshold
+          ## 3. Eigen's Error Threshold
 
-For a population with a master sequence of superiority
-$\sigma = {sigma_sup:.4f}$ (fitness ratio master/average), the critical
-mutation rate above which the master sequence is lost is:
+          For a population with a master sequence of superiority
+          $\sigma = {sigma_sup:.4f}$ (fitness ratio master/average), the critical
+          mutation rate above which the master sequence is lost is:
 
-$$\mu_c = 1 - \frac{{1}}{{\sigma}} = 1 - \frac{{1}}{{{sigma_sup:.4f}}} = {mu_c:.5f}$$
+          $$\mu_c = 1 - \frac{{1}}{{\sigma}} = 1 - \frac{{1}}{{{sigma_sup:.4f}}} = {mu_c:.5f}$$
 
-Current mutation rate $\mu = {mu_rate}$
-{'$< \mu_c$: population maintains a coherent master sequence (quasispecies below error threshold).' if mu_rate < mu_c else '$> \mu_c$: error catastrophe regime — master sequence lost to mutational load.'}
+          Current mutation rate $\mu = {mu_rate}$
+          {{'$< \mu_c$: population maintains a coherent master sequence (quasispecies below error threshold).' if mu_rate < mu_c else '$> \mu_c$: error catastrophe regime — master sequence lost to mutational load.'}}
 
----
+          ---
 
-## 4. BSHDER Dual-State Information Differential
+          ## 4. BSHDER Dual-State Information Differential
 
-The BSHDER architecture maintains two weight populations:
-- **Protected weights** $W_p$: low-variance, identity-preserving
-  ($\sigma_p \approx {np.std(W_prot):.4f}$)
-- **Fragile weights** $W_f$: high-variance, exploratory
-  ($\sigma_f \approx {np.std(W_frag):.4f}$)
+          The BSHDER architecture maintains two weight populations:
+          - **Protected weights** $W_p$: low-variance, identity-preserving
+            ($\sigma_p \approx {np.std(W_prot):.4f}$)
+          - **Fragile weights** $W_f$: high-variance, exploratory
+            ($\sigma_f \approx {np.std(W_frag):.4f}$)
 
-The information differential between the two populations:
+          The information differential between the two populations:
 
-$$\Delta H = \log_2 \frac{{\mathrm{{Var}}(W_f)}}{{\mathrm{{Var}}(W_p)}}
+          $$\Delta H = \log_2 \frac{{\mathrm{{Var}}(W_f)}}{{\mathrm{{Var}}(W_p)}}
            = \log_2 \frac{{{np.var(W_frag):.5f}}}{{{np.var(W_prot):.5f}}}
            = {H_diff:.4f} \text{{ bits}}$$
 
-This {H_diff:.2f}-bit differential quantifies the expressive advantage of
-the fragile population over the protected baseline — the budget the system
-has for exploration without compromising identity.
+          This {H_diff:.2f}-bit differential quantifies the expressive advantage of
+          the fragile population over the protected baseline — the budget the system
+          has for exploration without compromising identity.
 
----
-*{SESSION_ID} · {DATE_STR} · seed {SEED}*
-"""
+          ---
+          *{SESSION_ID} · {DATE_STR} · seed {SEED}*
+          """
               return doc.strip(), commit_suffix
 
           # ──────────────────────────────────────────────────────────────────
@@ -798,7 +802,6 @@ has for exploration without compromising identity.
               for d in test_dims:
                   # Hypersphere volume (log-space to avoid overflow)
                   # V_d = pi^(d/2) / Gamma(d/2 + 1)
-                  import math
                   log_vol = (d/2) * math.log(math.pi) - math.lgamma(d/2 + 1)
                   vol_str = f"{math.exp(log_vol):.4e}" if log_vol < 700 else "~0"
                   # Concentration of measure
@@ -830,77 +833,77 @@ has for exploration without compromising identity.
                                f"E_theta={exp_deg:.2f}deg "
                                f"k_JL={k_min_hrf}")
 
-              doc = rf"""---
-session_id: {SESSION_ID}
-date: {DATE_STR}
-topic: High-Dimensional Geometry
-seed: {SEED}
-HRF_dims: {hrf_d}
-GOD_dims: {god_d}
----
+              doc = rf"""--
+          session_id: {SESSION_ID}
+          date: {DATE_STR}
+          topic: High-Dimensional Geometry
+          seed: {SEED}
+          HRF_dims: {hrf_d}
+          GOD_dims: {god_d}
+          ---
 
-# Invention Archive — Daily Session {DATE_STR}
+          # Invention Archive — Daily Session {DATE_STR}
 
-**Session ID:** `{SESSION_ID}`
-**Topic:** {TITLE}
+          **Session ID:** `{SESSION_ID}`
+          **Topic:** {TITLE}
 
----
+          ---
 
-## 1. Constructs — High-Dimensional Domain
+          ## 1. Constructs — High-Dimensional Domain
 
-- **HRF** (Harmonic Resonance Forest): $d = {hrf_d}$ dimensional unified model
-- **GOD** (General Omni Dimensional Optimizer): dynamic {god_d}D sector selection
+          - **HRF** (Harmonic Resonance Forest): $d = {hrf_d}$ dimensional unified model
+          - **GOD** (General Omni Dimensional Optimizer): dynamic {god_d}D sector selection
 
----
+          ---
 
-## 2. Volume of the Unit Hypersphere
+          ## 2. Volume of the Unit Hypersphere
 
-$$V_d = \frac{{\pi^{{d/2}}}}{{\Gamma(d/2 + 1)}}$$
+          $$V_d = \frac{{\pi^{{d/2}}}}{{\Gamma(d/2 + 1)}}$$
 
-| $d$ | $V_d$ | $P(\|X - \mu\| > 0.1)$ | $k_{{JL}}$ | NN ratio |
-|---:|---:|---:|---:|---:|
-{rows.strip()}
+          | $d$ | $V_d$ | $P(\|X - \mu\| > 0.1)$ | $k_{{JL}}$ | NN ratio |
+          |---:|---:|---:|---:|---:|
+          {rows.strip()}
 
----
+          ---
 
-## 3. HRF $d = {hrf_d}$ Specific Analysis
+          ## 3. HRF $d = {hrf_d}$ Specific Analysis
 
-**Unit hypersphere volume:**
-$$V_{{{hrf_d}}} = {vol_hrf:.6e}$$
+          **Unit hypersphere volume:**
+          $$V_{{{hrf_d}}} = {vol_hrf:.6e}$$
 
-This near-zero volume is the hallmark of the curse of dimensionality:
-measure concentrates in a thin shell at radius $r = 1$.
+          This near-zero volume is the hallmark of the curse of dimensionality:
+          measure concentrates in a thin shell at radius $r = 1$.
 
-**Angular geometry:** The expected $|\cos\theta|$ between two random unit
-vectors in $\mathbb{{R}}^{{{hrf_d}}}$:
+          **Angular geometry:** The expected $|\cos\theta|$ between two random unit
+          vectors in $\mathbb{{R}}^{{{hrf_d}}}$:
 
-$$\mathbb{{E}}[|\cos\theta|] = \sqrt{{\frac{{2}}{{\pi d}}}} = {exp_cos:.5f}
-  \implies \mathbb{{E}}[\theta] \approx {exp_deg:.3f}^\circ$$
+          $$\mathbb{{E}}[|\cos\theta|] = \sqrt{{\frac{{2}}{{\pi d}}}} = {exp_cos:.5f}
+            \implies \mathbb{{E}}[\theta] \approx {exp_deg:.3f}^\circ$$
 
-HRF's 26 dimensions are near-orthogonal to each other — the representational
-independence assumption is geometrically justified.
+          HRF's 26 dimensions are near-orthogonal to each other — the representational
+          independence assumption is geometrically justified.
 
-**Concentration of measure** ($t = 0.1$):
-$$P\left(|X - \mathbb{{E}}[X]| > 0.1\right) \leq 2e^{{-0.1^2 \cdot {hrf_d}/2}}
-  = {2*math.exp(-0.01*hrf_d/2):.5f}$$
+          **Concentration of measure** ($t = 0.1$):
+          $$P\left(|X - \mathbb{{E}}[X]| > 0.1\right) \leq 2e^{{-0.1^2 \cdot {hrf_d}/2}}
+            = {2*math.exp(-0.01*hrf_d/2):.5f}$$
 
----
+          ---
 
-## 4. Johnson-Lindenstrauss Analysis
+          ## 4. Johnson-Lindenstrauss Analysis
 
-For $n = {n_data:,}$ data points and distortion $\varepsilon = {eps_hrf}$,
-the JL lemma guarantees distances are preserved in a projection to
-$k \geq 8 \ln n / \varepsilon^2$ dimensions:
+          For $n = {n_data:,}$ data points and distortion $\varepsilon = {eps_hrf}$,
+          the JL lemma guarantees distances are preserved in a projection to
+          $k \geq 8 \ln n / \varepsilon^2$ dimensions:
 
-$$k_{\rm JL} = \frac{{8 \ln {n_data}}}{{{eps_hrf}^2}} = {k_min_hrf}$$
+          $$k_{{\rm JL}} = \frac{{8 \ln {n_data}}}{{{eps_hrf}^2}} = {k_min_hrf}$$
 
-Since $k_{\rm JL} = {k_min_hrf} {'>' if k_min_hrf > hrf_d else '<'} d = {hrf_d}$,
-a JL-optimal projection from the data manifold into $\mathbb{{R}}^{{{hrf_d}}}$
-{'requires more dimensions than HRF provides — HRF is over-compressed for this data scale.' if k_min_hrf > hrf_d else 'fits within HRF dimensions — the 26D space is sufficient.'}
+          Since $k_{{\rm JL}} = {k_min_hrf} {'>' if k_min_hrf > hrf_d else '<'} d = {hrf_d}$,
+          a JL-optimal projection from the data manifold into $\mathbb{{R}}^{{{hrf_d}}}$
+          {'requires more dimensions than HRF provides — HRF is over-compressed for this data scale.' if k_min_hrf > hrf_d else 'fits within HRF dimensions — the 26D space is sufficient.'}
 
----
-*{SESSION_ID} · {DATE_STR} · seed {SEED}*
-"""
+          ---
+          *{SESSION_ID} · {DATE_STR} · seed {SEED}*
+          """
               return doc.strip(), commit_suffix
 
           # ──────────────────────────────────────────────────────────────────
@@ -954,104 +957,104 @@ a JL-optimal projection from the data manifold into $\mathbb{{R}}^{{{hrf_d}}}$
                                f"B4_ATP={n_ATP:.2e} "
                                f"B5_m_min={m_needed}")
 
-              doc = rf"""---
-session_id: {SESSION_ID}
-date: {DATE_STR}
-topic: Cross-Paradigm Bridges
-seed: {SEED}
----
+              doc = rf"""--
+          session_id: {SESSION_ID}
+          date: {DATE_STR}
+          topic: Cross-Paradigm Bridges
+          seed: {SEED}
+          ---
 
-# Invention Archive — Daily Session {DATE_STR}
+          # Invention Archive — Daily Session {DATE_STR}
 
-**Session ID:** `{SESSION_ID}`
-**Topic:** {TITLE}
+          **Session ID:** `{SESSION_ID}`
+          **Topic:** {TITLE}
 
----
+          ---
 
-## Overview
+          ## Overview
 
-This session establishes five explicit mathematical isomorphisms between
-constructs from different paradigms. Each bridge is verified numerically.
+          This session establishes five explicit mathematical isomorphisms between
+          constructs from different paradigms. Each bridge is verified numerically.
 
----
+          ---
 
-## Bridge 1: HRF Wave Superposition $\leftrightarrow$ NECF Order Parameter
+          ## Bridge 1: HRF Wave Superposition $\leftrightarrow$ NECF Order Parameter
 
-HRF output at time $t$:
-$$z_{\rm HRF} = \frac{{1}}{{d}}\sum_{{k=1}}^d A_k \cos\theta_k
+          HRF output at time $t$:
+          $$z_{{\rm HRF}} = \frac{{1}}{{d}}\sum_{{k=1}}^d A_k \cos\theta_k
               + i \frac{{1}}{{d}}\sum_{{k=1}}^d A_k \sin\theta_k$$
 
-NECF complex order parameter:
-$$z_{\rm NECF} = \frac{{1}}{{N}}\sum_{{i=1}}^N A_i e^{{i\theta_i}}$$
+          NECF complex order parameter:
+          $$z_{{\rm NECF}} = \frac{{1}}{{N}}\sum_{{i=1}}^N A_i e^{{i\theta_i}}$$
 
-**These are the same object.** Setting $N = d$, $A_i = A_k$, $\theta_i = \theta_k$:
+          **These are the same object.** Setting $N = d$, $A_i = A_k$, $\theta_i = \theta_k$:
 
-$$z_{\rm HRF} \equiv z_{\rm NECF}$$
+          $$z_{{\rm HRF}} \equiv z_{{\rm NECF}}$$
 
-Numerical verification ($d = {d}$): $|z_{\rm HRF} - z_{\rm NECF}| = {bridge1_err:.2e}$
-(floating-point rounding only). $r = {abs(z_necf):.6f}$, $\psi = {float(np.degrees(np.angle(z_necf))):.3f}^\circ$.
+          Numerical verification ($d = {d}$): $|z_{{\rm HRF}} - z_{{\rm NECF}}| = {bridge1_err:.2e}$
+          (floating-point rounding only). $r = {abs(z_necf):.6f}$, $\psi = {float(np.degrees(np.angle(z_necf))):.3f}^\circ$.
 
----
+          ---
 
-## Bridge 2: BSHDER Dual-State $\leftrightarrow$ NECF Identity Curvature $\mathcal{{H}}[\mathcal{{L}}]$
+          ## Bridge 2: BSHDER Dual-State $\leftrightarrow$ NECF Identity Curvature $\mathcal{{H}}[\mathcal{{L}}]$
 
-| BSHDER concept | NECF equivalent |
-|---|---|
-| Protected weights $W_p$ | Initial rules $\mathcal{{L}}^{{(0)}}$ (identity reference) |
-| Fragile weights $W_f$ | Evolving rules $\mathcal{{L}}(t)$ |
-| Damage accumulation | Drift penalty $\|W_f - W_p\|^2$ |
-| Homogenisation collapse | Variance penalty $\kappa\,\mathrm{{Var}}(W_f)$ |
+          | BSHDER concept | NECF equivalent |
+          |---|---|
+          | Protected weights $W_p$ | Initial rules $\mathcal{{L}}^{{(0)}}$ (identity reference) |
+          | Fragile weights $W_f$ | Evolving rules $\mathcal{{L}}(t)$ |
+          | Damage accumulation | Drift penalty $\|W_f - W_p\|^2$ |
+          | Homogenisation collapse | Variance penalty $\kappa\,\mathrm{{Var}}(W_f)$ |
 
-$$\mathcal{{H}}[W_f] = \underbrace{{\frac{{1}}{{d}}\|W_f - W_p\|^2}}_{{= {drift:.5f}}}
-  + \underbrace{{\kappa\,\mathrm{{Var}}(W_f)}}_{{= {kappa}\times{var_f:.5f}}}
-  = {H_L:.5f}$$
+          $$\mathcal{{H}}[W_f] = \underbrace{{\frac{{1}}{{d}}\|W_f - W_p\|^2}}_{{= {drift:.5f}}}
+            + \underbrace{{\kappa\,\mathrm{{Var}}(W_f)}}_{{= {kappa}\times{var_f:.5f}}}
+            = {H_L:.5f}$$
 
----
+          ---
 
-## Bridge 3: GENEVO Selection Pressure $\leftrightarrow$ NECF Epistemic Receptivity
+          ## Bridge 3: GENEVO Selection Pressure $\leftrightarrow$ NECF Epistemic Receptivity
 
-GENEVO individual update:
-$$\frac{{d\ell_i}}{{dt}} = \mu\,\underbrace{{\varepsilon_i}}_{{\text{{selection pressure}}}}\,
-(\ell^* - \ell_i)$$
+          GENEVO individual update:
+          $$\frac{{d\ell_i}}{{dt}} = \mu\,\underbrace{{\varepsilon_i}}_{{\text{{selection pressure}}}}\,
+          (\ell^* - \ell_i)$$
 
-NECF contagion update:
-$$\frac{{d\mathcal{{L}}_i}}{{dt}} = \mu\,\underbrace{{\varepsilon_i}}_{{\text{{receptivity}}}}\,
-(\bar{{\mathcal{{L}}}}_{\rm Boltzmann} - \mathcal{{L}}_i)$$
+          NECF contagion update:
+          $$\frac{{d\mathcal{{L}}_i}}{{dt}} = \mu\,\underbrace{{\varepsilon_i}}_{{\text{{receptivity}}}}\,
+          (\bar{{\mathcal{{L}}}}_{{\rm Boltzmann}} - \mathcal{{L}}_i)$$
 
-The **selection pressure** in GENEVO and the **prediction error** in NECF
-play formally identical roles as the driving coefficient. Correlation of
-update vectors: $\rho = {corr_b3:.5f}$.
+          The **selection pressure** in GENEVO and the **prediction error** in NECF
+          play formally identical roles as the driving coefficient. Correlation of
+          update vectors: $\rho = {corr_b3:.5f}$.
 
----
+          ---
 
-## Bridge 4: AION Reversal $\leftrightarrow$ Landauer Erasure Bound
+          ## Bridge 4: AION Reversal $\leftrightarrow$ Landauer Erasure Bound
 
-Restoring $\Delta I = {H_telomere:.2f}$ bits of genomic information costs:
+          Restoring $\Delta I = {H_telomere:.2f}$ bits of genomic information costs:
 
-$$E_{\rm AION}^{{\rm min}} = \Delta I \cdot k_B T \ln 2 = {E_landauer:.4e} \text{{ J}}
-  \approx {n_ATP:.3e} \text{{ ATP events}}$$
+          $$E_{{\rm AION}}^{{\rm min}} = \Delta I \cdot k_B T \ln 2 = {E_landauer:.4e} \text{{ J}}
+            \approx {n_ATP:.3e} \text{{ ATP events}}$$
 
-This is a fundamental lower bound — any AION implementation must expend
-at least this thermodynamic cost, regardless of mechanism.
+          This is a fundamental lower bound — any AION implementation must expend
+          at least this thermodynamic cost, regardless of mechanism.
 
----
+          ---
 
-## Bridge 5: GOD Optimizer $\leftrightarrow$ HRF Harmonic Selection
+          ## Bridge 5: GOD Optimizer $\leftrightarrow$ HRF Harmonic Selection
 
-Both GOD (selecting $k$ active sectors from $d = {d}$ dimensions) and
-HRF (activating $k$ dominant harmonics) solve a **sparse support recovery**
-problem. By compressed sensing theory (Candès \& Tao, 2006), the minimum
-number of measurements to recover a $k$-sparse signal in $d$ dimensions is:
+          Both GOD (selecting $k$ active sectors from $d = {d}$ dimensions) and
+          HRF (activating $k$ dominant harmonics) solve a **sparse support recovery**
+          problem. By compressed sensing theory (Candès \& Tao, 2006), the minimum
+          number of measurements to recover a $k$-sparse signal in $d$ dimensions is:
 
-$$m \geq k \log(d/k) = {k_sparse} \times \log({d}/{k_sparse}) = {m_needed}$$
+          $$m \geq k \log(d/k) = {k_sparse} \times \log({d}/{k_sparse}) = {m_needed}$$
 
-With $k = {k_sparse}$ active components and $d = {d}$, both architectures
-require at minimum $m = {m_needed}$ observations to uniquely identify the
-active sector/harmonic set. Sparsity ratio: $k/d = {sparsity_ratio:.3f}$.
+          With $k = {k_sparse}$ active components and $d = {d}$, both architectures
+          require at minimum $m = {m_needed}$ observations to uniquely identify the
+          active sector/harmonic set. Sparsity ratio: $k/d = {sparsity_ratio:.3f}$.
 
----
-*{SESSION_ID} · {DATE_STR} · seed {SEED}*
-"""
+          ---
+          *{SESSION_ID} · {DATE_STR} · seed {SEED}*
+          """
               return doc.strip(), commit_suffix
 
           # ──────────────────────────────────────────────────────────────────
@@ -1083,7 +1086,7 @@ active sector/harmonic set. Sparsity ratio: $k/d = {sparsity_ratio:.3f}$.
               # Match detected to true
               matched = []
               used    = set()
-              for ft, at in zip(f_cents := f_centers, amps_true):
+              for ft, at in zip(f_centers, amps_true):
                   best_i = min(range(len(det_f)),
                                 key=lambda i: abs(det_f[i]-ft) if i not in used else np.inf)
                   if abs(det_f[best_i] - ft) < 5.0:
@@ -1120,93 +1123,93 @@ active sector/harmonic set. Sparsity ratio: $k/d = {sparsity_ratio:.3f}$.
                                f"I_total={I_total:.3f}bits "
                                f"PR={PR:.1f} flatness={flatness:.5f}")
 
-              doc = rf"""---
-session_id: {SESSION_ID}
-date: {DATE_STR}
-topic: Spectral Encoding Capacity
-seed: {SEED}
-N_signal: {N_sig}
-fs_hz: {fs}
-n_components: {n_comp}
----
+              doc = rf"""--
+          session_id: {SESSION_ID}
+          date: {DATE_STR}
+          topic: Spectral Encoding Capacity
+          seed: {SEED}
+          N_signal: {N_sig}
+          fs_hz: {fs}
+          n_components: {n_comp}
+          ---
 
-# Invention Archive — Daily Session {DATE_STR}
+          # Invention Archive — Daily Session {DATE_STR}
 
-**Session ID:** `{SESSION_ID}`
-**Topic:** {TITLE}
+          **Session ID:** `{SESSION_ID}`
+          **Topic:** {TITLE}
 
----
+          ---
 
-## 1. Constructs — Spectral Domain
+          ## 1. Constructs — Spectral Domain
 
-- **SpectraNova**: Advanced spectral decomposition of complex signals
-- **FRAE**: Frequency-Resonance Adaptive Encoder
-- **AetherSPARC**: Signal Processing and Resonance Coding
+          - **SpectraNova**: Advanced spectral decomposition of complex signals
+          - **FRAE**: Frequency-Resonance Adaptive Encoder
+          - **AetherSPARC**: Signal Processing and Resonance Coding
 
----
+          ---
 
-## 2. Experimental Signal
+          ## 2. Experimental Signal
 
-A synthetic $N = {N_sig}$-sample signal ($f_s = {fs:.0f}$ Hz,
-$\Delta t = {dt_sig:.4f}$ s) comprising {n_comp} frequency components
-plus Gaussian noise ($\sigma_n = {noise_std:.4f}$):
+          A synthetic $N = {N_sig}$-sample signal ($f_s = {fs:.0f}$ Hz,
+          $\Delta t = {dt_sig:.4f}$ s) comprising {n_comp} frequency components
+          plus Gaussian noise ($\sigma_n = {noise_std:.4f}$):
 
-$$x(t) = \sum_{{k=1}}^{{{n_comp}}} A_k \cos(2\pi f_k t + \phi_k) + \eta(t)$$
+          $$x(t) = \sum_{{k=1}}^{{{n_comp}}} A_k \cos(2\pi f_k t + \phi_k) + \eta(t)$$
 
-True components: $f \in \{{{', '.join(f'{f:.2f}' for f in f_centers)}\}}$ Hz,
-$A \in \{{{', '.join(f'{a:.3f}' for a in amps_true)}\}}$.
+          True components: $f \in \{{{', '.join(f'{f:.2f}' for f in f_centers)}\}}$ Hz,
+          $A \in \{{{', '.join(f'{a:.3f}' for a in amps_true)}\}}$.
 
----
+          ---
 
-## 3. SpectraNova FFT Decomposition
+          ## 3. SpectraNova FFT Decomposition
 
-Frequency resolution: $\Delta f = f_s / N = {fs/N_sig:.3f}$ Hz.
+          Frequency resolution: $\Delta f = f_s / N = {fs/N_sig:.3f}$ Hz.
 
-### 3.1 Component Recovery
+          ### 3.1 Component Recovery
 
-| $f_{\rm true}$ (Hz) | $A_{\rm true}$ | $f_{\rm det}$ (Hz) | $A_{\rm det}$ | $|f_{\rm err}|$ (Hz) | $C_k$ (bits) |
-|---:|---:|---:|---:|---:|---:|
-{cap_rows.strip()}
+          | $f_{{\rm true}}$ (Hz) | $A_{{\rm true}}$ | $f_{{\rm det}}$ (Hz) | $A_{{\rm det}}$ | $|f_{{\rm err}}|$ (Hz) | $C_k$ (bits) |
+          |---:|---:|---:|---:|---:|---:|
+          {cap_rows.strip()}
 
-### 3.2 System-Level Statistics
+          ### 3.2 System-Level Statistics
 
-| Metric | Value |
-|---|---|
-| Total signal SNR | {SNR_total_db:.2f} dB |
-| Total FRAE encoding capacity $\sum_k C_k$ | **{I_total:.4f} bits** |
-| Spectral flatness (Wiener entropy proxy) | {flatness:.6f} |
-| Participation ratio (effective components) | {PR:.2f} |
-| Noise floor $\sigma_n$ | {noise_std:.5f} |
+          | Metric | Value |
+          |---|---|
+          | Total signal SNR | {SNR_total_db:.2f} dB |
+          | Total FRAE encoding capacity $\sum_k C_k$ | **{I_total:.4f} bits** |
+          | Spectral flatness (Wiener entropy proxy) | {flatness:.6f} |
+          | Participation ratio (effective components) | {PR:.2f} |
+          | Noise floor $\sigma_n$ | {noise_std:.5f} |
 
----
+          ---
 
-## 4. Shannon-Hartley Per-Component Capacity
+          ## 4. Shannon-Hartley Per-Component Capacity
 
-For each detected component with amplitude $A_k$ in additive white noise
-of variance $\sigma_n^2$, the per-component encoding capacity is:
+          For each detected component with amplitude $A_k$ in additive white noise
+          of variance $\sigma_n^2$, the per-component encoding capacity is:
 
-$$C_k = \log_2\!\left(1 + \frac{{A_k^2/2}}{{\sigma_n^2/N}}\right) \text{{ bits}}$$
+          $$C_k = \log_2\!\left(1 + \frac{{A_k^2/2}}{{\sigma_n^2/N}}\right) \text{{ bits}}$$
 
-Total capacity across {len(matched)} matched components:
-$C_{\rm total} = {I_total:.4f}$ bits.
+          Total capacity across {len(matched)} matched components:
+          $C_{{\rm total}} = {I_total:.4f}$ bits.
 
----
+          ---
 
-## 5. Spectral Flatness
+          ## 5. Spectral Flatness
 
-The **Wiener entropy** (spectral flatness measure):
+          The **Wiener entropy** (spectral flatness measure):
 
-$$\mathrm{{SFM}} = \frac{{\exp\bigl(\langle \ln S(f) \rangle\bigr)}}{{\langle S(f) \rangle}}
-  = {flatness:.6f}$$
+          $$\mathrm{{SFM}} = \frac{{\exp\bigl(\langle \ln S(f) \rangle\bigr)}}{{\langle S(f) \rangle}}
+            = {flatness:.6f}$$
 
-$\mathrm{{SFM}} \to 1$: white noise (maximally flat).
-$\mathrm{{SFM}} \to 0$: tonal / highly structured signal.
-The value ${flatness:.4f}$ indicates a
-{'highly structured signal with clear tonal components' if flatness < 0.1 else 'moderately structured signal' if flatness < 0.4 else 'relatively flat spectrum'}.
+          $\mathrm{{SFM}} \to 1$: white noise (maximally flat).
+          $\mathrm{{SFM}} \to 0$: tonal / highly structured signal.
+          The value ${flatness:.4f}$ indicates a
+          {'highly structured signal with clear tonal components' if flatness < 0.1 else 'moderately structured signal' if flatness < 0.4 else 'relatively flat spectrum'}.
 
----
-*{SESSION_ID} · {DATE_STR} · seed {SEED}*
-"""
+          ---
+          *{SESSION_ID} · {DATE_STR} · seed {SEED}*
+          """
               return doc.strip(), commit_suffix
 
           # ══════════════════════════════════════════════════════════════════
@@ -1231,8 +1234,10 @@ The value ${flatness:.4f}$ indicates a
 
           # ── Update docs/daily-log.md ─────────────────────────────────────
           log_path = "docs/daily-log.md"
-          new_entry = (f"| [{DATE_STR}]({fname}) | `{SESSION_ID}` "
-                       f"| {TITLE[:55]}... |\n")
+          rel_link  = f"sessions/{DATE_STR}_{SLUG}.md"
+          _t55      = TITLE[:55] + ("..." if len(TITLE) > 55 else "")
+          new_entry = (f"| [{DATE_STR}]({rel_link}) | `{SESSION_ID}` "
+                       f"| {_t55} |\n")
           if os.path.exists(log_path):
               with open(log_path) as f:
                   existing = f.read()
