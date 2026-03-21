@@ -6,5 +6,13 @@
     "n_constructs": 19,
     "n_repo_constructs": 1,
     "commit_suffix": "d=26 H_spec=3.9292/4.7004 resonant_pairs=241 C=1753.1bits SNR=14.9dB"
+  },
+  "2026-03-21": {
+    "session_id": "IA-2026-080-T2",
+    "topic_idx": 2,
+    "slug": "genomic_information_theory",
+    "n_constructs": 35,
+    "n_repo_constructs": 21,
+    "commit_suffix": "H_DNA=1.97650bpb H_telomere=4941.3bits E_reprog=1.466e-17J n_ATP=2.89e+02"
   }
 }
