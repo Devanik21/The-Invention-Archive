@@ -1,10 +1,4 @@
 {
-"id": "001",
-"name": "HRF",
-"full_name": "Harmonic Resonance Forest",
-"type": "conceptual-framework",
-"status": "active",
-"created": "2026",
-"tags": ["resonance", "ai", "hierarchical"],
-"source_repo": "https://github.com/Devanik21/Harmonic-Resonance-Forest"
+    "name": "001_HRF",
+    "status": "active"
 }

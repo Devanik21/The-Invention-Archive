@@ -1,13 +1,4 @@
 {
-  "id": "018",
-  "name": "AARGE",
-  "full_name": "AION Algorithmic Reversal of Genomic Entropy",
-  "type": "conceptual-framework",
-  "status": "active",
-  "created": "2026",
-  "tags": [
-    "ai",
-    "conceptual"
-  ],
-  "source_repo": "https://github.com/Devanik21/AION-Algorithmic-Reversal-of-Genomic-Entropy"
+    "name": "007_AARGE",
+    "status": "active"
 }

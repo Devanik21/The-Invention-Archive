@@ -19,15 +19,15 @@ INVENTIONS = {
     "constructs/011_BA": "BSHDER-Architecture",
     "constructs/012_GGEO": "GENEVO-GENetic-EVolutionary-Organoid",
     "constructs/013_HM": "HAG-MoE",
-    "Misc/001_LIM": "Latent-Inference-Manifold",
-    "Misc/002_LCM": "Latent-Consensus-Manifold",
-    "Misc/003_XV": "xylia-vision"
+    "constructs/Misc/001_LIM": "Latent-Inference-Manifold",
+    "constructs/Misc/002_LCM": "Latent-Consensus-Manifold",
+    "constructs/Misc/003_XV": "xylia-vision"
 }
 
 PENDING = [
-    "constructs/009_RHO", "constructs/010_LDD", 
-    "Misc/004_LB", "Misc/005_TM", "Misc/006_DTM", 
-    "Misc/007_AARGE", "Misc/008_DU"
+    "constructs/001_HRF", "constructs/009_RHO", "constructs/010_LDD",
+    "constructs/Misc/004_LB", "constructs/Misc/005_TM", "constructs/Misc/006_DTM",
+    "constructs/Misc/007_AARGE", "constructs/Misc/008_DU"
 ]
 
 def make_perfect_structure(folder, repo_name=""):

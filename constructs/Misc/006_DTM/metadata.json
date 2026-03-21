@@ -1,13 +1,4 @@
 {
-  "id": "013",
-  "name": "DTM",
-  "full_name": "Dark Thermodynamic Mind",
-  "type": "conceptual-framework",
-  "status": "active",
-  "created": "2026",
-  "tags": [
-    "ai",
-    "conceptual"
-  ],
-  "source_repo": "https://github.com/Devanik21/Dark-Thermodynamic-Mind"
+    "name": "006_DTM",
+    "status": "active"
 }
