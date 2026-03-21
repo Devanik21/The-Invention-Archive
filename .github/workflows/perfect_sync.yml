@@ -32,6 +32,7 @@ jobs:
           GITHUB_USER = "Devanik21"
           
           INVENTIONS = {
+              "constructs/001_HRF": "Harmonic-Resonance-Forest",
               "constructs/002_NECF": "Non-Equilibrium-Cognitive-Field",
               "constructs/003_TSP": "The-Schrodinger-Paradox",
               "constructs/004_AS": "Aether-SPARC",
@@ -39,19 +40,22 @@ jobs:
               "constructs/006_TCA": "The-Cytomorphic-Architecture",
               "constructs/007_DDG": "Dreamer-Dark-Genesis",
               "constructs/008_CS": "causa-sui",
+              "constructs/009_RHO": "Recursive-Hebbian-Organism",
+              "constructs/010_LDD": "Lucid-Dark-Dreamer",
               "constructs/011_BA": "BSHDER-Architecture",
               "constructs/012_GGEO": "GENEVO-GENetic-EVolutionary-Organoid",
               "constructs/013_HM": "HAG-MoE",
               "constructs/Misc/001_LIM": "Latent-Inference-Manifold",
               "constructs/Misc/002_LCM": "Latent-Consensus-Manifold",
-              "constructs/Misc/003_XV": "xylia-vision"
+              "constructs/Misc/003_XV": "xylia-vision",
+              "constructs/Misc/004_LB": "Life-Beyond",
+              "constructs/Misc/005_TM": "Thermodynamic-Mind",
+              "constructs/Misc/006_DTM": "Dark-Thermodynamic-Mind",
+              "constructs/Misc/007_AARGE": "AION-Algorithmic-Reversal-of-Genomic-Entropy",
+              "constructs/Misc/008_DU": "Deep-Universe"
           }
           
-          PENDING = [
-              "constructs/001_HRF", "constructs/009_RHO", "constructs/010_LDD",
-              "constructs/Misc/004_LB", "constructs/Misc/005_TM", "constructs/Misc/006_DTM",
-              "constructs/Misc/007_AARGE", "constructs/Misc/008_DU"
-          ]
+          PENDING = []
 
           def make_perfect_structure(folder, repo_name=""):
               snap_path = os.path.join(folder, "snapshot")
