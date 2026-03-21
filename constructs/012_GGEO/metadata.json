@@ -1,13 +1,4 @@
 {
-  "id": "020",
-  "name": "GGEO",
-  "full_name": "GENEVO GENetic EVolutionary Organoid",
-  "type": "conceptual-framework",
-  "status": "active",
-  "created": "2026",
-  "tags": [
-    "ai",
-    "conceptual"
-  ],
-  "source_repo": "https://github.com/Devanik21/GENEVO-GENetic-EVolutionary-Organoid"
+    "name": "GENEVO-GENetic-EVolutionary-Organoid",
+    "status": "active"
 }

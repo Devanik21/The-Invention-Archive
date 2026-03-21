@@ -1,13 +1,4 @@
 {
-  "id": "016",
-  "name": "LDD",
-  "full_name": "Lucid Dark Dreamer",
-  "type": "conceptual-framework",
-  "status": "active",
-  "created": "2026",
-  "tags": [
-    "ai",
-    "conceptual"
-  ],
-  "source_repo": "https://github.com/Devanik21/Lucid-Dark-Dreamer"
+    "name": "010_LDD",
+    "status": "active"
 }

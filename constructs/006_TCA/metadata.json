@@ -1,13 +1,4 @@
 {
-  "id": "009",
-  "name": "TCA",
-  "full_name": "The Cytomorphic Architecture",
-  "type": "conceptual-framework",
-  "status": "active",
-  "created": "2026",
-  "tags": [
-    "ai",
-    "conceptual"
-  ],
-  "source_repo": "https://github.com/Devanik21/The-Cytomorphic-Architecture"
+    "name": "The-Cytomorphic-Architecture",
+    "status": "active"
 }

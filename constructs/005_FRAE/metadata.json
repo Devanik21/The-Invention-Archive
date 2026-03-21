@@ -1,13 +1,4 @@
 {
-  "id": "007",
-  "name": "FRAE",
-  "full_name": "FRAE",
-  "type": "conceptual-framework",
-  "status": "active",
-  "created": "2026",
-  "tags": [
-    "ai",
-    "conceptual"
-  ],
-  "source_repo": "https://github.com/Devanik21/FRAE"
+    "name": "FRAE",
+    "status": "active"
 }
