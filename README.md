@@ -2,8 +2,6 @@
 
 A long-term, structured archival system designed to catalog, organize, and preserve conceptual constructs, theoretical frameworks, and AI repositories.
 
-<!-- Maintainer's note: The structural foundation of this archive is exceptionally solid. TODO: Consider evaluating recently active repositories (e.g., from the GitHub profile) for inclusion as future constructs to keep the archive aligned with ongoing research. -->
-
 ## Purpose
 
 The Invention Archive serves as a highly organized, durable repository for 21 core inventions and research frameworks spanning advanced AI architectures, thermodynamic models, cognitive fields, and evolutionary organoids.
@@ -30,27 +28,32 @@ To guarantee long-term accessibility, the archive strictly adheres to the follow
 
 ## Current Constructs
 
-The archive currently houses the following 21 foundational inventions:
+The archive currently houses the following 13 core inventions and 8 miscellaneous constructs:
+
+### Core Constructs
 
 1. Harmonic-Resonance-Forest (HRF)
 2. Non-Equilibrium-Cognitive-Field (NECF)
 3. The-Schrodinger-Paradox (TSP)
 4. Aether-SPARC (AS)
-5. Latent-Inference-Manifold (LIM)
-6. Latent-Consensus-Manifold (LCM)
-7. FRAE (FRAE)
-8. xylia-vision (XV)
-9. The-Cytomorphic-Architecture (TCA)
-10. Life-Beyond (LB)
-11. Dreamer-Dark-Genesis (DDG)
-12. Thermodynamic-Mind (TM)
-13. Dark-Thermodynamic-Mind (DTM)
-14. causa-sui (CS)
-15. Recursive-Hebbian-Organism (RHO)
-16. Lucid-Dark-Dreamer (LDD)
-17. BSHDER-Architecture (BA)
-18. AION-Algorithmic-Reversal-of-Genomic-Entropy (AARGE)
-19. Deep-Universe (DU)
-20. GENEVO-GENetic-EVolutionary-Organoid (GGEO)
-21. HAG-MoE (HM)
+5. FRAE (FRAE)
+6. The-Cytomorphic-Architecture (TCA)
+7. Dreamer-Dark-Genesis (DDG)
+8. causa-sui (CS)
+9. Recursive-Hebbian-Organism (RHO)
+10. Lucid-Dark-Dreamer (LDD)
+11. BSHDER-Architecture (BA)
+12. GENEVO-GENetic-EVolutionary-Organoid (GGEO)
+13. HAG-MoE (HM)
+
+### Miscellaneous Constructs
+
+1. Latent-Inference-Manifold (LIM)
+2. Latent-Consensus-Manifold (LCM)
+3. xylia-vision (XV)
+4. Life-Beyond (LB)
+5. Thermodynamic-Mind (TM)
+6. Dark-Thermodynamic-Mind (DTM)
+7. AION-Algorithmic-Reversal-of-Genomic-Entropy (AARGE)
+8. Deep-Universe (DU)
 
