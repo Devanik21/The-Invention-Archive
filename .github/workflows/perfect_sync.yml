@@ -1,13 +1,13 @@
-name: Perfect Invention Web Sync
+name: Precise Constructs Sync
 
 on:
-  workflow_dispatch: # Allows you to run this manually from the Actions tab
+  workflow_dispatch: # Allows manual trigger from the Actions tab
 
 permissions:
-  contents: write # Grants permission to push files directly to your repo
+  contents: write
 
 jobs:
-  sync-archives:
+  populate-constructs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -18,9 +18,9 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Build Structure and Download Assets
+      - name: Sync Constructs Assets
         run: |
-          cat << 'EOF' > web_sync.py
+          cat << 'EOF' > constructs_sync.py
           import os
           import time
           import urllib.request
@@ -29,7 +29,8 @@ jobs:
           ssl._create_default_https_context = ssl._create_unverified_context
           GITHUB_USER = "Devanik21"
           
-          INVENTIONS = {
+          # Exact mapping from source_repo.md files
+          CONSTRUCTS = {
               "constructs/001_HRF": "Harmonic-Resonance-Forest",
               "constructs/002_NECF": "Non-Equilibrium-Cognitive-Field",
               "constructs/003_TSP": "The-Schrodinger-Paradox",
@@ -40,52 +41,45 @@ jobs:
               "constructs/008_CS": "causa-sui",
               "constructs/011_BA": "BSHDER-Architecture",
               "constructs/012_GGEO": "GENEVO-GENetic-EVolutionary-Organoid",
-              "constructs/013_HM": "HAG-MoE",
-              "Misc/001_LIM": "Latent-Inference-Manifold",
-              "Misc/002_LCM": "Latent-Consensus-Manifold",
-              "Misc/003_XV": "xylia-vision"
+              "constructs/013_HM": "HAG-MoE"
           }
           
-          PENDING = [
-              "constructs/009_RHO", "constructs/010_LDD", 
-              "Misc/004_LB", "Misc/005_TM", "Misc/006_DTM", 
-              "Misc/007_AARGE", "Misc/008_DU"
-          ]
-          
-          # 1. Process known repos
-          for folder, repo in INVENTIONS.items():
+          for folder, repo in CONSTRUCTS.items():
+              # Ensure standard internal hierarchy
               snap_path = os.path.join(folder, "snapshot")
               os.makedirs(snap_path, exist_ok=True)
               os.makedirs(os.path.join(folder, "notes"), exist_ok=True)
               os.makedirs(os.path.join(folder, "versions"), exist_ok=True)
               
+              print(f"🚀 Archiving {repo} into {folder}...")
+              
+              success = False
               for branch in ['main', 'master']:
                   try:
-                      readme = f"https://raw.githubusercontent.com/{GITHUB_USER}/{repo}/{branch}/README.md"
+                      readme_url = f"https://raw.githubusercontent.com/{GITHUB_USER}/{repo}/{branch}/README.md"
                       zip_url = f"https://github.com/{GITHUB_USER}/{repo}/archive/refs/heads/{branch}.zip"
                       
-                      urllib.request.urlretrieve(readme, os.path.join(snap_path, "README.md"))
+                      # Fetch the exact files
+                      urllib.request.urlretrieve(readme_url, os.path.join(snap_path, "README.md"))
                       urllib.request.urlretrieve(zip_url, os.path.join(snap_path, f"{repo}.zip"))
-                      print(f"✅ Synced {repo} ({branch})")
+                      
+                      print(f"   ✅ Success ({branch})")
+                      success = True
                       break
                   except Exception:
                       continue
-              time.sleep(1)
               
-          # 2. Build empty pending structures
-          for folder in PENDING:
-              os.makedirs(os.path.join(folder, "snapshot"), exist_ok=True)
-              os.makedirs(os.path.join(folder, "notes"), exist_ok=True)
-              os.makedirs(os.path.join(folder, "versions"), exist_ok=True)
+              if not success:
+                  print(f"   ❌ Failed to fetch assets for {repo}")
               
-          print("All downloads complete.")
+              time.sleep(2) # Respect GitHub API limits
           EOF
-          python web_sync.py
+          python constructs_sync.py
 
-      - name: Commit and Push to Web Repo
+      - name: Commit and Push
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Auto-synced exact .zip and README from all inventions via Web Action" || echo "No changes to commit"
+          git add constructs/
+          git commit -m "Populate constructs folder with exact .zip and README snapshots" || echo "No changes to commit"
           git push origin main
