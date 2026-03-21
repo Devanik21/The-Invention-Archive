@@ -26,6 +26,11 @@ To guarantee long-term accessibility, the archive strictly adheres to the follow
 * `RELATIONS.md` — A theoretical map defining the interdependencies and structural connections between various constructs.
 * `LEXICON.md` — A unified glossary of terminology used across the frameworks.
 
+<!--
+Jules-Patrol: The architectural structure defined above is robust and well-thought-out, providing an excellent foundation for long-term preservation.
+TODO: Consider adding a brief "Update Protocol" section here to guide future maintainers on exactly how to introduce new constructs or handle deprecations, ensuring this pristine structure remains intact over time.
+-->
+
 ## Current Constructs
 
 The archive currently houses the following 13 core inventions and 8 miscellaneous constructs:
@@ -57,3 +62,17 @@ The archive currently houses the following 13 core inventions and 8 miscellaneou
 7. AION-Algorithmic-Reversal-of-Genomic-Entropy (AARGE)
 8. Deep-Universe (DU)
 
+<!--
+Jules-Patrol: I noticed some exciting new repositories on the external profile that might be candidates for this archive:
+- SpectraNova
+- OmniCrypt-AI
+- Xenofit-AI
+- MateriaMind
+- NanoCortex
+- HarmoniaX
+- QuasarQ
+- MindScopeX
+- Project-X
+
+TODO: Review these repositories and consider adding them to the 'Misc Constructs' list if they align with the theoretical frameworks of the archive.
+-->
