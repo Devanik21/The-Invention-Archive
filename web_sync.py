@@ -10,13 +10,7 @@ GITHUB_USER = "Devanik21"
 
 INVENTIONS = {
     "constructs/Misc/001_LIM": "Latent-Inference-Manifold",
-    "constructs/Misc/002_LCM": "Latent-Consensus-Manifold",
-    "constructs/Misc/003_XV": "xylia-vision",
-    "constructs/Misc/004_LB": "Life-Beyond",
-    "constructs/Misc/005_TM": "Thermodynamic-Mind",
-    "constructs/Misc/006_DTM": "Dark-Thermodynamic-Mind",
-    "constructs/Misc/007_AARGE": "AION-Algorithmic-Reversal-of-Genomic-Entropy",
-    "constructs/Misc/008_DU": "Deep-Universe"
+
 }
 
 PENDING = []
