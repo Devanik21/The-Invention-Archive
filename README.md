@@ -2,6 +2,8 @@
 
 A long-term, structured archival system designed to catalog, organize, and preserve conceptual constructs, theoretical frameworks, and AI repositories.
 
+<!-- Maintainer's note: The structural foundation of this archive is exceptionally solid. TODO: Consider evaluating recently active repositories (e.g., from the GitHub profile) for inclusion as future constructs to keep the archive aligned with ongoing research. -->
+
 ## Purpose
 
 The Invention Archive serves as a highly organized, durable repository for 21 core inventions and research frameworks spanning advanced AI architectures, thermodynamic models, cognitive fields, and evolutionary organoids.

@@ -1,3 +1,4 @@
+<!-- Maintainer's note: Great chronological record. TODO: To maintain readability as the archive grows across decades, consider grouping entries by year or era headers. -->
 2026 → HRF
 2026 → NECF
 2026 → TSP
