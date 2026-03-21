@@ -9,19 +9,6 @@ ssl._create_default_https_context = ssl._create_unverified_context
 GITHUB_USER = "Devanik21"
 
 INVENTIONS = {
-    "constructs/001_HRF": "Harmonic-Resonance-Forest",
-    "constructs/002_NECF": "Non-Equilibrium-Cognitive-Field",
-    "constructs/003_TSP": "The-Schrodinger-Paradox",
-    "constructs/004_AS": "Aether-SPARC",
-    "constructs/005_FRAE": "FRAE",
-    "constructs/006_TCA": "The-Cytomorphic-Architecture",
-    "constructs/007_DDG": "Dreamer-Dark-Genesis",
-    "constructs/008_CS": "causa-sui",
-    "constructs/009_RHO": "Recursive-Hebbian-Organism",
-    "constructs/010_LDD": "Lucid-Dark-Dreamer",
-    "constructs/011_BA": "BSHDER-Architecture",
-    "constructs/012_GGEO": "GENEVO-GENetic-EVolutionary-Organoid",
-    "constructs/013_HM": "HAG-MoE",
     "constructs/Misc/001_LIM": "Latent-Inference-Manifold",
     "constructs/Misc/002_LCM": "Latent-Consensus-Manifold",
     "constructs/Misc/003_XV": "xylia-vision",
