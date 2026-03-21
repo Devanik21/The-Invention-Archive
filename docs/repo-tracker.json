@@ -11,8 +11,8 @@
     "session_id": "IA-2026-080-T2",
     "topic_idx": 2,
     "slug": "genomic_information_theory",
-    "n_constructs": 35,
-    "n_repo_constructs": 21,
+    "n_constructs": 29,
+    "n_repo_constructs": 13,
     "commit_suffix": "H_DNA=1.97650bpb H_telomere=4941.3bits E_reprog=1.466e-17J n_ATP=2.89e+02"
   }
 }
