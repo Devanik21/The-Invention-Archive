@@ -1,10 +1,3 @@
-# HRF — Harmonic Resonance Forest
-
-
-## Source
-
-https://github.com/Devanik21/Harmonic-Resonance-Forest
-
 # Devanik
 
 **ECE 2026 | AI Researcher | Creator of Harmonic Resonance Fields**
