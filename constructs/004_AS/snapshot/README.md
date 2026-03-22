@@ -1,3 +1,5 @@
+https://github.com/Devanik21/Aether-SPARC
+
 # Aether-SPARC v3
 ## Asynchronous Event-Triggered Signal Processor with Selective State Space Modelling and Predictive Coding
 
