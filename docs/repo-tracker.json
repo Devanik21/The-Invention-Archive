@@ -14,5 +14,13 @@
     "n_constructs": 29,
     "n_repo_constructs": 13,
     "commit_suffix": "H_DNA=1.97650bpb H_telomere=4941.3bits E_reprog=1.466e-17J n_ATP=2.89e+02"
+  },
+  "2026-03-22": {
+    "session_id": "IA-2026-081-T3",
+    "topic_idx": 3,
+    "slug": "evolutionary_dynamics",
+    "n_constructs": 31,
+    "n_repo_constructs": 13,
+    "commit_suffix": "R2_fisher=0.7880 fitness_gain=+184.8% mu_c=0.3979 BSHDER_H_diff=6.095bits"
   }
 }
