@@ -1,3 +1,8 @@
+<!--
+Jules-Patrol: The structured format of this registry is excellent for parsing and automated syncing.
+TODO: As the archive grows, consider adding an automated linting check to ensure new entries rigidly follow this Markdown table format and ID numbering scheme, preventing registry drift.
+-->
+
 | ID  | Name | Type    | Status | Path               |
 | --- | ---- | ------- | ------ | ------------------ |
 | 001 | HRF  | Concept | Active | constructs/001_HRF |
