@@ -1,10 +1,12 @@
+https://github.com/Devanik21/Recursive-Hebbian-Organism
+
 # Differentiable Plasticity: A Meta-Learning Framework for Evolving Universal Learning Rules
 
-**Author:** Devanik  
-**Affiliation:** B.Tech ECE '26, National Institute of Technology Agartala  
-**Fellowships:** Samsung Convergence Software Fellowship (Grade I), Indian Institute of Science  
-**Research Areas:** Neuromorphic Computing • Meta-Learning • Bio-Inspired AI • Astrophysics × ML  
- 
+**Author:** Devanik
+**Affiliation:** B.Tech ECE '26, National Institute of Technology Agartala
+**Fellowships:** Samsung Convergence Software Fellowship (Grade I), Indian Institute of Science
+**Research Areas:** Neuromorphic Computing • Meta-Learning • Bio-Inspired AI • Astrophysics × ML
+
 [![GitHub](https://img.shields.io/badge/GitHub-Devanik21-181717?style=flat&logo=github)](https://github.com/Devanik21)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Devanik-0077B5?style=flat&logo=linkedin)](https://www.linkedin.com/in/devanik/)
 [![Twitter](https://img.shields.io/badge/Twitter-@devanik2005-1DA1F2?style=flat&logo=twitter)](https://x.com/devanik2005)
@@ -169,7 +171,7 @@ Biological plausibility requires that $\mathcal{G}_\theta$ operates on **local i
 
 For synapse $w_{ij}$, the genome has access to:
 1. $a_i^{\text{pre}}$ — Pre-synaptic activity
-2. $a_j^{\text{post}}$ — Post-synaptic activity  
+2. $a_j^{\text{post}}$ — Post-synaptic activity
 3. $w_{ij}$ — Current weight value
 
 Crucially, it does **not** have access to:
@@ -291,7 +293,7 @@ H(\mathbf{h}) = \text{std}(\mathbf{h}) \quad \text{(standard deviation as entrop
 \alpha_{\text{eff}} = \alpha_0 \cdot (1 + 10 \cdot H(\mathbf{h}))
 ```
 
-High entropy (diverse activations) → faster learning.  
+High entropy (diverse activations) → faster learning.
 Low entropy (uniform activations) → slower learning.
 
 This implements a form of **metaplasticity**—the plasticity of plasticity itself.
@@ -754,28 +756,28 @@ for episode in range(num_episodes):
     # Reset memory between episodes
     brain.short_term_latent.zero_()
     brain.long_term_latent.zero_()
-    
+
     # Sample task from bank
     cue, target = task_bank[episode % len(task_bank)]
-    
+
     # Inner Loop (Lifetime Learning)
     fast_weights = brain.synapse.clone()
     for step in range(num_inner_steps):
         # Forward pass
         activation, _, pre = brain(cue, override_weights=fast_weights)
-        
+
         # Teacher forcing (scheduled)
         teacher_ratio = 1.0 - step / (num_inner_steps - 1)
         post = teacher_ratio * target + (1 - teacher_ratio) * activation
-        
+
         # Plasticity update (differentiable!)
         delta_w = genome(pre, post, fast_weights)
         fast_weights = normalize(fast_weights + alpha * delta_w)
-    
+
     # Outer Loop: Evaluate & Backprop
     final_activation, _, _ = brain(cue, override_weights=fast_weights)
     loss = mse_loss(final_activation, target)
-    
+
     optimizer.zero_grad()
     loss.backward()  # Gradients flow through entire inner loop
     optimizer.step()
@@ -816,12 +818,12 @@ As an undergraduate researcher, I have been fortunate to explore questions at th
 
 ## Contact
 
-**Devanik**  
-B.Tech ECE '26, National Institute of Technology Agartala  
-Samsung Fellow (Grade I), Indian Institute of Science  
+**Devanik**
+B.Tech ECE '26, National Institute of Technology Agartala
+Samsung Fellow (Grade I), Indian Institute of Science
 
-🔗 [GitHub: Devanik21](https://github.com/Devanik21)  
-🔗 [LinkedIn: /in/devanik](https://www.linkedin.com/in/devanik/)  
+🔗 [GitHub: Devanik21](https://github.com/Devanik21)
+🔗 [LinkedIn: /in/devanik](https://www.linkedin.com/in/devanik/)
 🔗 [Twitter: @devanik2005](https://x.com/devanik2005)
 
 **Research Interests:**
@@ -869,11 +871,9 @@ The unifying thread is **discovering rather than designing**—allowing systems 
 
 ---
 
-**Last Updated**: January 29, 2026  
-**Version**: 1.0.0  
-**Status**: Active Research  
+**Last Updated**: January 29, 2026
+**Version**: 1.0.0
+**Status**: Active Research
 **Next Steps**: Hierarchical meta-learning, transformer integration, quantum plasticity
 
 ---
-
-

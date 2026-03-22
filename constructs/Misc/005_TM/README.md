@@ -1,3 +1,5 @@
+https://github.com/Devanik21/Thermodynamic-Mind
+
 # GeNesIS-I: Generative Neural System for Information-theoretic Self-awareness (A2C)
 
 **A Computational Framework for Empirically Testable Machine Consciousness via Causal Emergence**

@@ -1,3 +1,5 @@
+https://github.com/Devanik21/Latent-Inference-Manifold
+
 # Latent Inference Manifold
 
 <p align="center">

@@ -1,3 +1,5 @@
+https://github.com/Devanik21/Dark-Thermodynamic-Mind
+
 # GeNesIS-II: Generative Neural System for Information-theoretic Self-awareness (PPO)
 
 ## Dark Genesis: Proximal Policy Optimization with Latent Memory in Silico

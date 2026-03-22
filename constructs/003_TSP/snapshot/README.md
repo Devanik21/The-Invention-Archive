@@ -1,3 +1,5 @@
+https://github.com/Devanik21/The-Schrodinger-Paradox
+
 # The Schrödinger Dream: Neural Quantum State Solver
 
 **A Research Implementation of Variational Monte Carlo with State-Space Models**

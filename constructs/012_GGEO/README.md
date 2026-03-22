@@ -1,3 +1,5 @@
+https://github.com/Devanik21/GENEVO-GENetic-EVolutionary-Organoid
+
 # From Static Architectures to Evolutionary Neural Systems: A Bio-Inspired Approach to Artificial General Intelligence
 
 ## Abstract
