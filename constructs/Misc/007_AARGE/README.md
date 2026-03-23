@@ -1,15 +1,18 @@
 https://github.com/Devanik21/AION-Algorithmic-Reversal-of-Genomic-Entropy
 
-# AION-Algorithmic-Reversal-of-Genomic-Entropy
-If aging is information loss, then it is, in principle, reversible via error correction.
+<div align="center">
 
-
-
-**A computational proof-of-concept demonstrating that aging is reversible information loss, not irreversible physical decay**
+# 🕰️ AION: Algorithmic Reversal of Genomic Entropy
+### "If aging is information loss, it is, in principle, reversible via error correction."
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-red.svg)](https://streamlit.io)
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![Streamlit App](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=Streamlit&logoColor=white)](https://streamlit.io)
+[![GitHub Stars](https://img.shields.io/github/stars/Devanik21/AION-Algorithmic-Reversal-of-Genomic-Entropy?style=social)](https://github.com/Devanik21/AION-Algorithmic-Reversal-of-Genomic-Entropy)
+
+**A computational proof-of-concept demonstrating that aging is reversible information loss, not irreversible physical decay.**
+
+</div>
 
 > *"If aging is the accumulation of Shannon entropy in gene regulatory networks, then reversing it is an error correction problem, not a medical one."*
 
@@ -26,7 +29,8 @@ If aging is information loss, then it is, in principle, reversible via error cor
 
 **This is not a game. This is a formalization.**
 
-![Entropy Reversal](./newplot (21).png)
+<img width="1267" height="517" alt="newplot (21)" src="https://github.com/user-attachments/assets/ad05dc90-dc40-468e-b0cc-52f67e75bb02" />
+
 
 *Figure 1: Genomic information loss crosses death threshold (5.0) after 7,110 timesteps. Yamanaka factor injection resets entropy to 0, restoring youthful GRN state.*
 
@@ -414,32 +418,54 @@ H ↦ 0
 
 ---
 
+## 🧠 About the Author
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Researcher-Devanik_Debnath-blue?style=for-the-badge&logo=googlescholar&logoColor=white" />
+</div>
+
+**Devanik Debnath** is an AI researcher and undergraduate student pursuing a **B.Tech in Electronics & Communication Engineering** at the **National Institute of Technology Agartala**. 
+
+His work is driven by the conviction that aging is fundamentally an engineering problem—specifically an information theory problem. He aims to synthesize concepts from Shannon's entropy, control systems, and cellular biology to contribute to the mission of world-leading AGI labs like **Google DeepMind**.
+
+### 🔬 Research Focus
+- **Information Theory of Aging**: Formalizing cellular decay as channel noise.
+- **Genetic Error Correction**: Reversing entropy through algorithmic reset (Yamanaka factors).
+- **Bio-Inspired AGI**: Growth, adaptation, and structural plasticity.
+
+### 🌐 Connect & Collaborate
+[![GitHub](https://img.shields.io/badge/GitHub-Devanik21-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Devanik21)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-devanik-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/devanik/)
+[![Twitter](https://img.shields.io/badge/Twitter-devanik2005-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/devanik2005)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Devanik-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://github.com/Devanik21)
+
+---
+
 ## 🎓 Citation
 
-If this framework influences your work:
+If this framework influences your research or engineering work, please cite it as follows:
 
 ```bibtex
-@software{aion2024,
-  title={AION: Algorithmic Reversal of Biological Aging via Information-Theoretic Control},
-  author={[Your Name]},
-  year={2024},
-  url={https://github.com/yourusername/universe-sandbox-aion},
-  note={Computational proof-of-concept demonstrating aging as reversible information loss}
+@software{debnath2024aion,
+  title     = {AION: Algorithmic Reversal of Biological Aging via Information-Theoretic Control},
+  author    = {Debnath, Devanik},
+  year      = {2024},
+  url       = {https://github.com/Devanik21/AION-Algorithmic-Reversal-of-Genomic-Entropy},
+  institution={National Institute of Technology Agartala},
+  note      = {Computational proof-of-concept demonstrating aging as reversible information loss}
 }
 ```
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contributing & Support
 
-This is foundational work. We welcome:
+This is foundational research meant to spark innovation in longevitiy science. Contributions are welcome!
 
-- **Theoretical extensions** (proofs, phase transition analysis)
-- **Biological validation** (real GRN data integration)
-- **RL implementations** (optimal intervention policies)
-- **Visualization improvements** (better entropy dashboards)
+- **For Researchers**: Help us refine the entropy metrics or integrate real-world GRN data.
+- **For AGI Labs**: If you are interested in the intersection of biology and information control, reach out.
 
-**For AGI lab collaborations:** Contact [your-email]
+📧 **Get in touch via [LinkedIn](https://www.linkedin.com/in/devanik/) or [GitHub](https://github.com/Devanik21)**
 
 ---
 
@@ -462,27 +488,12 @@ This work stands on the shoulders of:
 
 ---
 
-## ⚡ Final Note
-
-**This is not a game.**
-
-This is a formalization of a Nobel-worthy idea:
-
-> If aging is information loss, it is, in principle, reversible via error correction.
-
-We're not claiming to cure aging in humans. We're claiming to have built the **framework** in which that cure would be expressible.
-
-And frameworks are how Nobel prizes are won.
-
 ---
 
-**🔬 "Order, disorder, reorder. That's not mysticism. That's thermodynamics."**
+<div align="center">
 
----
+**"Order, disorder, reorder. That's not mysticism. That's thermodynamics."**
 
-*For questions, collaborations, or job opportunities:*  
-📧 []  
-🐦 [@[Github](https://github.com/devanik21)]  
-🔗 [www.linkedin.com/in/devanik]
+[![Star this repo](https://img.shields.io/badge/Solve--Aging-🌟-gold?style=for-the-badge)](https://github.com/Devanik21/AION-Algorithmic-Reversal-of-Genomic-Entropy)
 
-**Star this repo if you think aging is solvable. 🌟**
+</div>
