@@ -1,5 +1,3 @@
-https://github.com/Devanik21/Non-Equilibrium-Cognitive-Field
-
 <div align="center">
 
 ```
@@ -32,7 +30,7 @@ https://github.com/Devanik21/Non-Equilibrium-Cognitive-Field
 <br/>
 
 **Devanik** · B.Tech ECE '26, NIT Agartala
-Samsung Convergence Software Fellowship (Grade I) · Indian Institute of Science
+Samsung  Fellowship · Indian Institute of Science
 
 </div>
 
@@ -77,17 +75,23 @@ This is not a claim about intelligence or general reasoning. It is a study of wh
 
 The standard picture of an adaptive system is a two-level hierarchy:
 
-$$\text{Level 1: } \frac{d\phi}{dt} = F(\phi,\, \mathcal{L})$$
+$$
+\text{Level 1: } \frac{d\phi}{dt} = F(\phi,\, \mathcal{L})
+$$
 
-$$\text{Level 2: } \frac{d\mathcal{L}}{dt} = 0 \quad \text{(fixed)} \quad \text{or} \quad G(\mathcal{L}, \nabla_\phi \mathcal{J}) \quad \text{(trained by outer loop)}$$
+$$
+\text{Level 2: } \frac{d\mathcal{L}}{dt} = 0 \quad \text{(fixed)} \quad \text{or} \quad G(\mathcal{L}, \nabla_\phi \mathcal{J}) \quad \text{(trained by outer loop)}
+$$
 
 where $\phi$ is the system state, $\mathcal{L}$ is the learning rule, and $\mathcal{J}$ is a loss function. The key characteristic of Level-2 systems is that **the function $G$ itself is fixed** — it does not adapt. Meta-learning approaches like MAML (Finn et al., 2017) find a good initialization for $\mathcal{L}$, but the update rule for $\mathcal{L}$ during deployment is still fixed.
 
 NECF proposes a genuine third level:
 
-$$\text{Level 3: } \frac{d\mathcal{L}}{dt} = F_{\text{contagion}}(\mathcal{L}, \varepsilon) - \lambda \nabla_\mathcal{L} \mathcal{H}[\mathcal{L}]$$
+$$
+\text{Level 3: } \frac{d\mathcal{L}_i}{dt} = \underbrace{F_{\text{contagion}}(\mathcal{L}_i,\, \varepsilon_i,\, W)}_{\text{Boltzmann epistemic contagion}} - \lambda\, \underbrace{\nabla_{\mathcal{L}_i} \mathcal{H}[\mathcal{L}]}_{\text{identity gradient}}
+$$
 
-where $F_{\text{contagion}}$ is an error-driven, thermodynamically-weighted rule propagation mechanism, and $\mathcal{H}[\mathcal{L}]$ is an **identity curvature functional** that constrains the evolution. The function governing $\mathcal{L}$'s evolution is **not fixed** — it adapts through the Boltzmann-weighted averaging of neighbor rules, making the rule-evolution process itself a field-level phenomenon.
+where $F_{\text{contagion}}$ is an error-driven, thermodynamically-weighted rule propagation mechanism, and $\mathcal{H}[\mathcal{L}]$ is an **identity curvature functional** that constrains the evolution. Critically, the rule governing $\mathcal{L}$'s evolution is **not fixed** — it adapts through the Boltzmann-weighted averaging of neighbor rules, making the rule-evolution process itself a genuine spatial field phenomenon.
 
 ### 1.2 Physical Intuition
 
@@ -131,14 +135,18 @@ The gap NECF occupies is the combination of (a) per-node rule fields, (b) Boltzm
 
 Each node $i \in \{1, \ldots, N\}$ carries a complex state:
 
-$$\phi_i(t) = A_i(t)\, e^{i\theta_i(t)}$$
+$$
+\phi_i(t) = A_i(t)\, e^{i\theta_i(t)}
+$$
 
 - $A_i \in (0, 1]$: amplitude — interpreted as local confidence or energy
 - $\theta_i \in [0, 2\pi)$: phase — causal alignment / temporal coordinate
 
 The **Kuramoto order parameter** quantifies global synchrony:
 
-$$r(t)\, e^{i\psi(t)} = \frac{1}{N} \sum_{j=1}^N A_j\, e^{i\theta_j}$$
+$$
+r(t)\, e^{i\psi(t)} = \frac{1}{N} \sum_{j=1}^N A_j\, e^{i\theta_j}
+$$
 
 $r \in [0, 1]$ with $r = 0$ (incoherent) and $r = 1$ (fully synchronized).
 
@@ -146,7 +154,9 @@ $r \in [0, 1]$ with $r = 0$ (incoherent) and $r = 1$ (fully synchronized).
 
 Each node carries a **rule vector**:
 
-$$\mathcal{L}_i(t) = \bigl(\alpha_i(t),\; \beta_i(t),\; \gamma_i(t)\bigr)$$
+$$
+\mathcal{L}_i(t) = \bigl(\alpha_i(t),\; \beta_i(t),\; \gamma_i(t)\bigr)
+$$
 
 | Parameter | Role | Initial value |
 |---|---|:---:|
@@ -156,27 +166,43 @@ $$\mathcal{L}_i(t) = \bigl(\alpha_i(t),\; \beta_i(t),\; \gamma_i(t)\bigr)$$
 
 ### 3.3 Level-1 Dynamics: Field Evolution
 
-**Phase update** (amplitude-weighted generalized Kuramoto with curiosity):
+**Phase update** (amplitude-weighted generalized Kuramoto with curiosity and external driving):
 
-$$\frac{d\theta_i}{dt} = \omega_i + \beta_i \cdot \frac{1}{N} \sum_{j=1}^N W_{ij}\, A_j\, \sin(\theta_j - \theta_i) + \gamma_i \cdot \nabla_{\theta_i} U(\theta_i)$$
+$$
+\frac{d\theta_i}{dt} = \underbrace{\omega_i}_{\text{intrinsic}} + \underbrace{\beta_i \cdot \frac{1}{N} \sum_{j=1}^N W_{ij}\, A_j\, \sin(\theta_j - \theta_i)}_{\text{synchrony pull}} + \underbrace{\gamma_i \cdot \nabla_{\theta_i} U(\theta_i)}_{\text{curiosity gradient}} + \underbrace{\Delta_{\text{ext}}(t)}_{\text{Lorenz + spikes}}
+$$
 
-where $W_{ij}$ is a symmetric coupling matrix sampled from $\mathcal{U}(0.5, 1.5)$ and $U(\theta_i) = -\log p(\theta_i \mid \text{context})$ is the **curiosity potential** — nodes in sparse regions of phase space experience a higher gradient.
+where $W_{ij} \sim \mathcal{U}(0.5, 1.5)$ is the symmetric coupling matrix (zero diagonal) and $\Delta_{\text{ext}}(t)$ captures spatially distributed Lorenz kicks and Poisson phase resets (Section 6).
 
-**Amplitude update** (error-driven with noise):
+**Curiosity potential** — approximated via circular KDE with Silverman bandwidth $h = 1.06\,\hat{\sigma}_\theta\, N^{-1/5}$:
 
-$$\frac{dA_i}{dt} = -\alpha_i\, \varepsilon_i(t)\, A_i + \sigma\, \eta_i(t)$$
+$$
+p(\theta_i) \approx \frac{1}{N} \sum_{j=1}^{N} \frac{1}{h} \exp\!\left(-\frac{\sin^2(\theta_i - \theta_j)}{2h^2}\right), \qquad U(\theta_i) = -\log p(\theta_i \mid \text{context})
+$$
 
-where $\varepsilon_i(t) = \sin^2\!\bigl((\theta_i - \psi)/2\bigr)$ is the local prediction error (circular distance from the mean phase) and $\eta_i(t)$ is a Wiener process with amplitude $\sigma = 0.02$.
+Nodes in dense, coherent phase regions experience a low $\|\nabla U\|$; nodes in sparse, chaotic regions experience a high gradient, pulling them toward informationally underexplored territory.
 
-**Mean-field critical coupling** (Kuramoto, 1975):
+**Amplitude update** (error-driven with noise and periodic modulation):
 
-$$K_c = \frac{2}{\pi\, g(\Omega)} = \frac{2\sigma_\omega\sqrt{2\pi}}{\pi} \approx 0.4787 \quad \text{for } \sigma_\omega = 0.3$$
+$$
+\frac{dA_i}{dt} = -\alpha_i\, \varepsilon_i(t)\, A_i + \sigma\, \eta_i(t) + \varepsilon_s \sin(2\pi f_s t)
+$$
 
-At initialization $\beta_i \approx 0.80$, giving an effective coupling $K_{\text{eff}} = \beta_i \cdot K \cdot \bar{W} \approx 0.56 > K_c$, placing the field in the synchronizing regime from the start.
+where $\varepsilon_i(t) = \sin^2\!\bigl((\theta_i - \psi)/2\bigr) \in [0,1]$ is the local prediction error (squared circular distance from the mean-field phase $\psi$), $\eta_i(t) \sim \mathcal{N}(0,1)$ is a Wiener process with amplitude $\sigma = 0.02$ (thermodynamic floor preventing amplitude collapse to zero), and $\varepsilon_s \sin(2\pi f_s t)$ is the periodic amplitude modulation driver ($\varepsilon_s = 0.03$, $f_s = 0.1$).
+
+**Mean-field critical coupling** (Kuramoto, 1975; Strogatz, 2000):
+
+$$
+K_c = \frac{2}{\pi\, g(\Omega)} = \frac{2\sigma_\omega\sqrt{2\pi}}{\pi} \approx 0.4787 \quad \text{for } \sigma_\omega = 0.3
+$$
+
+At initialization $\beta_i \approx 0.80$, giving an effective coupling $K_{\text{eff}} = \beta_i \cdot K \cdot \bar{W} \approx 0.56 > K_c$, placing the field in the synchronizing regime from the outset.
 
 ### 3.4 Level-3 Dynamics: Meta-Rule Evolution
 
-$$\frac{d\mathcal{L}_i}{dt} = \underbrace{F_{\text{contagion}}(\mathcal{L}_i,\, \varepsilon_i,\, W)}_{\text{Boltzmann epistemic contagion}} \;-\; \lambda\, \underbrace{\nabla_{\mathcal{L}_i} \mathcal{H}[\mathcal{L}]}_{\text{identity gradient}}$$
+$$
+\frac{d\mathcal{L}_i}{dt} = \underbrace{F_{\text{contagion}}(\mathcal{L}_i,\, \varepsilon_i,\, W)}_{\text{Boltzmann epistemic contagion}} \;-\; \lambda\, \underbrace{\nabla_{\mathcal{L}_i} \mathcal{H}[\mathcal{L}]}_{\text{identity gradient}}
+$$
 
 This is a dynamical system **in rule space**, not gradient descent on a loss function. The contagion term $F$ propagates rules from low-error nodes to high-error nodes; the identity gradient $\nabla \mathcal{H}$ prevents unlimited drift.
 
@@ -186,7 +212,9 @@ This is a dynamical system **in rule space**, not gradient descent on a loss fun
 
 The central object distinguishing NECF from prior adaptive systems is $\mathcal{H}[\mathcal{L}]$:
 
-$$\mathcal{H}[\mathcal{L}] = \underbrace{\frac{1}{N} \sum_{i=1}^N \|\mathcal{L}_i(t) - \mathcal{L}_i^{(0)}\|^2}_{\text{drift penalty}} + \underbrace{\kappa\; \overline{\text{Var}}(\mathcal{L}_i)}_{\text{collapse penalty}}$$
+$$
+\mathcal{H}[\mathcal{L}] = \underbrace{\frac{1}{N} \sum_{i=1}^N \|\mathcal{L}_i(t) - \mathcal{L}_i^{(0)}\|^2}_{\text{drift penalty}} + \underbrace{\kappa\; \overline{\text{Var}}(\mathcal{L}_i)}_{\text{collapse penalty}}
+$$
 
 **Properties:**
 
@@ -198,19 +226,27 @@ $$\mathcal{H}[\mathcal{L}] = \underbrace{\frac{1}{N} \sum_{i=1}^N \|\mathcal{L}_
 
 The gradient used in the meta-dynamics update:
 
-$$\nabla_{\mathcal{L}_i} \mathcal{H} = \frac{2}{N}\bigl(\mathcal{L}_i - \mathcal{L}_i^{(0)}\bigr) + \frac{2\kappa}{N}\bigl(\mathcal{L}_i - \bar{\mathcal{L}}\bigr)$$
+$$
+\nabla_{\mathcal{L}_i} \mathcal{H} = \frac{2}{N}\bigl(\mathcal{L}_i - \mathcal{L}_i^{(0)}\bigr) + \frac{2\kappa}{N}\bigl(\mathcal{L}_i - \bar{\mathcal{L}}\bigr)
+$$
+
+where $\bar{\mathcal{L}} = \frac{1}{N}\sum_i \mathcal{L}_i$ is the field mean. The first term is an elastic restoring force toward each node's structural origin; the second term is a **repulsive field** centered on the mean — it pushes nodes away from homogenization, preserving spatial rule diversity.
 
 ### 4.1 Rollback Mechanism
 
 At each step, the system checks whether identity curvature has increased too rapidly:
 
-$$\delta\mathcal{H}(t) = \mathcal{H}[\mathcal{L}(t)] - \mathcal{H}[\mathcal{L}(t - \Delta t)]$$
+$$
+\delta\mathcal{H}(t) = \mathcal{H}[\mathcal{L}(t)] - \mathcal{H}[\mathcal{L}(t - \Delta t)]
+$$
 
-If $\delta\mathcal{H} > \delta_{\text{thresh}}$, the system applies a **thermodynamic rollback**:
+If $\delta\mathcal{H} > \delta_{\text{thresh}}$ (default $0.30$), the system applies a **thermodynamic rollback**:
 
-$$\mathcal{L}(t) \leftarrow \mathcal{L}(t - \Delta t) - \eta_{\text{rb}} \cdot \nabla_\mathcal{L} \mathcal{H}[\mathcal{L}(t - \Delta t)]$$
+$$
+\mathcal{L}(t) \leftarrow \mathcal{L}(t - \Delta t) - \eta_{\text{rb}} \cdot \nabla_\mathcal{L} \mathcal{H}[\mathcal{L}(t - \Delta t)], \quad \eta_{\text{rb}} = 0.05
+$$
 
-This is not gradient descent — it is a reversion to the previous state plus a corrective step in the direction of lower identity curvature, preventing the same spike from recurring immediately.
+This is not gradient descent — it is a reversion to the previous state plus a corrective step in the direction of lower identity curvature. The combined effect prevents the same spike from recurring immediately and provides a Lyapunov stability certificate for the rule field over $T \to \infty$.
 
 ---
 
@@ -222,13 +258,17 @@ The contagion term $F_{\text{contagion}}$ implements thermodynamically-weighted 
 
 A naive inverse-error weighting:
 
-$$w_j^{\text{naive}} = \frac{1}{\varepsilon_j + \epsilon}$$
+$$
+w_j^{\text{naive}} = \frac{1}{\varepsilon_j + \epsilon}
+$$
 
-is singular. For $\varepsilon_j = 10^{-5}$, $w_j \approx 10^5$. After normalization this degenerates to a one-hot vector, snapping the entire field to the rule of whichever single node happens to achieve near-zero error on that timestep. This is **not** field dynamics.
+is singular. For $\varepsilon_j = 10^{-5}$, $w_j \approx 10^5$. After normalization this degenerates to a one-hot vector, snapping the entire field to the rule of whichever single node happens to achieve near-zero error on that timestep. This is **not** field dynamics — it is a discrete logic switch masquerading as a continuous system.
 
 ### 5.2 Boltzmann Softmax Weights (Adopted Design)
 
-$$w_j(\kappa) = \frac{\exp(-\varepsilon_j / \kappa)}{\displaystyle\sum_{k=1}^N \exp(-\varepsilon_k / \kappa)}$$
+$$
+w_j(\kappa) = \frac{\exp(-\varepsilon_j / \kappa)}{\displaystyle\sum_{k=1}^N \exp(-\varepsilon_k / \kappa)}
+$$
 
 implemented with the log-sum-exp trick for numerical stability:
 
@@ -238,6 +278,14 @@ log_w -= log_w.max()          # stability
 w = np.exp(log_w)
 w /= w.sum() + 1e-15
 ```
+
+The weight is globally $C^\infty$; its sensitivity to error is:
+
+$$
+\frac{\partial w_j}{\partial \varepsilon_j} = -\frac{1}{\kappa}\, w_j(1 - w_j)
+$$
+
+which is bounded by $[-1/(4\kappa),\, 0]$ for all $\varepsilon_j$ — preventing unbounded weight gradients and guaranteeing mathematical stability of the numerical integration step.
 
 **Properties of the Boltzmann weights:**
 
@@ -254,17 +302,23 @@ At $\kappa = 0.10$, the maximum weight across a 64-node field is approximately $
 
 For each node $i$, the Boltzmann-weighted target rule is:
 
-$$\mathcal{L}_i^{\text{target}} = \frac{\sum_j W_{ij}\, w_j\, \mathcal{L}_j}{\sum_j W_{ij}\, w_j + \epsilon}$$
+$$
+\mathcal{L}_i^{\text{target}} = \frac{\sum_j W_{ij}\, w_j\, \mathcal{L}_j}{\sum_j W_{ij}\, w_j + \epsilon}
+$$
 
 The contagion contribution to $d\mathcal{L}_i/dt$:
 
-$$F_{\text{contagion},i} = \mu \cdot \bigl(\mathcal{L}_i^{\text{target}} - \mathcal{L}_i\bigr) \cdot \varepsilon_i$$
+$$
+F_{\text{contagion},i} = \boldsymbol{\mu} \odot \bigl(\mathcal{L}_i^{\text{target}} - \mathcal{L}_i\bigr) \cdot \varepsilon_i
+$$
 
-where $\varepsilon_i$ acts as **receptivity**: high-error nodes update more strongly toward the rules of their low-error neighbors. $\mu = 0.05$ is the meta-update rate.
+where $\boldsymbol{\mu} = (\mu_\alpha, \mu_\beta, \mu_\gamma) = (0.05, 0.05, 0.05)$ and $\odot$ is elementwise multiplication. The factor $\varepsilon_i$ acts as **receptivity**: high-error nodes update more strongly toward the rules of their low-error neighbors; low-error nodes are stubborn — they resist change, acting as stable anchors from which contagion radiates.
 
-**Two-group mixing time** (analytically and empirically verified):
+**Two-group mixing time** (analytically derived and empirically verified):
 
-$$\tau_{\text{mix}}(\kappa) \approx \frac{1}{\mu\, \varepsilon_h\, w_{\text{low}}(\kappa)\, \Delta t}$$
+$$
+\tau_{\text{mix}}(\kappa) \approx \frac{1}{\mu\, \varepsilon_h\, w_{\text{low}}(\kappa)\, \Delta t}
+$$
 
 At the default $\kappa = 0.10$, $\mu = 0.50$ (accelerated test), $\varepsilon_h = 0.25$: $\tau_{\text{emp}} = 878$ steps, $\tau_{\text{theory}} = 708$ steps — relative error $\approx 19\%$, consistent with the non-uniform coupling matrix correction.
 
@@ -278,23 +332,29 @@ NECF is deliberately constructed as an **open thermodynamic system**. Three driv
 
 The Lorenz attractor $(x, y, z)$ with standard parameters $(\sigma=10,\, \rho=28,\, \beta=8/3)$ injects a spatially-distributed, deterministic chaotic phase perturbation:
 
-$$\Delta\theta_i^{\text{Lorenz}} = \varepsilon_L \cdot \frac{x(t)}{25} \cdot \sin\!\left(\frac{2\pi i}{N}\right)$$
+$$
+\Delta\theta_i^{\text{Lorenz}} = \varepsilon_L \cdot \frac{x(t)}{25} \cdot \sin\!\left(\frac{2\pi i}{N}\right), \quad \varepsilon_L = 0.05
+$$
+
+The spatial factor $\sin(2\pi i/N)$ is essential: nodes near $i = N/4$ receive a strong positive kick while nodes near $i = 3N/4$ receive an equal negative kick, physically tearing the field in half in a deterministic, aperiodic, structured manner — a far richer perturbation regime than white noise.
 
 ### 6.2 Periodic Signal
 
-A structured sinusoidal driver creates resonance opportunities:
+A structured sinusoidal driver creates resonance opportunities and modulates node amplitudes globally:
 
-$$\Delta A_i^{\text{periodic}} = \varepsilon_s \cdot \sin(2\pi f_s t)$$
+$$
+\Delta A_i^{\text{periodic}} = \varepsilon_s \cdot \sin(2\pi f_s t), \quad \varepsilon_s = 0.03,\quad f_s = 0.1
+$$
 
 ### 6.3 Poisson Phase Resets
 
-At each step, each node independently spikes with probability $\lambda_s = 0.02$, resetting its phase to a uniformly random value. This is the mechanism responsible for the **masked Lyapunov proxy** requirement: spiked nodes must be excluded from divergence estimates, or the external perturbation is misread as internal chaos.
+At each step, each node independently spikes with probability $\lambda_s = 0.02$, resetting its phase to $\mathcal{U}(0, 2\pi)$. This is the mechanism responsible for the **masked Lyapunov proxy**: a spiked node can jump from $\theta = 0.1$ to $\theta = 5.9$ in one step — a phase delta of $5.8$ radians. The raw $\|\delta\theta\|$ would explode, the rollback would trigger continuously, and all dynamics would freeze. The fix is to compute phase divergence only on nodes that were not spiked at $t$ or $t-1$:
 
-**Masked Lyapunov estimator:**
+$$
+\hat{\lambda}_1 = \frac{1}{\Delta t}\, \log\!\left(\frac{\|\delta\theta_{\sim\text{spike}}\|}{\sqrt{N_{\text{valid}}}} + 10^{-10}\right)
+$$
 
-$$\hat{\lambda}_1 = \frac{1}{T\,\Delta t}\, \log\!\left(\frac{\|\delta\theta_{[t]}\|_{\sim\text{spike}}}{\sqrt{N_{\text{valid}}}}\right)$$
-
-where $\sim\text{spike}$ denotes exclusion of nodes spiked at $t$ or $t-1$.
+where $\sim\text{spike}$ denotes exclusion of spiked nodes at both $t$ and $t-1$, and $N_{\text{valid}}$ is the number of unmasked nodes. When $N_{\text{valid}} < 2$ (edge case: near-total spike event), the estimator returns `NaN` and the step is classified `SPIKE_DOMINATED` — a transient physical event, not internal chaos. The spike mask is explicitly threaded from `environment.step()` through `field.step()` to `observer.record()` at every timestep.
 
 ---
 
@@ -352,9 +412,17 @@ Grid sweep over $\lambda \in \{0.01, 0.05, 0.10, 0.25, 0.50, 1.00\}$ and $\delta
 
 Full spectrum via continuous QR decomposition (Benettin et al., 1980), $N = 16$, $K = 0.70$:
 
-$$\lambda_1 = +0.173,\quad \lambda_2 = +0.049,\quad \lambda_3 = -0.060,\; \ldots$$
+$$
+\lambda_1 = +0.173,\quad \lambda_2 = +0.049,\quad \lambda_3 = -0.060,\; \ldots
+$$
 
-Kaplan–Yorke dimension: $D_{\text{KY}} = 4.84$, indicating a chaotic attractor with fractal dimension roughly $4.8$ in the 16-dimensional phase space. This places the system in the bounded-chaos regime — neither frozen nor explosively divergent.
+Kaplan–Yorke dimension:
+
+$$
+D_{\text{KY}} = j + \frac{\sum_{k=1}^{j} \lambda_k}{|\lambda_{j+1}|} = 4.84
+$$
+
+indicating a fractal strange attractor of dimension $\approx 4.8$ embedded in the 16-dimensional phase space. This places the system in the bounded-chaos regime — neither frozen ($\lambda_1 < 0$) nor explosively divergent ($\lambda_1 \gg 1$).
 
 ### 8.5 Epistemic Contagion Rate (T4)
 
@@ -416,9 +484,11 @@ Prigogine's theory of dissipative structures (1977) demonstrates that open therm
 
 The proto-will mechanism draws on causal entropy maximization (Klyubin, Polani & Nehaniv, 2005; Salge, Glackin & Polani, 2014), where an agent selects actions that maximize the logarithm of future state-space volume accessible under its policy. NECF's attractor selection formula:
 
-$$a^* = \arg\max_a \bigl[H_{\text{causal}}(a) - \mu\, D_{\text{identity}}(a)\bigr]$$
+$$
+a^* = \arg\max_a \bigl[H_{\text{causal}}(a) - \mu_{\text{will}}\, D_{\text{identity}}(a)\bigr]
+$$
 
-is a constrained version of this, where identity distortion acts as a regularizer on pure empowerment maximization.
+where $H_{\text{causal}}(a) = -\sum_{S'} p(S' \mid a)\log p(S' \mid a)$ is the Shannon entropy of future states reachable from attractor $a$, and $D_{\text{identity}}(a) = \frac{1}{N}\sum_i \|\mathcal{L}_{i,a} - \mathcal{L}_{i,\text{current}}\|^2$ is the structural cost of transitioning to that attractor. At $\mu_{\text{will}} = 0$: pure exploration (destructive). At $\mu_{\text{will}} \to \infty$: complete paralysis. The default $\mu_{\text{will}} = 1.0$ is a constrained empowerment maximizer — seeking influence while preserving identity.
 
 ---
 
@@ -662,7 +732,7 @@ Strogatz, S. H. (2000). From Kuramoto to Crawford: exploring the onset of synchr
 <div align="center">
 
 **Author:** [Devanik](https://github.com/Devanik21) · B.Tech ECE '26, NIT Agartala
-Samsung Convergence Software Fellowship (Grade I) · Indian Institute of Science
+Samsung  Fellowship  · Indian Institute of Science
 
 [![GitHub](https://img.shields.io/badge/GitHub-Devanik21-181717?style=flat-square&logo=github)](https://github.com/Devanik21)
 [![Twitter](https://img.shields.io/badge/Twitter-@devanik2005-1DA1F2?style=flat-square&logo=twitter&logoColor=white)](https://twitter.com/devanik2005)
