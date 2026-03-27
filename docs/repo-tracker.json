@@ -54,5 +54,13 @@
     "n_constructs": 31,
     "n_repo_constructs": 13,
     "commit_suffix": "N=31 CC=0.2000 top_pair=EternaSeq/EternaHeart J=0.7500"
+  },
+  "2026-03-27": {
+    "session_id": "IA-2026-086-T1",
+    "topic_idx": 1,
+    "slug": "harmonic_interference",
+    "n_constructs": 31,
+    "n_repo_constructs": 13,
+    "commit_suffix": "d=26 H_spec=3.9292/4.7004 resonant_pairs=241 C=1935.8bits SNR=16.5dB"
   }
 }
