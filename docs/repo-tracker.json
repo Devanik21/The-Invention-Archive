@@ -86,5 +86,13 @@
     "n_constructs": 31,
     "n_repo_constructs": 13,
     "commit_suffix": "d_HRF=26 V_d=4.6630e-04 E_cos=0.15648 E_theta=81.00deg k_JL=8656"
+  },
+  "2026-03-31": {
+    "session_id": "IA-2026-090-T5",
+    "topic_idx": 5,
+    "slug": "cross_paradigm_bridges",
+    "n_constructs": 31,
+    "n_repo_constructs": 13,
+    "commit_suffix": "B1_err=2.22e-17 B2_H=0.2767 B3_corr=0.8817 B4_ATP=2.89e+02 B5_m_min=8"
   }
 }
