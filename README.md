@@ -2,7 +2,7 @@
 
 > **A Long-Term, Hyper-Structured Archival System for Conceptual Constructs, Systems, and AI Architectures**
 
-The **Invention Archive** is designed to act as an immutable, century-spanning ledger and data repository for 21 advanced theoretical and functional frameworks. It provides strict isolation, standardized taxonomy, and an automated synchronization pipeline mapping external active repositories into static, version-controlled archival snapshots.
+The **Invention Archive** is designed to act as an immutable, century-spanning ledger and data repository for 22 advanced theoretical and functional frameworks. It provides strict isolation, standardized taxonomy, and an automated synchronization pipeline mapping external active repositories into static, version-controlled archival snapshots.
 
 The archive mandates an exceptionally strict structural paradigm to ensure data survivability, universal human-and-machine readability, and architectural coherence without relying on complex dependency chains or proprietary data structures.
 
@@ -27,7 +27,7 @@ To guarantee long-term accessibility, the archive strictly limits file formats t
 
 The root filesystem is strictly divided into functional tracking domains and isolation modules:
 
-* **`constructs/`** — The primary functional layer. Each conceptual framework or invention is isolated in a sequentially numbered directory (e.g., `001_HRF`, `013_HM`).
+* **`constructs/`** — The primary functional layer. Each conceptual framework or invention is isolated in a sequentially numbered directory (e.g., `001_HRF`, `014_RWG`).
   * **`constructs/Misc/`** — A sub-layer containing 8 auxiliary or miscellaneous frameworks structurally equivalent to the core layer.
 * **`docs/`** — System-level documentation, including `repo-tracker.json` and chronological `daily-log.md` files.
 * **`standards/`** — The operational protocols that govern the archive (`naming.md`, `structure.md`, `versioning.md`).
@@ -63,15 +63,15 @@ constructs/001_HRF/
 The Invention Archive utilizes continuous integration pipelines via GitHub Actions to systematically map and pull external codebases into their designated archival pods.
 
 perfect_sync.yml
-Domain: 13 Core Constructs (constructs/001_HRF ➔ 013_HM)
+Domain: 14 Core Constructs (constructs/001_HRF ➔ 014_RWG)
 Mechanism: Reads the exact external source_repo.md mappings, retrieves the latest .zip archives, downloads the README.md files, and injects them directly into the isolated snapshot/ layer. It additionally mirrors the README up to the construct root, preserving structural integrity.
 misc_sync.yml
 Domain: 8 Miscellaneous Constructs (constructs/Misc/001_LIM ➔ 008_DU)
 Mechanism: Operates on the same parameters but exclusively targets the auxiliary logic manifolds.
 This dual-pipeline architecture ensures that active external repositories are continuously flattened into static, immutable archival data points without human intervention.
 
-🌌 The 21 Constructs
-Core Frameworks (13)
+🌌 The 22 Constructs
+Core Frameworks (14)
 001_HRF — Harmonic-Resonance-Forest
 002_NECF — Non-Equilibrium-Cognitive-Field
 003_TSP — The-Schrodinger-Paradox
@@ -85,6 +85,7 @@ Core Frameworks (13)
 011_BA — BSHDER-Architecture
 012_GGEO — GENEVO-GENetic-EVolutionary-Organoid
 013_HM — HAG-MoE
+014_RWG — Riemannian-Wave-Geometry
 Auxiliary / Miscellaneous Frameworks (8)
 M01_LIM — Latent-Inference-Manifold
 M02_LCM — Latent-Consensus-Manifold
