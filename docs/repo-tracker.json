@@ -99,8 +99,8 @@
     "session_id": "IA-2026-091-T6",
     "topic_idx": 6,
     "slug": "spectral_encoding_capacity",
-    "n_constructs": 31,
-    "n_repo_constructs": 13,
+    "n_constructs": 32,
+    "n_repo_constructs": 14,
     "commit_suffix": "n_comp=5 SNR=24.4dB I_total=73.985bits PR=7.0 flatness=0.00551"
   }
 }
