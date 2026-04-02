@@ -1,3 +1,5 @@
+https://github.com/Devanik21/Infinite-Galactica-Dictionary
+
 <p align="center">
   <img src="https://img.shields.io/badge/Language-Python_3.11-3776AB?style=flat-square&logo=python&logoColor=white"/>
   <img src="https://img.shields.io/badge/Accelerator-NVIDIA_T4_GPU-76b900?style=flat-square&logo=nvidia&logoColor=white"/>
