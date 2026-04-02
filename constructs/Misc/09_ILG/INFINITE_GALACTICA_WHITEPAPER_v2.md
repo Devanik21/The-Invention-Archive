@@ -22,7 +22,7 @@ For any specific dataset, there exists an algorithm (or mixture of algorithms) t
 
 Existing practice responds by trying several algorithms and picking the best on a validation set. AutoML (Auto-Sklearn, TPOT, H2O) automates this with Bayesian optimization or evolutionary algorithms. Both commit to a single best pipeline — they answer the CASH problem (Combined Algorithm Selection and Hyperparameter optimization) with a point estimate:
 
-$$(A^*, \lambda^*) = \arg\max_{A \in \mathcal{A},\, \lambda \in \Lambda_A} \text{Acc}_{\text{val}}(A(\lambda), \mathcal{D})$$
+$$(A^\ast, \lambda^\ast) = \arg\max_{A \in \mathcal{A},\, \lambda \in \Lambda_A} \text{Acc}_{\text{val}}(A(\lambda), \mathcal{D})$$
 
 The Galactica Dictionary answers it with a probability distribution. For all registered $(A_i, \lambda_i)$ pairs, it computes the Boltzmann weight:
 
@@ -54,11 +54,11 @@ ranges monotonically from $H=0$ (crystallized, $T\to 0$) to $H = \log N_p$ (full
 
 This thermodynamic structure gives precise answers to questions that are otherwise heuristic in machine learning:
 
-**"How confident should we be in the best-CV algorithm?"** — The temperature encodes this. The temperature sweep finds $T^*$ where this confidence level is empirically optimal on the validation set — not imposed by heuristic but measured from data.
+**"How confident should we be in the best-CV algorithm?"** — The temperature encodes this. The temperature sweep finds $T^\ast$ where this confidence level is empirically optimal on the validation set — not imposed by heuristic but measured from data.
 
 **"How many algorithms are effectively contributing?"** — The effective number $N_{\text{eff}}(T) = 1/\sum_i w_i^2$ (inverse participation ratio) answers this. On Iris at $T=0.05$: $N_{\text{eff}} \approx 34$.
 
-**"How much information did the CV evidence provide about which algorithm to use?"** — The KL divergence from the uniform prior: $D_{\text{KL}}(w \| u) = \log N_p - H(T)$. At $T^*$, this measures how much the CV evidence has reduced uncertainty about the optimal algorithm.
+**"How much information did the CV evidence provide about which algorithm to use?"** — The KL divergence from the uniform prior: $D_{\text{KL}}(w \| u) = \log N_p - H(T)$. At $T^\ast$, this measures how much the CV evidence has reduced uncertainty about the optimal algorithm.
 
 **"What is the worst-case performance guarantee?"** — At any temperature, the dictionary cannot perform worse than $\sum_i w_i \text{Acc}_i$ — the weighted mean accuracy. At maximum liquidity ($T \to \infty$): this floor is the mean accuracy across all pages. Even with BernoulliNB at 0.3667 in the mix, its weight at $T=5$ is $1/100 = 0.01$, making its contribution negligible.
 
@@ -80,7 +80,7 @@ The **PAC-Bayes framework** (McAllester 1999) provides a generalization bound th
 
 $$\mathbb{E}_{i \sim w}[L(P_i)] \leq \mathbb{E}_{i \sim w}[\hat{L}(P_i)] + \sqrt{\frac{D_{\text{KL}}(w \| \pi) + \log(2\sqrt{m}/\delta)}{2m}}$$
 
-where $\hat{L}$ is empirical loss, $\pi = \text{Uniform}(N_p)$ is the prior, and $m = N_{\text{train}}$. This bound is minimized by the distribution $w^*$ that minimizes weighted empirical loss penalized by KL divergence from the prior — which is exactly the Boltzmann distribution. The temperature sweep finds (empirically, on a validation set) the Lagrange multiplier on the KL constraint that gives the best bias-variance trade-off in this bound. This gives the temperature a rigorous information-theoretic interpretation: $T^*$ is the concentration level at which the sample evidence is exactly sufficient to justify.
+where $\hat{L}$ is empirical loss, $\pi = \text{Uniform}(N_p)$ is the prior, and $m = N_{\text{train}}$. This bound is minimized by the distribution $w^\ast$ that minimizes weighted empirical loss penalized by KL divergence from the prior — which is exactly the Boltzmann distribution. The temperature sweep finds (empirically, on a validation set) the Lagrange multiplier on the KL constraint that gives the best bias-variance trade-off in this bound. This gives the temperature a rigorous information-theoretic interpretation: $T^\ast$ is the concentration level at which the sample evidence is exactly sufficient to justify.
 
 ---
 
@@ -106,9 +106,9 @@ The Boltzmann weighting modifies this: the weighted covariance term becomes $\su
 
 The most instructive result from the Iris run is the CV-test gap of the dominant page. QDA reg=0.1 achieves CV=0.9917 (best of all 100 pages) but test accuracy 0.9333 — worse than 7 pages at 1.0000. With only 60 samples per fold (2-fold CV on 120 training samples), the sampling error of the CV estimate is $\pm\sqrt{p(1-p)/60} \approx \pm 0.028$. The performance differences between the top 10 pages are all within this noise band. The CV ranking among the top pages is essentially noise.
 
-Crystallizing onto the CV-best page ($T \to 0$) propagates this ranking noise directly into the final prediction. The liquid blend at $T^* = 0.005$ hedges against this by distributing weight across the top 2–3 pages. Each has a different failure mode on the 30 test samples. Their combined probability output partially cancels the individual errors — the covariance-reduction benefit of the decomposition.
+Crystallizing onto the CV-best page ($T \to 0$) propagates this ranking noise directly into the final prediction. The liquid blend at $T^\ast = 0.005$ hedges against this by distributing weight across the top 2–3 pages. Each has a different failure mode on the 30 test samples. Their combined probability output partially cancels the individual errors — the covariance-reduction benefit of the decomposition.
 
-The flat plateau from $T=0.005$ to $T=5.0$ shows that on Iris, all well-performing pages largely agree on the 30 test predictions. The critical conclusion: $T^* \neq 0$. The dictionary should not crystallize, even when CV scores appear decisive, because on small datasets no CV score is statistically decisive.
+The flat plateau from $T=0.005$ to $T=5.0$ shows that on Iris, all well-performing pages largely agree on the 30 test predictions. The critical conclusion: $T^\ast \neq 0$. The dictionary should not crystallize, even when CV scores appear decisive, because on small datasets no CV score is statistically decisive.
 
 A quantitative confirmation: at $T=0.001$ (essentially crystallized), 80–90% of weight concentrates on QDA reg=0.1 (test accuracy 0.9333). At $T=0.005$ ($N_{\text{eff}} \approx 2.14$), roughly equal weight goes to QDA reg=0.1 and LDA (svd) (test accuracy 1.0000). The blend of 0.9333 and 1.0000 with approximately equal weights gives $\approx 0.9667$ — the observed result. The transition from crystallized to optimal is literally the averaging of one page's CV-best answer with its nearest competitor's superior test answer.
 
@@ -331,17 +331,17 @@ The Open Meta-Learning initiative (Vanschoren et al., OpenML) has accumulated al
  but this is a worst-case bound. The typical-case optimal temperature likely depends on properties of the CV score distribution that are not captured by the worst-case bound.
 
 ### Theoretical Sample Complexity
-To ensure that the selected temperature $\hat{T}$ from a set of $N_p$ candidates achieves an error no more than $\epsilon$ away from the true $T^*$ with probability $1-\delta$, the required number of validation samples is:
+To ensure that the selected temperature $\hat{T}$ from a set of $N_p$ candidates achieves an error no more than $\epsilon$ away from the true $T^\ast$ with probability $1-\delta$, the required number of validation samples is:
 $$N_{\text{val}} \geq \frac{C}{\epsilon^2} \ln\left(\frac{N_p}{\delta}\right)$$
 where $C$ is a constant related to the range of the loss function (e.g., NLL). This shows that the complexity is **logarithmic** in the number of sweep points ($N_p$) but **inverse-quadratic** in the desired precision ($\epsilon$).
 
 ### Minimax vs. Typical-Case
 * **Minimax-Optimal:** Without specific distribution knowledge, the minimax-optimal $T$ is the one that minimizes the maximum possible ECE (Expected Calibration Error) or NLL over all valid score distributions. This often aligns with the conservative **PAC-Bayes** scaling to ensure robustness against adversarial or heavy-tailed logit distributions.
-* **Typical-Case:** In practice, $T^*$ is driven by the **second moment** (variance) of the logit distribution. For overconfident deep learning models, $T^*$ is typically solved by finding the point where the average predicted confidence matches the empirical accuracy on $N_{\text{val}}$.
+* **Typical-Case:** In practice, $T^\ast$ is driven by the **second moment** (variance) of the logit distribution. For overconfident deep learning models, $T^\ast$ is typically solved by finding the point where the average predicted confidence matches the empirical accuracy on $N_{\text{val}}$.
 
 
 
-**What is the optimal page registration strategy for a given compute budget?** If we can evaluate $B$ page-fold pairs total, how should we allocate between breadth (many pages, fewer folds each) versus depth (fewer pages, more reliable CV scores)? This is a sequential experimental design problem — a variant of the explore-exploit trade-off from bandit theory. The dictionary with highest effective $N_{\text{eff}}(T^*)$ for a given $B$ budget is the best allocation, but finding that allocation without evaluating all options requires a meta-strategy.
+**What is the optimal page registration strategy for a given compute budget?** If we can evaluate $B$ page-fold pairs total, how should we allocate between breadth (many pages, fewer folds each) versus depth (fewer pages, more reliable CV scores)? This is a sequential experimental design problem — a variant of the explore-exploit trade-off from bandit theory. The dictionary with highest effective $N_{\text{eff}}(T^\ast)$ for a given $B$ budget is the best allocation, but finding that allocation without evaluating all options requires a meta-strategy.
 
 **Does the Boltzmann mixture converge to BMA?** As $N_p \to \infty$ with pages drawn from an increasingly dense covering of algorithm space, does $\sum_i w_i P_i(\mathbf{q})$ converge to the true BMA $\int P(y|\mathbf{q}, M) p(M|\mathcal{D}) dM$? What coverage conditions on the page distribution are needed? This is a functional approximation theory question — analogous to asking whether a quadrature rule converges to the true integral.
 
@@ -371,4 +371,4 @@ These are engineering gaps, not theoretical failures. The statistical mechanics 
 
 *End of White Paper.*
 
-*Dataset: Iris (OpenML, N=150). Platform: Python 3.11, NVIDIA T4 (detection only). Dictionary: 100 pages, 18 families. CV-best page: QDA reg=0.1 (CV=0.9917, test=0.9333). Test-best pages: 7 pages at 1.0000. Liquid Dictionary at T*=0.005: 0.9667. Authors: Devanik Debnath + Xylia.*
+*Dataset: Iris (OpenML, N=150). Platform: Python 3.11, NVIDIA T4 (detection only). Dictionary: 100 pages, 18 families. CV-best page: QDA reg=0.1 (CV=0.9917, test=0.9333). Test-best pages: 7 pages at 1.0000. Liquid Dictionary at $T^\ast=0.005$: 0.9667. Authors: Devanik Debnath + Xylia.*
