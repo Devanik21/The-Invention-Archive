@@ -1,3 +1,5 @@
+https://github.com/Devanik21/Infinite-Galactica-Dictionary
+
 <p align="center">
   <img src="https://img.shields.io/badge/Language-Python_3.11-3776AB?style=flat-square&logo=python&logoColor=white"/>
   <img src="https://img.shields.io/badge/Accelerator-NVIDIA_T4_GPU-76b900?style=flat-square&logo=nvidia&logoColor=white"/>
@@ -85,7 +87,7 @@ The **Infinite Galactica Dictionary** is a meta-learning classification framewor
 
 The core aggregation is:
 
-$$\hat{\mathbf{p}}(\mathbf{q}) = \sum_{i=1}^{N_p} w_i(T) \cdot P_i.\texttt{predict\_proba}(\mathbf{q}), \qquad w_i(T) = \frac{\exp((\tilde{s}_i - \tilde{s}_{\max})/T)}{\sum_j \exp((\tilde{s}_j - \tilde{s}_{\max})/T)}$$
+$$\hat{\mathbf{p}}(\mathbf{q}) = \sum_{i=1}^{N_p} w_i(T) \cdot P_i.\mathtt{predict\_proba}(\mathbf{q}), \qquad w_i(T) = \frac{\exp((\tilde{s}_i - \tilde{s}_{\max})/T)}{\sum_j \exp((\tilde{s}_j - \tilde{s}_{\max})/T)}$$
 
 where $\tilde{s}_i \in [0,1]$ is the min-max-normalized cross-validated accuracy of page $i$ and $T > 0$ is the temperature. The log-sum-exp shift $(\tilde{s}_i - \tilde{s}_{\max})$ prevents numerical overflow at any finite $T$, guaranteeing arithmetic stability across the full temperature range.
 
@@ -109,13 +111,13 @@ The NFL theorem also provides a constructive map: if no algorithm is universally
 
 ### 2.2 The CASH Problem
 
-The **Combined Algorithm Selection and Hyperparameter optimization** (CASH) problem, formalized by Thornton et al. (2013) and Auto-Sklearn, asks: given a dataset $\mathcal{D}$, find the pipeline $(A^*, \lambda^*)$ that maximizes validation performance:
+The **Combined Algorithm Selection and Hyperparameter optimization** (CASH) problem, formalized by Thornton et al. (2013) and Auto-Sklearn, asks: given a dataset $\mathcal{D}$, find the pipeline $(A^\ast, \lambda^\ast)$ that maximizes validation performance:
 
-$$(A^*, \lambda^*) = \arg\max_{A \in \mathcal{A},\, \lambda \in \Lambda_A} \text{Acc}_{\text{val}}(A(\lambda), \mathcal{D})$$
+$$(A^\ast, \lambda^\ast) = \arg\max_{A \in \mathcal{A},\, \lambda \in \Lambda_A} \text{Acc}_{\text{val}}(A(\lambda), \mathcal{D})$$
 
 where $\mathcal{A}$ is the algorithm space and $\Lambda_A$ is the hyperparameter space of algorithm $A$. AutoML solves CASH by searching this space with Bayesian optimization or evolutionary methods, returning a single optimal pipeline.
 
-The Infinite Dictionary reframes CASH: rather than finding the single best $(A^*, \lambda^*)$, it evaluates all $(A_i, \lambda_i)$ pairs and computes a probability distribution over them. Each **page** is a fixed $(A_i, \lambda_i)$ tuple. The CASH answer is not a point estimate but a Boltzmann distribution. This is epistemically more honest: the data rarely provides evidence strong enough to eliminate all but one algorithm; a distribution over algorithms captures the residual uncertainty.
+The Infinite Dictionary reframes CASH: rather than finding the single best $(A^\ast, \lambda^\ast)$, it evaluates all $(A_i, \lambda_i)$ pairs and computes a probability distribution over them. Each **page** is a fixed $(A_i, \lambda_i)$ tuple. The CASH answer is not a point estimate but a Boltzmann distribution. This is epistemically more honest: the data rarely provides evidence strong enough to eliminate all but one algorithm; a distribution over algorithms captures the residual uncertainty.
 
 The temperature $T$ encodes how much certainty the CV evidence provides: low $T$ means the CV ranking is trusted and the distribution concentrates; high $T$ means the CV ranking is too noisy to justify concentration and the distribution spreads.
 
@@ -129,7 +131,7 @@ where $\bar{\sigma}^2 = \frac{1}{M}\sum_i \sigma_i^2$ is the mean page variance 
 
 This is the mathematical justification for the Galactica Dictionary's algorithm family diversity: pages from different families (linear models, SVMs, tree-based methods, GPs, neural networks) capture structurally different inductive biases and therefore produce *decorrelated* prediction errors. When a linear model misclassifies a query because the decision boundary is curved, the SVM with an RBF kernel may classify it correctly. When the SVM fails on a high-dimensional sparse region, the Naive Bayes page may succeed. The Boltzmann blend aggregates these decorrelated views.
 
-The temperature $T$ modulates the covariance term indirectly: low $T$ concentrates weight on few pages, recovering near-single-model variance; high $T$ distributes weight, activating the covariance-reduction benefit of diversity. The optimal $T^*$ balances bias (from including poor-performing pages) against variance reduction (from including diverse pages).
+The temperature $T$ modulates the covariance term indirectly: low $T$ concentrates weight on few pages, recovering near-single-model variance; high $T$ distributes weight, activating the covariance-reduction benefit of diversity. The optimal $T^\ast$ balances bias (from including poor-performing pages) against variance reduction (from including diverse pages).
 
 ---
 
@@ -194,7 +196,7 @@ Define the **effective number of pages** (inverse participation ratio):
 
 $$N_{\text{eff}}(T) = \frac{1}{\sum_i w_i(T)^2} \in [1, N_p]$$
 
-At $T \to 0$: $N_{\text{eff}} \to 1$ (one page dominates). At $T \to \infty$: $N_{\text{eff}} \to N_p$ (all pages equally weighted). The temperature sweep finds $T^*$ where $N_{\text{eff}}(T^*)$ gives the optimal bias-variance trade-off on the validation set.
+At $T \to 0$: $N_{\text{eff}} \to 1$ (one page dominates). At $T \to \infty$: $N_{\text{eff}} \to N_p$ (all pages equally weighted). The temperature sweep finds $T^\ast$ where $N_{\text{eff}}(T^\ast)$ gives the optimal bias-variance trade-off on the validation set.
 
 For the Iris run at $T = 0.05$: $N_{\text{eff}} \approx 34$ (34 effective pages contributing, despite having 100 total). The dominant page (QDA reg=0.1, $w = 0.0293$) receives $2.93\times$ the uniform weight, while the 3 lowest-performing pages (BernoulliNB, ComplementNB, Ridge) have $w < 0.001$ and contribute negligibly.
 
@@ -202,7 +204,7 @@ For the Iris run at $T = 0.05$: $N_{\text{eff}} \approx 34$ (34 effective pages 
 
 The blended probability at query $\mathbf{q}$:
 
-$$\hat{\mathbf{p}}(\mathbf{q}) = \sum_{i=1}^{N_p} w_i \cdot P_i.\texttt{predict\_proba}(\mathbf{q}) \in \Delta^{C-1}$$
+$$\hat{\mathbf{p}}(\mathbf{q}) = \sum_{i=1}^{N_p} w_i \cdot P_i.\mathtt{predict\_proba}(\mathbf{q}) \in \Delta^{C-1}$$
 
 where $\Delta^{C-1}$ is the $(C-1)$-simplex (probability vectors for $C$ classes). The sum of probability vectors weighted by $\{w_i\}$ is itself a valid probability vector (convex combination of simplicial points remains in the simplex).
 
@@ -233,11 +235,11 @@ The argmax of the blended probability is the **Bayes-optimal decision** under th
 
 ### 3.5 The Dominant Page and Weight Concentration
 
-The dominant page $P^* = \arg\max_i w_i$ is always the CV-best page (weight is monotone in score). The weight concentration index:
+The dominant page $P^\ast = \arg\max_i w_i$ is always the CV-best page (weight is monotone in score). The weight concentration index:
 
 $$\rho(T) = \frac{w_{\max}(T)}{1/N_p} = N_p \cdot w_{\max}(T) \in [1, N_p]$$
 
-measures how much the dominant page is amplified relative to the uniform baseline. At the Iris run's $T=0.05$: $\rho = 100 \times 0.0293 = 2.93$. At $T^*=0.005$: the dominant page receives approximately $e^{1/0.005}/Z \approx e^{200}/Z$ — effectively all weight, since $\Delta_i/T$ for all non-dominant pages is very large.
+measures how much the dominant page is amplified relative to the uniform baseline. At the Iris run's $T=0.05$: $\rho = 100 \times 0.0293 = 2.93$. At $T^\ast=0.005$: the dominant page receives approximately $e^{1/0.005}/Z \approx e^{200}/Z$ — effectively all weight, since $\Delta_i/T$ for all non-dominant pages is very large.
 
 **Important caveat:** The CV-best page is not necessarily the test-best page. On Iris, 7 pages achieve test accuracy = 1.0 while the CV-best page (QDA reg=0.1, CV=0.9917) achieves only test accuracy = 0.9333. This CV-test gap explains why full crystallization ($T \to 0$) is suboptimal: the CV ranking is a noisy estimate of generalization performance, especially with 2-fold CV on only 120 training samples.
 
@@ -617,7 +619,7 @@ The Dictionary is also uniquely **extensible to physics-informed architectures**
 | $T$ | $N_{\text{eff}}$ | Test Accuracy | Notes |
 |-----|-----------------|--------------|-------|
 | 0.001 | 1.00 | 0.9333 | Crystallized → CV-best page (QDA reg=0.1) |
-| 0.005 | 2.14 | **0.9667** | Optimal $T^*$ |
+| 0.005 | 2.14 | **0.9667** | Optimal $T^\ast$ |
 | 0.01 | 3.52 | 0.9667 | |
 | 0.05 | 34.1 | 0.9667 | Working temperature |
 | 0.10 | 54.7 | 0.9667 | |
@@ -702,7 +704,7 @@ Current v1.0 uses scikit-learn (CPU, parallelized) for all model fitting and inf
 | `temperature` | 0.05 | $(0, \infty)$ | Boltzmann fluidity. $T \to 0$: crystallize. $T \to \infty$: uniform. |
 | `CV_FOLDS` (k) | 2 | 2–10 | Trade-off between CV reliability and training set size per fold. |
 | `test_size` | 0.20 | 0.10–0.30 | Held-out test fraction. Larger → more reliable accuracy estimate. |
-| `temps` (sweep) | 8-point log grid | log-spaced, $[10^{-3}, 5]$ | Resolution of $T^*$ search. |
+| `temps` (sweep) | 8-point log grid | log-spaced, $[10^{-3}, 5]$ | Resolution of $T^\ast$ search. |
 | `random_state` | 42 | any int | Controls all page random seeds and CV fold splits simultaneously. |
 | `N_p` | 100 | $\infty$ (theoretical) | Number of registered pages. |
 | `max_samples` | (page-specific) | — | Bagging fraction for Bagging pages (fixed at 1.0 for non-Bagging). |
