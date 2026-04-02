@@ -144,7 +144,7 @@ As $T \to \infty$: $\Delta_i/T \to 0$ for all $i$, so $\exp(\Delta_i/T) \to 1$, 
 
 For finite intermediate $T$: The weights follow a **Boltzmann distribution** over algorithm performance. Pages with $\Delta_i$ small in magnitude (close to the best) receive substantial weight; pages with large $|\Delta_i|$ (poor performance) are exponentially suppressed. The decay rate is controlled by $1/T$.
 
-Empirical result from the Iris run: at $T = 0.05$ (used for the main fit), the dominant page (QDA reg=0.1, CV=0.9917) receives weight $w = 0.0293$ — approximately $2.93\%$ of total weight. This seems small but represents a concentration of approximately $2.93\%$ relative to a uniform baseline of $1\% = 1/100$, a $3\times$ amplification. At this temperature the system is fluid — many pages contribute — rather than crystallized. The temperature sweep found $T^* = 0.005$ as optimal for Iris on the held-out test set.
+Empirical result from the Iris run: at $T = 0.05$ (used for the main fit), the dominant page (QDA reg=0.1, CV=0.9917) receives weight $w = 0.0293$ — approximately $2.93\%$ of total weight. This seems small but represents a concentration of approximately $2.93\%$ relative to a uniform baseline of $1\% = 1/100$, a $3\times$ amplification. At this temperature the system is fluid — many pages contribute — rather than crystallized. The temperature sweep found $T^\ast = 0.005$ as optimal for Iris on the held-out test set.
 
 ### 4.4 Blended Probability Aggregation
 
@@ -152,7 +152,7 @@ Given weights $\{w_i\}$ and fitted pipelines $\{P_i\}$, the Liquid Dictionary pr
 
 $$\hat{\mathbf{p}}(\mathbf{q}) = \sum_{i=1}^{N_p} w_i \cdot \mathbf{p}_i(\mathbf{q})$$
 
-where $\mathbf{p}_i(\mathbf{q}) = P_i.\texttt{predict\_proba}(\mathbf{q}) \in \Delta^{C-1}$ is the probability simplex output of page $i$ for the $C$ classes. The final prediction is:
+where $\mathbf{p}_i(\mathbf{q}) = P_i.\mathtt{predict\_proba}(\mathbf{q}) \in \Delta^{C-1}$ is the probability simplex output of page $i$ for the $C$ classes. The final prediction is:
 
 $$\hat{y}(\mathbf{q}) = \arg\max_{c \in \{1,\ldots,C\}} \hat{p}_c(\mathbf{q})$$
 
@@ -174,7 +174,7 @@ where $M_i$ is model $i$ and $p(M_i | \mathcal{D})$ is the posterior model proba
 
 ### 4.5 The Dominant Page and Weight Concentration
 
-The **dominant page** is defined as $P^* = \arg\max_i w_i$ — the page receiving the highest Boltzmann weight. This is always the page with the highest CV accuracy, since the weights are a monotone increasing function of $s_i$ for any fixed $T > 0$. The dominant page can be read off directly:
+The **dominant page** is defined as $P^\ast = \arg\max_i w_i$ — the page receiving the highest Boltzmann weight. This is always the page with the highest CV accuracy, since the weights are a monotone increasing function of $s_i$ for any fixed $T > 0$. The dominant page can be read off directly:
 
 ```python
 @property
@@ -186,7 +186,7 @@ The weight concentration ratio $\rho = w_{\max} / (1/N_p)$ measures how much the
 
 ### 4.6 Temperature Sweep and Optimal T Selection
 
-The optimal temperature $T^*$ is found by evaluating the Liquid Dictionary's test accuracy over a logarithmically-spaced grid of temperatures using the **reweight** method, which recomputes Softmax weights without refitting any model:
+The optimal temperature $T^\ast$ is found by evaluating the Liquid Dictionary's test accuracy over a logarithmically-spaced grid of temperatures using the **reweight** method, which recomputes Softmax weights without refitting any model:
 
 ```python
 temps = [0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0, 5.0]
@@ -204,7 +204,7 @@ T_star = temps[best_T_idx]
 The `reweight` method is $O(N_p)$ (only the weight vector is updated) while re-fitting would be $O(N_p \cdot N_{\text{train}})$. This makes the sweep computationally free given already-fitted pages — a key design choice that enables dense temperature grids.
 
 **On Iris**, the sweep found:
-- $T^* = 0.005$, accuracy $= 0.9667$
+- $T^\ast = 0.005$, accuracy $= 0.9667$
 - At $T=0.001$ (crystallized): accuracy $= 0.9333$ — note this is *lower* than the best single model (1.0000 for several pages), because the crystallized dictionary collapses to whichever page dominates the CV score (QDA reg=0.1, CV=0.9917), which does not achieve perfect test accuracy
 - At $T=5.0$ (fully liquid): accuracy $= 0.9667$ — the uniform average performs identically to the best temperature here, suggesting the Iris dataset is sufficiently regular that all good algorithms agree on the same predictions
 
