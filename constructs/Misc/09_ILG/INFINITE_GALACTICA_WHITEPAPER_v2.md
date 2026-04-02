@@ -297,7 +297,7 @@ Beyond the families discussed above, there is a class of algorithm that does not
 
 **Neural architecture search (NAS) classifiers.** DARTS, ENAS, and related NAS algorithms discover neural network architectures that outperform hand-designed ones on specific datasets. Each NAS-discovered architecture is a page. The dictionary would automatically identify which NAS architectures perform best on the given data without the human needing to know anything about neural architecture design.
 
-**Ensemble of discovered algorithms.** The generative dictionary — the eventual v$\infty$ — would use the Boltzmann evidence from each dataset to guide a generative model of algorithm pipelines, proposing novel pages that exploit the structure of the high-weight region of algorithm space. This closes a deep loop: the dictionary identifies which algorithm types work best; a generator proposes new variants in those regions; the new variants are evaluated; the weights update. This is an evolutionary algorithm operating over algorithm space rather than over data, guided by the Boltzmann posterior from each dataset. Each iteration of this process adds pages that are specifically adapted to the current dataset's structure — a form of on-the-fly algorithm design.
+**Ensemble of discovered algorithms.** The generative dictionary — the eventual $v_{\infty}$ — would use the Boltzmann evidence from each dataset to guide a generative model of algorithm pipelines, proposing novel pages that exploit the structure of the high-weight region of algorithm space. This closes a deep loop: the dictionary identifies which algorithm types work best; a generator proposes new variants in those regions; the new variants are evaluated; the weights update. This is an evolutionary algorithm operating over algorithm space rather than over data, guided by the Boltzmann posterior from each dataset. Each iteration of this process adds pages that are specifically adapted to the current dataset's structure — a form of on-the-fly algorithm design.
 
 ---
 
@@ -327,7 +327,19 @@ The Open Meta-Learning initiative (Vanschoren et al., OpenML) has accumulated al
 
 ## XI. Open Research Questions
 
-**What is the sample complexity of optimal temperature selection?** The temperature sweep uses a validation set. How many validation samples are needed to reliably identify $T^*$ for a given $N_p$? Is there a minimax-optimal temperature given only $N_{\text{val}}$ samples and $N_p$ pages? The PAC-Bayes bound gives one answer: $T^* \sim \sqrt{m/D_{\text{KL}}}$, but this is a worst-case bound. The typical-case optimal temperature likely depends on properties of the CV score distribution that are not captured by the worst-case bound.
+**What is the sample complexity of optimal temperature selection?** The temperature sweep uses a validation set. How many validation samples are needed to reliably identify $T^\ast$ for a given $N_p$? Is there a minimax-optimal temperature given only $N_{\text{val}}$ samples and $N_p$ pages? The PAC-Bayes bound gives one answer: $T^\ast \sim \sqrt{m/D_{\text{KL}}}$,
+ but this is a worst-case bound. The typical-case optimal temperature likely depends on properties of the CV score distribution that are not captured by the worst-case bound.
+
+### Theoretical Sample Complexity
+To ensure that the selected temperature $\hat{T}$ from a set of $N_p$ candidates achieves an error no more than $\epsilon$ away from the true $T^*$ with probability $1-\delta$, the required number of validation samples is:
+$$N_{\text{val}} \geq \frac{C}{\epsilon^2} \ln\left(\frac{N_p}{\delta}\right)$$
+where $C$ is a constant related to the range of the loss function (e.g., NLL). This shows that the complexity is **logarithmic** in the number of sweep points ($N_p$) but **inverse-quadratic** in the desired precision ($\epsilon$).
+
+### Minimax vs. Typical-Case
+* **Minimax-Optimal:** Without specific distribution knowledge, the minimax-optimal $T$ is the one that minimizes the maximum possible ECE (Expected Calibration Error) or NLL over all valid score distributions. This often aligns with the conservative **PAC-Bayes** scaling to ensure robustness against adversarial or heavy-tailed logit distributions.
+* **Typical-Case:** In practice, $T^*$ is driven by the **second moment** (variance) of the logit distribution. For overconfident deep learning models, $T^*$ is typically solved by finding the point where the average predicted confidence matches the empirical accuracy on $N_{\text{val}}$.
+
+
 
 **What is the optimal page registration strategy for a given compute budget?** If we can evaluate $B$ page-fold pairs total, how should we allocate between breadth (many pages, fewer folds each) versus depth (fewer pages, more reliable CV scores)? This is a sequential experimental design problem — a variant of the explore-exploit trade-off from bandit theory. The dictionary with highest effective $N_{\text{eff}}(T^*)$ for a given $B$ budget is the best allocation, but finding that allocation without evaluating all options requires a meta-strategy.
 
