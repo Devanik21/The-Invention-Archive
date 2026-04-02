@@ -14,7 +14,7 @@ https://github.com/Devanik21/Riemannian-Wave-Geometry
   <img src="https://img.shields.io/badge/Authors-Devanik_Debnath_%7C_Xylia-black?style=flat-square&logo=github"/>
 </p>
 
-> *Two novel GPU-accelerated classifiers — RWC and GWL — that treat machine learning as a problem of wave physics on a Riemannian manifold. Classification is performed not by learning a decision boundary, but by measuring quantum-mechanical resonance energies on a continuously evolving geometric surface sculpted by discrete Ricci flow. Across 14 iterative milestones, five distinct architectural generations are explored — with the **GWL Polychromatic Forest (V13, 93.46% accuracy)** representing the project's accuracy peak, and the V14 generation (SCWH, AQGL, MFT-HRF) constituting a parallel architectural exploration — a +25.99 percentage-point absolute gain from the 67.46% baseline, all on a single NVIDIA T4 GPU.*
+> *Two novel GPU-accelerated classifiers — RWC and GWL — that treat machine learning as a problem of wave physics on a Riemannian manifold. Classification is performed not by learning a decision boundary, but by measuring quantum-mechanical resonance energies on a continuously evolving geometric surface sculpted by discrete Ricci flow. Across 14 iterative milestones, five distinct architectural generations are explored — with the **GWL Polychromatic Forest (V13, 93.46% accuracy)** representing the project's accuracy peak, and the V14 generation (SCWH, AQGL, MFT-HRF) constituting a parallel architectural exploration — a +26.00 percentage-point absolute gain from the 67.46% baseline, all on a single NVIDIA T4 GPU.*
 
 ---
 
@@ -84,7 +84,7 @@ The project then explores five architectural generations beyond this foundation:
 - **V13.C MFT-HRF** — Multi-Frequency Tensor HRF with a fully vectorized 50-frequency GPU tensor
 - **V14 Dynamic Adaptive Manifold** — the final architecture unifying sparse eigensolver, temporal splicing, phase holography, asymmetric gravity warping, extreme spectral gating, and dual-axis polychromatic forests into three distinct classifiers (SCWH, AQGL, MFTHRF) under a generic `PolychromaticForest` wrapper
 
-Evaluated on the EEG Eye State dataset (OpenML ID 1471, N = 14,980), the **GWL Polychromatic Forest (V13)** achieves **93.46% test accuracy** — rising from a 67.46% baseline, a **+25.99 percentage-point absolute gain** across 14 documented milestones. The V14 generation (SCWH: 93.02%, AQGL: 92.52%, MFT-HRF: 92.96%) constitutes a parallel architectural exploration introducing sparse eigensolvers, temporal phase coupling, asymmetric gravity warping, and multi-frequency HRF tensors.
+Evaluated on the EEG Eye State dataset (OpenML ID 1471, N = 14,980), the **GWL Polychromatic Forest (V13)** achieves **93.46% test accuracy** — rising from a 67.46% baseline, a **+26.00 percentage-point absolute gain** across 14 documented milestones. The V14 generation (SCWH: 93.02%, AQGL: 92.52%, MFT-HRF: 92.96%) constitutes a parallel architectural exploration introducing sparse eigensolvers, temporal phase coupling, asymmetric gravity warping, and multi-frequency HRF tensors.
 
 ---
 
@@ -642,7 +642,7 @@ Note: V14 architectures represent a parallel exploration of sparse, temporal, an
 
 | Metric | Value |
 |--------|-------|
-| Absolute gain: baseline → GWL V13 polychromatic | **+25.99 pp** (67.46% → 93.46%) |
+| Absolute gain: baseline → GWL V13 polychromatic | **+26.00 pp** (67.46% → 93.46%) |
 | Absolute gain: baseline → RWC V13 polychromatic | +25.20 pp (67.46% → 92.66%) |
 | Largest single-step gain | V1→V2 GWL: +22.09 pp (energy function fix) |
 | HRF contribution (V4→V5, GWL) | +2.30 pp |
@@ -799,8 +799,8 @@ Note: V14 architectures represent a parallel exploration of sparse, temporal, an
 
 ```bash
 # Clone the repository
-git clone https://github.com/Devanik21/RWC-GWL-Manifold.git
-cd RWC-GWL-Manifold
+git clone https://github.com/Devanik21/Riemannian-Wave-Geometry.git
+cd Riemannian-Wave-Geometry
 
 # Create conda environment
 conda create -n rwc-gwl python=3.11 -y
