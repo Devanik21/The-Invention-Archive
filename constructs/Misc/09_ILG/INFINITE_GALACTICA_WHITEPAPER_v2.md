@@ -371,4 +371,5 @@ These are engineering gaps, not theoretical failures. The statistical mechanics 
 
 *End of White Paper.*
 
-*Dataset: Iris (OpenML, N=150). Platform: Python 3.11, NVIDIA T4 (detection only). Dictionary: 100 pages, 18 families. CV-best page: QDA reg=0.1 (CV=0.9917, test=0.9333). Test-best pages: 7 pages at 1.0000. Liquid Dictionary at $T^\ast=0.005$: 0.9667. Authors: Devanik Debnath + Xylia.*
+*Dataset: Iris (OpenML, N=150). Platform: Python 3.11, NVIDIA T4 (detection only). Dictionary: 100 pages, 18 families. CV-best page: QDA reg=0.1 (CV=0.9917, test=0.9333). Test-best pages: 7 pages at 1.0000. Liquid Dictionary at $`T^\ast=0.005`$
+: 0.9667. Authors: Devanik Debnath + Xylia.*
