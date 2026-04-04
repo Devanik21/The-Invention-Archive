@@ -1295,7 +1295,17 @@ jobs:
           git config user.name  "Devanik21"
           git config user.email "devanik2005@gmail.com"
 
-          git add docs/
+          echo "Pruning old session files..."
+
+          find docs -type f \( -name "*session*.md" -o -name "session*.md" -o -path "docs/sessions/*.md" \) -printf '%T@ %p\n' \
+          | sort -nr \
+          | awk 'NR>7 {print $2}' \
+          | xargs -r rm -f --
+
+          echo "Remaining session files:"
+          find docs -type f \( -name "*session*.md" -o -name "session*.md" -o -path "docs/sessions/*.md" \) | sort
+
+          git add -A docs/
 
           if git diff --staged --quiet; then
             echo "[Archive] Nothing to commit — session already recorded today."
