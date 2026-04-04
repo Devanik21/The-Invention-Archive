@@ -1315,4 +1315,4 @@ jobs:
           git commit -F archive_commit_msg.txt
           git push origin HEAD:main
 
-          find docs -type f \( -name "*session*.md" -o -name "session*.md" -o -path "docs/sessions/*.md" \) | wc -l
+    #  find docs -type f \( -name "*session*.md" -o -name "session*.md" -o -path "docs/sessions/*.md" \) | wc -l
