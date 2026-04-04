@@ -1292,8 +1292,8 @@ jobs:
 
       - name: Commit and push
         run: |
-          git config user.name  "InventionArchive-ResearchLog"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name  "Devanik21"
+          git config user.email "devanik2005@gmail.com"
 
           git add docs/
 
@@ -1303,4 +1303,4 @@ jobs:
           fi
 
           git commit -F archive_commit_msg.txt
-          git push origin HEAD
+          git push origin HEAD:main
