@@ -174,5 +174,13 @@
     "n_constructs": 32,
     "n_repo_constructs": 14,
     "commit_suffix": "d=26 H_spec=3.9292/4.7004 resonant_pairs=241 C=1938.9bits SNR=16.5dB"
+  },
+  "2026-04-11": {
+    "session_id": "IA-2026-101-T2",
+    "topic_idx": 2,
+    "slug": "genomic_information_theory",
+    "n_constructs": 32,
+    "n_repo_constructs": 14,
+    "commit_suffix": "H_DNA=1.97650bpb H_telomere=4941.3bits E_reprog=1.466e-17J n_ATP=2.89e+02"
   }
 }
