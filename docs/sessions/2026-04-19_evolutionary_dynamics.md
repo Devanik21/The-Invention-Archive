@@ -1,15 +1,15 @@
 --
-session_id: IA-2026-102-T3
-date: 2026-04-12
+session_id: IA-2026-109-T3
+date: 2026-04-19
 topic: Evolutionary Dynamics
-seed: 20260412
+seed: 20260419
 N_pop: 200
 N_gen: 120
 ---
 
-# Invention Archive — Daily Session 2026-04-12
+# Invention Archive — Daily Session 2026-04-19
 
-**Session ID:** `IA-2026-102-T3`
+**Session ID:** `IA-2026-109-T3`
 **Topic:** Evolutionary Dynamics and Dual-State Stability: Fisher's Fundamental Theorem and Eigen Error Threshold
 
 ---
@@ -34,14 +34,14 @@ $d = 8$-dimensional genome, $\mu = 0.01$, $\sigma_{\rm mut} = 0.1$):
 
 | Metric | Value |
 |---|---|
-| Initial $\bar{W}$ | 0.476776 |
-| Final $\bar{W}$ | 0.999494 |
-| Fitness gain | **+109.64%** |
-| Fisher regression slope | 2.4926 |
-| $R^2$ (Fisher verification) | **0.9364** |
-| $p$-value | 1.846e-72 |
+| Initial $\bar{W}$ | 0.433002 |
+| Final $\bar{W}$ | 0.985277 |
+| Fitness gain | **+127.55%** |
+| Fisher regression slope | 1.9023 |
+| $R^2$ (Fisher verification) | **0.8139** |
+| $p$-value | 6.577e-45 |
 
-The $R^2 = 0.9364$ confirms Fisher's theorem to high accuracy in
+The $R^2 = 0.8139$ confirms Fisher's theorem to high accuracy in
 this simulation: variance predicts gain.
 
 ---
@@ -49,10 +49,10 @@ this simulation: variance predicts gain.
 ## 3. Eigen's Error Threshold
 
 For a population with a master sequence of superiority
-$\sigma = 1.7656$ (fitness ratio master/average), the critical
+$\sigma = 2.2030$ (fitness ratio master/average), the critical
 mutation rate above which the master sequence is lost is:
 
-$$\mu_c = 1 - \frac{1}{\sigma} = 1 - \frac{1}{1.7656} = 0.43363$$
+$$\mu_c = 1 - \frac{1}{\sigma} = 1 - \frac{1}{2.2030} = 0.54607$$
 
 Current mutation rate $\mu = 0.01$
 {'$< \mu_c$: population maintains a coherent master sequence (quasispecies below error threshold).' if mu_rate < mu_c else '$> \mu_c$: error catastrophe regime — master sequence lost to mutational load.'}
@@ -63,19 +63,19 @@ Current mutation rate $\mu = 0.01$
 
 The BSHDER architecture maintains two weight populations:
 - **Protected weights** $W_p$: low-variance, identity-preserving
-  ($\sigma_p \approx 0.0560$)
+  ($\sigma_p \approx 0.0573$)
 - **Fragile weights** $W_f$: high-variance, exploratory
-  ($\sigma_f \approx 0.4257$)
+  ($\sigma_f \approx 0.3664$)
 
 The information differential between the two populations:
 
 $$\Delta H = \log_2 \frac{\mathrm{Var}(W_f)}{\mathrm{Var}(W_p)}
- = \log_2 \frac{0.18122}{0.00314}
- = 5.8521 \text{ bits}$$
+ = \log_2 \frac{0.13427}{0.00328}
+ = 5.3552 \text{ bits}$$
 
-This 5.85-bit differential quantifies the expressive advantage of
+This 5.36-bit differential quantifies the expressive advantage of
 the fragile population over the protected baseline — the budget the system
 has for exploration without compromising identity.
 
 ---
-*IA-2026-102-T3 · 2026-04-12 · seed 20260412*
+*IA-2026-109-T3 · 2026-04-19 · seed 20260419*
