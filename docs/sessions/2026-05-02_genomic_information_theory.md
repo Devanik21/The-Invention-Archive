@@ -1,13 +1,13 @@
 --
-session_id: IA-2026-115-T2
-date: 2026-04-25
+session_id: IA-2026-122-T2
+date: 2026-05-02
 topic: Genomic Information Theory
-seed: 20260425
+seed: 20260502
 ---
 
-# Invention Archive — Daily Session 2026-04-25
+# Invention Archive — Daily Session 2026-05-02
 
-**Session ID:** `IA-2026-115-T2`
+**Session ID:** `IA-2026-122-T2`
 **Topic:** Genomic Information Theory: Shannon Entropy Bounds, Hayflick Information Loss, and Landauer Erasure Cost
 
 ---
@@ -41,11 +41,11 @@ $$I_{\rm coding} = 94.87 \text{ Mbits}$$
 
 ## 3. Information Loss Rate
 
-The somatic mutation rate is approximately $\mu \approx 1.32$
+The somatic mutation rate is approximately $\mu \approx 1.31$
 substitutions per cell division (Alexandrov et al., 2013). Each substitution
 destroys $\log_2 G$ bits of positional information:
 
-$$\Delta I_{\rm div} = \mu \cdot \log_2 G = 1.32 \times 31.575 = 41.777 \text{ bits/division}$$
+$$\Delta I_{\rm div} = \mu \cdot \log_2 G = 1.31 \times 31.575 = 41.490 \text{ bits/division}$$
 
 ---
 
@@ -75,7 +75,7 @@ $$E_{\rm AION} = \Delta I \cdot k_B T \ln 2 = 1.4659e-17 \text{ J}$$
 
 equivalent to approximately $\mathbf{2.89e+02}$ **ATP hydrolysis events**
 (using $\Delta G_{\rm ATP} \approx 30.5$ kJ/mol). For a target recovery of
-83.3%: $E_{\rm target} = 1.2212e-17$ J.
+87.1%: $E_{\rm target} = 1.2761e-17$ J.
 
 ---
 
@@ -89,4 +89,4 @@ This $\approx 1.68$ bits/codon of built-in redundancy provides error-correction
 capacity that AION and EternaSeq leverage for restoration strategies.
 
 ---
-*IA-2026-115-T2 · 2026-04-25 · seed 20260425*
+*IA-2026-122-T2 · 2026-05-02 · seed 20260502*
