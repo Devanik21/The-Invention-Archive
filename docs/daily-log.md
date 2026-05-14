@@ -54,3 +54,4 @@
 | [2026-05-11](sessions/2026-05-11_high_dimensional_geometry.md) | `IA-2026-131-T4` | High-Dimensional Geometry: Hypersphere Volume, Johnson-... |
 | [2026-05-12](sessions/2026-05-12_cross_paradigm_bridges.md) | `IA-2026-132-T5` | Cross-Paradigm Formal Bridges: Mathematical Isomorphism... |
 | [2026-05-13](sessions/2026-05-13_spectral_encoding_capacity.md) | `IA-2026-133-T6` | Spectral Decomposition and Encoding Capacity: FFT Analy... |
+| [2026-05-14](sessions/2026-05-14_construct_topology.md) | `IA-2026-134-T0` | Information-Theoretic Construct Topology: Jaccard Simil... |
