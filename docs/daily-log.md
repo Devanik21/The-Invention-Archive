@@ -59,3 +59,4 @@
 | [2026-05-16](sessions/2026-05-16_genomic_information_theory.md) | `IA-2026-136-T2` | Genomic Information Theory: Shannon Entropy Bounds, Hay... |
 | [2026-05-17](sessions/2026-05-17_evolutionary_dynamics.md) | `IA-2026-137-T3` | Evolutionary Dynamics and Dual-State Stability: Fisher'... |
 | [2026-05-18](sessions/2026-05-18_high_dimensional_geometry.md) | `IA-2026-138-T4` | High-Dimensional Geometry: Hypersphere Volume, Johnson-... |
+| [2026-05-19](sessions/2026-05-19_cross_paradigm_bridges.md) | `IA-2026-139-T5` | Cross-Paradigm Formal Bridges: Mathematical Isomorphism... |
