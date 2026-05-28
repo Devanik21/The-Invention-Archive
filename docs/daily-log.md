@@ -67,3 +67,4 @@
 | [2026-05-24](sessions/2026-05-24_evolutionary_dynamics.md) | `IA-2026-144-T3` | Evolutionary Dynamics and Dual-State Stability: Fisher'... |
 | [2026-05-25](sessions/2026-05-25_high_dimensional_geometry.md) | `IA-2026-145-T4` | High-Dimensional Geometry: Hypersphere Volume, Johnson-... |
 | [2026-05-27](sessions/2026-05-27_spectral_encoding_capacity.md) | `IA-2026-147-T6` | Spectral Decomposition and Encoding Capacity: FFT Analy... |
+| [2026-05-28](sessions/2026-05-28_construct_topology.md) | `IA-2026-148-T0` | Information-Theoretic Construct Topology: Jaccard Simil... |
