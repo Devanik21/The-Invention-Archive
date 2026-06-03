@@ -1,16 +1,16 @@
 --
-session_id: IA-2026-147-T6
-date: 2026-05-27
+session_id: IA-2026-154-T6
+date: 2026-06-03
 topic: Spectral Encoding Capacity
-seed: 20260527
+seed: 20260603
 N_signal: 1024
 fs_hz: 1000.0
 n_components: 5
 ---
 
-# Invention Archive — Daily Session 2026-05-27
+# Invention Archive — Daily Session 2026-06-03
 
-**Session ID:** `IA-2026-147-T6`
+**Session ID:** `IA-2026-154-T6`
 **Topic:** Spectral Decomposition and Encoding Capacity: FFT Analysis, Per-Component SNR, and Shannon-Hartley Bounds
 
 ---
@@ -27,12 +27,12 @@ n_components: 5
 
 A synthetic $N = 1024$-sample signal ($f_s = 1000$ Hz,
 $\Delta t = 0.0010$ s) comprising 5 frequency components
-plus Gaussian noise ($\sigma_n = 0.0302$):
+plus Gaussian noise ($\sigma_n = 0.0480$):
 
 $$x(t) = \sum_{k=1}^{5} A_k \cos(2\pi f_k t + \phi_k) + \eta(t)$$
 
-True components: $f \in \{14.82, 72.78, 93.02, 95.65, 102.25\}$ Hz,
-$A \in \{0.891, 0.736, 0.687, 0.386, 0.201\}$.
+True components: $f \in \{8.67, 13.60, 71.72, 88.81, 102.64\}$ Hz,
+$A \in \{0.891, 0.600, 0.281, 0.232, 0.156\}$.
 
 ---
 
@@ -44,20 +44,21 @@ Frequency resolution: $\Delta f = f_s / N = 0.977$ Hz.
 
 | $f_{\rm true}$ (Hz) | $A_{\rm true}$ | $f_{\rm det}$ (Hz) | $A_{\rm det}$ | $|f_{\rm err}|$ (Hz) | $C_k$ (bits) |
 |---:|---:|---:|---:|---:|---:|
-| 14.82 | 0.8909 | 14.65 | 0.8418 | 0.172 | 18.598 |
-| 72.78 | 0.7358 | 73.24 | 0.4793 | 0.467 | 16.973 |
-| 93.02 | 0.6867 | 92.77 | 0.6120 | 0.247 | 17.678 |
-| 102.25 | 0.2013 | 102.54 | 0.1949 | 0.287 | 14.378 |
+| 8.67 | 0.8907 | 8.79 | 0.8671 | 0.123 | 17.351 |
+| 13.60 | 0.5997 | 13.67 | 0.6190 | 0.071 | 16.378 |
+| 71.72 | 0.2815 | 71.29 | 0.2014 | 0.430 | 13.139 |
+| 88.81 | 0.2317 | 88.87 | 0.2298 | 0.059 | 13.519 |
+| 102.64 | 0.1564 | 102.54 | 0.1545 | 0.098 | 12.375 |
 
 ### 3.2 System-Level Statistics
 
 | Metric | Value |
 |---|---|
-| Total signal SNR | 30.38 dB |
-| Total FRAE encoding capacity $\sum_k C_k$ | **67.6275 bits** |
-| Spectral flatness (Wiener entropy proxy) | 0.004852 |
-| Participation ratio (effective components) | 5.14 |
-| Noise floor $\sigma_n$ | 0.03024 |
+| Total signal SNR | 24.54 dB |
+| Total FRAE encoding capacity $\sum_k C_k$ | **72.7616 bits** |
+| Spectral flatness (Wiener entropy proxy) | 0.004754 |
+| Participation ratio (effective components) | 2.51 |
+| Noise floor $\sigma_n$ | 0.04799 |
 
 ---
 
@@ -68,8 +69,8 @@ of variance $\sigma_n^2$, the per-component encoding capacity is:
 
 $$C_k = \log_2\!\left(1 + \frac{A_k^2/2}{\sigma_n^2/N}\right) \text{ bits}$$
 
-Total capacity across 4 matched components:
-$C_{\rm total} = 67.6275$ bits.
+Total capacity across 5 matched components:
+$C_{\rm total} = 72.7616$ bits.
 
 ---
 
@@ -78,12 +79,12 @@ $C_{\rm total} = 67.6275$ bits.
 The **Wiener entropy** (spectral flatness measure):
 
 $$\mathrm{SFM} = \frac{\exp\bigl(\langle \ln S(f) \rangle\bigr)}{\langle S(f) \rangle}
-  = 0.004852$$
+  = 0.004754$$
 
 $\mathrm{SFM} \to 1$: white noise (maximally flat).
 $\mathrm{SFM} \to 0$: tonal / highly structured signal.
-The value $0.0049$ indicates a
+The value $0.0048$ indicates a
 highly structured signal with clear tonal components.
 
 ---
-*IA-2026-147-T6 · 2026-05-27 · seed 20260527*
+*IA-2026-154-T6 · 2026-06-03 · seed 20260603*
