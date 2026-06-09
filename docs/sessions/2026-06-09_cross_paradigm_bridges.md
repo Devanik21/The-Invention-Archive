@@ -1,13 +1,13 @@
 --
-session_id: IA-2026-153-T5
-date: 2026-06-02
+session_id: IA-2026-160-T5
+date: 2026-06-09
 topic: Cross-Paradigm Bridges
-seed: 20260602
+seed: 20260609
 ---
 
-# Invention Archive — Daily Session 2026-06-02
+# Invention Archive — Daily Session 2026-06-09
 
-**Session ID:** `IA-2026-153-T5`
+**Session ID:** `IA-2026-160-T5`
 **Topic:** Cross-Paradigm Formal Bridges: Mathematical Isomorphisms Between Resonance, Field, Evolutionary, and Longevity Constructs
 
 ---
@@ -32,8 +32,8 @@ $$z_{\rm NECF} = \frac{1}{N}\sum_{i=1}^N A_i e^{i\theta_i}$$
 
 $$z_{\rm HRF} \equiv z_{\rm NECF}$$
 
-Numerical verification ($d = 26$): $|z_{\rm HRF} - z_{\rm NECF}| = 6.94e-18$
-(floating-point rounding only). $r = 0.196255$, $\psi = -8.304^\circ$.
+Numerical verification ($d = 26$): $|z_{\rm HRF} - z_{\rm NECF}| = 1.39e-17$
+(floating-point rounding only). $r = 0.081385$, $\psi = -158.202^\circ$.
 
 ---
 
@@ -46,9 +46,9 @@ Numerical verification ($d = 26$): $|z_{\rm HRF} - z_{\rm NECF}| = 6.94e-18$
 | Damage accumulation | Drift penalty $\|W_f - W_p\|^2$ |
 | Homogenisation collapse | Variance penalty $\kappa\,\mathrm{Var}(W_f)$ |
 
-$$\mathcal{H}[W_f] = \underbrace{\frac{1}{d}\|W_f - W_p\|^2}_{= 0.23263}
-  + \underbrace{\kappa\,\mathrm{Var}(W_f)}_{= 0.5\times0.23909}
-  = 0.35217$$
+$$\mathcal{H}[W_f] = \underbrace{\frac{1}{d}\|W_f - W_p\|^2}_{= 0.32820}
+  + \underbrace{\kappa\,\mathrm{Var}(W_f)}_{= 0.5\times0.31946}
+  = 0.48793$$
 
 ---
 
@@ -64,7 +64,7 @@ $$\frac{d\mathcal{L}_i}{dt} = \mu\,\underbrace{\varepsilon_i}_{\text{receptivity
 
 The **selection pressure** in GENEVO and the **prediction error** in NECF
 play formally identical roles as the driving coefficient. Correlation of
-update vectors: $\rho = 0.80355$.
+update vectors: $\rho = 0.75293$.
 
 ---
 
@@ -94,4 +94,4 @@ require at minimum $m = 8$ observations to uniquely identify the
 active sector/harmonic set. Sparsity ratio: $k/d = 0.154$.
 
 ---
-*IA-2026-153-T5 · 2026-06-02 · seed 20260602*
+*IA-2026-160-T5 · 2026-06-09 · seed 20260609*
