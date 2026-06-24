@@ -1,6 +1,7 @@
 # The Invention Archive
 
-<img width="988" height="584" alt="image" src="https://github.com/user-attachments/assets/42c128fc-0406-4903-b48c-1ba97ed3f3cb" />
+<img width="1500" height="844" alt="image" src="https://github.com/user-attachments/assets/3fe06e29-8a2b-4d46-9856-5ca51fa3d5c2" />
+
 
 
 > **A Long-Term, Hyper-Structured Archival System for Conceptual Constructs, Systems, and AI Architectures**
