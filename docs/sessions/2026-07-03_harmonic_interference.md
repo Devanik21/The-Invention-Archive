@@ -1,14 +1,14 @@
 --
-session_id: IA-2026-177-T1
-date: 2026-06-26
+session_id: IA-2026-184-T1
+date: 2026-07-03
 topic: Harmonic Interference
-seed: 20260626
+seed: 20260703
 HRF_dimensions: 26
 ---
 
-# Invention Archive — Daily Session 2026-06-26
+# Invention Archive — Daily Session 2026-07-03
 
-**Session ID:** `IA-2026-177-T1`
+**Session ID:** `IA-2026-184-T1`
 **Topic:** Harmonic Series and Wave Interference Analysis: Resonant Pairs, Spectral Entropy, and Channel Capacity
 
 ---
@@ -53,9 +53,9 @@ First five: dim1/2=1/2, dim1/3=1/3, dim1/4=1/4, dim1/5=1/5, dim1/6=1/6.
 
 Treating the harmonic series as a multi-channel communication system with
 total bandwidth $B = \sum_k f_k = 351.00$ (normalised units) and
-SNR $= 17.44$ dB:
+SNR $= 15.91$ dB:
 
-$$C = B \cdot \log_2(1 + \text{SNR}) = 351.00 \cdot \log_2(1 + 55.5) = 2042.96 \text{ bits/s}$$
+$$C = B \cdot \log_2(1 + \text{SNR}) = 351.00 \cdot \log_2(1 + 39.0) = 1868.20 \text{ bits/s}$$
 
 ### 2.4 Minimum Beat Frequency
 
@@ -82,4 +82,4 @@ structure — these pairs can exhibit constructive interference, creating
 emergent higher-level representations from simpler harmonic components.
 
 ---
-*IA-2026-177-T1 · 2026-06-26 · seed 20260626*
+*IA-2026-184-T1 · 2026-07-03 · seed 20260703*
