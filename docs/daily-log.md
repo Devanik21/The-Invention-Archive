@@ -111,3 +111,4 @@
 | [2026-07-08](sessions/2026-07-08_spectral_encoding_capacity.md) | `IA-2026-189-T6` | Spectral Decomposition and Encoding Capacity: FFT Analy... |
 | [2026-07-09](sessions/2026-07-09_construct_topology.md) | `IA-2026-190-T0` | Information-Theoretic Construct Topology: Jaccard Simil... |
 | [2026-07-10](sessions/2026-07-10_harmonic_interference.md) | `IA-2026-191-T1` | Harmonic Series and Wave Interference Analysis: Resonan... |
+| [2026-07-11](sessions/2026-07-11_genomic_information_theory.md) | `IA-2026-192-T2` | Genomic Information Theory: Shannon Entropy Bounds, Hay... |
