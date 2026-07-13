@@ -113,3 +113,4 @@
 | [2026-07-10](sessions/2026-07-10_harmonic_interference.md) | `IA-2026-191-T1` | Harmonic Series and Wave Interference Analysis: Resonan... |
 | [2026-07-11](sessions/2026-07-11_genomic_information_theory.md) | `IA-2026-192-T2` | Genomic Information Theory: Shannon Entropy Bounds, Hay... |
 | [2026-07-12](sessions/2026-07-12_evolutionary_dynamics.md) | `IA-2026-193-T3` | Evolutionary Dynamics and Dual-State Stability: Fisher'... |
+| [2026-07-13](sessions/2026-07-13_high_dimensional_geometry.md) | `IA-2026-194-T4` | High-Dimensional Geometry: Hypersphere Volume, Johnson-... |
