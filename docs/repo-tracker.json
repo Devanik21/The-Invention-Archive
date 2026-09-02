@@ -1318,5 +1318,13 @@
     "n_constructs": 32,
     "n_repo_constructs": 14,
     "commit_suffix": "B1_err=2.78e-17 B2_H=0.3596 B3_corr=0.8036 B4_ATP=2.89e+02 B5_m_min=8"
+  },
+  "2026-09-02": {
+    "session_id": "IA-2026-245-T6",
+    "topic_idx": 6,
+    "slug": "spectral_encoding_capacity",
+    "n_constructs": 32,
+    "n_repo_constructs": 14,
+    "commit_suffix": "n_comp=5 SNR=26.0dB I_total=77.089bits PR=7.8 flatness=0.00925"
   }
 }
