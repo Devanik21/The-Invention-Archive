@@ -185,3 +185,4 @@
 | [2026-09-20](sessions/2026-09-20_evolutionary_dynamics.md) | `IA-2026-263-T3` | Evolutionary Dynamics and Dual-State Stability: Fisher'... |
 | [2026-09-21](sessions/2026-09-21_high_dimensional_geometry.md) | `IA-2026-264-T4` | High-Dimensional Geometry: Hypersphere Volume, Johnson-... |
 | [2026-09-22](sessions/2026-09-22_cross_paradigm_bridges.md) | `IA-2026-265-T5` | Cross-Paradigm Formal Bridges: Mathematical Isomorphism... |
+| [2026-09-23](sessions/2026-09-23_spectral_encoding_capacity.md) | `IA-2026-266-T6` | Spectral Decomposition and Encoding Capacity: FFT Analy... |
