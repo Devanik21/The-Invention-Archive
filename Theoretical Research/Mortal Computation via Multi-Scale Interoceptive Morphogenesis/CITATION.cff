@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "Citation metadata for Mortal Computation via Multi-Scale Interoceptive Morphogenesis"
+title: "Mortal Computation via Multi-Scale Interoceptive Morphogenesis"
+type: software
+abstract: >-
+  A theoretical and numerical framework, MILLS (Multi-timescale Interoceptive Learning and Lifespan Selection),
+  coupling variational inference, interoceptive homeostasis, parameter plasticity, and adaptive topology to a finite
+  internal viability reserve. The release includes the full preprint and reproducible verification code.
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+repository-artifact: "https://github.com/Devanik21/The-Invention-Archive"
+url: "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Mortal%20Computation%20via%20Multi-Scale%20Interoceptive%20Morphogenesis"
+license: MIT
+version: "2026.10.04"
+date-released: "2026-10-04"
+keywords:
+  - mortal computation
+  - interoception
+  - active inference
+  - morphogenesis
+  - structural plasticity
+  - neuromorphic computing
+  - artificial life
+  - embodied intelligence
+  - thermodynamics of computation
+  - topology adaptation

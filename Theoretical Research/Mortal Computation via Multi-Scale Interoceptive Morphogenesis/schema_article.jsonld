@@ -1,0 +1,32 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "name": "Mortal Computation via Multi-Scale Interoceptive Morphogenesis",
+  "headline": "Mortal Computation via Multi-Scale Interoceptive Morphogenesis",
+  "description": "A theoretical and numerical framework in which variational inference, interoceptive homeostasis, parameter learning, and topology selection are coupled to a finite viability reserve.",
+  "datePublished": "2026-10-04",
+  "inLanguage": "en",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "url": "https://orcid.org/0009-0001-8310-6921",
+    "identifier": "0009-0001-8310-6921",
+    "sameAs": [
+      "https://github.com/Devanik21",
+      "https://medium.com/@devanik2005",
+      "https://www.kaggle.com/devanik"
+    ]
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "The-Invention-Archive"
+  },
+  "isPartOf": {
+    "@type": "DataRepository",
+    "name": "The-Invention-Archive",
+    "url": "https://github.com/Devanik21/The-Invention-Archive"
+  },
+  "codeRepository": "https://github.com/Devanik21/The-Invention-Archive",
+  "url": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Mortal%20Computation%20via%20Multi-Scale%20Interoceptive%20Morphogenesis",
+  "keywords": "mortal computation, interoception, active inference, morphogenesis, structural plasticity, neuromorphic computing, artificial life"
+}
