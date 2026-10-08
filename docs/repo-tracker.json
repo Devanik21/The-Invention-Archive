@@ -1606,5 +1606,13 @@
     "n_constructs": 32,
     "n_repo_constructs": 14,
     "commit_suffix": "n_comp=5 SNR=22.1dB I_total=70.131bits PR=2.4 flatness=0.00764"
+  },
+  "2026-10-08": {
+    "session_id": "IA-2026-281-T0",
+    "topic_idx": 0,
+    "slug": "construct_topology",
+    "n_constructs": 32,
+    "n_repo_constructs": 14,
+    "commit_suffix": "N=32 CC=0.2000 top_pair=EternaSeq/EternaHeart J=0.7500"
   }
 }
