@@ -30,7 +30,7 @@ jobs:
         run: |
           set -euo pipefail
           test ! -e "$RELEASE_DIR" || { echo "Release path already exists; refusing overwrite." >&2; exit 1; }
-          cat source-channel-payload-part-*.txt | tr -d '\r\n' | base64 --decode | base64 --decode | xz --decompress --stdout | tar -xf -
+          cat source-channel-payload-part-*.txt | tr -d '\r\n' | base64 --decode | base64 --decode | xz --decompress --stdout | tar -xf - -C 'Theoretical Research'
           test -d "$RELEASE_DIR"
           test ! -e "$RELEASE_DIR/paper.pdf"
 
