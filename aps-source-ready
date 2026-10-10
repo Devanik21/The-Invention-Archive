@@ -1,0 +1,1 @@
+Build and publish the Artificial Paracrine System release from the adjacent one-run payload chunks. The workflow validates the source, compiles paper.pdf, updates the index, commits the 11-file release, and creates the dated tag.
