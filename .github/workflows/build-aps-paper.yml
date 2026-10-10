@@ -1,0 +1,111 @@
+name: Build and publish Artificial Paracrine System release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "aps-source-ready"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Check for release-path collision and unpack source
+        env:
+          RELEASE_DIR: "Theoretical Research/The_Artificial_Paracrine_System_Robust_Control_of_Extracellular_Vesicle_Signaling_Under_Biological_Uncertainty"
+        run: |
+          set -euo pipefail
+          test ! -e "${RELEASE_DIR}" || { echo "Release directory exists; refusing overwrite." >&2; exit 1; }
+          cat aps-payload-part-*.txt | tr -d '\r\n' | base64 --decode | xz --decompress --stdout | tar -xf -
+          test -d "${RELEASE_DIR}"
+          rm -f "${RELEASE_DIR}/paper.pdf"
+
+      - name: Validate source manifest, metadata, typography, and synthetic model
+        working-directory: "Theoretical Research/The_Artificial_Paracrine_System_Robust_Control_of_Extracellular_Vesicle_Signaling_Under_Biological_Uncertainty"
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "numpy>=1.24" "PyYAML>=6.0"
+          python verify_model.py
+          python - <<'PY'
+          import json, re, yaml
+          from pathlib import Path
+          expected = {"paper.tex", "verify_model.py", "README.md", "medium_story.md",
+                      "x_thread.md", "CITATION.cff", "paper.bib", ".zenodo.json",
+                      "schema_article.jsonld", "deploy.py"}
+          present = {p.name for p in Path(".").iterdir() if p.is_file()}
+          assert present == expected, f"Source manifest mismatch: missing={expected-present}; extra={present-expected}"
+          json.loads(Path(".zenodo.json").read_text(encoding="utf-8"))
+          json.loads(Path("schema_article.jsonld").read_text(encoding="utf-8"))
+          yaml.safe_load(Path("CITATION.cff").read_text(encoding="utf-8"))
+          medium = re.findall(r"\b[\w'-]+\b", Path("medium_story.md").read_text(encoding="utf-8"))
+          assert 1500 <= len(medium) <= 2000, f"Medium word count out of range: {len(medium)}"
+          thread = Path("x_thread.md").read_text(encoding="utf-8")
+          assert len(re.findall(r"(?m)^\d+/14 ", thread)) == 14, "X thread must contain 14 numbered posts"
+          readme = Path("README.md").read_text(encoding="utf-8")
+          assert readme.count("$$") == 6, "README must contain three display-math blocks"
+          assert r"\n" not in readme, "Literal escaped newline sequence found in README"
+          print(f"PASS: metadata and source checks; Medium words={len(medium)}; X posts=14.")
+          PY
+
+      - name: Compile PDF from current LaTeX source
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper.tex
+          working_directory: "Theoretical Research/The_Artificial_Paracrine_System_Robust_Control_of_Extracellular_Vesicle_Signaling_Under_Biological_Uncertainty"
+
+      - name: Validate PDF, update index, commit release, and create dated tag
+        env:
+          RELEASE_DIR: "Theoretical Research/The_Artificial_Paracrine_System_Robust_Control_of_Extracellular_Vesicle_Signaling_Under_Biological_Uncertainty"
+          RELEASE_SLUG: "The_Artificial_Paracrine_System_Robust_Control_of_Extracellular_Vesicle_Signaling_Under_Biological_Uncertainty"
+          RELEASE_TAG: "v2026.10.10"
+        run: |
+          set -euo pipefail
+          test -s "${RELEASE_DIR}/paper.pdf"
+          head -c 5 "${RELEASE_DIR}/paper.pdf" | grep -q '%PDF-'
+          rm -f "${RELEASE_DIR}/paper.aux" "${RELEASE_DIR}/paper.log" "${RELEASE_DIR}/paper.out" "${RELEASE_DIR}/paper.toc" "${RELEASE_DIR}/paper.synctex.gz" "${RELEASE_DIR}/paper.fdb_latexmk" "${RELEASE_DIR}/paper.fls"
+          python - <<'PY'
+          import json, re, yaml
+          from pathlib import Path
+          rel = Path("Theoretical Research/The_Artificial_Paracrine_System_Robust_Control_of_Extracellular_Vesicle_Signaling_Under_Biological_Uncertainty")
+          expected = {"paper.tex", "paper.pdf", "verify_model.py", "README.md", "medium_story.md",
+                      "x_thread.md", "CITATION.cff", "paper.bib", ".zenodo.json",
+                      "schema_article.jsonld", "deploy.py"}
+          present = {p.name for p in rel.iterdir() if p.is_file()}
+          assert present == expected, f"Final 11-file manifest mismatch: missing={expected-present}; extra={present-expected}"
+          assert (rel / "paper.pdf").read_bytes().startswith(b"%PDF-")
+          json.loads((rel / ".zenodo.json").read_text(encoding="utf-8"))
+          json.loads((rel / "schema_article.jsonld").read_text(encoding="utf-8"))
+          yaml.safe_load((rel / "CITATION.cff").read_text(encoding="utf-8"))
+          index = Path("Theoretical Research/Readme.md")
+          current = index.read_text(encoding="utf-8")
+          slug = rel.name
+          if slug in current:
+              raise SystemExit("Release index already contains this path; refusing duplicate entry.")
+          row = f"| 2026.10.10 | The Artificial Paracrine System | Robust-control preprint | [APS release]({slug}/) |"
+          index.write_text(current.rstrip() + "\n" + row + "\n", encoding="utf-8")
+          print("PASS: compiled PDF and exact 11-file release manifest.")
+          PY
+          rm -f aps-source-ready aps-payload-part-*.txt
+          git fetch origin main --tags
+          if git show-ref --verify --quiet "refs/tags/${RELEASE_TAG}"; then
+            echo "Release tag ${RELEASE_TAG} already exists; refusing to overwrite it." >&2
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add Artificial Paracrine System research release"
+          git tag -a "${RELEASE_TAG}" -m "Artificial Paracrine System preprint ${RELEASE_TAG}"
+          git push origin HEAD:main
+          git push origin "refs/tags/${RELEASE_TAG}"
+          echo "RELEASE_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo "RELEASE_TAG=${RELEASE_TAG}" >> "$GITHUB_STEP_SUMMARY"
