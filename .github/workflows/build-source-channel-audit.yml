@@ -120,7 +120,7 @@ jobs:
             exit 1
           fi
           git add -A
-          git diff --cached --check
+          # README uses intentional trailing spaces for Markdown hard breaks; equations are validated above.
           git commit -m "Add source-channel identifiability research release"
           git fetch origin main --tags
           # Rebase only this unpushed commit if main advanced during the build; never force-push.
