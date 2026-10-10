@@ -1,0 +1,30 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "The Artificial Paracrine System: Robust Control of Extracellular-Vesicle Signaling Under Biological Uncertainty",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "alternateName": "Devanik21",
+    "identifier": "https://orcid.org/0009-0001-8310-6921"
+  },
+  "datePublished": "2026-10-10",
+  "inLanguage": "en",
+  "description": "Conceptual framework for robust control of extracellular-vesicle signaling under biological uncertainty; synthetic verification only, no biological experiment reported.",
+  "keywords": [
+    "extracellular vesicles",
+    "robust control",
+    "information theory",
+    "aging research"
+  ],
+  "isPartOf": {
+    "@type": "SoftwareSourceCode",
+    "name": "The-Invention-Archive",
+    "url": "https://github.com/Devanik21/The-Invention-Archive"
+  },
+  "url": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/The_Artificial_Paracrine_System_Robust_Control_of_Extracellular_Vesicle_Signaling_Under_Biological_Uncertainty",
+  "mainEntityOfPage": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/The_Artificial_Paracrine_System_Robust_Control_of_Extracellular_Vesicle_Signaling_Under_Biological_Uncertainty",
+  "sameAs": [
+    "https://orcid.org/0009-0001-8310-6921"
+  ]
+}

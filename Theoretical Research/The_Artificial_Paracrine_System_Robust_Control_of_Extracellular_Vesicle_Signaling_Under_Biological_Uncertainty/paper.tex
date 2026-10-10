@@ -1,0 +1,96 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,hyperref,microtype}
+\usepackage[T1]{fontenc}
+\title{The Artificial Paracrine System: Robust Control of Extracellular-Vesicle Signaling Under Biological Uncertainty}
+\author{Devanik Debnath (Devanik21)\\\small Department of Electronics and Communication Engineering\\\small National Institute of Technology Agartala, India}
+\date{10 October 2026}
+\newtheorem{proposition}{Proposition}
+\begin{document}\maketitle
+\begin{abstract}
+Extracellular vesicles (EVs) participate in intercellular communication and are being investigated as therapeutic carriers. This paper proposes a control-theoretic architecture, termed the Artificial Paracrine System (APS), for regulating a narrowly specified tissue signaling objective through sensing, state estimation, robust control, and a constrained EV-compatible actuation interface. The paper does not claim that aging is exclusively an information failure, that a universal youthful signal exists, or that arbitrary molecular payloads can be generated safely in real time. Instead, it defines a linearized model, states conditions under which feedback stabilization is mathematically meaningful, and identifies observability, controllability, manufacturing, and safety as gating constraints. A deterministic synthetic program checks basic properties of an illustrative two-state plant and a binary communication channel. These checks are mathematical demonstrations only, not biological evidence or a formal $H_\infty$ certificate. The proposed contribution is a falsifiable system architecture and validation protocol; empirical feasibility remains unestablished.
+\end{abstract}
+\noindent\textbf{Keywords:} extracellular vesicles; robust control; information theory; aging; microfluidics; system identification; safety constraints
+
+\section{Research posture and contribution}
+The central question is: under what assumptions could a feedback controller regulate a selected tissue-level signaling state when measurements are noisy, dynamics are uncertain, and intervention delivery is constrained? The APS is a proposal, not a demonstrated artificial organ. Its contribution is to make the control problem explicit and identify failure conditions before molecular design or implantation is contemplated.
+
+\section{Background and scope}
+EVs transport proteins, lipids, and nucleic acids and are studied as mediators of intercellular communication and as therapeutic delivery vehicles. Reviews describe both their relevance to senescence-associated signaling and persistent translational challenges in production yield, cargo loading, targeting, standardization, and safety [1--4]. These findings motivate the question but do not establish that EV signaling is the dominant cause of aging. Aging is multifactorial, and altered communication coexists with genomic, metabolic, mitochondrial, and tissue-level changes.
+
+The phrase \emph{man-in-the-middle} is used only as a systems analogy. Biological signals are not discrete messages with a single authenticated sender; they are heterogeneous molecules interacting with receptors, clearance mechanisms, immune surveillance, and feedback loops. A practical design would need to preserve beneficial signaling while avoiding indiscriminate suppression of endogenous pathways.
+
+\section{Model and assumptions}
+Let $x(t)\in\mathbb{R}^n$ denote a local, experimentally defined tissue state; $u(t)\in\mathbb{R}^m$ a bounded control input; $w(t)$ disturbances; and $y(t)$ observations. Around a specified operating point, assume a linearized model:
+\begin{align}
+\dot{x}(t)&=Ax(t)+Bu(t)+Ew(t),\label{eq:plant}\\
+y(t)&=Cx(t)+v(t),\label{eq:measurement}
+\end{align}
+where $v$ is measurement noise. This model is valid only locally and only if system identification supports its use. Delays, nonlinear receptor dynamics, changing cell populations, pharmacokinetics, and actuator saturation may invalidate it.
+
+A candidate static feedback law is $u=-K\hat{x}$, where $\hat{x}$ is an estimated state. In the ideal fully observed case, the closed-loop matrix is $A_{cl}=A-BK$. Stability of this matrix is necessary for the corresponding linear autonomous dynamics to decay, but it is not sufficient to establish biological benefit or safety.
+
+\section{Robust-control objective}
+For a regulated output $z$, an $H_\infty$ formulation seeks a controller such that the induced gain from disturbance $w$ to $z$ is bounded:
+\begin{equation}
+\|T_{w\to z}\|_\infty < \gamma.\label{eq:hinf}
+\end{equation}
+Here $T_{w\to z}$ is the closed-loop transfer function under the declared plant and controller. The inequality is meaningful only after the plant, performance output, disturbance channels, uncertainty model, and stability conditions are specified. The present paper does not synthesize an $H_\infty$ controller for a biological plant; it uses the criterion to define a future design obligation [5].
+
+\section{Information-theoretic interpretation}
+A communication analogy can quantify uncertainty in a deliberately simplified measurement channel. For a binary symmetric channel with independent symbol error probability $p$, capacity is
+\begin{equation}
+C=1-H_2(p),\qquad H_2(p)=-p\log_2p-(1-p)\log_2(1-p),\label{eq:capacity}
+\end{equation}
+with the usual continuous endpoint convention. Capacity is measured in bits per channel use. Real biochemical signaling is not binary or memoryless in general; Equation~\eqref{eq:capacity} is therefore an illustrative baseline, not a biomarker of organismal age. A useful empirical information measure would require defined source variables, observation windows, noise models, and a task-specific distortion function.
+
+\section{Architecture and constraints}
+The conceptual loop has five modules: (1) a validated sensor panel; (2) a state estimator with uncertainty reporting; (3) a robust controller with hard safety constraints; (4) a separately validated manufacturing and release interface; and (5) post-actuation monitoring with an independent shutdown path. Molecular payload generation is not placed directly in an unrestricted real-time loop. Any candidate cargo would require a finite, prequalified design space, analytical characterization, batch-release tests, and independent safety review before biological testing.
+
+The actuator is not assumed to synthesize arbitrary exosomes inside a human body. Present evidence on EV engineering identifies production, loading, targeting, characterization, and reproducibility as open problems [1,2,4]. Microfluidic integration may support laboratory workflows, but it does not by itself establish an implantable, closed-loop, clinically reliable biomanufacturing device.
+
+\section{Mathematical proposition}
+\begin{proposition}
+For the linear time-invariant model $\dot{x}=Ax+Bu$ with state feedback $u=-Kx$, if every eigenvalue of $A-BK$ has strictly negative real part, then the origin of the closed-loop continuous-time system is asymptotically stable.
+\end{proposition}
+\begin{proof}
+The closed-loop system is $\dot{x}=(A-BK)x$. A finite-dimensional continuous-time LTI system is asymptotically stable if and only if its state matrix is Hurwitz, i.e., all eigenvalues have negative real parts. The stated condition is exactly this criterion.
+\end{proof}
+This is a standard control-theoretic result, not a novel biological theorem. If only $y=Cx$ is observed, state feedback requires an estimator and appropriate observability/detectability conditions. If the target modes are uncontrollable, no controller using the modeled input can arbitrarily assign their dynamics.
+
+\section{Synthetic numerical checks}
+The accompanying \texttt{verify\_model.py} uses a dimensionless two-state system to check nominal closed-loop eigenvalues, controllability rank, a seeded finite sweep of bounded matrix perturbations, and endpoint behavior of Equation~\eqref{eq:capacity}. The perturbation sweep tests 5,000 samples with entrywise perturbations in $[-0.10,0.10]$. A passing finite sweep is not a proof over the uncertainty set and does not establish an $H_\infty$ bound. The values are illustrative and are not fitted to human or animal data. The exact output is produced by executing the script; it must not be interpreted as empirical validation.
+
+\section{Epistemic classification}
+\begin{center}\small
+\begin{tabular}{p{0.10\linewidth}p{0.36\linewidth}p{0.43\linewidth}}\toprule
+Class & Claim & Status \\ \midrule
+P1 & LTI stability criterion; binary-channel capacity & Established identities under stated assumptions. \\
+P2 & Feedback could stabilize a target state & Conditional on identification, controllability, constraints, and valid dynamics. \\
+P3 & Universal scaling law for aging-related signaling noise & Not claimed; no supporting analysis supplied. \\
+P4 & EV signaling as a communication/control channel & Structural correspondence requiring operational definitions. \\
+P5 & Body as a computer peripheral; aging as software failure & Metaphor only, not a biological explanation. \\ \bottomrule
+\end{tabular}\end{center}
+
+\section{Validation and falsification plan}
+A credible next step is a staged, non-clinical program. First define one tissue, a narrow endpoint, and a minimal state vector. Establish sensor repeatability and whether the relevant state is observable from available measurements. Identify the plant with independent data and compare linear and nonlinear models. Evaluate open-loop, feedback, sham, and standard-control baselines. Pre-register perturbations and acceptable uncertainty bounds. Assess EV identity, cargo content, potency, biodistribution, immunogenicity, off-target activity, batch reproducibility, and failure-safe behavior before interpreting functional outcomes.
+
+The architecture should be rejected or narrowed if the state is unobservable, the target is uncontrollable within safe actuator limits, delay destabilizes the loop, manufacturing variation exceeds the controller's robustness envelope, or the observed benefit is explained by nonspecific stress, toxicity, or biased endpoint selection. A decrease in one molecular or epigenetic score is not sufficient evidence of rejuvenation.
+
+\section{Limitations and safety}
+No biological parameter estimation, wet-lab experiment, animal study, clinical evidence, or intervention design is presented. The simulation does not include receptor binding, EV biodistribution, immune effects, tissue heterogeneity, tumor surveillance, or long-term feedback. Unrestricted generation of new mRNA/protein payloads in vivo would introduce substantial identity, potency, off-target, manufacturing, and safety uncertainties. The proposal therefore does not recommend human implantation, self-experimentation, or unsupervised molecular intervention. Translational work would require appropriate institutional review, validated manufacturing, and regulatory oversight.
+
+\section{Conclusion}
+An external controller could in principle regulate a narrowly defined biological state only when that state is observable, controllable, and safely actuated under a sufficiently accurate model. Information theory and robust control provide useful tools for stating those requirements; they do not establish that biological age is reducible to signaling fidelity. The Artificial Paracrine System is best treated as a falsifiable systems-engineering research program whose first contribution is a precise list of conditions that must be measured and tested.
+
+\section*{Reproducibility and data availability}
+The complete synthetic verification is supplied in \texttt{verify\_model.py}. Requirements and execution instructions appear in \texttt{README.md}. No biological data were collected or analyzed. The synthetic model is deterministic apart from a seeded uncertainty sweep.
+
+\begin{thebibliography}{9}\small
+\bibitem{ma2025} Y. Ma et al., ``Engineering therapeutical extracellular vesicles for clinical translation,'' \emph{Trends in Biotechnology}, vol. 43, no. 1, pp. 61--82, 2025. doi: 10.1016/j.tibtech.2024.08.007.
+\bibitem{vanDelen2024} M. Van Delen et al., ``A systematic review and meta-analysis of clinical trials assessing safety and efficacy of human extracellular vesicle-based therapy,'' \emph{Journal of Extracellular Vesicles}, vol. 13, no. 7, e12458, 2024. doi: 10.1002/jev2.12458.
+\bibitem{yin2021} Y. Yin et al., ``Roles of extracellular vesicles in the aging microenvironment and age-related diseases,'' \emph{Journal of Extracellular Vesicles}, vol. 10, no. 12, e12154, 2021. doi: 10.1002/jev2.12154.
+\bibitem{takakura2024} Y. Takakura et al., ``Quality and Safety Considerations for Therapeutic Products Based on Extracellular Vesicles,'' \emph{Pharmaceutical Research}, 2024. doi: 10.1007/s11095-024-03757-4.
+\bibitem{zames1981} G. Zames, ``Feedback and optimal sensitivity: Model reference transformations, multiplicative seminorms, and approximate inverses,'' \emph{IEEE Transactions on Automatic Control}, vol. 26, no. 2, pp. 301--320, 1981. doi: 10.1109/TAC.1981.1102603.
+\end{thebibliography}
+\end{document}
