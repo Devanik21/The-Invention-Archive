@@ -1,0 +1,28 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Heteroplasmy Phase Control: Threshold-Aware Mitophagy Scheduling as a Stochastic Control Problem for Mitochondrial Aging",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "url": "https://github.com/Devanik21"
+  },
+  "datePublished": "2026-10-10",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "learningResourceType": "Theoretical methods preprint",
+  "keywords": [
+    "mtDNA heteroplasmy",
+    "mitophagy",
+    "optimal control",
+    "stochastic process",
+    "mitochondrial aging"
+  ],
+  "abstract": "A theoretical analysis of a fixed-dose schedule theorem for a reduced heteroplasmy model, with synthetic stochastic audits and falsifiable experimental gates. It does not claim a validated actuator or lifespan effect.",
+  "mainEntityOfPage": "https://github.com/Devanik21/The-Invention-Archive",
+  "citation": [
+    "https://doi.org/10.1146/annurev-genom-120324-032239",
+    "https://doi.org/10.1101/gr.278200.123",
+    "https://doi.org/10.1038/s41467-025-57286-8"
+  ]
+}

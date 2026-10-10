@@ -1,0 +1,28 @@
+{
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "title": "Heteroplasmy Phase Control: Threshold-Aware Mitophagy Scheduling as a Stochastic Control Problem for Mitochondrial Aging",
+  "creators": [
+    {
+      "name": "Debnath, Devanik",
+      "affiliation": "Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India"
+    }
+  ],
+  "description": "Theoretical methods preprint deriving a fixed-dose scheduling result in a reduced heteroplasmy model. Simulations are synthetic and do not provide biological validation. No DOI has been minted by this repository release.",
+  "publication_date": "2026-10-10",
+  "version": "0.1.0",
+  "keywords": [
+    "mitochondrial DNA heteroplasmy",
+    "mitophagy",
+    "stochastic control",
+    "mitochondrial aging",
+    "first-passage time"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Devanik21/The-Invention-Archive",
+      "relation": "isSupplementTo",
+      "resource_type": "publication-repository"
+    }
+  ]
+}

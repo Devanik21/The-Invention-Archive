@@ -1,0 +1,135 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.88in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,tabularx,array}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\setlist{nosep,leftmargin=1.5em}
+\hypersetup{pdftitle={Heteroplasmy Phase Control: Threshold-Aware Mitophagy Scheduling as a Stochastic Control Problem for Mitochondrial Aging},pdfauthor={Devanik Debnath}}
+\title{Heteroplasmy Phase Control: Threshold-Aware Mitophagy Scheduling as a Stochastic Control Problem for Mitochondrial Aging}
+\author{Devanik Debnath (Devanik21)\\\small Department of Electronics and Communication Engineering\\\small National Institute of Technology Agartala, India}
+\date{10 October 2026}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}{Lemma}
+\begin{document}
+\maketitle
+\begin{abstract}
+Mitochondrial DNA (mtDNA) heteroplasmy evolves through replication, degradation, genetic drift, and cell-specific selection. Many pathogenic variants exhibit a biochemical threshold: an oxidative-phosphorylation phenotype may change sharply only after mutant load crosses a variant- and tissue-dependent level. This motivates studying the timing of a hypothetical genotype-selective mitochondrial quality-control actuator, not merely its average intensity. We analyze a deliberately reduced model, $\dot{x}=x(1-x)(s-\Delta u)$, where $x$ is mutant heteroplasmy, $s$ is a relative replication advantage, and $u$ is control intensity with effective selectivity $\Delta$. An exact log-odds transform yields a dose-scheduling theorem: for a fixed integrated dose and constant positive selectivity, a maximally front-loaded pulse minimizes every time-integrated nondecreasing penalty of heteroplasmy, while the final deterministic heteroplasmy is schedule-invariant. This result is conditional, not a treatment recommendation; it fails as a ranking when selectivity is absent or reversed and may be overturned by actuator delay, toxicity, feedback, or compensatory biogenesis. We extend the model with bounded stochastic fluctuations and define first-passage and cross-cell-variance endpoints. We do not infer a Kramers escape law from the reduced dynamics because the model is not bistable. A reproducible synthetic simulation illustrates the theorem but is not biological evidence. The central empirical gate is whether an intervention can produce positive, measurable selection against mutant genomes in the target tissue without unacceptable collateral loss. The paper supplies falsifiable experiments and an explicit kill criterion; it establishes neither a working actuator nor lifespan extension.
+\end{abstract}
+
+\noindent\textbf{Keywords:} mtDNA heteroplasmy; mitochondrial aging; mitophagy; optimal control; stochastic processes; first-passage time; threshold dynamics; model identifiability
+
+\section{Question, scope, and claim discipline}
+Mitochondrial DNA heteroplasmy is the within-cell mixture of mitochondrial genomes carrying and not carrying a specified variant. Heteroplasmy can change through relaxed replication, turnover, segregation, and selection. Recent reviews emphasize that stochastic drift and directional selection coexist, and that their relative contributions vary across tissues and life stages \cite{Ryall2026,Smith2024}. Single-cell data also show age-associated distributions of somatic mtDNA mutations that bulk averages can obscure \cite{Green2025}. These findings motivate dynamical models, but do not imply that all mutant genomes are harmful, that heteroplasmy alone determines function, or that mitophagy preferentially removes every pathogenic variant.
+
+The question here is narrower: under what assumptions can scheduling a fixed amount of a putative mutant-selective actuator reduce time spent above a prespecified heteroplasmy threshold? The contribution is a theorem for a transparent baseline model, a stochastic test harness, and a protocol for trying to falsify its required biological assumptions. It is not a claim that pulsed mitophagy has been experimentally shown to outperform continuous treatment.
+
+Three distinctions are essential. First, a biochemical threshold is variant- and tissue-dependent, not a universal constant; a 60--90\% range appears often in the literature, but systematic analyses document substantial heterogeneity \cite{Smith2024}. Second, potential-dependent mitochondrial quality control is not equivalent to genotype-specific mtDNA clearance. Some deleterious mtDNA variants do not produce lower membrane potential, and several can evade this route \cite{Suen2008,Seabright2020,Ryall2026}. Third, the ordinary selection equation studied below is monotone between its boundaries; it does not itself produce bistability or a potential barrier. Any Kramers-style claim would require a separate, independently justified bistable model.
+
+\section{Reduced control model}
+Let $x(t)\in(0,1)$ be the fraction of mtDNA genomes carrying a specified mutant variant in one cell at time $t\in[0,T]$. Use the reduced selection equation
+\begin{equation}
+\dot{x}(t)=x(t)\bigl(1-x(t)\bigr)\bigl(s-\Delta u(t)\bigr),\qquad 0\leq u(t)\leq U. \label{eq:base}
+\end{equation}
+Here $s$ is the net selective advantage of the mutant in the absence of intervention, $U$ is a maximum control intensity, and $\Delta$ is the effect of unit control on the mutant-versus-wild-type log-odds drift. The units of $s$ and $\Delta u$ are inverse time. This is an effective within-cell selection model, not a mechanistic model of organelle fission, fusion, cargo recognition, or mtDNA nucleoid mixing.
+
+The sign and magnitude of $\Delta$ must be measured for each intervention--variant--cell context. $\Delta>0$ means the intervention shifts selection against the mutant. $\Delta=0$ means it changes no mutant/wild-type relative selection in this model, even if bulk mitophagy flux rises. $\Delta<0$ means the intervention favors the mutant relative to wild type. The model assumes $\Delta$ is constant over time and across states; biological data may reject that simplification.
+
+Let $x^*$ denote a prespecified functional threshold, measured rather than assumed, and let $m\geq0$ be a safety margin. A smooth threshold-violation loss can be written
+\begin{equation}
+\ell(x)=\bigl[x-(x^*-m)\bigr]_+^2,\qquad [z]_+=\max(z,0).
+\end{equation}
+The cumulative burden is $R[u]=\int_0^T\ell(x_u(t))\,dt$. A threshold-crossing-time endpoint is also useful, but $R$ avoids the discontinuity of a binary crossing indicator. We compare schedules subject to a fixed cumulative input dose
+\begin{equation}
+\int_0^T u(t)\,dt=B,\qquad 0\leq B\leq UT. \label{eq:budget}
+\end{equation}
+For this comparison, any linear input cost $c\int_0^T u(t)dt$ equals $cB$ for every candidate schedule and therefore cannot by itself distinguish them. Toxicity, cumulative off-target injury, actuator pharmacokinetics, and recovery costs are deliberately not hidden inside $c$; they require explicit additional state variables or constraints.
+
+\section{Exact transformation and schedule theorem}
+Define the log-odds $z(t)=\log\bigl(x(t)/(1-x(t))\bigr)$ and cumulative dose $A_u(t)=\int_0^t u(\tau)d\tau$. Differentiating gives
+\begin{equation}
+\dot z(t)=s-\Delta u(t),\qquad z(t)=z(0)+st-\Delta A_u(t),\qquad x(t)=\sigma(z(t)),
+\label{eq:logit}
+\end{equation}
+where $\sigma(z)=(1+e^{-z})^{-1}$. Equation \eqref{eq:logit} reveals exactly what the model can and cannot identify: at time $T$, the deterministic endpoint depends on the total dose $B$, not on its temporal arrangement; intermediate heteroplasmy depends on the cumulative dose path $A_u(t)$.
+
+Let the front-loaded control be $u_F(t)=U$ for $0\leq t<B/U$ and zero afterward (if $B=0$, it is identically zero). Its cumulative input is $A_F(t)=\min(Ut,B)$. Every feasible control satisfies $A_u(t)\leq\min(Ut,B)$, so $A_F(t)\geq A_u(t)$ for all $t$.
+
+\begin{proposition}[Fixed-dose front-loading dominance]
+Assume $\Delta>0$, $x(0)\in(0,1)$, constant $s$ and $\Delta$, and admissible controls satisfying \eqref{eq:budget}. For every feasible $u$, the front-loaded control obeys $x_F(t)\leq x_u(t)$ for all $t\in[0,T]$. Further, $x_F(T)=x_u(T)$, and $R[u_F]\leq R[u]$ for every nondecreasing loss function $\ell$.
+\end{proposition}
+\begin{proof}
+The cumulative-dose inequality gives $A_F(t)\geq A_u(t)$. Since $\Delta>0$, equation \eqref{eq:logit} implies $z_F(t)\leq z_u(t)$; the logistic map is increasing, so $x_F(t)\leq x_u(t)$. At $T$, both cumulative doses equal $B$, giving equal final log-odds and heteroplasmy. Since $\ell$ is nondecreasing, $\ell(x_F(t))\leq\ell(x_u(t))$ pointwise; integration proves the loss inequality. $\square$
+\end{proof}
+
+\begin{corollary}[Threshold exposure]
+For a threshold $q\in(0,1)$, the front-loaded schedule has no greater measure of time above $q$ than any same-dose schedule under the deterministic assumptions above.
+\end{corollary}
+\begin{proof}
+The pointwise state order $x_F(t)\leq x_u(t)$ implies $\mathbf{1}\{x_F(t)>q\}\leq\mathbf{1}\{x_u(t)>q\}$ for every $t$. Integrate both indicators over the horizon. $\square$
+\end{proof}
+
+This is a deliberately narrow theorem, not an argument for universal pulsing. If $\Delta=0$, schedules are identical in this model. If $\Delta<0$, front-loading shifts $x$ upward and reverses the pointwise ranking. If control efficacy depends on $x$, an intervention has delayed onset, a washout state, a nonlinear toxicity penalty, or adaptive feedback changes $s$, the cumulative-dose comparison alone no longer establishes dominance. Those omissions define the most important routes to falsification.
+
+\section{Stochastic extension and early-warning estimands}
+Cell-to-cell heterogeneity can be represented in a first approximation by a Wright--Fisher-type diffusion,
+\begin{equation}
+ dX_t=X_t(1-X_t)\bigl(s-\Delta u(t)\bigr)dt+\sqrt{\frac{X_t(1-X_t)}{N_e}}\,dW_t,
+ \label{eq:sde}
+\end{equation}
+where $N_e$ is an effective population-size parameter and $W_t$ is Brownian motion. This SDE is a diffusion approximation, not a literal account of mtDNA replication. Boundary behavior and mutation input must be specified for the experimental setting; in the code, an Euler--Maruyama approximation is projected onto $[0,1]$ and the projection convention is reported explicitly. Stochastic paths need not be pointwise ordered even when deterministic trajectories are.
+
+For a target threshold $x^*$, define the first-passage time $\tau^*=\inf\{t\geq0:X_t\geq x^*\}$, with $\tau^*=\infty$ if the crossing does not occur within the observation window. Relevant estimands include $\Pr(\tau^*\leq T)$, restricted mean time above threshold, quantiles of $\tau^*$ among crossers, and the cross-cell variance $\operatorname{Var}(X_t)$. For a specified drift $b(x,u)$ and diffusion coefficient $a(x)$, the mean first-passage function, where finite and subject to explicit boundary conditions, solves the backward equation $b(x,u)m'(x)+\frac12a(x)m''(x)=-1$. We do not assert a Kramers law $\tau\propto e^{\Delta V/D}$: the drift in \eqref{eq:base} has no double-well potential or metastable barrier. A Kramers approximation would be appropriate only after a separate model and data justify a bistable landscape.
+
+The early-warning hypothesis is therefore operational, not universal: within a specified mutation, tissue, and sampling protocol, an increase in cell-to-cell heteroplasmy variance might predict future threshold-crossing burden beyond the information in the mean alone. That claim must be assessed using out-of-sample prediction, with controls for sequencing depth, copy number, cell composition, batch, and lineage structure. Variance can rise under neutral drift without being an actionable warning, so a raw increase in variance is not sufficient evidence.
+
+\section{Synthetic numerical audit}
+The verification script uses dimensionless parameters $x_0=0.40$, $s=0.15$, $\Delta=0.18$, $U=1$, $T=20$, $B=5$, and an illustrative threshold $x^*=0.70$. These values are pedagogical and are not estimates from a cell, tissue, drug, mouse, or human. It compares (i) a front-loaded unit-intensity pulse lasting $B/U=5$ time units and (ii) constant intensity $B/T=0.25$. Both schedules deliver the same integral dose and have the same final heteroplasmy in the deterministic model. The pulse acts earlier, so it has a smaller intermediate trajectory and less integrated threshold burden in accordance with the proposition.
+
+In the log-odds coordinates, the continuous schedule has slope $s-\Delta B/T=0.105$ throughout, while the pulse has slope $s-\Delta U=-0.03$ during the first five time units and slope $s=0.15$ thereafter. This illustrates the model's scheduling mechanism: it redistributes the same cumulative change to earlier times rather than changing the endpoint. The stochastic experiment is a separate finite Monte Carlo audit of an Euler--Maruyama approximation to \eqref{eq:sde} using 6,000 trajectories per schedule and a fixed seed. In this one illustrative run, the time-averaged squared threshold loss is 0.02621 for the pulse and 0.03712 for constant control, while the fractions of paths crossing the threshold by \(T\) are 0.94650 and 0.96217, respectively. The estimated terminal cross-cell variances are 0.00624 and 0.00613, showing that variance does not monotonically rank the schedules even in the synthetic model. These parameter-dependent outputs are not biological measurements or proof that a real actuator has positive selectivity.
+
+The tests check the analytic logit solution, endpoint invariance under equal total dose, pointwise front-loading dominance for randomly generated bounded same-dose controls, zero-selectivity invariance, adverse-sign reversal, monotonicity of the threshold loss, parameter validation, reproducible stochastic boundedness, and finite-passage accounting. Monte Carlo uncertainty is summarized for the synthetic crossing fraction; the simulation does not use data fitted to biological measurements and does not estimate a lifespan effect.
+
+\section{Experimental program and falsification}
+\subsection{Gate 1: estimate the actuator, not just mitophagy flux}
+Before schedule comparisons, estimate whether the intervention produces a positive and reproducible $\Delta$ for the chosen mutant allele in the target cell type. Use an isogenic or well-characterized heteroplasmic cybrid panel, include wild-type and mutation-matched controls, and quantify heteroplasmy longitudinally alongside mtDNA copy number, membrane potential, mitophagy flux, and oxidative-phosphorylation function. A bulk increase in mitophagy flux is not a proxy for mutant-selective clearance. The measurement should estimate change in mutant-versus-wild-type odds under exposure, with uncertainty, rather than infer selectivity from membrane-potential staining alone. This is critical because genotype--potential relationships differ by variant and context \cite{Seabright2020,Ryall2026}.
+
+\subsection{Gate 2: fixed-dose schedule comparison in cybrids}
+Calibrate a variant- and cell-specific functional response curve to define $x^*$ before examining schedules. Randomize replicate clones or independent culture units to vehicle, constant exposure, and front-loaded/pulsed exposure with equal cumulative input; match handling, assay timing, and washout. Pre-register primary outcomes: time above calibrated $x^*$, integrated threshold burden, final heteroplasmy, and a prespecified oxidative-phosphorylation endpoint. Secondary outcomes should include cell survival, mtDNA copy number, mitochondrial mass, membrane potential, and off-target loss of wild-type genomes. Estimate selectivity and actuator kinetics independently in a training set, then test predictions in held-out clones. Analyze single cells where feasible because bulk averages can conceal high-load tails \cite{Green2025}.
+
+\textbf{Falsification criterion A:} if the actuator's estimated $\Delta$ is nonpositive or statistically indistinguishable from zero across the target context, the proposed selective-mitophagy mechanism is unsupported; do not interpret schedule differences as confirmation of this model. \textbf{Falsification criterion B:} if the pulse fails to reduce the prespecified threshold burden relative to equal-dose continuous exposure, with uncertainty narrow enough to exclude the preregistered minimum effect, reject the baseline schedule prediction in that context. A nonsignificant, underpowered comparison alone is inconclusive rather than a clean falsification.
+
+\subsection{Gate 3: stochastic validation and in vivo translation}
+Fit the diffusion and observation models to longitudinal single-cell or lineage-resolved data, with independent estimation of copy-number effects and measurement noise. Test whether variance adds out-of-sample predictive value over mean heteroplasmy, cell identity, copy number, and age. Replication should span independent biological units and prespecified tissues. A PolgA D257A mutator mouse model is relevant to the consequences of elevated mtDNA mutagenesis and premature-aging phenotypes \cite{Trifunovic2004}, but its broad mutational process is not automatically a model of one heteroplasmic deletion or of the required genotype-selective mitophagy actuator. It should be a secondary mechanistic context only after a specific mutation, target engagement, safety, and a justified tissue endpoint are established. Any animal protocol requires independent ethical review and formal power analysis; the present paper provides no dosing regimen.
+
+\textbf{Kill criterion:} no demonstrated positive mutant-versus-wild-type selection effect in the target tissue means this actuator cannot instantiate the control term $\Delta u$ as intended, regardless of mathematical schedule optimization. A result that improves a surrogate endpoint while depleting total mtDNA or damaging wild-type mitochondrial function also fails the translational objective.
+
+\section{Relation to prior work and novelty boundary}
+Mitochondrial base editors provide a distinct route to modifying selected mtDNA bases; DdCBE demonstrated programmable C-to-T editing in human mtDNA but does not make a mitophagy actuator selective by itself \cite{Mok2020}. The adaptive-therapy literature similarly motivates temporal treatment design in heterogeneous evolving populations, but its ecological competition mechanism and clinical setting are not evidence that a mitochondrial pulse regimen will work \cite{Gatenby2009}. The current literature already contains dynamic models of mtDNA drift, mutation, and selection; therefore, this manuscript does not claim to invent heteroplasmy dynamics or thresholded mitochondrial phenotypes. The restricted contribution is to make the fixed-dose timing result explicit, identify assumptions under which it follows, and separate it from unverified actuator biology and stochastic early-warning claims.
+
+A targeted search conducted for this release used combinations of the phrases ``heteroplasmy threshold control,'' ``mitophagy optimal control,'' ``mitochondrial heteroplasmy dynamics,'' and ``adaptive therapy mitochondria,'' plus PubMed/arXiv-oriented queries. It found closely related studies on heteroplasmy selection, thresholds, and mitochondrial editing but did not establish that the exact problem statement or theorem is novel. Search absence is not proof of priority; a submission-grade novelty claim requires an updated systematic search and expert review.
+
+\section{Limitations}
+The state variable compresses the intracellular distribution of mtDNA into one fraction. It ignores multiple mutant species, linked variants, nucleoid segregation, organelle fission/fusion, mitochondrial biogenesis, cell death, immune interactions, tissue architecture, and time-varying effective population size. The threshold is treated as known even though biochemical thresholds depend on mutation and cellular context. The intervention is represented as direct selection on heteroplasmy, though actual mitophagy acts on organelles and may not discriminate genomes within mixed organelles. The linear effect $\Delta u$ has no saturation, delay, feedback, or toxicity. The stochastic term is phenomenological, and a cross-cell variance signal can be confounded by measurement error. Synthetic simulations validate implementation and internal implications only. No empirical dataset, biological experiment, animal intervention, safety evaluation, or lifespan analysis was performed.
+
+\section{Conclusion}
+The reduced model yields a precise conditional statement: when mutant-selective control has a constant positive effect on log-odds drift, an equal-dose front-loaded pulse weakly minimizes every monotone integrated heteroplasmy penalty while leaving the deterministic endpoint unchanged. This is a consequence of cumulative-dose ordering, not proof of a clinically useful treatment schedule. The stochastic extension defines first-passage and variance-based measurements without inventing a barrier or claiming a Kramers law. The decisive experiment is to establish mutant-specific selection, estimate actuator kinetics and collateral costs, and then test preregistered equal-dose schedules. If selectivity is absent, the control concept fails at its first biological gate. No claim of restored mitochondrial function, slowed aging, or lifespan extension follows from this theoretical and synthetic work.
+
+All computations are synthetic and used no biological dataset. The source verifier requires Python 3.10+ and NumPy 1.24+ (seed 20261010). This is a theoretical methods proposal, not an experimentally or clinically validated result; no DOI has been minted and no external manuscript submission is claimed.
+
+\begin{thebibliography}{99}\small
+\setlength{\itemsep}{0pt}
+\bibitem{Ryall2026} C. Ryall, P. F. Chinnery, and J. van den Ameele, ``Common Principles Underlie Mitochondrial DNA Heteroplasmy Dynamics in the Germline and Soma,'' \emph{Annual Review of Genomics and Human Genetics}, vol. 27, pp. 247--275, 2026. doi:10.1146/annurev-genom-120324-032239.
+\bibitem{Smith2024} K. K. Smith et al., ``A systematic review on the biochemical threshold of mitochondrial genetic variants,'' \emph{Genome Research}, vol. 34, no. 3, pp. 341--365, 2024. doi:10.1101/gr.278200.123.
+\bibitem{Green2025} A. P. Green et al., ``Cryptic mitochondrial DNA mutations coincide with mid-late life and are pathophysiologically informative in single cells across tissues and species,'' \emph{Nature Communications}, vol. 16, art. 2250, 2025. doi:10.1038/s41467-025-57286-8.
+\bibitem{Suen2008} D.-F. Suen, K. L. Norris, and R. J. Youle, ``Mitochondrial dynamics and apoptosis,'' \emph{Genes \& Development}, vol. 22, pp. 1577--1590, 2008. doi:10.1101/gad.1658508.
+\bibitem{Seabright2020} A. P. Seabright et al., ``Intracellular quality control of mitochondrial DNA: evidence and limitations,'' \emph{Philosophical Transactions of the Royal Society B}, vol. 375, 20190196, 2020. doi:10.1098/rstb.2019.0196.
+\bibitem{Trifunovic2004} A. Trifunovic et al., ``Premature ageing in mice expressing defective mitochondrial DNA polymerase,'' \emph{Nature}, vol. 429, pp. 417--423, 2004. doi:10.1038/nature02517.
+\bibitem{Mok2020} B. Y. Mok et al., ``A bacterial cytidine deaminase toxin enables CRISPR-free mitochondrial base editing,'' \emph{Nature}, vol. 583, pp. 631--637, 2020. doi:10.1038/s41586-020-2477-4.
+\bibitem{Gatenby2009} R. A. Gatenby, A. S. Silva, R. J. Gillies, and B. R. Frieden, ``Adaptive therapy,'' \emph{Cancer Research}, vol. 69, no. 11, pp. 4894--4903, 2009. doi:10.1158/0008-5472.CAN-08-3658.
+\end{thebibliography}
+\end{document}
