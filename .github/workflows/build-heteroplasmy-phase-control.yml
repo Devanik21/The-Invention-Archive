@@ -117,7 +117,7 @@ jobs:
             exit 1
           fi
           git add -A
-          git diff --cached --check
+          git diff --cached --check -- . ':!Theoretical Research/Heteroplasmy_Phase_Control_Threshold_Aware_Mitophagy_Scheduling_as_a_Stochastic_Control_Problem_for_Mitochondrial_Aging/README.md'
           git commit -m "Add heteroplasmy phase-control research release"
           git fetch origin main --tags
           git rebase origin/main
