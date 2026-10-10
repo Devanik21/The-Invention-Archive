@@ -1,0 +1,150 @@
+name: Build and publish source-channel identifiability audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/build-source-channel-audit.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Refresh main without discarding remote work
+        run: |
+          set -euo pipefail
+          git fetch origin main --tags
+          git rebase origin/main
+
+      - name: Check path collision and unpack prepared source files
+        env:
+          RELEASE_DIR: "Theoretical Research/Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit"
+        run: |
+          set -euo pipefail
+          test ! -e "$RELEASE_DIR" || { echo "Release path already exists; refusing overwrite." >&2; exit 1; }
+          cat source-channel-payload-part-*.txt | tr -d '\r\n' | base64 --decode | base64 --decode | xz --decompress --stdout | tar -xf -
+          test -d "$RELEASE_DIR"
+          test ! -e "$RELEASE_DIR/paper.pdf"
+
+      - name: Validate mathematical checks, word count, thread, and metadata
+        working-directory: "Theoretical Research/Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit"
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "numpy>=1.24" "PyYAML>=6.0"
+          python verify_model.py
+          python - <<'PY'
+          import json, re, yaml
+          from pathlib import Path
+          expected = {"paper.tex", "verify_model.py", "README.md", "medium_story.md",
+                      "x_thread.md", "CITATION.cff", "paper.bib", ".zenodo.json",
+                      "schema_article.jsonld", "deploy.py"}
+          present = {p.relative_to(Path(".")).as_posix() for p in Path(".").rglob("*") if p.is_file()}
+          assert present == expected, f"Source manifest mismatch: missing={expected-present}; extra={present-expected}"
+          json.loads(Path(".zenodo.json").read_text(encoding="utf-8"))
+          json.loads(Path("schema_article.jsonld").read_text(encoding="utf-8"))
+          yaml.safe_load(Path("CITATION.cff").read_text(encoding="utf-8"))
+          medium = re.findall(r"\b[\w'-]+\b", Path("medium_story.md").read_text(encoding="utf-8"))
+          assert 1500 <= len(medium) <= 2000, f"Medium draft has {len(medium)} words"
+          thread = Path("x_thread.md").read_text(encoding="utf-8")
+          assert len(re.findall(r"(?m)^\*\*\d+/12\*\*", thread)) == 12, "Expected 12 numbered X posts"
+          readme = Path("README.md").read_text(encoding="utf-8")
+          assert len(re.findall(r"(?m)^\$\$$", readme)) == 6, "README must contain three dedicated display equations"
+          assert r"\n" not in readme, "Literal escaped newline sequence found in README"
+          bib = Path("paper.bib").read_text(encoding="utf-8")
+          tex = Path("paper.tex").read_text(encoding="utf-8")
+          keys = set(re.findall(r"@\w+\s*\{\s*([^,\s]+)", bib))
+          cited = set()
+          for group in re.findall(r"\\cite\{([^}]+)\}", tex):
+              cited.update(key.strip() for key in group.split(","))
+          assert cited <= keys, f"Missing BibTeX keys: {cited-keys}"
+          print(f"PASS: metadata, source manifest, bibliography keys; Medium words={len(medium)}; X posts=12.")
+          PY
+
+      - name: Compile PDF from the current LaTeX source
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper.tex
+          working_directory: "Theoretical Research/Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit"
+
+      - name: Validate final release, update index, commit, tag, push, and verify
+        env:
+          RELEASE_DIR: "Theoretical Research/Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit"
+          RELEASE_SLUG: "Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit"
+          RELEASE_TAG: "v2026.10.10-02"
+        run: |
+          set -euo pipefail
+          test -s "$RELEASE_DIR/paper.pdf"
+          head -c 5 "$RELEASE_DIR/paper.pdf" | grep -q '%PDF-'
+          rm -f "$RELEASE_DIR/paper.aux" "$RELEASE_DIR/paper.log" "$RELEASE_DIR/paper.out" "$RELEASE_DIR/paper.toc" "$RELEASE_DIR/paper.synctex.gz" "$RELEASE_DIR/paper.fdb_latexmk" "$RELEASE_DIR/paper.fls" "$RELEASE_DIR/paper.bbl" "$RELEASE_DIR/paper.blg"
+          python - <<'PY'
+          import json, re, yaml
+          from pathlib import Path
+          rel = Path("Theoretical Research/Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit")
+          expected = {"paper.tex", "paper.pdf", "verify_model.py", "README.md", "medium_story.md",
+                      "x_thread.md", "CITATION.cff", "paper.bib", ".zenodo.json",
+                      "schema_article.jsonld", "deploy.py"}
+          present = {p.relative_to(rel).as_posix() for p in rel.rglob("*") if p.is_file()}
+          assert present == expected, f"Final 11-file manifest mismatch: missing={expected-present}; extra={present-expected}"
+          assert (rel / "paper.pdf").read_bytes().startswith(b"%PDF-")
+          json.loads((rel / ".zenodo.json").read_text(encoding="utf-8"))
+          json.loads((rel / "schema_article.jsonld").read_text(encoding="utf-8"))
+          yaml.safe_load((rel / "CITATION.cff").read_text(encoding="utf-8"))
+          medium = re.findall(r"\b[\w'-]+\b", (rel / "medium_story.md").read_text(encoding="utf-8"))
+          assert 1500 <= len(medium) <= 2000, f"Medium word count out of range: {len(medium)}"
+          posts = re.findall(r"(?m)^\*\*\d+/12\*\*", (rel / "x_thread.md").read_text(encoding="utf-8"))
+          assert len(posts) == 12, f"X thread count out of range: {len(posts)}"
+          index = Path("Theoretical Research/Readme.md")
+          current = index.read_text(encoding="utf-8")
+          if rel.name in current:
+              raise SystemExit("Release path already appears in index; refusing duplicate entry.")
+          row = f"| 2026.10.10 | Source-Channel Identifiability in Aging Biomolecular Communication | Information-theoretic audit | [{rel.name}]({rel.name}/) |"
+          index.write_text(current.rstrip() + "\n" + row + "\n", encoding="utf-8")
+          print(f"PASS: PDF signature, 11-file manifest, metadata; Medium words={len(medium)}; X posts={len(posts)}.")
+          PY
+
+          # Remove only the temporary source payload and trigger marker, not repository assets.
+          rm -f source-channel-release-ready source-channel-payload-part-*.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main --tags
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release tag $RELEASE_TAG already exists; refusing to overwrite it." >&2
+            exit 1
+          fi
+          git add -A
+          git diff --cached --check
+          git commit -m "Add source-channel identifiability research release"
+          git fetch origin main --tags
+          # Rebase only this unpushed commit if main advanced during the build; never force-push.
+          git rebase origin/main
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release tag $RELEASE_TAG appeared during deployment; refusing to overwrite it." >&2
+            exit 1
+          fi
+          git tag -a "$RELEASE_TAG" -m "Source-channel identifiability preprint $RELEASE_TAG"
+          git push origin HEAD:main
+          git push origin "refs/tags/$RELEASE_TAG"
+          git fetch origin main --tags
+          COMMIT="$(git rev-parse HEAD)"
+          test "$(git rev-parse origin/main)" = "$COMMIT"
+          mapfile -t REMOTE_PATHS < <(git ls-tree -r --name-only origin/main -- "$RELEASE_DIR")
+          test "${#REMOTE_PATHS[@]}" -eq 11
+          for name in paper.tex paper.pdf verify_model.py README.md medium_story.md x_thread.md CITATION.cff paper.bib .zenodo.json schema_article.jsonld deploy.py; do
+            local_sha="$(git hash-object "$RELEASE_DIR/$name")"
+            remote_sha="$(git rev-parse "origin/main:$RELEASE_DIR/$name")"
+            test "$local_sha" = "$remote_sha" || { echo "Remote file mismatch: $name" >&2; exit 1; }
+          done
+          echo "## Source-channel audit release" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Commit: $COMMIT" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Tag: $RELEASE_TAG" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Remote manifest: 11/11 files verified" >> "$GITHUB_STEP_SUMMARY"
+          echo "- PDF: compiled from paper.tex and verified nonempty" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Repository URL: https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/$RELEASE_SLUG" >> "$GITHUB_STEP_SUMMARY"

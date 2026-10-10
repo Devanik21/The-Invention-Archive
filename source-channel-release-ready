@@ -1,0 +1,1 @@
+One-run build trigger for the source-channel identifiability research release. The workflow validates ten source files, compiles paper.pdf, commits the exact 11-file release, updates the index, tags, and verifies the remote state.
