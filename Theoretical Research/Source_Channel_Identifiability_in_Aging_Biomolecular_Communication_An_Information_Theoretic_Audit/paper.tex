@@ -1,0 +1,135 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,booktabs,tabularx,array}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=1.5em}
+\hypersetup{pdftitle={Source-Channel Identifiability in Aging Biomolecular Communication: An Information-Theoretic Audit},pdfauthor={Devanik Debnath}}
+\title{Source-Channel Identifiability in Aging Biomolecular Communication: An Information-Theoretic Audit}
+\author{Devanik Debnath (Devanik21)\\\small Department of Electronics and Communication Engineering\\\small National Institute of Technology Agartala, India}
+\date{10 October 2026}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\begin{document}
+\maketitle
+\begin{abstract}
+Mutual information between a regulatory input and a molecular output can change because the input distribution changes, because the conditional input-output channel changes, or because both change. These mechanisms are not interchangeable. This paper formalizes that distinction for aging-related biomolecular communication and supplies a source-standardized audit based on a common reference distribution. For a finite channel $W(y\mid x)$ and source law $p(x)$, mutual information $I_p(X;Y)$ is a functional of both objects; therefore, comparing observed mutual information across cohorts does not, by itself, identify degradation of the conditional channel. We give an exact reference-distribution decomposition, prove the basic non-identifiability statement, and verify the result in a binary symmetric channel where source-shift alone produces a large mutual-information decline while the channel remains unchanged. A second synthetic comparison separates source shift from an independently imposed increase in channel error. The contribution is a transparent measurement and analysis protocol, not a biological finding: empirical application requires common-support measurements, careful estimation of conditional response laws, and uncertainty analysis. The paper does not assert that aging is reducible to information loss or that information-theoretic standardization establishes causality.
+\end{abstract}
+
+\noindent\textbf{Keywords:} mutual information; source-channel identifiability; aging; gene regulation; biochemical signaling; distribution shift; information theory; reproducibility
+
+\section{Research question and posture}
+Information theory has long been used to quantify cellular signaling under molecular noise. Recent work has applied these methods to aging-related transcriptional regulation, building on established treatments of information flow and intrinsic noise in biochemical signaling \cite{rhee2012,suderman2018}. Emison et al. report that, in their analyzed system, an age-associated decline in mutual information was driven by input-distribution mismatch rather than channel corruption \cite{emison2026}. Earlier work quantified age-related loss of effective biomolecular communication in skeletal-muscle data \cite{sivakumar2025}. Together, these studies make a crucial measurement question timely: when an estimated mutual information changes across cohorts, which component changed—the distribution of inputs, the conditional response law, or both?
+
+The objective here is narrower than a theory of aging. We derive an exact decomposition of a mutual-information contrast relative to a declared reference input law, and demonstrate why the decomposition matters in a fully specified synthetic model. The paper does not introduce a new biological mechanism, reanalyze the source studies' data, or independently reproduce their empirical conclusions. Novelty is not claimed as historical priority; the proposed contribution is a compact, reproducible audit formulation that can be tested against future datasets.
+
+\section{Definitions and assumptions}
+Let $X$ denote a discrete regulatory input and $Y$ a discrete measured response, with finite alphabets $\mathcal X$ and $\mathcal Y$. In cohort $g$, let the input distribution be $p_g(x)$ and the conditional channel be $W_g(y\mid x)=P_g(Y=y\mid X=x)$. Then the joint distribution is
+\begin{equation}
+P_g(x,y)=p_g(x)W_g(y\mid x),
+\label{eq:joint}
+\end{equation}
+and the marginal output law is $p_g^Y(y)=\sum_x p_g(x)W_g(y\mid x)$. Mutual information, using base-2 logarithms, is the standard Shannon measure of statistical dependence \cite{cover2006}:
+\begin{equation}
+I_{p_g}(W_g)=\sum_{x,y}p_g(x)W_g(y\mid x)\log_2\frac{W_g(y\mid x)}{p_g^Y(y)}.
+\label{eq:mi}
+\end{equation}
+Terms with zero probability are interpreted by continuity. Units are bits per observed input-output pair. We assume the input and output definitions remain comparable across cohorts; if cell types, assays, normalization, or feature definitions change, those changes can create an additional measurement problem rather than a biological channel effect.
+
+The conditional response law $W_g$ is called the channel for mathematical convenience. In transcriptomic observational data it is not necessarily a causal mechanism: hidden variables, feedback, cell composition, confounding, and selection can all alter the observed conditional distribution. The term “channel change” therefore means a change in the estimated conditional law under the chosen variables, not proof that molecular machinery itself degraded.
+
+\section{Why mutual information does not identify channel change}
+Equation~\eqref{eq:mi} shows that mutual information depends on the source distribution $p_g$ and the conditional law $W_g$. Holding $W$ fixed while changing $p$ generally changes both the output marginal and the relative weighting of input-conditioned responses.
+
+\begin{proposition}[Source dependence under a fixed channel]
+For a finite channel $W$, there exist source distributions $p_1$ and $p_2$ such that $I_{p_1}(W)\neq I_{p_2}(W)$ even though the conditional channel is identical in both cases. Consequently, an observed difference in mutual information alone cannot identify a change in $W$.
+\end{proposition}
+\begin{proof}
+A binary symmetric channel with crossover probability $\epsilon\in(0,1/2)$ is sufficient. Let $X\sim\operatorname{Bernoulli}(p)$ and $Y=X\oplus N$, where $N\sim\operatorname{Bernoulli}(\epsilon)$ is independent of $X$. The output probability is $r=\epsilon+p(1-2\epsilon)$, and
+\begin{equation}
+I_p(W)=H_2\bigl(\epsilon+p(1-2\epsilon)\bigr)-H_2(\epsilon),
+\label{eq:bscmi}
+\end{equation}
+where $H_2(q)=-q\log_2q-(1-q)\log_2(1-q)$. For $p=1/2$, $I_{1/2}(W)=1-H_2(\epsilon)>0$. As $p\to0$, $r\to\epsilon$ and $I_p(W)\to0$. Thus source changes alone can alter mutual information while $W$ is fixed.\end{proof}
+
+This result is not specific to biology. It is a basic consequence of Shannon mutual information. In biological interpretation, it rules out a common but invalid inference: “the cohort-level mutual information declined, therefore the cellular communication machinery became noisier.” The conclusion requires additional assumptions or measurements.
+
+\section{Reference-distribution standardization}
+Choose a reference input distribution $q(x)$ whose support lies within the observed input support of each cohort. Define standardized mutual information
+\begin{equation}
+I_q(W_g)=\sum_{x,y}q(x)W_g(y\mid x)\log_2\frac{W_g(y\mid x)}{\sum_{x'}q(x')W_g(y\mid x')}.
+\label{eq:standardized}
+\end{equation}
+This asks how each cohort's estimated conditional response law would transmit information if the input were drawn from the same reference distribution $q$. It is a statistical standardization, not necessarily a realizable physiological intervention. When $q$ has support outside a cohort's observed support, the quantity is not empirically identified without extrapolating assumptions; such a cohort should be excluded from that comparison or the reference support narrowed.
+
+For younger cohort $Y$ and older cohort $A$, define $\Delta_{\mathrm{nat}}=I_{p_A}(W_A)-I_{p_Y}(W_Y)$ and $\Delta_{\mathrm{std}}(q)=I_q(W_A)-I_q(W_Y)$. The natural contrast reflects both source and conditional-law differences, while the standardized contrast compares estimated conditional laws under the same source distribution.
+
+\begin{proposition}[Exact three-term decomposition]
+For any reference law $q$ under which all terms are defined,
+\begin{align}
+\Delta_{\mathrm{nat}}={}&\underbrace{I_{p_A}(W_A)-I_q(W_A)}_{D_A(q)}+\underbrace{I_q(W_A)-I_q(W_Y)}_{C(q)}\\
+&+\underbrace{I_q(W_Y)-I_{p_Y}(W_Y)}_{D_Y(q)}.
+\label{eq:decomp}
+\end{align}
+\end{proposition}
+\begin{proof}
+The right-hand side telescopes after cancellation of $I_q(W_A)$ and $I_q(W_Y)$, leaving $I_{p_A}(W_A)-I_{p_Y}(W_Y)$.\end{proof}
+
+The middle term $C(q)$ is a source-standardized channel contrast. The first and third terms quantify how each cohort's natural source law differs from the reference for its own estimated channel. This decomposition is exact but reference-dependent: it is not a unique causal allocation of the total difference. Results should therefore report the chosen $q$, source-support restrictions, and sensitivity to reasonable alternative reference distributions. The terms $D_A$ and $D_Y$ need not have the same sign.
+
+\section{Synthetic verification: binary communication channel}
+We use a binary symmetric channel solely to verify the mathematics. Inputs and outputs are binary; a transmitted bit is flipped independently with probability $\epsilon$. No biological data or biological parameter estimates enter the model. For a fixed $\epsilon=0.10$, we vary the source probability $p=P(X=1)$ across $0.05, 0.25, 0.50, 0.75, 0.95$. Equation~\eqref{eq:bscmi} predicts identical channel fidelity for every source probability, even though natural mutual information changes with $p$.
+
+A second synthetic comparison sets a younger reference cohort to $(p_Y,\epsilon_Y)=(0.50,0.10)$ and an older cohort to $(p_A,\epsilon_A)=(0.05,0.20)$. We compare the natural mutual-information difference with the decomposition in Equation~\eqref{eq:decomp}, using $q=\operatorname{Bernoulli}(0.5)$. For this chosen channel family, the standardized contrast is $[1-H_2(0.20)]-[1-H_2(0.10)]$. This term isolates the channel-error difference under the shared source law; the remainder in the natural contrast is attributable to the source-law change under the explicitly chosen reference decomposition.
+
+The script \texttt{verify\_model.py} calculates analytical mutual information, draws seeded samples, estimates empirical mutual information, and checks that sample estimates converge to the analytical values within a declared tolerance. It tests endpoint entropy conventions and verifies the telescoping decomposition numerically. It does not simulate gene regulation, extracellular vesicles, an organism, or the aging process. A finite synthetic test validates the implementation and the logical counterexample, not any biological hypothesis.
+
+\section{A practical audit protocol for aging-related data}
+A responsible analysis should report at least four objects rather than a single mutual-information score:
+\begin{enumerate}
+\item \textbf{Natural mutual information.} Estimate $I_{p_g}(W_g)$ in each cohort with a consistent estimator and uncertainty intervals.
+\item \textbf{Conditional response law.} Estimate $W_g(y\mid x)$ on common input support. Report sample counts for each input stratum; sparse strata can make apparent conditional differences unstable.
+\item \textbf{Standardized mutual information.} Select a reference distribution $q$ before inspecting the desired cohort contrast, and calculate $I_q(W_g)$. Repeat for defensible reference distributions to test sensitivity.
+\item \textbf{Measurement and composition controls.} Examine cell-type composition, sequencing depth, dropouts, batch effects, normalization, covariates, and possible hidden inputs. Use held-out prediction or resampling to quantify estimator uncertainty.
+\end{enumerate}
+
+Where ethically and technically appropriate, controlled perturbations that vary the regulatory input over a common range can identify the conditional response law more directly than purely observational cohorts. Such interventions still require causal assumptions and checks for feedback, nonstationarity, and off-target effects. Common-support standardization can reduce one source of ambiguity, but it cannot repair unmeasured confounding or a poorly measured input.
+
+\section{Null models, competing explanations, and falsification}
+Several competing explanations can produce a decline in observed mutual information: a changed input distribution with a stable conditional law; altered conditional response variability; cell-type mixture changes; measurement noise or dropout changes; changes in the selected input-output feature pair; and estimator bias caused by unequal sample sizes. These hypotheses make different predictions under common-input standardization, within-cell-type analysis, matched-depth subsampling, and controlled input perturbation.
+
+The proposed audit would be weakened if standardized contrasts proved unstable across reasonable $q$, if the common input support were too small to be informative, or if the estimated conditional distributions changed mainly under technical preprocessing choices. A claim of channel degradation would be unsupported if the natural mutual-information decline disappeared under a common reference distribution and relevant measurement controls. Conversely, a persistent standardized change is evidence of a conditional-law difference under the selected variables, but it is still not by itself proof of a specific molecular mechanism or a causal effect of age.
+
+\section{Epistemological classification}
+\begin{center}\small
+\begin{tabularx}{\linewidth}{@{}p{0.07\linewidth}p{0.32\linewidth}X@{}}\toprule
+Class & Claim & Status and boundary \\\midrule
+P1 & Mutual-information definition; source dependence; telescoping decomposition & Exact mathematical statements for the declared finite-alphabet model. \\
+P2 & A controller or intervention could improve a biological output & Not established here; requires an identified, controllable biological system and independent safety evidence. \\
+P3 & A universal aging-related communication exponent exists & Not claimed; no scaling analysis or null-model ensemble is supplied. \\
+P4 & Gene regulation can be analyzed using a noisy-channel formalism & A useful structural mapping; the channel abstraction is not a complete biological model. \\
+P5 & Aging is simply “software failure” or all declining mutual information is channel damage & Metaphorical or unsupported without separate evidence; explicitly rejected as an inference. \\\bottomrule
+\end{tabularx}
+\end{center}
+
+\section{Limitations and research scope}
+The model uses a known binary symmetric channel and a single discrete input, which is far simpler than multi-variable, continuous, delayed, nonlinear gene regulation. Empirical mutual-information estimates can be biased at finite sample sizes and sensitive to discretization. Source-standardized mutual information depends on a selected $q$, and an observational conditional law may mix causal response with confounding. The paper's verification is synthetic and reproducible, but it does not independently reproduce or validate any published biological dataset. The literature comparison is current to the audit date and does not establish exhaustive priority across all adjacent disciplines.
+
+\section{Conclusion}
+A change in mutual information is not synonymous with a change in channel quality. The source distribution contributes to the measured statistic, so aging-related comparisons require a clearly defined input law and a conditional response analysis. The exact decomposition and reproducible binary counterexample provide a compact audit tool for distinguishing these possibilities. The next empirical step is not to prescribe a rejuvenation intervention, but to evaluate whether the chosen biological inputs and outputs are comparable, observable, and estimable across cohorts.
+
+\section*{Reproducibility and data availability}
+Run \texttt{python verify\_model.py} with Python 3.10 or later and NumPy 1.24 or later. The script uses seed 20261010. The simulation uses no external data and makes no network requests. All numerical values in the synthetic section are generated from the stated analytical model; no biological dataset was accessed or transformed.
+
+\clearpage
+\begin{thebibliography}{9}
+\bibitem{emison2026} B. Emison, C. W. Lynn, A. Mugler, F. Ambrosio, and P. D. Dixit, ``An information-theoretic framework for transcriptional regulation reveals declining communication fidelity in aging,'' \emph{Cell Reports Physical Science}, article 103516, 16 September 2026. doi: 10.1016/j.xcrp.2026.103516.
+\bibitem{sivakumar2025} S. Sivakumar, R. W. LeFebre, G. Menichetti, H. Iijima, A. Mugler, and F. Ambrosio, ``A novel information-theoretic approach reveals loss of effective biomolecular communication in aging muscle cells,'' \emph{The Journals of Gerontology: Series A}, vol. 80, no. 12, glaf195, 2025. doi: 10.1093/gerona/glaf195.
+\bibitem{rhee2012} A. Rhee, R. Cheong, and A. Levchenko, ``The application of information theory to biochemical signaling systems,'' \emph{Physical Biology}, vol. 9, no. 4, 045011, 2012. doi: 10.1088/1478-3975/9/4/045011.
+\bibitem{suderman2018} R. Suderman and E. J. Deeds, ``Intrinsic limits of information transmission in biochemical signalling motifs,'' \emph{Interface Focus}, vol. 8, no. 6, 20180039, 2018. doi: 10.1098/rsfs.2018.0039.
+\bibitem{cover2006} T. M. Cover and J. A. Thomas, \emph{Elements of Information Theory}, 2nd ed. Hoboken, NJ: Wiley, 2006.
+\end{thebibliography}
+\end{document}

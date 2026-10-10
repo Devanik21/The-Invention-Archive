@@ -1,0 +1,33 @@
+{
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "title": "Source-Channel Identifiability in Aging Biomolecular Communication: An Information-Theoretic Audit",
+  "creators": [
+    {
+      "name": "Devanik Debnath",
+      "affiliation": "Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India",
+      "orcid": "0009-0001-8310-6921"
+    }
+  ],
+  "description": "A theoretical and computational methods preprint formalizing source-channel identifiability for aging-related biomolecular communication. It provides an exact reference-distribution decomposition and a reproducible synthetic binary-channel audit. It contains no biological dataset and makes no clinical claim.",
+  "publication_date": "2026-10-10",
+  "version": "1.0.0",
+  "keywords": [
+    "mutual information",
+    "source-channel identifiability",
+    "aging",
+    "biomolecular communication",
+    "information theory",
+    "reproducibility"
+  ],
+  "access_right": "open",
+  "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "notes": "Prepared deposition metadata only. No Zenodo upload or DOI minting has occurred."
+}

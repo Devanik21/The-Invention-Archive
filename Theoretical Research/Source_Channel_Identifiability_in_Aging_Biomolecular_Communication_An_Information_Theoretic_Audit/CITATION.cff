@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it using the metadata in this file."
+title: "Source-Channel Identifiability in Aging Biomolecular Communication: An Information-Theoretic Audit"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    affiliation: "Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India"
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+version: 1.0.0
+date-released: "2026-10-10"
+type: other
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+url: "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit"
+license: MIT
+abstract: "A finite-channel analysis and source-standardized audit showing why changes in observed mutual information do not alone identify changes in a conditional response channel. Includes deterministic synthetic verification; no biological data are analyzed."
+keywords:
+  - mutual information
+  - information theory
+  - biological signaling
+  - aging
+  - distribution shift
+  - identifiability

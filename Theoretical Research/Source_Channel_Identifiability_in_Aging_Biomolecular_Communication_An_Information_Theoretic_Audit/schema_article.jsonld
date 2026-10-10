@@ -1,0 +1,58 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Source-Channel Identifiability in Aging Biomolecular Communication: An Information-Theoretic Audit",
+  "name": "Source-Channel Identifiability in Aging Biomolecular Communication: An Information-Theoretic Audit",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "identifier": "https://orcid.org/0009-0001-8310-6921",
+    "url": "https://github.com/Devanik21"
+  },
+  "affiliation": {
+    "@type": "Organization",
+    "name": "National Institute of Technology Agartala",
+    "department": "Electronics and Communication Engineering",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "IN"
+    }
+  },
+  "datePublished": "2026-10-10",
+  "inLanguage": "en",
+  "keywords": [
+    "mutual information",
+    "source-channel identifiability",
+    "aging",
+    "biomolecular communication",
+    "information theory"
+  ],
+  "abstract": "A finite-channel analysis and source-standardized audit showing why observed mutual-information changes do not alone identify changes in a conditional response channel.",
+  "isAccessibleForFree": true,
+  "url": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit",
+  "encoding": [
+    {
+      "@type": "MediaObject",
+      "name": "LaTeX manuscript",
+      "contentUrl": "https://github.com/Devanik21/The-Invention-Archive/blob/main/Theoretical%20Research/Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit/paper.tex"
+    },
+    {
+      "@type": "MediaObject",
+      "name": "Compiled preprint PDF",
+      "fileFormat": "application/pdf",
+      "contentUrl": "https://github.com/Devanik21/The-Invention-Archive/blob/main/Theoretical%20Research/Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit/paper.pdf"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "Synthetic verification script",
+      "programmingLanguage": "Python",
+      "codeRepository": "https://github.com/Devanik21/The-Invention-Archive/blob/main/Theoretical%20Research/Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit/verify_model.py"
+    }
+  ],
+  "citation": [
+    "https://doi.org/10.1016/j.xcrp.2026.103516",
+    "https://doi.org/10.1093/gerona/glaf195",
+    "https://doi.org/10.1088/1478-3975/9/4/045011",
+    "https://doi.org/10.1098/rsfs.2018.0039"
+  ]
+}
