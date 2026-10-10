@@ -27,6 +27,8 @@ jobs:
           test ! -e "$RELEASE_DIR" || { echo "Release path already exists; refusing overwrite." >&2; exit 1; }
           cat heteroplasmy-phase-control-payload-part-*.txt | tr -d '\r\n' | base64 --decode | xz --decompress --stdout | tar -xf - -C 'Theoretical Research'
           test -d "$RELEASE_DIR"
+          test -s heteroplasmy-suen2008.bib
+          cat heteroplasmy-suen2008.bib >> "$RELEASE_DIR/paper.bib"
           test ! -e "$RELEASE_DIR/paper.pdf"
 
       - name: Validate source, metadata, mathematical tests, and release text
@@ -106,7 +108,7 @@ jobs:
           PY
 
           # Remove temporary payloads, preserving the workflow that records this deployment process.
-          rm -f heteroplasmy-phase-control-payload-part-*.txt
+          rm -f heteroplasmy-phase-control-payload-part-*.txt heteroplasmy-suen2008.bib
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin main --tags
