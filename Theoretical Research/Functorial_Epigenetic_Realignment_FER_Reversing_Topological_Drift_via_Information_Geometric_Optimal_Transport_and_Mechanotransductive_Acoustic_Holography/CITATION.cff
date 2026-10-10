@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+title: "Functorial Epigenetic Realignment (FER): Reversing Topological Drift via Information-Geometric Optimal Transport and Mechanotransductive Acoustic Holography"
+message: "If you use this preprint or verification code, please cite this release."
+type: software
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    alias: Devanik21
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+url: "https://github.com/Devanik21/The-Invention-Archive"
+date-released: "2026-10-08"
+version: "v2026.10.08"
+license: CC-BY-4.0
+abstract: >-
+  A falsifiable theoretical and computational framework that combines
+  topological data analysis, information geometry, optimal transport,
+  categorical control, mechanobiology, active-matter descriptors, and
+  acoustic holography as a research program for geometric control of
+  biological state transitions.
+keywords:
+  - aging
+  - epigenetics
+  - topological data analysis
+  - persistent homology
+  - optimal transport
+  - information geometry
+  - mechanobiology
+  - chromatin
+  - acoustic holography
+  - active matter
+preferred-citation:
+  type: article
+  title: "Functorial Epigenetic Realignment (FER): Reversing Topological Drift via Information-Geometric Optimal Transport and Mechanotransductive Acoustic Holography"
+  authors:
+    - family-names: Debnath
+      given-names: Devanik
+      orcid: "https://orcid.org/0009-0001-8310-6921"
+  year: 2026
+  url: "https://github.com/Devanik21/The-Invention-Archive"

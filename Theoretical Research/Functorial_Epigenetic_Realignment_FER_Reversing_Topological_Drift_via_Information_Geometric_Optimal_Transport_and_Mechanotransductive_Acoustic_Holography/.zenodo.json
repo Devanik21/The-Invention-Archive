@@ -1,0 +1,34 @@
+{
+  "title": "Functorial Epigenetic Realignment (FER): Reversing Topological Drift via Information-Geometric Optimal Transport and Mechanotransductive Acoustic Holography",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "description": "A falsifiable theoretical and computational framework for testing whether age-associated cellular-state transitions admit a useful geometric representation and mechanically controllable directions. FER combines topological data analysis, information geometry, Wasserstein optimal transport, categorical control, mechanobiology, active-matter defect descriptors, and acoustic holography as a candidate field-synthesis layer.",
+  "creators": [
+    {
+      "name": "Devanik Debnath",
+      "affiliation": "National Institute of Technology Agartala, India",
+      "orcid": "0009-0001-8310-6921"
+    }
+  ],
+  "keywords": [
+    "aging",
+    "epigenetics",
+    "topological data analysis",
+    "persistent homology",
+    "optimal transport",
+    "information geometry",
+    "mechanobiology",
+    "chromatin",
+    "acoustic holography",
+    "active matter"
+  ],
+  "license": "CC-BY-4.0",
+  "publication_date": "2026-10-08",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Devanik21/The-Invention-Archive",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ]
+}
