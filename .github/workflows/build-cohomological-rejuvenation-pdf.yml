@@ -77,3 +77,19 @@ jobs:
             git commit -m "Build Cohomological Rejuvenation PDF"
             git push origin HEAD:main
           fi
+
+      - name: Create and verify semantic tag
+        env:
+          RELEASE_TAG: "v2026.10.11"
+        run: |
+          set -euo pipefail
+          git fetch origin main --tags
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Tag $RELEASE_TAG already exists; refusing to overwrite it." >&2
+            exit 1
+          fi
+          git tag -a "$RELEASE_TAG" -m "Cohomological Rejuvenation preprint $RELEASE_TAG"
+          git push origin "refs/tags/$RELEASE_TAG"
+          git fetch origin --tags
+          test "$(git rev-list -n 1 "$RELEASE_TAG")" = "$(git rev-parse HEAD)"
+          echo "Verified annotated tag $RELEASE_TAG -> $(git rev-parse HEAD)"
