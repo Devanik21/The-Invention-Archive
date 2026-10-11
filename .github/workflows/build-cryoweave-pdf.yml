@@ -81,7 +81,7 @@ jobs:
           assert all((d / name).stat().st_size > 0 for name in expected)
           print('Exact 11-file manifest passed; all files nonempty')
           PY
-      - name: Commit current compiled PDF
+      - name: Commit compiled PDF with fast-forward retry
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
@@ -91,7 +91,19 @@ jobs:
             echo 'Compiled PDF is already current.'
           else
             git commit -m 'Build CryoWeave research PDF'
-            git push origin HEAD:main
+            pushed=0
+            for attempt in 1 2 3; do
+              git fetch origin main
+              if ! git merge-base --is-ancestor origin/main HEAD; then
+                git rebase origin/main
+              fi
+              if git push origin HEAD:main; then
+                pushed=1
+                break
+              fi
+              echo "Fast-forward push attempt $attempt raced another commit; retrying."
+            done
+            test "$pushed" -eq 1 || { echo 'Could not publish PDF after three fast-forward-safe attempts.' >&2; exit 1; }
           fi
       - name: Create and verify release tag
         env:
