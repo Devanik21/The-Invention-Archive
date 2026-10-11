@@ -1,0 +1,155 @@
+name: Build and publish rate-distortion immunology preprint
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/build-rate-distortion-immunology.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Guard release path and unpack source payload
+        env:
+          RELEASE_DIR: "Theoretical Research/Rate_Distortion_Immunology_Defragmenting_the_Aging_Immune_Repertoire"
+        run: |
+          set -euo pipefail
+          test ! -e "$RELEASE_DIR" || { echo "Release path already exists; refusing overwrite." >&2; exit 1; }
+          cat rate-distortion-payload-part-*.txt | tr -d '\r\n' | base64 --decode | xz --decompress --stdout | tar -xf - -C 'Theoretical Research'
+          test -d "$RELEASE_DIR"
+          test ! -e "$RELEASE_DIR/paper.pdf"
+
+      - name: Run verification and validate source, references, and metadata
+        working-directory: "Theoretical Research/Rate_Distortion_Immunology_Defragmenting_the_Aging_Immune_Repertoire"
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "numpy>=1.24" "PyYAML>=6.0" "pypdf>=5.0"
+          python verify_model.py
+          python - <<'PY'
+          import json, re, yaml
+          from pathlib import Path
+          expected = {"paper.tex", "verify_model.py", "README.md", "medium_story.md",
+                      "x_thread.md", "CITATION.cff", "paper.bib", ".zenodo.json",
+                      "schema_article.jsonld", "deploy.py"}
+          present = {p.relative_to(Path(".")).as_posix() for p in Path(".").rglob("*") if p.is_file()}
+          assert present == expected, f"Source manifest mismatch: missing={expected-present}; extra={present-expected}"
+          json.loads(Path(".zenodo.json").read_text(encoding="utf-8"))
+          json.loads(Path("schema_article.jsonld").read_text(encoding="utf-8"))
+          cff = yaml.safe_load(Path("CITATION.cff").read_text(encoding="utf-8"))
+          assert cff.get("cff-version") == "1.2.0" and cff.get("authors"), "CITATION.cff validation failed"
+          medium = re.findall(r"\b[\w'-]+\b", Path("medium_story.md").read_text(encoding="utf-8"))
+          assert 1500 <= len(medium) <= 2000, f"Medium draft has {len(medium)} words"
+          thread = Path("x_thread.md").read_text(encoding="utf-8")
+          assert len(re.findall(r"(?m)^\*\*\d+/12\*\*", thread)) == 12, "Expected 12 numbered X posts"
+          readme = Path("README.md").read_text(encoding="utf-8")
+          assert len(re.findall(r"(?m)^\$\$$", readme)) == 8, "README must contain four dedicated display equations"
+          assert r"\n" not in readme, "Literal escaped newline sequence found in README"
+          assert r"\operatorname" not in readme, "Unsupported operator macro found in README"
+          tex = Path("paper.tex").read_text(encoding="utf-8")
+          bib = Path("paper.bib").read_text(encoding="utf-8")
+          keys = set(re.findall(r"@\w+\s*\{\s*([^,\s]+)", bib))
+          cited = set()
+          for group in re.findall(r"\\cite[a-zA-Z*]*\{([^}]+)\}", tex):
+              cited.update(key.strip() for key in group.split(","))
+          assert cited <= keys, f"Missing BibTeX entries: {cited-keys}"
+          assert "Co-equal research-process credit is given to Devanik Debnath and Xylia" in tex, "Required Xylia research-process credit missing"
+          assert "Devanik Debnath retains responsibility for the final manuscript" in tex, "Author responsibility disclosure missing"
+          print(f"PASS: source, citations, and metadata; Medium words={len(medium)}; X posts=12; citation keys={len(cited)}.")
+          PY
+
+      - name: Compile PDF from current LaTeX source
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper.tex
+          working_directory: "Theoretical Research/Rate_Distortion_Immunology_Defragmenting_the_Aging_Immune_Repertoire"
+
+      - name: Validate compiled PDF, update index, commit, tag, push, and verify remote
+        env:
+          RELEASE_DIR: "Theoretical Research/Rate_Distortion_Immunology_Defragmenting_the_Aging_Immune_Repertoire"
+          RELEASE_SLUG: "Rate_Distortion_Immunology_Defragmenting_the_Aging_Immune_Repertoire"
+          RELEASE_TAG: "v2026.10.11.4"
+        run: |
+          set -euo pipefail
+          test -s "$RELEASE_DIR/paper.pdf"
+          head -c 5 "$RELEASE_DIR/paper.pdf" | grep -q '%PDF-'
+          python -m pip install --disable-pip-version-check "pypdf>=5.0" "PyYAML>=6.0"
+          # Remove only known TeX build products, never manuscript sources.
+          rm -f "$RELEASE_DIR/paper.aux" "$RELEASE_DIR/paper.log" "$RELEASE_DIR/paper.out" "$RELEASE_DIR/paper.toc" "$RELEASE_DIR/paper.synctex.gz" "$RELEASE_DIR/paper.fdb_latexmk" "$RELEASE_DIR/paper.fls" "$RELEASE_DIR/paper.bbl" "$RELEASE_DIR/paper.blg" "$RELEASE_DIR/paper.lof" "$RELEASE_DIR/paper.lot" "$RELEASE_DIR/paper.nav" "$RELEASE_DIR/paper.snm" "$RELEASE_DIR/paper.vrb" "$RELEASE_DIR/paper.xdv"
+          python - <<'PY'
+          import json, re, yaml
+          from pathlib import Path
+          from pypdf import PdfReader
+          rel = Path("Theoretical Research/Rate_Distortion_Immunology_Defragmenting_the_Aging_Immune_Repertoire")
+          expected = {"paper.tex", "paper.pdf", "verify_model.py", "README.md", "medium_story.md",
+                      "x_thread.md", "CITATION.cff", "paper.bib", ".zenodo.json",
+                      "schema_article.jsonld", "deploy.py"}
+          present = {p.name for p in rel.iterdir()}
+          assert present == expected, f"Final 11-file manifest mismatch: missing={expected-present}; extra={present-expected}"
+          pdf = rel / "paper.pdf"
+          assert pdf.read_bytes().startswith(b"%PDF-") and pdf.stat().st_size > 5000
+          pages = len(PdfReader(str(pdf)).pages)
+          assert pages >= 7, f"Compiled PDF has {pages} pages; minimum is 7"
+          json.loads((rel / ".zenodo.json").read_text(encoding="utf-8"))
+          json.loads((rel / "schema_article.jsonld").read_text(encoding="utf-8"))
+          cff = yaml.safe_load((rel / "CITATION.cff").read_text(encoding="utf-8"))
+          assert cff.get("cff-version") == "1.2.0" and cff.get("authors")
+          medium = re.findall(r"\b[\w'-]+\b", (rel / "medium_story.md").read_text(encoding="utf-8"))
+          assert 1500 <= len(medium) <= 2000, f"Medium word count out of range: {len(medium)}"
+          posts = re.findall(r"(?m)^\*\*\d+/12\*\*", (rel / "x_thread.md").read_text(encoding="utf-8"))
+          assert len(posts) == 12, f"X thread count out of range: {len(posts)}"
+          index = Path("Theoretical Research/Readme.md")
+          current = index.read_text(encoding="utf-8")
+          if rel.name in current:
+              raise SystemExit("Release path already appears in index; refusing duplicate entry.")
+          row = f"| 2026.10.11 | Rate-Distortion Immunology: Defragmenting the Aging Immune Repertoire | Coverage-aware methods preprint | [{rel.name}]({rel.name}/) |"
+          index.write_text(current.rstrip() + "\n" + row + "\n", encoding="utf-8")
+          print(f"PASS: PDF signature, pages={pages}, 11-file manifest, JSON/YAML, Medium words={len(medium)}, X posts={len(posts)}.")
+          PY
+
+          rm -f rate-distortion-payload-part-*.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main --tags
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release tag $RELEASE_TAG already exists; refusing to overwrite it." >&2
+            exit 1
+          fi
+          git add -A
+          git diff --cached --check
+          git commit -m "Add rate-distortion immunology research release"
+          git fetch origin main --tags
+          git rebase origin/main
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release tag $RELEASE_TAG appeared during deployment; refusing to overwrite it." >&2
+            exit 1
+          fi
+          git tag -a "$RELEASE_TAG" -m "Rate-distortion immunology methods preprint $RELEASE_TAG"
+          git push origin HEAD:main
+          git push origin "refs/tags/$RELEASE_TAG"
+          git fetch origin main --tags
+          COMMIT="$(git rev-parse HEAD)"
+          test "$(git rev-parse origin/main)" = "$COMMIT"
+          test "$(git rev-parse "refs/tags/$RELEASE_TAG^{}")" = "$COMMIT"
+          test "$(git ls-tree -r --name-only origin/main -- "$RELEASE_DIR" | wc -l)" -eq 11
+          for name in paper.tex paper.pdf verify_model.py README.md medium_story.md x_thread.md CITATION.cff paper.bib .zenodo.json schema_article.jsonld deploy.py; do
+            local_sha="$(git hash-object "$RELEASE_DIR/$name")"
+            remote_sha="$(git rev-parse "origin/main:$RELEASE_DIR/$name")"
+            test "$local_sha" = "$remote_sha" || { echo "Remote file mismatch: $name" >&2; exit 1; }
+          done
+          echo "## Rate-distortion immunology release" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Commit: $COMMIT" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Tag: $RELEASE_TAG" >> "$GITHUB_STEP_SUMMARY"
+          echo "- PDF: compiled from paper.tex; at least 7 pages" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Remote manifest: 11/11 files independently hash-verified" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Repository URL: https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/$RELEASE_SLUG" >> "$GITHUB_STEP_SUMMARY"
