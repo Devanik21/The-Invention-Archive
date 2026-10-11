@@ -1,0 +1,28 @@
+{
+  "title": "The Identifiability Budget: An Audit Framework for Mechanistic AI and Experimental Design",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "publication_date": "2026-10-11",
+  "description": "Research preprint defining an intervention-budget audit for discriminating a finite set of candidate mechanisms under explicit Gaussian observation assumptions. Numerical checks are synthetic and do not validate a real biological or physical mechanism. This file is metadata preparation only; it does not represent a Zenodo deposition or DOI assignment.",
+  "creators": [
+    {
+      "name": "Debnath, Devanik",
+      "affiliation": "National Institute of Technology Agartala, India (author-reported affiliation)"
+    }
+  ],
+  "keywords": [
+    "scientific machine learning",
+    "mechanistic identifiability",
+    "experimental design",
+    "active learning",
+    "information theory"
+  ],
+  "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Devanik21/The-Invention-Archive",
+      "relation": "isPartOf",
+      "resource_type": "publication-technicalnote"
+    }
+  ]
+}

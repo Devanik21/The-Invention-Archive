@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this research artifact, please cite the preprint and link to the repository release."
+title: "The Identifiability Budget: An Audit Framework for Mechanistic AI and Experimental Design"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    affiliation: "National Institute of Technology Agartala, India (author-reported affiliation)"
+date-released: 2026-10-11
+version: "v2026.10.11.2"
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+type: article
+abstract: >-
+  An audit framework for distinguishing predictive performance from mechanistic
+  identification. It defines a Gaussian identifiability budget and verifies a
+  toy intervention-design example under explicit assumptions.
+keywords:
+  - scientific machine learning
+  - mechanistic identifiability
+  - experimental design
+  - active learning
+  - information theory
+license: MIT

@@ -1,0 +1,124 @@
+name: Build Identifiability Budget PDF
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Theoretical Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design/paper.tex'
+      - 'Theoretical Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design/paper.bib'
+      - 'Theoretical Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design/README.md'
+      - 'Theoretical Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design/deploy.py'
+      - 'Theoretical Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design/CITATION.cff'
+      - 'Theoretical Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design/verify_model.py'
+      - 'Theoretical Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design/medium_story.md'
+      - 'Theoretical Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design/x_thread.md'
+      - 'Theoretical Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design/.zenodo.json'
+      - 'Theoretical Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design/schema_article.jsonld'
+      - 'Theoretical Research/Readme.md'
+      - '.github/workflows/build-identifiability-budget-pdf.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install verifier and TeX dependencies
+        run: |
+          python -m pip install PyYAML
+          sudo apt-get update
+          sudo apt-get install -y texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended poppler-utils
+      - name: Verify theory, metadata, and dissemination drafts
+        shell: bash
+        run: |
+          set -euo pipefail
+          RELEASE_DIR="Theoretical Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design"
+          python "$RELEASE_DIR/verify_model.py"
+          python - "$RELEASE_DIR" <<'PY'
+          import json, pathlib, re, sys, yaml
+          d = pathlib.Path(sys.argv[1])
+          json.loads((d / ".zenodo.json").read_text(encoding="utf-8"))
+          json.loads((d / "schema_article.jsonld").read_text(encoding="utf-8"))
+          yaml.safe_load((d / "CITATION.cff").read_text(encoding="utf-8"))
+          words = (d / "medium_story.md").read_text(encoding="utf-8").split()
+          assert 1500 <= len(words) <= 2000, f"Medium word count outside 1500-2000: {len(words)}"
+          thread = (d / "x_thread.md").read_text(encoding="utf-8")
+          posts = re.findall(r"^\*\*\d+/12\*\*", thread, flags=re.M)
+          assert len(posts) == 12, f"Expected 12 X posts, found {len(posts)}"
+          readme = (d / "README.md").read_text(encoding="utf-8")
+          assert readme.count(chr(36) * 2) == 6, "README must use three separate display-math blocks"
+          assert r"\operatorname" not in readme, "Prohibited operatorname macro in README"
+          assert r"\n" not in readme, "Literal escaped newline in README"
+          tex = (d / "paper.tex").read_text(encoding="utf-8")
+          assert "Co-equal research-process credit is given to Devanik Debnath and Xylia" in tex, "Missing Xylia research-process disclosure"
+          print(f"Metadata valid; Medium words={len(words)}; X posts={len(posts)}; README math and disclosure checks passed")
+          PY
+      - name: Compile and validate the current manuscript
+        shell: bash
+        run: |
+          set -euo pipefail
+          RELEASE_DIR="Theoretical Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design"
+          BUILD_DIR="$(mktemp -d)"
+          trap 'rm -rf "$BUILD_DIR"' EXIT
+          cp "$RELEASE_DIR/paper.tex" "$BUILD_DIR/paper.tex"
+          cp "$RELEASE_DIR/paper.bib" "$BUILD_DIR/paper.bib"
+          cd "$BUILD_DIR"
+          pdflatex -interaction=nonstopmode -halt-on-error paper.tex
+          pdflatex -interaction=nonstopmode -halt-on-error paper.tex
+          pdflatex -interaction=nonstopmode -halt-on-error paper.tex
+          test -s paper.pdf
+          python -c "from pathlib import Path; p=Path('paper.pdf'); assert p.read_bytes()[:5] == b'%PDF-', 'invalid PDF signature'; print(f'Compiled PDF: {p.stat().st_size} bytes')"
+          PAGE_COUNT="$(pdfinfo paper.pdf | awk '/^Pages:/ {print $2}')"
+          test "$PAGE_COUNT" -ge 7 || { echo "PDF must contain at least 7 pages; found $PAGE_COUNT" >&2; exit 1; }
+          if grep -E 'Citation .*undefined|Reference .*undefined' paper.log; then
+            echo "Unresolved citation or reference remains" >&2
+            exit 1
+          fi
+          echo "PDF page-count gate passed: $PAGE_COUNT pages"
+          cd "$GITHUB_WORKSPACE"
+          cp "$BUILD_DIR/paper.pdf" "$RELEASE_DIR/paper.pdf"
+          python - "$RELEASE_DIR" <<'PY'
+          import pathlib, sys
+          d = pathlib.Path(sys.argv[1])
+          expected = {
+              "paper.tex", "paper.pdf", "verify_model.py", "README.md",
+              "medium_story.md", "x_thread.md", "CITATION.cff", "paper.bib",
+              ".zenodo.json", "schema_article.jsonld", "deploy.py"
+          }
+          actual = {p.name for p in d.iterdir() if p.is_file()}
+          assert actual == expected, f"Expected exactly 11 core files; missing={expected-actual}, extra={actual-expected}"
+          assert all((d / n).stat().st_size > 0 for n in expected), "Empty release artifact"
+          print("Release manifest valid: exactly 11 nonempty core files")
+          PY
+      - name: Commit compiled PDF
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- "Theoretical Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design/paper.pdf"
+          if git diff --cached --quiet; then
+            echo "Compiled PDF is already current."
+          else
+            git commit -m "Build Identifiability Budget PDF"
+            git push origin HEAD:main
+          fi
+      - name: Create and verify semantic tag
+        env:
+          RELEASE_TAG: "v2026.10.11.2"
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --tags
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Tag $RELEASE_TAG already exists; refusing to overwrite it." >&2
+            exit 1
+          fi
+          git tag -a "$RELEASE_TAG" -m "The Identifiability Budget preprint $RELEASE_TAG"
+          git push origin "refs/tags/$RELEASE_TAG"
+          git fetch origin --tags
+          test "$(git rev-list -n 1 "$RELEASE_TAG")" = "$(git rev-parse HEAD)"
+          echo "Verified annotated tag $RELEASE_TAG -> $(git rev-parse HEAD)"

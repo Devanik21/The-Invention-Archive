@@ -1,0 +1,264 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,tabularx,array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[numbers,sort&compress]{natbib}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\setlength{\parskip}{4pt}
+\setlength{\parindent}{0pt}
+\setlist{nosep,leftmargin=1.5em}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{remark}{Remark}[section]
+\newcommand{\Mcal}{\mathcal{M}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Ecal}{\mathcal{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\KL}{D_{\mathrm{KL}}}
+\newcommand{\PhiCDF}{\Phi}
+\title{\textbf{The Identifiability Budget: An Audit Framework for Mechanistic AI and Experimental Design}}
+\author{Devanik Debnath\\\small Electronics and Communication Engineering, National Institute of Technology Agartala, India}
+\date{11 October 2026 \\ \small Research preprint; not peer reviewed}
+\begin{document}
+\maketitle
+\begin{abstract}
+Scientific AI can predict measurements accurately while leaving the mechanism that generated them unidentified. This is not merely a limitation of model interpretability: when competing mechanisms induce the same distribution on the observed experimental support, no algorithm operating only on those observations can distinguish them better than its prior information permits. This paper develops an operational audit for that gap. We formalize observational equivalence, derive an intervention-specific information budget for a finite set of candidate mechanisms, and give a finite-sample model-selection guarantee for independent Gaussian observations with known, mechanism-invariant covariance. The resulting design problem chooses intervention replicates so that every decision-relevant mechanism pair is separated by a sufficient Mahalanobis/Kullback--Leibler distance; if no admissible experiment separates a pair, the budget is infinite and the correct output is abstention rather than a single asserted explanation. A reproducible two-mechanism example, with outputs $f_0(u)=u$ and $f_1(u)=u^2$, shows exact observational equivalence on $u\in\{0,1\}$ and intervention-based discrimination at $u=2$. A standard-library verification script checks the derivations and compares Monte Carlo error rates with their analytic Gaussian values. The contribution is a transparent audit framework and a tractable benchmark, not a claim to have invented observational equivalence, active experimental design, or information-theoretic testing. Guarantees apply only to the declared candidate class and stated observation model; they do not establish that a candidate mechanism is biologically or physically true.
+\end{abstract}
+\textbf{Keywords:} scientific machine learning; mechanistic identifiability; active learning; experimental design; observational equivalence; Kullback--Leibler divergence; model discrimination; scientific AI reliability.
+
+\section{Introduction}
+A predictive model and a mechanistic explanation answer different questions. Prediction asks whether a mapping reproduces observations on a target distribution. Mechanistic inference asks which process would continue to explain the system under new conditions, including interventions that alter the data-generating process. The first does not imply the second. This distinction has been made in causal inference and is newly prominent in discussions of AI-assisted scientific discovery: latent drivers are often observed only through proxies, so incompatible mechanisms may induce almost indistinguishable observational relationships \citep{pearl2009,mccormick2026}.
+
+This matters in biomedical research, climate science, materials, neuroscience, and engineering. An AI system may rank a candidate explanation highly because it is fluent, fits a trajectory, or reproduces a familiar regime. Yet an unobserved intervention may reveal that the candidate and a rival predict radically different responses. The scientific question is therefore not only ``Which model predicts best?'' but also ``What evidence would distinguish the plausible mechanisms, at what cost, and with what residual ambiguity?''
+
+Optimal experimental design and active intervention selection already address substantial parts of this question. Causal active learning selects informative interventions \citep{zhang2023}; recent work studies experimental design for practical identifiability and model discrimination in mechanistic ODE models \citep{liu2026}; and active-learning methods can reduce the data needed to establish practical parameter identifiability \citep{liu_active2025}. This paper does not present those foundations as new. Instead, it proposes a compact audit object—the \emph{identifiability budget}—that makes an AI-generated mechanism claim answer a concrete question: how much intervention evidence is required to distinguish the decision-relevant candidate mechanisms at a declared error target, under explicit statistical assumptions?
+
+The paper has four outputs. First, it separates prediction fit from mechanism identification through an observational-equivalence proposition. Second, it derives a Gaussian finite-candidate bound that converts pairwise intervention separation into a model-selection error bound. Third, it defines a budgeted intervention-design problem and an AI-assisted audit protocol. Fourth, it supplies an executable toy benchmark demonstrating the difference between observational fit and interventional discrimination.
+
+The scope is deliberately narrow. The formal guarantee assumes a finite candidate set, known candidate response means, independent Gaussian measurements, and covariance that does not vary with the candidate mechanism. Real scientific workflows often violate one or more assumptions. Those violations are treated as reasons to downgrade or withhold a certificate, not as technicalities to hide.
+
+\section{Relation to existing work and the bounded contribution}
+The identifiability problem predates modern AI. In causal inference, observational distributions frequently identify an equivalence class rather than a unique causal graph; interventions can refine that class \citep{pearl2009}. Active learning for intervention design makes this search computationally explicit \citep{zhang2023}. For mechanistic biological models, optimal design has long used sensitivity, likelihood profiles, and control inputs to improve parameter estimation or discriminate candidate models. Liu, Maini, and Baker formulate practical-identifiability and model-discrimination design as an optimal-control problem and use profile likelihood to assess parameter identifiability \citep{liu2026}. Liu and colleagues study active learning for efficient data collection to establish practical parameter identifiability \citep{liu_active2025}.
+
+The recent position paper by McCormick argues that mechanistic learning from high-dimensional proxies is generically underdetermined and that predictive success is insufficient evidence for mechanism discovery \citep{mccormick2026}. That argument strongly motivates the audit developed here. Its essential premise is not novel: multiple models can agree on observed support and disagree elsewhere. The present paper instead gives a deliberately inspectable design calculation for a finite candidate set under a simple noise model, an explicit budget definition, and a reproducible counterexample where the distinction can be checked line by line.
+
+The bounded contribution is consequently methodological rather than a claim of priority over general optimal experimental design. The audit is useful as a minimum reporting standard for AI-guided discovery: report the observational equivalence class, state the discriminating intervention, quantify its expected separation and cost, state the assumptions supporting any error bound, and abstain when the class remains unresolved. Whether this compact framework improves real laboratory decisions is an empirical question for future benchmarks.
+
+\section{Problem formulation}
+\subsection{Candidate mechanisms and observation regimes}
+Let $\Mcal=\{M_1,\ldots,M_K\}$ be a finite set of scientific mechanisms under consideration. An experimental setting $u\in\Ucal$ may encode an input signal, perturbation, initial condition, measurement time, or operating regime. Under mechanism $M_i$, one observation has distribution $P_i(\cdot\mid u)$. Let $\Ucal_{\mathrm{obs}}$ denote the experimental settings represented in the current observational data and $\Ucal_{\mathrm{int}}$ the admissible intervention settings.
+
+A predictive model can be evaluated using risk on the observed regime, for example
+\begin{equation}
+R_{\mathrm{obs}}(M_i)=\mathbb{E}_{(u,y)\sim P_{\mathrm{obs}}}\!\left[\ell\big(f_i(u),y\big)\right].
+\end{equation}
+Low risk does not by itself imply that $M_i$ is identifiable. The risk compares predictions to observations; it need not measure separation from every competing mechanism. A candidate can be observationally optimal while its rivals remain equally compatible with the evidence.
+
+\begin{definition}[Observational equivalence]
+Two candidate mechanisms $M_i,M_j$ are observationally equivalent over $\Ucal_{\mathrm{obs}}$ if their induced joint distributions on all available observations agree. Write $M_i\sim_{\mathrm{obs}}M_j$ when $P_i^{\mathrm{obs}}=P_j^{\mathrm{obs}}$. In finite data, exact equality is often replaced by a declared practical threshold based on a distance, likelihood ratio, or uncertainty region; such an approximation must be reported as approximate equivalence, not equality.
+\end{definition}
+
+A mechanism pair is decision-relevant when choosing between its predictions could change a scientific conclusion, subsequent experiment, engineering action, or safety decision. We denote the subset of pairs that matter for the stated decision by $\mathcal{P}_{\mathrm{rel}}$. Excluding a pair is itself a scientific judgement and should be justified before inspecting the preferred result.
+
+\subsection{What AI does in the framework}
+AI has substantive roles at four stages: proposing candidate mechanisms from literature and data; fitting each candidate to observed measurements; proposing admissible interventions that maximize disagreement between candidates; and approximating expensive forward models to shortlist experiments. The formal calculation remains separate from the generative model. The AI system must not treat its own text, likelihood score, or surrogate prediction as evidence that the nominated mechanism is true.
+
+This separation creates a clear interface. The model proposer returns a finite hypothesis set and uncertainty statements. The experiment-design layer returns proposed settings, expected observations, costs, and pairwise divergences. A verification layer checks the algebra and simulates data. The scientist decides whether the candidate set is adequate, the intervention is feasible and ethical, and the assumptions correspond to the apparatus and domain.
+
+\section{The observational limit}
+\begin{proposition}[No observational discrimination under exact equivalence]
+Suppose $M_0$ and $M_1$ induce the same probability law for every observation available under the observational design. Let the prior probabilities of the two mechanisms be equal. Then, for any decision rule that uses only those observations, the probability of selecting the correct mechanism is $1/2$. This remains true for arbitrarily large observational sample sizes.
+\end{proposition}
+\begin{proof}
+Under the assumption, the data law is the same under either mechanism: $P_0^{\mathrm{obs}}=P_1^{\mathrm{obs}}$. Consequently, the distribution of any statistic or randomized decision produced from those data is also the same under both hypotheses. If a rule selects $M_0$ with probability $q$ under this common law, it selects $M_1$ with probability $1-q$ under the same law. Under an equal prior, its probability of being correct is $\frac12q+\frac12(1-q)=\frac12$. Adding observations from the same observational regime does not change the equality of the induced laws.
+\end{proof}
+
+\begin{remark}
+The proposition is an identity about information available in the data, not an indictment of a particular architecture. More layers, larger language models, better optimization, or more fluent rationales cannot recover information absent from the observational distribution. Informative prior knowledge can affect posterior odds, but it is not new evidence supplied by the observational sample.
+\end{remark}
+
+For approximate rather than exact equivalence, the conclusion is softened: mechanisms may be distinguishable in principle but require a sample size much larger than the available budget. The intervention-budget calculation below quantifies separation under a specified statistical model. It does not convert a weakly separated pair into a uniquely identified mechanism by definition.
+
+\section{Gaussian intervention separation}
+Consider an experiment plan $E$ consisting of settings $u_1,\ldots,u_N$. Under mechanism $M_i$, suppose observation $k$ follows
+\begin{equation}
+Y_k\mid M_i,u_k\sim\mathcal{N}\big(\mu_i(u_k),\Sigma_k\big),
+\end{equation}
+where the covariance matrix $\Sigma_k$ is known, positive definite, and common to all candidate mechanisms. Conditional observations are independent across $k$. The common-covariance assumption is important: it makes the log-likelihood boundary between a pair of mechanisms linear in the observations and yields the closed form below.
+
+\begin{definition}[Cumulative intervention divergence]
+For a design $E$, the pairwise cumulative Kullback--Leibler divergence is
+\begin{equation}
+D_{ij}(E)=\frac12\sum_{k=1}^{N}\big(\mu_i(u_k)-\mu_j(u_k)\big)^\top\Sigma_k^{-1}\big(\mu_i(u_k)-\mu_j(u_k)\big).
+\end{equation}
+This is the KL divergence between the joint Gaussian observation laws under $M_i$ and $M_j$ for the selected design, using the standard information-theoretic definition of Kullback and Leibler \citep{kullback1951}. It is nonnegative and is zero precisely when the candidate means agree at all selected settings under the stated covariance model.
+\end{definition}
+
+\begin{proposition}[Exact pairwise Gaussian discrimination error]
+For two simple candidate mechanisms with equal prior odds, independent Gaussian observations, known means, and a common known covariance, the maximum-likelihood (equivalently, equal-prior Bayes) pairwise error probability is
+\begin{equation}
+P_e(i,j\mid E)=\Phi\!\left(-\sqrt{D_{ij}(E)/2}\right),
+\end{equation}
+where $\Phi$ is the standard normal cumulative distribution function.
+\end{proposition}
+\begin{proof}
+Stack the observations into one vector. The two joint laws are Gaussian with means $\mu_i^E,\mu_j^E$ and common block-diagonal covariance $\Sigma^E$. Whiten the vector by $(\Sigma^E)^{-1/2}$. The resulting hypotheses have identity covariance and mean difference with Euclidean norm $d$, where $d^2=(\mu_i^E-\mu_j^E)^\top(\Sigma^E)^{-1}(\mu_i^E-\mu_j^E)=2D_{ij}(E)$. Under equal priors, the likelihood-ratio decision boundary is the hyperplane halfway between the means. Projecting onto the unit vector between the means reduces the test to two one-dimensional normal distributions whose means are separated by $d$ and whose variances equal one. Each tail error is $\Phi(-d/2)=\Phi(-\sqrt{D_{ij}(E)/2})$.
+\end{proof}
+
+\begin{theorem}[Finite-candidate error bound]
+Assume the candidate class contains the data-generating mechanism, there are $K\geq2$ candidates, and maximum-likelihood selection compares the stated Gaussian candidate models. For true mechanism $M_i$, the selection error is bounded by
+\begin{equation}
+P_i(\widehat M\ne M_i\mid E)\leq\sum_{j\ne i}\Phi\!\left(-\sqrt{D_{ij}(E)/2}\right).
+\end{equation}
+Therefore, a sufficient condition for error at most $\epsilon$ for every candidate is
+\begin{equation}
+D_{ij}(E)\geq 2\left[\Phi^{-1}\!\left(1-\frac{\epsilon}{K-1}\right)\right]^2\quad\text{for every }i\ne j.
+\end{equation}
+\end{theorem}
+\begin{proof}
+If maximum likelihood selects a wrong candidate $M_j$ when $M_i$ is true, at least one competitor has likelihood no smaller than that of $M_i$. The event of any such competitor is contained in the union of the $K-1$ pairwise likelihood-reversal events. Apply the union bound and the pairwise error formula. If each pairwise tail probability is at most $\epsilon/(K-1)$, their sum is at most $\epsilon$.
+\end{proof}
+
+The theorem is a guarantee for a fully specified finite statistical model, not for unrestricted biological reality. It is conditional on correct candidate means, common covariance, independent measurements, and candidate-set adequacy. If the model class excludes the truth, the bound only describes selection among wrong candidates. If a learned surrogate supplies inaccurate $\mu_i(u)$, the computed divergence may overstate the separation. Those cases require robust bounds, calibration against high-fidelity simulation, or explicit abstention.
+
+\section{The identifiability budget}
+Let $\Ucal_{\mathrm{int}}$ be a finite or discretized set of admissible interventions. Each candidate intervention $u$ has nonnegative cost $c(u)$ and may be repeated $n_u\in\{0,1,2,\ldots\}$ times. Let $D_{ij}(n)$ denote the cumulative divergence induced by those replications. For a requested family-wise selection error $\epsilon$, define
+\begin{equation}
+\tau_{K,\epsilon}=2\left[\Phi^{-1}\!\left(1-\frac{\epsilon}{K-1}\right)\right]^2.
+\end{equation}
+
+\begin{definition}[Identifiability budget]
+The Gaussian identifiability budget for candidate class $\Mcal$, admissible intervention set $\Ucal_{\mathrm{int}}$, costs $c$, and target $\epsilon$ is
+\begin{equation}
+B_\epsilon=\min_{n_u\in\mathbb{N}_0}\sum_{u\in\Ucal_{\mathrm{int}}}c(u)n_u
+\quad\text{subject to}\quad D_{ij}(n)\geq\tau_{K,\epsilon}\;\ \forall(i,j)\in\mathcal{P}_{\mathrm{rel}}.
+\end{equation}
+If no feasible plan exists, define $B_\epsilon=+\infty$.
+\end{definition}
+
+If all candidate pairs are decision-relevant, the theorem gives a sufficient guarantee for maximum-likelihood selection under its assumptions. If only a subset is relevant to a prespecified decision, the budget certifies separation only for those pairs and must not be described as full mechanism identification. An infinite budget has a useful interpretation: within the allowed intervention set and candidate class, the proposed decision cannot be resolved by this design. The proper outcome is to enlarge the intervention set, refine the hypotheses, accept the residual ambiguity, or abstain.
+
+In the finite setting, $B_\epsilon$ is a mixed-integer optimization problem. For $K$ candidates and $J$ intervention settings, there are $K(K-1)/2$ pairwise constraints and $J$ nonnegative integer decision variables. Small problems can be solved by enumeration or integer optimization; larger problems may use a greedy max-min divergence-per-cost heuristic to propose a plan. A heuristic is not a proof of global optimality. The final plan should be recalculated on the selected interventions and checked against every required pair.
+
+\section{An AI-assisted audit protocol}
+The protocol deliberately treats AI as a hypothesis and design assistant, not as an oracle. It has seven steps.
+\begin{enumerate}
+\item \textbf{Declare the decision.} State what scientific or engineering choice depends on the mechanism, which pairs are consequential, and what error tolerance is operationally meaningful.
+\item \textbf{Generate and prune candidates.} Use literature review, domain expertise, symbolic models, and AI-assisted hypothesis generation to form a finite candidate set. Record excluded alternatives and uncertainty in each model. A candidate list is a working set, not the universe of possible mechanisms.
+\item \textbf{Fit the observational regime.} Estimate parameters and predictive errors without conflating good interpolation with unique identification. Identify pairs whose observational distributions or likelihood regions overlap. If their difference is below numerical or empirical resolution, label the pair approximately equivalent.
+\item \textbf{Propose admissible interventions.} AI or a search algorithm can propose inputs, perturbations, times, or initial states. The scientist imposes safety, feasibility, ethical, and apparatus constraints before optimizing information.
+\item \textbf{Estimate response separation.} For each candidate and intervention, compute or estimate $\mu_i(u)$ and its uncertainty. Use high-fidelity solvers or pilot data to validate a learned surrogate. Compute $D_{ij}$ only when its distributional assumptions are defensible.
+\item \textbf{Optimize and audit the plan.} Minimize cost subject to pairwise divergence requirements, or use a documented heuristic and then verify all constraints. Report sensitivity to noise, model parameters, cost assumptions, and candidate-set changes.
+\item \textbf{Run, update, and report.} Execute the intervention only under the relevant experimental approvals. Update the candidate likelihoods using the observed outcomes. If the predicted separation fails, investigate model misspecification; do not retrofit assumptions merely to preserve the preferred explanation.
+\end{enumerate}
+
+A compact output report should contain: the model list; observational equivalence groups; intervention settings and costs; pairwise divergences; assumed covariance and parameter estimates; the chosen error target; the achieved worst pairwise separation; validation of the forward simulator; and unresolved mechanisms. An AI-written rationale without these quantities is not an identifiability audit.
+
+\section{Numerical example: excellent observational fit, no mechanism identification}
+Consider two deterministic response laws with additive unit-variance Gaussian measurement noise:
+\begin{equation}
+f_0(u)=u,\qquad f_1(u)=u^2,\qquad Y=f_i(u)+\eta,\quad\eta\sim\mathcal{N}(0,1).
+\end{equation}
+Suppose observations are collected only at $u=0$ and $u=1$. Both candidates predict zero at the first setting and one at the second. Their complete observational distributions are identical, so $D_{01}(E_{\mathrm{obs}})=0$, the likelihood ratio is one for every possible observed sample, and an equal-prior mechanism selector remains at $1/2$ probability of being correct. This result does not depend on sample size.
+
+At the intervention $u=2$, the predictions become $f_0(2)=2$ and $f_1(2)=4$. A single observation with unit variance yields pairwise divergence $D_{01}=\tfrac12(4-2)^2=2$. With $n$ independent replicates at this intervention, $D_{01}=2n$, and the exact equal-prior binary selection error is $\Phi(-\sqrt{n})$. Numerically, the analytic error is about $0.1587$ for one replicate, $0.0787$ for two, and $0.0416$ for three. Under the known-model Gaussian assumptions, three replicates are therefore enough to reduce the pairwise error below five per cent; two are not.
+
+\begin{table}[ht]
+\centering
+\caption{Analytic information and discrimination error for repeated measurements at $u=2$.}
+\begin{tabular}{rrrr}
+\toprule
+Replicates $n$ & $D_{01}=2n$ & $P_e=\Phi(-\sqrt{n})$ & Meets 5\% target?\\
+\midrule
+0 & 0 & 0.5000 & No\\
+1 & 2 & 0.1587 & No\\
+2 & 4 & 0.0787 & No\\
+3 & 6 & 0.0416 & Yes\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The experiment is intentionally elementary. Its value is that every conclusion is analytically checkable: high predictive fit on observed support does not identify a mechanism, but a chosen intervention can separate the pair at a quantifiable noise-dependent rate. In real research, a response function is not known exactly, intervention cost can vary, and candidate mechanisms can share uncertainty. This example validates the calculation only; it provides no empirical evidence about any biological process.
+
+The verification script reproduces the exact equal means on observed support, calculates the divergence at $u=2$, obtains the required replicate count from the Gaussian quantile, and estimates selection errors with seeded Monte Carlo sampling. Monte Carlo frequencies should approach the analytic values within sampling variation; they need not equal them exactly. The script tests the statistical implementation, not the validity of any real-world mechanism.
+
+\section{Stress tests, failure modes, and safeguards}
+\subsection{Candidate-set failure}
+The theorem's most consequential assumption may also be the easiest to overlook: the true mechanism must be among the candidates for model selection to have its intended interpretation. A finite class generated by an LLM can omit the true mechanism, merge distinct hypotheses, or encode assumptions that make the answer appear identifiable. The budget is conditional on that class. Future work should add model criticism and open-set rejection rather than treat the class as exhaustive.
+
+\subsection{Uncertain response means and learned surrogates}
+The closed-form divergence uses candidate means as if they were known. In mechanistic science, parameters are estimated and forward simulations may be approximate. A naive substitution of point estimates can create false separation. One conservative extension is to calculate worst-case divergence over uncertainty regions, $\underline D_{ij}(u)=\inf_{\theta_i\in\Theta_i,\theta_j\in\Theta_j}D_{ij}(u;\theta_i,\theta_j)$. If the regions overlap enough that this lower bound is zero, the experiment does not certify separation. Such robust divergences may be computationally costly and are not implemented in the toy verifier.
+
+\subsection{Noise structure and dependence}
+Temporal measurements from the same specimen, patient, laboratory run, or simulation may be correlated. Treating them as independent would overstate cumulative information. Non-Gaussian noise, candidate-dependent variance, censoring, batch effects, or heteroscedasticity also invalidate the exact formula. In those cases, use a defensible likelihood or a conservative concentration bound and validate it under the actual design. The Gaussian formula is a benchmark, not a universal recipe.
+
+\subsection{Intervention validity, safety, and transport}
+An intervention can distinguish mathematical candidates yet be impossible, unethical, unsafe, or irrelevant to the target environment. An apparent difference may also arise from a measurement channel that changes with the intervention rather than from the mechanism of interest. Experimental cost should include practical constraints, and the model must specify what is changed and what is measured. No intervention should be executed based solely on AI-generated suggestions.
+
+\subsection{Multiple decisions and post-selection}
+The error bound applies to a declared finite candidate set and plan. Generating many candidates or intervention combinations and then reporting only the most favorable pair can invalidate naive uncertainty statements. The decision-relevant pair set, candidate count, intervention search space, and stopping rule should be preregistered when possible. If the candidate set is expanded after pilot results, the analysis should account for that adaptive selection.
+
+\subsection{Prediction can still be useful}
+The framework does not devalue prediction. When the operational task is interpolation inside a stable regime, an accurate predictor can be valuable even if its internal mechanism is unknown. The error arises when predictive success is presented as evidence for a unique causal or physical explanation, or when a model is transported into interventions where rival mechanisms make different predictions. The audit asks researchers to use language proportional to evidence: a predictor can be reliable in a domain without being mechanistically identified.
+
+\section{A falsifiable evaluation programme}
+The next evaluation step is a benchmark containing model families with controlled degrees of observational overlap: exact equivalence on the training support, near-equivalence under measurement noise, and well-separated alternatives. Each case should include a known truth, an admissible intervention set, intervention costs, a budget cap, and a held-out simulator or empirical dataset. Baselines should include random interventions, largest raw prediction disagreement, local Fisher-information design, and an existing active causal-design method \citep{zhang2023,liu2026}. Metrics should include achieved pairwise error, intervention cost, worst-case separation, calibration of predicted response uncertainty, and false declarations of mechanism identification.
+
+A serious study would vary candidate misspecification, covariance mismatch, heteroscedasticity, dependent trajectories, and noise-model uncertainty. It should report cases where the audit correctly abstains, cases where its assumptions fail, and whether the budget improves experimental efficiency over simple baselines. Public biological data or a real laboratory study would be necessary before making claims about practical utility in a specific scientific domain. The present paper has not run that broad benchmark and reports no real biological experiments.
+
+Falsification conditions for the proposed operational value are straightforward. The framework would not be useful if it systematically recommends high-cost interventions with no better discrimination than simple baselines; if surrogate-error correction is infeasible at relevant scale; if budget estimates are too sensitive to plausible model uncertainty to aid decisions; or if practitioners cannot define candidate mechanisms and interventions precisely enough for the calculations. A reproducible failure on these tests should lead to narrowing or abandoning the framework rather than broadening the claim.
+
+\section{Epistemic status and conclusion}
+The central proposition about observational equivalence is an exact consequence of equal data distributions (P1). The Gaussian pairwise error expression and its finite-candidate union bound are exact within the stated statistical assumptions (P1 for the algebra and P2 only in the limited sense of selecting a design objective; neither asserts that a physical system obeys the assumed model). The identifiability budget is a proposed operational formalization of a known scientific need, not an established universal metric. The two-response example is a verified toy demonstration. Transfer to experimental biology, medicine, or physics remains an untested hypothesis (P4 until validated in a real domain).
+
+The practical conclusion is modest but important: a model that predicts well on observations has not thereby earned a unique mechanistic interpretation. When the mechanism matters, the evidence must be designed to discriminate among plausible alternatives. A quantified intervention budget can expose when the required information is absent, help prioritize experiments under explicit assumptions, and provide a principled reason to abstain when no admissible experiment can resolve the decision. The goal is not to make AI sound more certain, but to make scientific claims easier to test and harder to overstate.
+
+\section*{Research-process credit and AI disclosure}
+Co-equal research-process credit is given to Devanik Debnath and Xylia, the autonomous multi-model research engine coordinating AI-assisted discovery, synthesis, and verification. Devanik Debnath retains responsibility for the final manuscript, scientific claims, citations, and released artifacts.
+
+\begin{thebibliography}{99}
+\bibitem[Pearl(2009)]{pearl2009}
+Judea Pearl.
+\newblock \emph{Causality: Models, Reasoning, and Inference}.
+\newblock 2nd edition, Cambridge University Press, 2009.
+\newblock doi: \href{https://doi.org/10.1017/CBO9780511803161}{10.1017/CBO9780511803161}.
+
+\bibitem[Zhang et~al.(2023)]{zhang2023}
+Jiaqi Zhang, Louis Cammarata, Chandler Squires, Themistoklis P. Sapsis, and Caroline Uhler.
+\newblock Active learning for optimal intervention design in causal models.
+\newblock \emph{Nature Machine Intelligence}, 5:1066--1075, 2023.
+\newblock doi: \href{https://doi.org/10.1038/s42256-023-00719-0}{10.1038/s42256-023-00719-0}.
+
+\bibitem[Liu et~al.(2026)]{liu2026}
+Yue Liu, Philip K. Maini, and Ruth E. Baker.
+\newblock Optimal experiment design for practical parameter identifiability and model discrimination.
+\newblock \emph{Mathematical Biosciences}, 399:109710, 2026.
+\newblock doi: \href{https://doi.org/10.1016/j.mbs.2026.109710}{10.1016/j.mbs.2026.109710}.
+
+\bibitem[Liu et~al.(2025)]{liu_active2025}
+Xiaolu Liu, Linda Wanika, Michael J. Chappell, and Juergen Branke.
+\newblock Efficient data collection for establishing practical identifiability via active learning.
+\newblock \emph{Computational and Structural Biotechnology Journal}, 27:4992--5006, 2025.
+\newblock doi: \href{https://doi.org/10.1016/j.csbj.2025.10.058}{10.1016/j.csbj.2025.10.058}.
+
+\bibitem[McCormick(2026)]{mccormick2026}
+Tyler McCormick.
+\newblock Position: Prioritize identifying structure, not complex models, for scientific discovery.
+\newblock In \emph{Proceedings of the 43rd International Conference on Machine Learning}, volume 306 of \emph{Proceedings of Machine Learning Research}, pages 171460--171485. PMLR, 2026.
+\newblock \url{https://proceedings.mlr.press/v306/mccormick26a.html}.
+
+\bibitem[Kullback and Leibler(1951)]{kullback1951}
+Solomon Kullback and Richard A. Leibler.
+\newblock On information and sufficiency.
+\newblock \emph{The Annals of Mathematical Statistics}, 22(1):79--86, 1951.
+\newblock doi: \href{https://doi.org/10.1214/aoms/1177729694}{10.1214/aoms/1177729694}.
+\end{thebibliography}
+\end{document}

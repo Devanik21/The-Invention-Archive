@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "The Identifiability Budget: An Audit Framework for Mechanistic AI and Experimental Design",
+  "name": "The Identifiability Budget: An Audit Framework for Mechanistic AI and Experimental Design",
+  "datePublished": "2026-10-11",
+  "inLanguage": "en",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "National Institute of Technology Agartala",
+      "description": "Author-reported affiliation; current degree completion is not asserted."
+    }
+  },
+  "description": "A bounded identifiability-budget audit for AI-assisted scientific mechanism discovery, with a Gaussian finite-candidate model-selection guarantee and a reproducible toy example.",
+  "keywords": [
+    "scientific machine learning",
+    "mechanistic identifiability",
+    "experimental design",
+    "active learning",
+    "information theory"
+  ],
+  "isPartOf": {
+    "@type": "SoftwareSourceCode",
+    "name": "The-Invention-Archive",
+    "url": "https://github.com/Devanik21/The-Invention-Archive"
+  },
+  "url": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/The_Identifiability_Budget_An_Audit_Framework_for_Mechanistic_AI_and_Experimental_Design",
+  "citation": [
+    "https://proceedings.mlr.press/v306/mccormick26a.html",
+    "https://www.nature.com/articles/s42256-023-00719-0",
+    "https://doi.org/10.1016/j.mbs.2026.109710"
+  ]
+}
