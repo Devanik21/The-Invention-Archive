@@ -5,6 +5,10 @@ on:
     paths:
       - 'Theoretical Research/Cohomological_Rejuvenation_Tissues_That_Heal_Their_Own_Incoherence/paper.tex'
       - 'Theoretical Research/Cohomological_Rejuvenation_Tissues_That_Heal_Their_Own_Incoherence/paper.bib'
+      - 'Theoretical Research/Cohomological_Rejuvenation_Tissues_That_Heal_Their_Own_Incoherence/README.md'
+      - 'Theoretical Research/Cohomological_Rejuvenation_Tissues_That_Heal_Their_Own_Incoherence/deploy.py'
+      - 'Theoretical Research/Cohomological_Rejuvenation_Tissues_That_Heal_Their_Own_Incoherence/CITATION.cff'
+      - 'Theoretical Research/Readme.md'
       - '.github/workflows/build-cohomological-rejuvenation-pdf.yml'
   workflow_dispatch:
 permissions:

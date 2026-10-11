@@ -39,7 +39,7 @@ $$
 For a cochain complex, the first cohomology is the quotient of closed edge cochains by exact coboundaries:
 
 $$
-H^1(K;\mathcal{F}) = \ker(\delta^1) / \operatorname{im}(\delta^0).
+H^1(K;\mathcal{F}) = \ker(\delta^1) / \mathrm{im}(\delta^0).
 $$
 
 This quotient is not the same object as the local Dirichlet energy.
