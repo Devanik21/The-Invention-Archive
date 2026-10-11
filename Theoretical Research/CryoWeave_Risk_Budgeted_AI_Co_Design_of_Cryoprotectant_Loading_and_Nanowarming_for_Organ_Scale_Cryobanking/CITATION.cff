@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this research artifact, please cite it as a theoretical and computational proposal; its simulation is not empirical cryopreservation validation."
+title: "CryoWeave: Risk-Budgeted AI Co-Design of Cryoprotectant Loading and Nanowarming for Organ-Scale Cryobanking"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+version: "v2026.10.11.3"
+date-released: "2026-10-11"
+url: "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking"
+license: MIT
+type: software
+abstract: "A proposed uncertainty-aware framework for jointly searching cryoprotectant loading and nanowarming settings. It includes a dimensionless reduced-order simulation and deterministic software checks; it does not establish empirical or clinical efficacy."
+keywords:
+  - organ cryopreservation
+  - vitrification
+  - nanowarming
+  - cryoprotective agents
+  - robust optimization
+  - scientific machine learning

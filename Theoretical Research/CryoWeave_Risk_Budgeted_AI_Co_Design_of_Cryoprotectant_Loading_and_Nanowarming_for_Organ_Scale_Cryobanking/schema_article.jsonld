@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "CryoWeave: Risk-Budgeted AI Co-Design of Cryoprotectant Loading and Nanowarming for Organ-Scale Cryobanking",
+  "name": "CryoWeave: Risk-Budgeted AI Co-Design of Cryoprotectant Loading and Nanowarming for Organ-Scale Cryobanking",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "identifier": "https://orcid.org/0009-0001-8310-6921",
+    "url": "https://github.com/Devanik21"
+  },
+  "datePublished": "2026-10-11",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "creativeWorkStatus": "Preprint",
+  "description": "A theoretical proposal for robust, uncertainty-aware joint search over cryoprotectant loading and nanowarming settings. The included numerical result is a dimensionless toy-model result and is not experimental or clinical evidence.",
+  "keywords": [
+    "organ cryopreservation",
+    "vitrification",
+    "nanowarming",
+    "robust optimization",
+    "scientific machine learning"
+  ],
+  "url": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking",
+  "codeRepository": "https://github.com/Devanik21/The-Invention-Archive",
+  "license": "https://opensource.org/license/mit/"
+}

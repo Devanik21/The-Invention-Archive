@@ -1,0 +1,31 @@
+{
+  "title": "CryoWeave: Risk-Budgeted AI Co-Design of Cryoprotectant Loading and Nanowarming for Organ-Scale Cryobanking",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "description": "Theoretical and computational proposal for uncertainty-aware joint optimization of cryoprotectant loading and nanowarming. Includes a dimensionless reduced-order toy model and executable mathematical checks. These simulations are not experimental cryopreservation evidence and do not provide an operational or clinical protocol. No DOI has been issued by this artifact.",
+  "creators": [
+    {
+      "name": "Devanik Debnath",
+      "orcid": "0009-0001-8310-6921",
+      "affiliation": "Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India"
+    }
+  ],
+  "keywords": [
+    "organ cryopreservation",
+    "vitrification",
+    "nanowarming",
+    "cryoprotective agents",
+    "robust optimization",
+    "scientific machine learning"
+  ],
+  "license": "MIT",
+  "version": "v2026.10.11.3",
+  "publication_date": "2026-10-11",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Devanik21/The-Invention-Archive",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

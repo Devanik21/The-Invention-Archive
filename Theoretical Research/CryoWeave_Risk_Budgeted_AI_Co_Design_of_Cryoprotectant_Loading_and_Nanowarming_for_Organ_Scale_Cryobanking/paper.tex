@@ -1,0 +1,227 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.92in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,urlcolor=blue!55!black}
+\setlength{\parskip}{0.45em}
+\setlength{\parindent}{0pt}
+\setlist{nosep,leftmargin=1.4em}
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\title{CryoWeave: Risk-Budgeted AI Co-Design of Cryoprotectant Loading and Nanowarming for Organ-Scale Cryobanking}
+\author{Devanik Debnath (Devanik21)\\Department of Electronics and Communication Engineering\\National Institute of Technology Agartala, India\\\href{https://orcid.org/0009-0001-8310-6921}{ORCID: 0009-0001-8310-6921}\\[0.4em]\small Research-process orchestration: Xylia}
+\date{11 October 2026 \\ \small Theoretical and computational proposal; not experimentally validated}
+\begin{document}
+\maketitle
+\begin{abstract}
+Organ-scale cryopreservation is an increasingly concrete engineering target, yet its stages are coupled: cryoprotectant-agent (CPA) delivery trades equilibration against concentration-dependent toxicity, nanoparticle loading shapes subsequent heating, and the rewarming trajectory must limit both thermal nonuniformity and time spent in damage-sensitive regimes. Existing work has separately optimized CPA perfusion, demonstrated kidney vitrification and nanowarming in an animal model, and extended physical vitrification or nanowarming to liter-scale volumes. This paper proposes \emph{CryoWeave}, a risk-budgeted co-design framework that treats CPA loading and nanowarming as one uncertainty-aware optimization problem with an explicit feasibility gate. A Gaussian-process-inspired active-search layer proposes candidate controls, but does not decide whether a candidate is safe: feasibility is evaluated separately against a finite set of uncertain delivery, heating, and diffusion scenarios. A transparent three-region reduced-order model supplies a reproducible proof-of-work benchmark. Its deterministic simulation returned a feasible point with a synthetic objective of 1.749721 versus 1.845855 for a fixed feasible baseline, a 5.21\% decrease in that model-specific score; an intentionally aggressive point was rejected by the constraint gate. These results demonstrate only the implementation and internal logic of a dimensionless toy problem. They do not establish organ viability, clinical safety, an experimentally useful protocol, or superiority on real data. The proposed contribution is a testable systems formulation: select loading and warming jointly, optimize against explicit uncertainty scenarios, and abstain when the available search cannot find a feasible candidate. We derive the reduced equations, identify the assumptions that make them analytically checkable, compare the framework with adjacent literature, and specify a validation programme using measured perfusion, temperature, and tissue-injury outcomes.
+\end{abstract}
+
+\textbf{Keywords:} organ cryopreservation; vitrification; cryoprotective agents; nanowarming; robust optimization; scientific machine learning; Gaussian processes; constrained control; uncertainty quantification
+
+\section{Research posture and contribution}
+
+This work is a research proposal backed by executable mathematical checks, not a report of experiments. The distinction matters because organ cryopreservation combines strongly coupled transport, thermal, chemical, and biological phenomena, and a simulation can be correct about its own equations while being a poor representation of tissue. CryoWeave is therefore framed as a candidate method for coordinating two stages that are usually parameterized through different models: the pre-vitrification loading of cryoprotective agents and the later energy-input schedule used to rewarm a nanoparticle-loaded sample.
+
+The narrow contribution is not the claim that artificial intelligence, active learning, or numerical optimization is new to cryopreservation. Recent research explicitly reviews AI in cryopreservation, and sparse-temperature reconstruction has been explored with learned reduced-order models \cite{LeiAI2026,SunTemp2026}. Model-guided CPA-perfusion optimization is also established \cite{HanPerfusion2023}. CryoWeave instead proposes a specific integration of (i) CPA exposure accounting, (ii) nanoparticle uptake, (iii) a staged rewarming control, (iv) a finite uncertainty set spanning delivery and heating variation, and (v) an optimizer-independent feasibility gate that can refuse to recommend a candidate. A targeted search did not identify this exact joint architecture in the literature consulted here, but this is a limited novelty assessment, not proof of priority.
+
+The research question is: \emph{Can a risk-budgeted, uncertainty-aware search over CPA loading and nanowarming controls identify more feasible protocols, at lower model-specific cost, than a staged or fixed-control baseline when all candidates are evaluated under the same explicit uncertainty set?} A later empirical question is whether this architecture improves measured organ-level outcomes after calibration. The present paper answers neither question for real organs; it defines an executable first test and its limits.
+
+\subsection{Claim hierarchy}
+Important claims are classified using a P1--P5 hierarchy to prevent mathematical results from being mistaken for empirical evidence.
+\begin{itemize}
+\item \textbf{P1, mathematical identity:} the closed-form exposure integral follows from the assumed exponential concentration curve; the chain-graph Laplacian is positive semidefinite and conserves the sum under pure diffusion.
+\item \textbf{P2, model-dependent optimization:} the returned parameter vector minimizes the evaluated subset of a synthetic score, subject to the synthetic feasibility tests. It is not a global-optimality proof.
+\item \textbf{P3, statistical universality:} no claim of scaling law, universality class, or statistical generalization is made.
+\item \textbf{P4, cross-domain structural correspondence:} Gaussian-process-guided search is connected to protocol selection through a black-box objective; this is an algorithmic correspondence, not a claim that biological dynamics are Gaussian.
+\item \textbf{P5, intuition:} the metaphor of one protocol being a woven path across loading and rewarming is explanatory only. It supplies no biological evidence.
+\end{itemize}
+
+\section{Why joint design is a meaningful problem}
+
+CPA delivery and rewarming are not independent knobs. The CPA concentration field at the end of perfusion influences whether a tissue can vitrify under the intended thermal conditions, while CPA exposure has a toxicity cost. Nanoparticles can couple radiofrequency energy into a sample, but the attainable heating profile depends on particle distribution, heating efficiency, thermal transport, and sample geometry. A protocol that is attractive in a loading-only model can therefore be unattractive in the warming model, and vice versa. The objective of joint design is to avoid optimizing two stage-specific surrogates that select mutually incompatible settings.
+
+There is a credible experimental foundation for asking this question. Han and colleagues demonstrated long-term cryogenic storage following vitrification and nanowarming and reported life-sustaining kidney function in a rat transplantation model \cite{Han2023}. A later study explored physical vitrification and nanowarming at CPA volumes up to litres, with vitrification and rewarming capabilities depending on volume and formulation; it did not demonstrate a fully rewarmed, transplanted human organ \cite{Gangwar2025}. Model-guided CPA perfusion work has used transport modelling and a toxicity cost function to optimize loading protocols \cite{HanPerfusion2023}. A 2026 review describes potential AI roles including protocol optimization and damage prediction while emphasizing technological challenges \cite{LeiAI2026}. Work on sparse surface measurements and transient temperature-field reconstruction further illustrates that measurement-limited inference is already an active area \cite{SunTemp2026}. Ferumoxytol has also been investigated as a nanowarming agent in a vitrification-based organ preservation setting \cite{FengFerumoxytol2026}.
+
+Those results justify a research programme, not a conclusion that organ banking is clinically ready. Geometry, perfusability, vascular heterogeneity, osmotic stress, CPA toxicity, cracking, devitrification, rewarming gradients, nanoparticle distribution, and post-rewarming function remain distinct constraints. In particular, warming uniformly in a bulk volume is not equivalent to proving that every microscopic tissue region receives a safe trajectory. CryoWeave's reduced model deliberately captures only a handful of those couplings and names everything omitted.
+
+\subsection{Ten candidate directions screened}
+The workflow first compared ten directions. Scores are heuristic triage values on a 1--5 scale, not empirical rankings; they are included for process transparency and can be revised as the literature expands.
+\begin{center}
+\small
+\begin{tabular}{p{0.48\linewidth}cccc}
+\toprule
+Candidate direction & Impact & Distinctness & Testability & Decision \\
+\midrule
+Joint CPA--nanowarming robust co-design & 5 & 4 & 4 & Select \\
+New universal CPA molecule via generative design & 5 & 3 & 2 & Defer \\
+AI-only temperature-field reconstruction & 4 & 2 & 4 & Existing adjacent work \\
+Vascular digital twin for organ reperfusion & 5 & 3 & 3 & Candidate \\
+Biomaterial-based ice-recrystallization control & 4 & 3 & 3 & Candidate \\
+Quantum coherence in cryoprotectant transport & 3 & 1 & 1 & Reject: unsupported premise \\
+General cryobiology foundation model & 4 & 2 & 3 & Too broad \\
+Organ-specific CPA toxicity atlas & 4 & 3 & 4 & Candidate \\
+Closed-loop cryogenic sensor placement & 4 & 3 & 4 & Candidate \\
+Cryopreservation ethics and access index & 3 & 2 & 5 & Lower mechanistic novelty \\
+\bottomrule
+\end{tabular}
+\end{center}
+The chosen topic combines an important engineering bottleneck, a mathematical object that can be written down, and a feasible initial validation. It is deliberately different from the archive's recent topics on epigenetic state control, mitochondrial heteroplasmy, paracrine signalling, tissue coherence, and mechanistic-AI identifiability. The topic is ambitious enough to matter if validated but narrow enough to falsify.
+
+\section{Mathematical architecture}
+
+\subsection{Decision variables and state abstractions}
+Let the protocol vector be
+\begin{equation}
+\theta=(\tau,c_{\mathrm{in}},n_{\mathrm{in}},p_1,p_2),
+\label{eq:theta}
+\end{equation}
+where $\tau$ is normalized CPA loading duration; $c_{\mathrm{in}}$ is normalized CPA inlet level; $n_{\mathrm{in}}$ is normalized nanoparticle inlet level; and $p_1,p_2$ are dimensionless early- and late-stage heating powers. Every quantity in this prototype is dimensionless. In particular, these controls are not directly convertible to real perfusion concentrations, minutes, nanoparticle mass, or radiofrequency wattage.
+
+The tissue is approximated by three regions connected as a path graph. This is a numerical scaffold, not a spatial map of an actual organ. Let $L$ be its graph Laplacian:
+\begin{equation}
+L=\begin{bmatrix}1&-1&0\\-1&2&-1\\0&-1&1\end{bmatrix}.
+\label{eq:laplacian}
+\end{equation}
+A symmetric nonnegative graph Laplacian has nonnegative eigenvalues; the all-ones vector lies in its nullspace. Thus diffusion redistributes the temperature proxy among regions without changing the sum in the absence of heat input or boundary loss. The toy model omits the boundary loss term on purpose to make this invariant easy to verify. A realistic model would need organ geometry, heterogeneous conductivity, boundary conditions, perfusion, latent heat, and phase-change effects.
+
+\subsection{CPA transport and exposure proxy}
+For region $i$, assume a simple saturating loading curve
+\begin{equation}
+c_i(t)=c_{\mathrm{in}}\left(1-e^{-k_i t}\right),\quad t\in[0,\tau],
+\label{eq:cpa}
+\end{equation}
+where $k_i>0$ is a normalized effective delivery rate. The quadratic exposure proxy is $E_i(\tau)=\int_0^\tau c_i(t)^2\,dt$. Integrating the expansion of the square yields
+\begin{equation}
+E_i(\tau)=c_{\mathrm{in}}^2\left[\tau-\frac{2(1-e^{-k_i\tau})}{k_i}+\frac{1-e^{-2k_i\tau}}{2k_i}\right].
+\label{eq:exposure}
+\end{equation}
+This expression is an exact identity under Equation~\ref{eq:cpa}. The chosen $c_i^2$ cost is not a validated CPA toxicity law. Actual toxicity depends on the agent, temperature, time history, tissue, osmotic effects, and concentration; a calibrated model would replace the proxy with a formulation supported by measurements. The code checks the analytic integral against numerical quadrature so mistakes in its implementation are testable.
+
+Nanoparticle uptake is similarly represented as $n_i=n_{\mathrm{in}}(1-e^{-q_i\tau})$, where $q_i$ is a normalized uptake rate. The model does not represent particle aggregation, extravasation, perfusion barriers, local magnetic properties, or cell-specific response. Its only role is to couple loading duration and particle amount to the later heat-source term.
+
+\subsection{Reduced-order nanowarming}
+Let $T_i(t)$ be a dimensionless temperature-rise state, initialized at zero. Over a fixed normalized interval $t\in[0,H]$, the model is
+\begin{equation}
+\dot{T}_i(t)=\eta_i n_i p(t)-D(LT(t))_i,
+\label{eq:heat}
+\end{equation}
+where $\eta_i$ is a dimensionless local heating coupling, $D\geq0$ is a diffusion scale, and $p(t)$ equals $p_1$ in the first half of the interval and $p_2$ in the second half. Explicit Euler integration is used for transparency. The script checks that graph diffusion alone conserves the spatial sum, but it does not present its temperature output as a Celsius field or a prediction of organ rewarming.
+
+\subsection{Uncertainty and hard feasibility}
+The current proof-of-work uses nine fixed scenarios, formed by selected combinations of multipliers for CPA delivery, particle uptake, heating coupling, and diffusion. This finite set is a deterministic stress set, not a probability distribution and not a statistical confidence region. Let $s\in\mathcal{S}$ index these scenarios. The objective is
+\begin{equation}
+J_{\mathrm{rob}}(\theta)=\max_{s\in\mathcal{S}}J(\theta;s),
+\label{eq:robust}
+\end{equation}
+where the scenario score combines an exposure proxy, loading duration, time spent in a synthetic risk band, endpoint tracking error, spatial spread, and a heating-energy proxy. The weights are explicit design choices with no empirical calibration. Because a scalar weighted sum can hide safety violations, the search separately enforces hard bounds on regional CPA and particle levels, endpoint temperature proxies, and maximum spatial spread.
+
+For each candidate, constraint violations are computed independently of the surrogate model and penalized in the scalar score to steer candidate ranking. A release-quality controller should go further: report the constraints and margins, reject all violations regardless of the learned score, and abstain when no candidate meets every threshold. CryoWeave's safety gate is not a certified guarantee for an unknown biological system; it enforces only the formal bounds and scenarios that a modeller supplies. It can never guarantee safety outside the stated model.
+
+\section{AI's substantive role}
+
+CryoWeave uses a Gaussian-process-inspired active search to rank candidates in a bounded five-dimensional control space. A deterministic pool of candidate settings is first screened against analytic loading constraints across the nine scenarios. A Mat\'ern-3/2 covariance kernel is then fitted to the evaluated point set. A lower-confidence-bound acquisition rule proposes another not-yet-evaluated feasible-loading candidate, after which the full reduced-order score and all constraints are computed. Candidate selection is deterministic for a fixed seed and environment.
+
+The AI contribution is therefore specific: allocate expensive model evaluations by balancing predicted score against model uncertainty. It is not a neural network that discovers biology, a learned medical recommender, or a replacement for biophysical simulation. Relative to uniform random search, active learning can focus evaluation effort near promising or uncertain regions; relative to unconstrained black-box optimization, the analytic loading screen and explicit final gate make the restrictions visible. Whether this small GP prototype materially outperforms simpler alternatives on realistic models remains an open empirical question. The correct baselines include grid search where feasible, Latin-hypercube random search, evolutionary strategies, robust direct search, and staged optimization.
+
+\subsection{Algorithm}
+\begin{enumerate}
+\item Define a protocol parameterization, physiological bounds, and a documented uncertainty set.
+\item Generate a deterministic candidate pool and apply inexpensive analytic pre-screening.
+\item Evaluate the reduced-order loading and heating equations for an initial design.
+\item Fit a Gaussian-process surrogate to evaluated objectives and select a candidate using a lower-confidence-bound acquisition rule.
+\item Evaluate the selected point under every scenario with the original equations, not with the surrogate prediction.
+\item Keep the best candidate satisfying every hard constraint. If no feasible candidate is found, return ``no feasible protocol found'' rather than relaxing constraints silently.
+\item Record code, seed, bounds, scenarios, constraint margins, model versions, and the reason for every rejected candidate.
+\end{enumerate}
+
+The present script implements steps 1--6 in an offline toy setting. It does not fit a model to organ data, update controls using sensors, or command any physical apparatus. A future closed-loop implementation would require validated instrumentation, hardware safeguards, an independent safety controller, and human experimental oversight.
+
+\section{Numerical verification and toy results}
+
+The executable artifact \texttt{verify\_model.py} requires Python 3.10 or later and NumPy 1.24 or later. Run it from the release directory with \texttt{python verify\_model.py}. A deterministic seed of 20261011 is used for search and noise-free toy checks. At the time of this release, all six code-level checks passed in the supplied environment.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{p{0.48\linewidth}p{0.43\linewidth}}
+\toprule
+Check & Observed result \\
+\midrule
+Analytic CPA exposure vs 100,001-point quadrature & Pass; numerical agreement within declared tolerance \\
+Chain-graph Laplacian & Pass; nonnegative spectrum within tolerance and sum-conserving diffusion \\
+Deterministic active search & Pass; repeated run returned identical controls and score \\
+Hard constraints under nine scenarios & Pass; returned solution met all stated synthetic bounds \\
+Fixed feasible baseline comparison & Pass; optimized score 1.749721 vs baseline 1.845855 (5.21\% lower) \\
+Unsafe candidate test & Pass; deliberately aggressive candidate failed the feasibility gate \\
+\bottomrule
+\end{tabular}
+\caption{Software-level checks on synthetic, dimensionless values. This table is not experimental cryopreservation evidence.}
+\label{tab:checks}
+\end{table}
+
+The selected parameter vector was $\theta=(6.18888,1.03973,0.96997,0.72631,0.92696)$ in dimensionless model units. The worst-case objective was 1.749721 after 120 candidate evaluations. Across the scenario set, the reported minimum and maximum regional CPA proxies were 0.883255 and 1.000128; particle proxies were 0.747608 and 0.886336; endpoint temperature proxies ranged from 0.808653 to 1.239581; and the maximum temperature-proxy spread was 0.164782. The synthetic toxicity proxy was 3.356723, risk-band dwell proxy 0.819876, spatial RMS proxy 0.039841, and energy proxy 1.040091. These numbers are included as reproducible output, not as interpretable clinical units.
+
+Relative to the script's fixed feasible baseline, the optimized objective decreased by 5.21\%. This percentage is only a comparison between two settings under one invented dimensionless objective and one candidate-generation procedure. The objective weights and state limits were selected for a tractable toy example; changing them can change the winner. This is not a 5.21\% reduction in tissue damage, toxicity, energy consumption, ischemic time, or organ failure. Likewise, the aggressive candidate's rejection shows that the coded gate can reject one unsafe point in the mathematical model, not that the method can recognize all dangerous protocols in a real organ.
+
+\section{Competing explanations, uncertainty, and failure conditions}
+
+Several simpler explanations could account for any apparent advantage if this framework later appears to work. First, the improvement might arise from the chosen scalar objective or hand-tuned weights rather than from the GP acquisition rule. Second, a random or evolutionary search may identify an equal or better feasible protocol with comparable computational effort. Third, the uncertainty set may be too narrow or may fail to represent correlated failure modes. Fourth, a three-region chain may erase hot spots and under-perfused zones that dominate actual tissue injury. Fifth, concentration-squared exposure and endpoint tracking can reward physically implausible trajectories unless anchored to real toxicity and thermal data.
+
+The core hypothesis should be considered unsupported if joint search does not outperform a staged or non-AI baseline at matched simulation budget; if the performance advantage disappears across random seeds, organs, or reasonable objective weights; if the selected design fails under held-out uncertainty scenarios; if sensor-informed model residuals reveal systematic spatial bias; or if experimental injury, CPA distribution, and post-rewarming function are not better than an appropriate comparator. A nominally feasible point is insufficient when unmeasured model discrepancy can move the real system outside the feasible region.
+
+A more defensible future version would include a discrepancy variable calibrated from independent data, chance constraints only where probabilistic calibration is justified, robust worst-case constraints over physically plausible parameter intervals, and an out-of-distribution abstention rule. Where uncertainty bounds cannot be defended, the system should label the protocol as unevaluable rather than converting ignorance into a narrow probability distribution. The controller should also separate constraints that can be traded against one another from non-negotiable safety limits.
+
+\section{Experimental and computational validation plan}
+
+Validation should progress through staged gates, each with a stop criterion.
+\begin{enumerate}
+\item \textbf{Equation and implementation audit.} Reproduce the dose integral with symbolic algebra and independent numerical integration. Check time-step convergence, graph-size sensitivity, mass/energy bookkeeping, and limiting cases such as zero heating, uniform coupling, and vanishing diffusion.
+\item \textbf{Model calibration.} Replace dimensionless delivery and heating parameters with measured ranges from a chosen perfused tissue or validated phantom. Estimate parameter distributions from data separate from evaluation data. Model CPA osmotic and chemical injury and validate concentration fields using independent measurements.
+\item \textbf{Digital comparison.} Compare joint active search against staged optimization, random sampling, and a robust direct-search baseline using the same candidate budget. Hold out model parameter combinations and anatomical configurations. Report feasibility rate, constraint margin, objective distributions, wall-clock time, and sensitivity to objective weights—not only the best run.
+\item \textbf{Phantom-scale thermal evaluation.} Under approved laboratory protocols, measure three-dimensional temperature and spatial gradients with independently checked sensors. Evaluate temperature reconstruction error, thermal nonuniformity, repeatability, and device-specific failure modes. The manuscript does not provide an operational thawing or perfusion recipe.
+\item \textbf{Tissue study and functional endpoint.} Only after model and safety review should approved ex-vivo experiments examine CPA distribution, histology, endothelial and microvascular integrity, cracking or devitrification, injury markers, and tissue-specific function. The primary endpoint and analysis must be specified before seeing outcomes.
+\item \textbf{Independent replication.} Repeat with held-out specimens, a separately calibrated model, and independent analysis. Report negative outcomes, protocol failures, and the boundaries of extrapolation across organ types and scales.
+\end{enumerate}
+
+An empirical test should register the primary endpoint and failure criteria in advance. Reasonable primary endpoints would depend on the specimen and stage: spatial CPA concentration error during loading; maximum and percentile temperature gradients; probability of violating a pre-defined thermal bound; and, at later stages, blinded measures of tissue integrity and functional recovery. No single temperature metric can stand in for biological viability. Comparisons must account for organ type, mass, perfusion state, vascular condition, CPA formulation, and nanoparticle loading method.
+
+\section{Safety and translational boundaries}
+
+CryoWeave does not prescribe an intervention for patients, donors, animal subjects, or cryogenic equipment. The example's normalized values are deliberately not converted to operational units. Any physical protocol would require institutional oversight, materials compatibility and toxicology work, approved animal or tissue protocols where relevant, equipment-specific validation, and trained personnel. A search algorithm must not be connected directly to a perfusion pump or rewarming apparatus on the basis of this paper.
+
+The framework also raises design questions beyond thermodynamics. Robustness has a cost: deliberately conservative bounds may reduce performance, whereas poorly calibrated bounds can create false confidence. Organ preservation capacity, equipment access, and distribution infrastructure are unequal; if an eventually effective technology emerges, access and allocation will need transparent governance. These issues do not alter the mathematical derivation, but they matter to a responsible translational programme.
+
+\section{Limitations}
+
+The main limitations are substantial. The model has three regions, exponential delivery, a concentration-squared exposure proxy, a simplified particle uptake law, a two-stage heating profile, dimensionless temperatures, an explicit-Euler integrator, and only nine deterministic uncertainty scenarios. The GP kernel and objective weights are hand-specified. Candidate pre-screening constrains loading levels but does not model perfusion pressure or osmotic stress. Temperature diffusion is represented on a path graph with no physical boundary losses or latent heat. The model has no geometry, real CPA constitutive data, vessel network, ice nucleation, glass transition, fracture mechanics, cell-scale injury, nanowarming hardware model, or empirical tissue endpoint. Consequently, it cannot support claims about organ viability or a recommended CPA or rewarming protocol.
+
+The search is not a proof of global optimality; it returns the best feasible point in its evaluated set. Its deterministic scenario set is not exhaustive. The weighted objective can create preference reversals as coefficients or constraints change, and the current toy score does not incorporate statistical confidence. Six passed tests indicate that the implemented equations and assertions behave as stated; they do not verify that the abstractions capture the organ. The first useful scientific result may therefore be a negative one: if the joint framework cannot beat strong non-AI baselines once realistic physics and measurement data are included, its AI layer should be removed or redesigned.
+
+\section{Conclusion}
+
+Organ-scale cryopreservation is a coupled optimization challenge, and the literature provides enough prior evidence to formulate a serious next step without implying that a fully functional human-organ banking pipeline exists. CryoWeave proposes one explicit integration: search the CPA loading and nanowarming settings jointly, evaluate candidates across a declared uncertainty set, and keep model-based feasibility separate from learned candidate ranking. The mathematical core is intentionally small enough to audit, while the validation plan spells out the data and safety gates required before scientific or translational conclusions could follow.
+
+The toy experiment confirms only that the code computes the declared reduced-order score, returns a deterministic point satisfying the synthetic constraints, beats one fixed feasible baseline on that score, and rejects one intentionally unsafe candidate. It does not demonstrate useful biological performance. The next decisive evidence is a fair computational comparison using measured, organ-relevant parameters, followed by sensor-validated phantom experiments and ethically approved tissue studies. Until those tests exist, CryoWeave should be read as a falsifiable design proposal and reusable starting point, not a cryopreservation protocol.
+
+\section*{Research-process credit and responsibility}
+Co-equal research-process credit is given to Devanik Debnath and Xylia, the autonomous multi-model research engine coordinating AI-assisted discovery, synthesis, and verification. Devanik Debnath retains responsibility for the final manuscript, scientific claims, citations, and released artifacts.
+
+\begin{thebibliography}{99}
+\bibitem{Han2023} Z. Han, J. S. Rao, L. Gangwar, B.-E. Namsrai, J. L. Pasek-Allen, M. L. Etheridge, S. M. Wolf, T. L. Pruett, J. C. Bischof, and E. B. Finger, ``Vitrification and nanowarming enable long-term organ cryopreservation and life-sustaining kidney transplantation in a rat model,'' \emph{Nature Communications}, vol. 14, article 3407, 2023. doi: \href{https://doi.org/10.1038/s41467-023-38824-8}{10.1038/s41467-023-38824-8}.
+\bibitem{HanPerfusion2023} Z. Han, J. S. Rao, S. Ramesh, J. Hergesell, B.-E. Namsrai, M. L. Etheridge, E. B. Finger, and J. C. Bischof, ``Model-guided design and optimization of CPA perfusion protocols for whole organ cryopreservation,'' \emph{Annals of Biomedical Engineering}, vol. 51, no. 10, pp. 2216--2228, 2023. doi: \href{https://doi.org/10.1007/s10439-023-03255-5}{10.1007/s10439-023-03255-5}.
+\bibitem{Gangwar2025} L. Gangwar, Z. Han, C. Scheithauer, B.-E. Namsrai, S. Kantesaria, R. Goldstein, M. L. Etheridge, E. B. Finger, and J. C. Bischof, ``Physical vitrification and nanowarming at liter-scale CPA volumes: toward organ cryopreservation,'' \emph{Nature Communications}, vol. 16, article 8511, 2025. doi: \href{https://doi.org/10.1038/s41467-025-63483-2}{10.1038/s41467-025-63483-2}.
+\bibitem{LeiAI2026} X. Lei, L. He, and G. Zhao, ``The application of artificial intelligence in cryopreservation: technological advances and future challenges,'' \emph{Cryobiology}, vol. 122, article 105589, 2026. doi: \href{https://doi.org/10.1016/j.cryobiol.2026.105589}{10.1016/j.cryobiol.2026.105589}.
+\bibitem{SunTemp2026} W. Sun, X. Dong, J. Zhang, X. Wang, P. Yuan, and M. Gong, ``Rapid reconstruction of three-dimensional transient temperature fields from sparse surface observations during organ cryopreservation using POD-CLDM,'' \emph{International Communications in Heat and Mass Transfer}, vol. 178, article 111681, 2026. doi: \href{https://doi.org/10.1016/j.icheatmasstransfer.2026.111681}{10.1016/j.icheatmasstransfer.2026.111681}.
+\bibitem{FengFerumoxytol2026} H. Feng, M. Zhang, Y. Li, G. Si, K. Lu, Y. Mao, Y. Zhang, and N. Gu, ``Repurposing ferumoxytol as a nanowarming agent for vitrification-based organ preservation,'' \emph{Nano Today}, vol. 67, article 102981, 2026. doi: \href{https://doi.org/10.1016/j.nantod.2026.102981}{10.1016/j.nantod.2026.102981}.
+\bibitem{WilczokCPA2026} D. Wilczok, J. Vald{\'e}s-Hern{\'a}ndez, V. Bernales, and A. Aspuru-Guzik, ``Lessons from drug discovery for cryoprotective agent design: an AI-oriented perspective,'' \emph{Advanced Science}, 2026. doi: \href{https://doi.org/10.1002/advs.75947}{10.1002/advs.75947}.
+\end{thebibliography}
+
+\end{document}

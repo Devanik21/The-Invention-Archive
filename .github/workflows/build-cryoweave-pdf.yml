@@ -1,0 +1,110 @@
+name: Build CryoWeave research PDF
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Theoretical Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking/paper.tex'
+      - 'Theoretical Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking/paper.bib'
+      - 'Theoretical Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking/README.md'
+      - 'Theoretical Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking/verify_model.py'
+      - 'Theoretical Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking/medium_story.md'
+      - 'Theoretical Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking/x_thread.md'
+      - 'Theoretical Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking/CITATION.cff'
+      - 'Theoretical Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking/.zenodo.json'
+      - 'Theoretical Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking/schema_article.jsonld'
+      - 'Theoretical Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking/deploy.py'
+      - 'Theoretical Research/Readme.md'
+      - '.github/workflows/build-cryoweave-pdf.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install verifier and TeX dependencies
+        run: |
+          python -m pip install 'numpy>=2,<3' PyYAML
+          sudo apt-get update
+          sudo apt-get install -y texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended poppler-utils
+      - name: Verify model, metadata, essays, thread, and typography
+        shell: bash
+        run: |
+          set -euo pipefail
+          RELEASE_DIR='Theoretical Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking'
+          BUILD_DIR="$(mktemp -d)"
+          trap 'rm -rf "$BUILD_DIR"' EXIT
+          python "$RELEASE_DIR/verify_model.py"
+          python - "$RELEASE_DIR" <<'PY'
+          import json, pathlib, re, sys, yaml
+          d = pathlib.Path(sys.argv[1])
+          json.loads((d / '.zenodo.json').read_text(encoding='utf-8'))
+          json.loads((d / 'schema_article.jsonld').read_text(encoding='utf-8'))
+          yaml.safe_load((d / 'CITATION.cff').read_text(encoding='utf-8'))
+          medium = (d / 'medium_story.md').read_text(encoding='utf-8')
+          words = len(re.findall(r"\b[\w'-]+\b", medium))
+          assert 1500 <= words <= 2000, f'Medium draft word count outside 1500-2000: {words}'
+          thread = (d / 'x_thread.md').read_text(encoding='utf-8')
+          posts = re.findall(r'^\*\*\d+/12\*\*', thread, flags=re.M)
+          assert len(posts) == 12, f'Expected 12 X posts, found {len(posts)}'
+          readme = (d / 'README.md').read_text(encoding='utf-8')
+          assert readme.count('$$') == 8, 'README must contain four display-math blocks'
+          assert r'\operatorname' not in readme and r'\n' not in readme, 'README math typography violation'
+          tex = (d / 'paper.tex').read_text(encoding='utf-8')
+          assert 'Co-equal research-process credit is given to Devanik Debnath and Xylia' in tex
+          bib = (d / 'paper.bib').read_text(encoding='utf-8')
+          keys = set(re.findall(r'@\w+\s*\{\s*([^,\s]+)', bib))
+          cited = {k.strip() for group in re.findall(r'\\cite\{([^}]+)\}', tex) for k in group.split(',')}
+          assert cited <= keys, f'Missing BibTeX entries: {sorted(cited-keys)}'
+          print(f'Metadata valid; Medium words={words}; X posts={len(posts)}; bibliography and math preflight passed')
+          PY
+          cp "$RELEASE_DIR/paper.tex" "$BUILD_DIR/paper.tex"
+          cd "$BUILD_DIR"
+          for n in 1 2 3; do pdflatex -interaction=nonstopmode -halt-on-error -file-line-error paper.tex; done
+          test -s paper.pdf
+          python -c "from pathlib import Path; p=Path('paper.pdf'); assert p.read_bytes().startswith(b'%PDF-'); print(f'Valid PDF: {p.stat().st_size} bytes')"
+          PAGE_COUNT="$(pdfinfo paper.pdf | awk '/^Pages:/ {print $2}')"
+          test "$PAGE_COUNT" -ge 7 || { echo "Expected >=7 pages; found $PAGE_COUNT" >&2; exit 1; }
+          echo "Page-count gate passed: $PAGE_COUNT pages"
+          cd "$GITHUB_WORKSPACE"
+          cp "$BUILD_DIR/paper.pdf" "$RELEASE_DIR/paper.pdf"
+          python - "$RELEASE_DIR" <<'PY'
+          import pathlib, sys
+          d = pathlib.Path(sys.argv[1])
+          expected = {'paper.tex','paper.pdf','verify_model.py','README.md','medium_story.md','x_thread.md','CITATION.cff','paper.bib','.zenodo.json','schema_article.jsonld','deploy.py'}
+          actual = {p.name for p in d.iterdir() if p.is_file()}
+          assert actual == expected, f'Manifest mismatch: missing={expected-actual}; extra={actual-expected}'
+          assert all((d / name).stat().st_size > 0 for name in expected)
+          print('Exact 11-file manifest passed; all files nonempty')
+          PY
+      - name: Commit current compiled PDF
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- 'Theoretical Research/CryoWeave_Risk_Budgeted_AI_Co_Design_of_Cryoprotectant_Loading_and_Nanowarming_for_Organ_Scale_Cryobanking/paper.pdf'
+          if git diff --cached --quiet; then
+            echo 'Compiled PDF is already current.'
+          else
+            git commit -m 'Build CryoWeave research PDF'
+            git push origin HEAD:main
+          fi
+      - name: Create and verify release tag
+        env:
+          RELEASE_TAG: 'v2026.10.11.3'
+        run: |
+          set -euo pipefail
+          git fetch origin main --tags
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Tag $RELEASE_TAG already exists; refusing to overwrite it." >&2
+            exit 1
+          fi
+          git tag -a "$RELEASE_TAG" -m "CryoWeave preprint $RELEASE_TAG"
+          git push origin "refs/tags/$RELEASE_TAG"
+          git fetch origin --tags
+          test "$(git rev-list -n 1 "$RELEASE_TAG")" = "$(git rev-parse HEAD)"
+          echo "Verified annotated tag $RELEASE_TAG -> $(git rev-parse HEAD)"
