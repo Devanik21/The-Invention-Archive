@@ -1,0 +1,309 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.86in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,tabularx,array,longtable}
+\usepackage{enumitem}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\setlist{nosep,leftmargin=1.55em}
+\hypersetup{pdftitle={Rate-Distortion Immunology: Defragmenting the Aging Immune Repertoire},pdfauthor={Devanik Debnath}}
+\title{Rate-Distortion Immunology: Defragmenting the Aging Immune Repertoire\\[0.35em]\large A prior-sensitive, safety-constrained framework for T-cell recognition coverage}
+\author{Devanik Debnath (Devanik21)\\\small Department of Electronics and Communication Engineering\\\small National Institute of Technology Agartala, India}
+\date{11 October 2026}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+\begin{document}
+\maketitle
+\begin{abstract}
+Immune aging is often described through losses of repertoire diversity, thymic output, and vaccine responsiveness, alongside persistent expansions of antigen-experienced clones. These measurements are related but not interchangeable: a clone can be abundant and protective, diversity can be preserved despite cytomegalovirus-associated expansion, and raw sequence richness does not measure recognition of future pathogen epitopes. We formulate a rate-distortion view of the T-cell receptor (TCR) repertoire in which distortion is the prior-weighted probability that a defined, HLA-conditioned antigen panel is not recognized. At a fixed number of representational units, the proposed \emph{coverage gap} compares the observed repertoire with the best achievable selection from an explicitly stated candidate universe. The gap is not an intrinsic biological constant: it is conditional on the antigen prior, recognition estimator, candidate pool, HLA context, and assay. We derive a monotone submodular coverage result under a conditional-independence approximation, give a greedy selection guarantee for a fixed-cardinality benchmark, and formulate distributionally robust and protection-constrained variants when pathogen priors are uncertain. An AI-assisted estimator can contribute only if TCR--epitope scores are calibrated on external studies, split by donor and epitope to prevent leakage, and accompanied by uncertainty bounds. A reproducible synthetic benchmark verifies the algebra and demonstrates how clones with identical abundance profiles can differ in modeled coverage. No patient-level cohort was downloaded or analyzed for this release; real-data testing is specified as a preregistered next step. The central falsifiable claim is methodological: coverage-aware debt should improve out-of-cohort prediction of vaccine response or infection outcomes beyond repertoire size, Hill diversity, clonality, age, sex, CMV status, and technical covariates. If it does not, the rate-distortion framing should be rejected as a useful predictive advance. The paper does not recommend deleting human memory clones and makes no claim of clinical readiness.
+\end{abstract}
+
+\noindent\textbf{Keywords:} T-cell receptor repertoire; rate-distortion theory; immune aging; antigen coverage; clonal expansion; robust optimization; machine learning; vaccine response; CMV; safety constraints
+
+\section{Research posture and contribution}
+This is a theory-and-methods proposal with a synthetic numerical check, not an empirical immunology result. Its vocabulary is deliberately narrower than the motivating metaphor. A TCR repertoire does not literally encode every pathogen in the world, and biological immunity is not an engineered codec with a known fixed memory budget. The framework asks whether a carefully defined recognition-coverage objective provides information that standard repertoire summaries omit, and whether the resulting gap is reproducible under uncertainty.
+
+The contribution is fourfold. First, it defines a \emph{candidate-space-conditional coverage gap} rather than treating clonal dominance or low Shannon entropy as synonymous with waste. Second, it separates the antigen-prior problem from receptor recognition uncertainty and gives each an explicit sensitivity analysis. Third, it connects a conditional-independence recognition model to submodular maximum coverage, yielding an interpretable baseline optimizer rather than an uncheckable black box. Fourth, it proposes an AI evaluation protocol with held-out donors, held-out epitopes, calibration, and a hard rule against converting sequence predictions directly into human clone-depletion decisions.
+
+The novelty claim is correspondingly limited. The review found established rate-distortion theory, repertoire diversity metrics, generative repertoire models, maximum-entropy immune repertoire models, TCR--epitope prediction, repertoire optimal transport, and large-cohort analyses of age, CMV, clone expansion, and diversity. Searches did not establish that this exact rate-distortion synthesis is already canonical, but absence of an exact phrase is not proof of priority. This paper presents a testable synthesis and a falsifiable benchmark proposal, not a claim that the component mathematics or biological observations are new.
+
+\section{Why diversity is not coverage}
+The adaptive immune system contains enormous sequence diversity generated by V(D)J recombination and shaped by thymic and peripheral selection \citep{Murugan2012,Elhanati2014,ElhanatiSelection2014,Olson2022}. Repertoire-sequencing analyses commonly report richness, Shannon entropy, clonality, Simpson-type diversity, or Hill numbers. These summarize the abundance distribution, but they do not directly answer the question, ``What is the probability that this repertoire recognizes a specified future antigen?'' Two repertoires can share exactly the same clone-frequency vector while their TCR sequences differ in HLA-restricted specificity. Any abundance-only metric must assign them the same score despite their potentially different coverage.
+
+The converse caution matters just as much. Large clones are not automatically redundant. CMV-associated clonal expansion can be substantial, but one human study reported that the underlying CD8 repertoire diversity could be preserved despite CMV-associated expansion \citep{Lindau2019}. A 2026 analysis of about 30,000 TCR$\beta$ repertoires reported that repertoire size and the frequency contributed by highly expanded clones together explained about 96\% of observed variance in TCR$\beta$ diversity in its cohort \citep{Zahid2026}. That result makes the baseline stronger, not weaker: any coverage-debt measure must demonstrate added value beyond abundance-based diversity models and must not relabel a correlational decomposition as a mechanism of aging.
+
+Longitudinal evidence also argues against treating every expansion as a defect. A small, approximately 20-year follow-up study found age-related changes in CD8 diversity and clonality, while CD4 patterns differed; the authors noted persistent high-frequency clonotypes over time \citep{Yoshida2017}. Vaccine studies have associated antigen-specific repertoire structure with response quality, but their endpoints, vaccine platforms, and cohorts differ \citep{Saggau2022}. Thus the relevant target is not maximal evenness. It is adequate, durable, HLA-compatible recognition of a prespecified threat distribution, subject to preserving known protective memory and avoiding autoreactivity.
+
+\section{Notation and operational scope}
+Let $\mathcal{E}=\{e_1,\ldots,e_m\}$ be a finite panel of pathogen-derived peptide--MHC targets. A target is not just a peptide sequence: it is a peptide in an HLA context and with a declared assay and response definition. Let $\pi\in\Delta^{m-1}$ be the target prior, where $\pi_e\geq0$ and $\sum_e\pi_e=1$. Let $\ell_e\in[0,1]$ be a prespecified consequence weight. Setting all $\ell_e=1$ estimates unweighted recognition failure; using disease-severity weights changes the estimand and needs explicit justification.
+
+Let $\mathcal{C}$ be the candidate receptor universe for one donor or HLA stratum. It may include observed clonotypes, experimentally characterized receptors, and carefully qualified candidate receptors that could plausibly be produced from a donor-compatible naive pool. These sources must be distinguished. A public receptor from another donor, a sequence sampled from a generative VDJ model, and a clone already present in the donor are not interchangeable biological options. AI-generated sequence proposals cannot be treated as functional receptors without independent binding and cell-response validation.
+
+For candidate receptor $i$ and target $e$, define $r_{ie}\in[0,1]$ as the probability of a response under a declared operational assay, not an abstract claim of all-pathogen affinity. The score may be based on direct assay data or an externally calibrated predictive model. Let $S\subseteq\mathcal{C}$ be a selected set of at most $K$ distinct receptor types. Here $K$ is an explicit representational budget in the computational benchmark. It is not asserted to equal a fixed physiological number of memory cells or niches.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{0.18\linewidth}X}
+\toprule
+Symbol & Meaning and measurement requirement\\
+\midrule
+$\mathcal{E}$ & Predeclared peptide--HLA target panel, with provenance and assay definitions.\\
+$\pi$ & Pathogen/epitope prior; a modeling choice requiring prespecified alternatives.\\
+$\ell_e$ & Severity or utility weight for target $e$, when justified.\\
+$r_{ie}$ & Calibrated response probability for receptor $i$ against target $e$.\\
+$S$ and $K$ & Selected receptor types and a fixed cardinality budget, respectively.\\
+$q_e(S)$ & Modeled probability target $e$ remains unrecognized by $S$.\\
+$D_\pi(S)$ & Prior-weighted, loss-weighted recognition distortion.\\
+$D^*_\pi(K;\mathcal{C})$ & Minimum modeled distortion among sets from candidate universe $\mathcal{C}$ with size at most $K$.\\
+$\mathrm{CD}_\pi$ & Coverage gap/debt relative to the stated candidate universe and baseline selection.\\
+\bottomrule
+\end{tabularx}
+\caption{Core notation. The result depends on the candidate universe and cannot be interpreted as an absolute measure of immune quality.}
+\end{table}
+
+\section{Rate-distortion formulation}
+For a set $S$, a simple working approximation assumes that recognition events of distinct clonotypes are conditionally independent given target $e$. Then the target is missed by every selected clonotype with probability
+\begin{equation}
+q_e(S)=\prod_{i\in S}(1-r_{ie}).
+\label{eq:miss}
+\end{equation}
+The model's distortion is
+\begin{equation}
+D_\pi(S)=\sum_{e\in\mathcal{E}}\pi_e\ell_e q_e(S).
+\label{eq:distortion}
+\end{equation}
+When $\ell_e=1$, this is the model-estimated probability of missing a randomly drawn target from $\pi$. If $\ell_e$ is severity-weighted, the result is expected weighted loss, not a probability. The distinction must remain visible in reports.
+
+Given budget $K$ and candidate set $\mathcal{C}$, define the rate-distortion frontier
+\begin{equation}
+D^*_{\pi}(K;\mathcal{C})=\min_{S\subseteq\mathcal{C},\,|S|\leq K}D_\pi(S).
+\label{eq:frontier}
+\end{equation}
+For observed repertoire $R$ and an explicitly defined baseline $R_K\subseteq R$ with $|R_K|\leq K$, define candidate-space-conditional coverage debt
+\begin{equation}
+\mathrm{CD}_{\pi}(R_K;K,\mathcal{C})=D_\pi(R_K)-D^*_{\pi}(K;\mathcal{C}).
+\label{eq:debt}
+\end{equation}
+When $R_K\subseteq\mathcal{C}$, the debt is nonnegative by construction. It is not a universal biological constant. It changes if the candidate universe, target prior, HLA conditioning, assay, score calibration, or baseline-selection rule changes. A zero gap means only that no improvement is found within this candidate universe and model; it does not imply that the person's immune system is optimal.
+
+The term ``rate'' in rate-distortion refers here to the number of receptor types retained in the computational codebook. It should not be conflated with read depth, total T-cell count, clone abundance, or biological memory occupancy. Those are different capacities. A second-stage biological model could replace cardinality with an experimentally defined niche-occupancy cost $a_i$ and budget $B$, but a knapsack objective would require its own optimization and biological validation. This paper does not infer a fixed hard memory-capacity limit from sequence data alone.
+
+\subsection{Recognition dependence and safer distortion estimates}
+Equation~\eqref{eq:miss} can overstate or understate combined recognition when TCRs share motifs, require the same HLA context, or respond through correlated cellular states. If joint measurements are available, estimate
+\begin{equation}
+q_e(S)=\Pr\!\left(\bigcap_{i\in S}\{\text{receptor }i\text{ fails to respond to }e\}\right),
+\label{eq:joint}
+\end{equation}
+using paired functional data or a calibrated joint model. The product form is a baseline, not a biological law. Any claimed debt must be reported both under the independence baseline and, where feasible, under dependence-sensitive estimates.
+
+\section{A formal property of the baseline objective}
+Define the covered utility $F_\pi(S)=1-D_\pi(S)$ when $\sum_e\pi_e\ell_e=1$, or more generally $F_\pi(S)=\sum_e\pi_e\ell_e[1-q_e(S)]$ with the maximum total utility $L_\pi=\sum_e\pi_e\ell_e$. For the independence model, the following result holds.
+
+\begin{proposition}[Monotonicity and submodularity]
+Suppose $\pi_e\ell_e\geq0$ and each $r_{ie}\in[0,1]$ is fixed. Under equation~\eqref{eq:miss}, $F_\pi$ is monotone and submodular: for $A\subseteq B\subseteq\mathcal{C}$ and $j\notin B$,
+\begin{equation}
+F_\pi(A\cup\{j\})-F_\pi(A)\geq F_\pi(B\cup\{j\})-F_\pi(B)\geq0.
+\label{eq:diminishing}
+\end{equation}
+\end{proposition}
+\begin{proof}
+The marginal benefit of adding receptor $j$ to set $S$ is
+\begin{equation}
+\Delta_j(S)=\sum_e\pi_e\ell_e r_{je}\prod_{i\in S}(1-r_{ie}).
+\label{eq:marginal}
+\end{equation}
+Each factor is nonnegative. If $A\subseteq B$, the product over $B$ contains all factors in the product over $A$ and additional factors in $[0,1]$, so the product cannot increase. Termwise, $\Delta_j(A)\geq\Delta_j(B)\geq0$. Thus utility is monotone with diminishing returns and is submodular.
+\end{proof}
+
+\begin{corollary}[Greedy cardinality baseline]
+For the unconstrained cardinality problem $\max_{|S|\leq K}F_\pi(S)$ with a nonnegative monotone submodular utility and no additional safety constraints, the standard greedy algorithm achieves at least $1-1/e$ of the optimal covered utility. This guarantee applies to the stated plug-in objective, not automatically to the robust, correlated, or clinically constrained versions.
+\end{corollary}
+
+This property gives an interpretable baseline and a scalable candidate-selection method. It does not prove that natural repertoires evolved to solve this optimization problem, that a selected clone can safely replace another, or that model-predicted receptors are available in vivo. With correlated recognition, uncertain scores, mandatory protection constraints, or donor-specific feasibility constraints, exact submodularity and the standard approximation guarantee may fail; those variants must be checked separately.
+
+\section{Pathogen-prior uncertainty and robust debt}
+A single prior $\pi$ risks dominating the result. Future pathogen exposure is nonstationary, geographically and behaviorally structured, conditioned by vaccination and past infection, and difficult to infer from immunological history. We therefore recommend a family $\Pi$ of plausible priors, each documented before outcomes are analyzed. Examples include (i) a surveillance-weighted prior, (ii) a uniform-over-predeclared-epitope-panel prior, (iii) a vaccine-target prior, and (iv) stress priors that upweight antigen families underrepresented in the training data.
+
+A robust objective is
+\begin{equation}
+D_{\mathrm{rob}}(S)=\sup_{\pi\in\Pi}\sum_e\pi_e\ell_e q_e(S),\qquad
+D^*_{\mathrm{rob}}(K;\mathcal{C})=\min_{|S|\leq K}D_{\mathrm{rob}}(S).
+\label{eq:robust}
+\end{equation}
+The distributional uncertainty family should be specified explicitly; one option is a Kullback--Leibler ball around reference distribution $\pi_0$, $\Pi_\rho=\{\pi:D_{\mathrm{KL}}(\pi\Vert\pi_0)\leq\rho\}$. This makes $\rho$ interpretable as a prior-shift sensitivity parameter, though choosing it remains an assumption. The robust coverage debt uses $D_{\mathrm{rob}}$ in equation~\eqref{eq:debt}. It is a different quantity from the debt computed under a single prior, and both should be reported rather than choosing whichever looks best.
+
+Recognition probabilities also have epistemic uncertainty. If $r_{ie}$ is represented by a posterior distribution or calibrated interval, uncertainty should be propagated through $q_e$, $D$, and the optimization. A conservative selector may optimize an upper confidence bound on distortion or impose a lower confidence bound on retained coverage for protected targets. Uncertainty is not cured by using a larger language model. It is measured through external calibration, assay replication, and shifts between training and deployment domains.
+
+\section{Protection constraints: coverage is not permission to delete memory}
+Any future translational interpretation must start from a non-removal constraint. Let $\mathcal{P}$ be a panel of known protective epitopes or required memory functions, and let $\gamma_e$ be a prespecified minimum acceptable coverage for each $e\in\mathcal{P}$. Define the feasible family
+\begin{equation}
+\mathcal{F}_{\mathrm{safe}}=\{S:|S|\leq K,\; C_e(S)\geq\gamma_e\text{ for each }e\in\mathcal{P},\; S\supseteq S_{\mathrm{protected}}\},
+\label{eq:safety}
+\end{equation}
+where $C_e(S)=1-q_e(S)$ and $S_{\mathrm{protected}}$ contains clonotypes that policy, clinical knowledge, or functional evidence requires retaining. In an observational benchmark, the protected set is a statistical constraint, not a treatment instruction. In a real biological intervention, this condition is necessary but not sufficient: autoreactivity, exhaustion, tissue residency, non-canonical functions, network effects, antigen escape, and unknown memory targets cannot be excluded from repertoire sequence alone.
+
+If the protected constraints are infeasible under budget $K$, the correct output is ``infeasible under current assumptions'', not a relaxed guarantee hidden inside an optimizer. A safety gate should reject a candidate removal whenever retained-coverage uncertainty crosses a prespecified threshold, assay support is inadequate, the target is known to be protective, or the clone's broader function is uncharacterized. Until prospective experimental evidence is available, this paper supports prioritization of experiments and retrospective scoring only. It does not recommend clonotype-directed depletion in humans.
+
+\section{Role of AI: calibrated recognition, not sequence divination}
+AI has a substantive but bounded role. A TCR--epitope model can estimate $r_{ie}$ from CDR3 sequence, V/J usage, HLA restriction, peptide sequence, paired-chain context where available, and assay provenance. Models can include protein-language-model embeddings, contrastive receptor--epitope representations, and probabilistic hierarchical effects for donor, laboratory, HLA, and study. They should be compared with simple sequence-similarity baselines and calibrated probabilistic regression. Prior literature already explores machine-learning prediction of TCR binding and its limitations \citep{Weber2024}; such models do not establish functional recognition in an untested donor or protection against disease.
+
+The benchmark must split by donor and by epitope, not only randomly by receptor sequence. Highly similar clonotypes, duplicate assay pairs, public receptors, and repeated sequences across database sources can create leakage. A robust protocol will use a primary held-out-study test and a second test holding out entire epitope families or pathogens. Calibration should be measured with Brier score, log loss, reliability curves, expected calibration error with stated binning, and coverage of prediction intervals. Recognition predictions with inadequate calibration or out-of-distribution flags should be excluded from the primary debt calculation or assigned conservative uncertainty bounds.
+
+The AI pipeline's output is a posterior recognition matrix and an uncertainty annotation, not a list of clones to delete. Generative VDJ models may estimate candidate-sequence plausibility, but plausible recombination is not the same as thymic selection, self-tolerance, surface expression, antigen binding, T-cell activation, or clinical protection. Candidate sequences from external donors are reference comparators, not evidence that those clones can be regenerated in the older donor. This limitation is central to interpreting any optimality gap.
+
+\section{Computational validation design}
+The minimal retrospective study should use public AIRR-seq repositories with harmonized subject metadata, plus experimentally mapped receptor--epitope data from resources such as IEDB. The AIRR Data Commons and related AIRR Knowledge infrastructure provide interoperable repertoire discovery across studies \citep{AIRR2023}. The 2026 IEDB update reports a substantially expanded, standardized collection of experimentally characterized receptors and AIRR-compatible export, while warning by its very need for harmonization that receptor and assay metadata require careful curation \citep{IEDB2026}. A public dataset released in June 2026 contains clonotype-level TRA/TRB repertoires from CD4 and CD8 compartments with metadata on healthy/frail older individuals and CMV status, and links to epigenetic age acceleration \citep{Breens2026data}. It is a candidate for a limited aging/CMV association study, but the release record inspected here does not establish a vaccine-response endpoint for that dataset.
+
+No raw repertoire file from these resources was successfully downloaded into this execution environment, so no human cohort was analyzed in this release. The numerical outputs below come only from a deliberately synthetic benchmark. An empirical analysis should not proceed as if this gap had been filled.
+
+\subsection{Preregistered data-analysis plan}
+\begin{enumerate}
+\item \textbf{Lock the outcome and cohort.} Select one cohort with age, CMV status, sex, compartment, sequencing depth, study/batch, and a defensible endpoint. For a predictive vaccine analysis, choose a separate cohort with measured vaccine outcome and sample timing. Do not infer vaccine response from age or CMV metadata.
+\item \textbf{Harmonize repertoire units.} Use productive paired-chain receptors where available; otherwise declare the single-chain limitation. Normalize sequencing depth by rarefaction or a justified sampling model, report richness and Hill numbers, and retain cell subset, HLA, library protocol, and batch covariates.
+\item \textbf{Build the target panel.} Freeze epitopes, HLA restrictions, response definitions, source of pathogen weights, and all prior variants before examining endpoint associations. Report the target universe and missing targets.
+\item \textbf{Train and calibrate recognition scores.} Train only on data available before the validation fold. Use donor-disjoint, study-disjoint, and epitope-disjoint evaluations. Deduplicate related receptor--epitope rows and treat negative assay evidence distinctly from untested pairs.
+\item \textbf{Estimate debt and its uncertainty.} Compute plug-in and prior-robust distortion gaps using repeated donor bootstrap, model ensembles or posterior draws, and a fixed candidate universe. Report whether the optimizer selects externally sourced or generated candidates that are not physically present.
+\item \textbf{Compare against strong baselines.} Compare age, sex, CMV, repertoire size, richness, Shannon/Hill diversity, top-clone mass, clonality, HLA, cell subset, and assay covariates. Use nested validation to prevent feature-selection leakage.
+\item \textbf{Evaluate incremental value.} For binary endpoints, report AUROC and AUPRC with confidence intervals, calibration, Brier score, and decision-curve or net-benefit analysis where meaningful. For continuous antibody titres or cellular-response readouts, report out-of-sample error and calibration. Ensure participant-level splits and evaluate across studies or geographic cohorts.
+\item \textbf{Falsify early.} The main framing fails as a useful biomarker if coverage debt does not improve out-of-cohort prediction beyond preregistered diversity/clonality baselines, if the ranking is unstable under plausible pathogen priors, or if the estimated gap is dominated by recognition-model calibration error or assay batch.
+\end{enumerate}
+
+\subsection{What this test can and cannot establish}
+An association between coverage debt and frailty does not demonstrate that immune memory is physically overfilled or that deleting clones would help. Predictive improvement establishes information beyond the comparators in that cohort, not causality. Evidence for the stronger mechanism requires longitudinal measurements of naive-pool replenishment, clone persistence, antigen-specific functional response, absolute cell counts, and niche competition. A depletion-and-renewal experiment would additionally require experimental demonstration of selective removal, preservation of protective functions, and a safe source of replacement diversity. Those experiments lie beyond this computational proposal.
+
+\section{Synthetic benchmark and numerical results}
+We implement a compact synthetic example with 36 epitope classes, eight observed clonotypes, and ten candidate replacements under a fixed codebook budget of eight. Five observed clones have overlapping recognition profiles concentrated on four targets; the remaining observed clones cover narrow additional regions. Candidate replacements represent an idealized reserve pool with distinct predicted target profiles. The example is intentionally stylized: it is not fit to a human dataset and does not approximate the scale or biology of a whole immune system.
+
+For each subset, equation~\eqref{eq:miss} yields miss probabilities; uniform target weights yield unweighted distortion. An exhaustive search of all $\binom{18}{8}$ candidate subsets obtains the exact synthetic optimum for this small instance. The verifier also checks the algebraic monotonicity/diminishing-returns property, the sign of the coverage gap, sensitivity to nonuniform pathogen priors, and the fact that a frequency-only metric cannot distinguish repertoires with identical abundance vectors but different antigen-recognition matrices.
+
+In the current synthetic run, the observed eight-clone panel has modeled distortion 0.810755 and exhaustive selection from the 18-candidate reference universe has distortion 0.365500, for a gap of 0.445255 under the uniform prior. Under a prior that emphasizes four selected target classes, the observed distortion is 0.364949 and the exhaustive optimum is 0.203893, for a gap of 0.161056. The changed magnitude demonstrates prior sensitivity; these values are only outputs of a transparent constructed example. They are not estimates for older adults, CMV-positive individuals, vaccine recipients, or any patient population.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabularx}{\linewidth}{lX}
+\toprule
+Validation item & Result and interpretation\\
+\midrule
+Analytical checks & The independent verifier tests miss-probability bounds, empty-set distortion, full coverage under unit recognition, and monotonicity.\\
+Submodularity & Marginal coverage gains decrease when more clones have already been selected, as derived in Proposition 1.\\
+Exact tiny-instance optimum & Exhaustive enumeration supplies an independent optimizer for the 18-candidate, eight-slot toy problem.\\
+Prior perturbation & Reweighting antigen classes changes distortion and may change the best subset; this is expected sensitivity, not a model error.\\
+Abundance baseline & Fixed abundance frequencies alone cannot determine the recognition matrix or the resulting coverage gap.\\
+Biological validation & Not performed. No public cohort or antigen-binding assay was analyzed in this release.\\
+\bottomrule
+\end{tabularx}
+\caption{Scope of numerical verification. All numerical claims in this table refer to a synthetic model or exact algebraic checks.}
+\end{table}
+
+\section{Statistical-physics interpretation: useful null models, dangerous metaphors}
+Maximum-entropy models have been used to describe correlations and sequence distributions in immune repertoires \citep{Mora2010,Elhanati2014}. Optimal-transport distances also provide a way to compare whole empirical TCR distributions without reducing them to a single richness statistic \citep{Olson2022}. They can provide null distributions for clone abundance, generation probability, or sequence correlations. An apparent ``condensation'' of abundance into dominant clonotypes may be a useful descriptive analogy, but a statistical physics phase transition cannot be inferred from a heavy-tailed distribution alone. Any universality claim would require a finite-size analysis, defined order parameter, matched null models, and robust scaling across subjects and sequencing depths.
+
+Similarly, Lotka--Volterra-style equations can represent competition for a limiting resource only when the resource and interaction coefficients have empirical grounding. Cytokine dependence, tissue niches, antigen persistence, homeostatic proliferation, trafficking, and cellular differentiation are not a single interchangeable resource. The present rate-distortion model intentionally does not pretend to derive repertoire abundance from those mechanisms. A later mechanistic coupling would need an explicit dynamic model such as
+\begin{equation}
+\dot{x}_i=x_i\left(g_i-\sum_j A_{ij}x_j\right)+u_i(t)+\xi_i(t),
+\label{eq:competition}
+\end{equation}
+where $x_i$ is an abundance state, $g_i$ is net growth/survival, $A_{ij}$ contains measured competition coefficients, $u_i$ represents input/renewal, and $\xi_i$ represents demographic and environmental noise. Equation~\eqref{eq:competition} is a candidate structure, not a fitted model or established general law of T-cell competition. Coupling it to rate-distortion would require linking $x_i$ to the recognition coverage matrix and validating the parameters in relevant cell subsets.
+
+\section{Failure modes, fairness, and safety}
+\paragraph{Prior misspecification.} A prior assembled from known epitopes overweights what scientists have measured and may underrepresent emerging pathogens, non-dominant HLA alleles, and geographic differences in exposure. Results must be shown across alternative priors and target panels. A single headline number conceals value judgments.
+
+\paragraph{Recognition-model error.} Peptide binding, TCR binding, T-cell activation, and clinical protection are distinct endpoints. A language model trained on positive pairs can identify database regularities rather than generalizable specificity. Assay heterogeneity and missing-not-at-random negative labels can make apparently precise probabilities misleading.
+
+\paragraph{Sampling and composition.} Blood is not the entire immune system. Tissue-resident memory, mucosal responses, CD4/CD8 composition, naive/memory proportions, and age-associated shifts in cell fractions can alter observed repertoire statistics. Sequencing depth and productive-read filters also affect apparent richness and rare-clone coverage.
+
+\paragraph{Self-tolerance and autoimmunity.} Maximizing foreign-epitope coverage alone could favor receptors with unacceptable self-reactivity or cross-reactivity. Negative selection and immune regulation constrain the feasible repertoire. Safety requires explicit counter-target panels, functional assays, and conservative constraints, not just a lower expected distortion.
+
+\paragraph{Protection lost through depletion.} A clone recognized as redundant for one target panel may be critical for a variant, tissue context, or unmeasured pathogen. CMV-specific expansions can reflect durable protective memory. The model must never infer that a clone is disposable from its abundance or a predicted redundancy score alone. No human clone-depletion protocol is proposed here.
+
+\paragraph{Equity and population shift.} TCR specificity datasets overrepresent selected pathogens, HLA alleles, ancestries, ages, and laboratories. A risk score trained on one population can misrank another. Before any clinical use, calibration and failure analysis must be stratified by HLA, ancestry where ethically and legally available, age, sex, and assay site; missing data cannot be interpreted as biological absence.
+
+\section{P1--P5 epistemological classification}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.12\linewidth}p{0.29\linewidth}p{0.49\linewidth}}
+\toprule
+Class & Claim type & Status in this release\\
+\midrule
+P1 & Exact mathematical properties & Equation~\eqref{eq:miss} defines the independence model; the distortion and debt are definitions. The submodularity proposition follows exactly if $r_{ie}$ is fixed and nonnegative weights are used.\\
+P2 & Optimization result & Greedy's $1-1/e$ guarantee applies only to monotone submodular cardinality coverage. A robust or safety-constrained optimizer needs separate analysis.\\
+P3 & Statistical universality & No universal aging law, phase transition, or scaling exponent is claimed. Existing repertoire statistics motivate null-model comparison only.\\
+P4 & Cross-domain correspondence & The mapping from antigen recognition to rate-distortion is a formal operational correspondence. It is not evidence that the immune system literally optimizes an information-theoretic code.\\
+P5 & Preliminary analogy & ``Defragmentation'', ``compression debt'', and ``repertoire condensation'' are metaphors unless their operational definitions and test conditions are specified. They are not direct biological mechanisms.\\
+\bottomrule
+\end{longtable}
+
+\section{Decision gates and falsification criteria}
+The proposed programme has explicit go/no-go criteria.
+\begin{enumerate}
+\item \textbf{Coverage identifiability gate.} If the chosen target panel lacks sufficient experimentally supported receptor--epitope pairs, HLA conditioning, or calibration for the study population, do not report a point estimate of debt. Report bounds or declare the metric not identifiable.
+\item \textbf{Prior stability gate.} If the ordering of individuals changes dramatically across plausible priors or a small number of rare targets, describe the score as prior-sensitive and reject its use as a general aging biomarker.
+\item \textbf{Incremental prediction gate.} If the coverage gap fails to improve out-of-cohort prediction beyond age, sex, CMV, cell subset, read depth, repertoire size, Hill diversity, and top-clone mass, the central utility claim fails.
+\item \textbf{Calibration gate.} If predicted response probabilities are not calibrated on donor-disjoint and epitope-disjoint validation, any apparent coverage improvement is not admissible as evidence.
+\item \textbf{Safety gate.} No clone depletion is considered from sequence-only scores. Functional evidence for retained protection, self-reactivity screening, tissue-relevant response and a feasible renewal mechanism would all be required before an intervention experiment could be considered.
+\end{enumerate}
+
+\section{Conclusion}
+Rate-distortion theory offers a disciplined way to ask whether a repertoire covers a declared target distribution efficiently for a fixed representational budget. The useful research object is not a claim that aged immune systems contain useless memory. It is the gap between a measured baseline and an optimizer over an explicitly bounded, donor-compatible candidate universe, with pathogen-prior uncertainty and recognition-model uncertainty made visible.
+
+The mathematics is modest but operational: under the product miss model, weighted antigen coverage is monotone submodular and supports a strong greedy baseline. The hard scientific question is whether the candidate universe and recognition matrix can be estimated reliably enough that the resulting coverage gap predicts meaningful outcomes beyond ordinary diversity, clonality and clinical covariates. Public repertoire and antigen-specificity resources make a first retrospective evaluation plausible, but the data need to be harmonized and the evaluation must be donor-disjoint, epitope-disjoint, calibrated and reproducible.
+
+A positive result would justify a better computational biomarker and experimental prioritization framework, not immediate repertoire manipulation. A null result would be equally informative: it would show that the rate-distortion language adds no robust predictive value beyond established metrics. The responsible near-term goal is to test the metric, not to delete cells.
+
+\noindent\textbf{Co-equal research-process credit and disclosure.} Co-equal research-process credit is given to Devanik Debnath and Xylia, the autonomous multi-model research engine coordinating AI-assisted discovery, synthesis, and verification. Devanik Debnath retains responsibility for the final manuscript, scientific claims, citations, and released artifacts.
+
+\section*{Data availability and reproducibility}
+No human participant data were downloaded or analyzed for this release. The synthetic verifier is included in the release directory and can be run with Python 3.10 or later and NumPy 1.24 or later using \texttt{python verify\_model.py}. Candidate public resources for a future analysis include the AIRR Data Commons, IEDB's standardized receptor exports, and the dataset by Breëns and colleagues (Zenodo record 20545037). Each has different sampling, licensing, and outcome limitations; none is represented here as already analyzed. The current code validates mathematical properties and an illustrative finite optimization instance only.
+
+\begin{thebibliography}{99}
+\bibitem[Berger(1971)]{Berger1971}
+Berger, T. (1971). \emph{Rate Distortion Theory: A Mathematical Basis for Data Compression}. Prentice-Hall.
+
+\bibitem[Cover and Thomas(2006)]{CoverThomas2006}
+Cover, T. M., and Thomas, J. A. (2006). \emph{Elements of Information Theory}, 2nd ed. Wiley-Interscience. doi:10.1002/047174882X.
+
+\bibitem[Elhanati et~al.(2014)]{ElhanatiSelection2014}
+Elhanati, Y., Murugan, A., Callan, C. G., Mora, T., and Walczak, A. M. (2014). Quantifying selection in immune receptor repertoires. \emph{Proceedings of the National Academy of Sciences}, 111(27), 9875--9880. doi:10.1073/pnas.1409572111.
+
+\bibitem[Elhanati et~al.(2015)]{Elhanati2014}
+Elhanati, Y., Sethna, Z., Marcou, Q., Callan, C. G., Mora, T., and Walczak, A. M. (2015). Inferring processes underlying B-cell repertoire diversity. \emph{Philosophical Transactions of the Royal Society B: Biological Sciences}, 370(1675), 20140243. doi:10.1098/rstb.2014.0243.
+
+\bibitem[Lindau et~al.(2019)]{Lindau2019}
+Lindau, P., Mukherjee, R., Gutschow, M. V., Vignali, M., Warren, E. H., Riddell, S. R., Makar, K. W., Turtle, C. J., and Robins, H. S. (2019). Cytomegalovirus exposure in the elderly does not reduce CD8 T cell repertoire diversity. \emph{The Journal of Immunology}, 202(2), 476--483. doi:10.4049/jimmunol.1800217.
+
+\bibitem[Mora et~al.(2010)]{Mora2010}
+Mora, T., Walczak, A. M., Bialek, W., and Callan, C. G. (2010). Maximum entropy models for antibody diversity. \emph{Proceedings of the National Academy of Sciences}, 107(12), 5405--5410. doi:10.1073/pnas.1001705107.
+
+\bibitem[Murugan et~al.(2012)]{Murugan2012}
+Murugan, A., Mora, T., Walczak, A. M., and Callan, C. G. (2012). Statistical inference of the generation probability of T-cell receptors from sequence repertoires. \emph{Proceedings of the National Academy of Sciences}, 109(40), 16161--16166. doi:10.1073/pnas.1212755109.
+
+\bibitem[Olson et~al.(2022)]{Olson2022}
+Olson, B. J., Schattgen, S. A., Thomas, P. G., Bradley, P., and Matsen, F. A. (2022). Comparing T cell receptor repertoires using optimal transport. \emph{PLOS Computational Biology}, 18(12), e1010681. doi:10.1371/journal.pcbi.1010681.
+
+\bibitem[Saggau et~al.(2022)]{Saggau2022}
+Saggau, C., Rios Martini, G., Rosati, E., et~al. (2022). The pre-exposure SARS-CoV-2-specific T cell repertoire determines the quality of the immune response to vaccination. \emph{Immunity}, 55(10), 1924--1939.e5. doi:10.1016/j.immuni.2022.08.003.
+
+\bibitem[Weber et~al.(2024)]{Weber2024}
+Weber, A., P{\'e}lissier, A., and Rodr{\'i}guez Mart{\'i}nez, M. (2024). T-cell receptor binding prediction: A machine learning revolution. \emph{ImmunoInformatics}, 15, 100040. doi:10.1016/j.immuno.2024.100040.
+
+\bibitem[Yoshida et~al.(2017)]{Yoshida2017}
+Yoshida, K., Cologne, J. B., Cordova, K., Misumi, M., Yamaoka, M., Kyoizumi, S., Hayashi, T., Robins, H., and Kusunoki, Y. (2017). Aging-related changes in human T-cell repertoire over 20 years delineated by deep sequencing of peripheral T-cell receptors. \emph{Experimental Gerontology}, 96, 29--37. doi:10.1016/j.exger.2017.05.015.
+
+\bibitem[Zahid et~al.(2026)]{Zahid2026}
+Zahid, H. J., May, D., Robins, H., and Greissl, J. (2026). A fundamental relationship between TCR diversity, repertoire size and systemic clonal expansion: insights from 30,000 TCR$\beta$ repertoires. \emph{Frontiers in Immunology}, 16, 1707727. doi:10.3389/fimmu.2025.1707727.
+
+\bibitem[AIRR Community(2023)]{AIRR2023}
+AIRR Community (2023). \emph{AIRR Data Commons API V1}. AIRR Standards documentation, version 1.5.0. Available at \url{https://docs.airr-community.org/en/v1.5.0/api/adc_api.html}.
+
+\bibitem[Bre\"ens et~al.(2026)]{Breens2026data}
+Bre\"ens, M., De Man, K., Heylen, Y., Ha, M., Kuznetsova, M., Besbassi, H., Affaticati, F., Vanden Berghe, W., Ogunjimi, B., and Meysman, P. (2026). Dataset: The T cell receptor repertoire captures healthy aging and CMV independently from epigenetic clocks. Zenodo. doi:10.5281/zenodo.20545037. No files from this dataset were analyzed in the present release.
+
+\bibitem[Scheffer et~al.(2026)]{IEDB2026}
+Scheffer, L., Richardson, E. M., Vita, R., Zarebski, L., Blazeska, N., Wheeler, D. K., Cantrell, J. R., Deleuran, S. N., Lees, W. D., Christley, S., Corrie, B., Cowell, L. G., Sette, A., and Peters, B. (2026). Revised Adaptive Immune Receptor Data in the Immune Epitope Database. \emph{bioRxiv} preprint. doi:10.64898/2026.06.03.728549.
+\end{thebibliography}
+\end{document}

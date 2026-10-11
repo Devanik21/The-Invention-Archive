@@ -1,0 +1,35 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Rate-Distortion Immunology: Defragmenting the Aging Immune Repertoire",
+  "name": "Rate-Distortion Immunology: Defragmenting the Aging Immune Repertoire",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "url": "https://github.com/Devanik21",
+    "identifier": "https://orcid.org/0009-0001-8310-6921",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "National Institute of Technology Agartala",
+      "department": "Electronics and Communication Engineering"
+    }
+  },
+  "datePublished": "2026-10-11",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Rate_Distortion_Immunology_Defragmenting_the_Aging_Immune_Repertoire",
+  "description": "A theoretical methods proposal for a prior-sensitive, safety-constrained coverage gap for T-cell receptor repertoires. The mathematical verifier uses synthetic data only; no human cohort was analyzed.",
+  "keywords": [
+    "T-cell receptor repertoire",
+    "rate-distortion theory",
+    "immune aging",
+    "antigen coverage",
+    "robust optimization",
+    "machine learning"
+  ],
+  "isPartOf": {
+    "@type": "CreativeWorkSeries",
+    "name": "The-Invention-Archive Theoretical Research Releases"
+  }
+}

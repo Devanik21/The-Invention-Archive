@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use this theoretical/methods preprint or its synthetic verifier, please cite it."
+title: "Rate-Distortion Immunology: Defragmenting the Aging Immune Repertoire"
+abstract: >-
+  A prior-sensitive, safety-constrained framework for estimating gaps in T-cell
+  recognition coverage under a fixed representational budget. Includes a formal
+  submodular baseline, synthetic numerical verification, and a preregistered
+  plan for future public-data evaluation. No human cohort was analyzed.
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    affiliation: "Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India"
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+version: 1.0.0
+date-released: "2026-10-11"
+license: CC-BY-4.0
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+url: "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Rate_Distortion_Immunology_Defragmenting_the_Aging_Immune_Repertoire"
+keywords:
+  - T-cell receptor repertoire
+  - rate-distortion theory
+  - immune aging
+  - antigen coverage
+  - robust optimization
+  - machine learning
+  - synthetic verification
+preferred-citation:
+  type: article
+  title: "Rate-Distortion Immunology: Defragmenting the Aging Immune Repertoire"
+  authors:
+    - family-names: Debnath
+      given-names: Devanik
+  year: 2026

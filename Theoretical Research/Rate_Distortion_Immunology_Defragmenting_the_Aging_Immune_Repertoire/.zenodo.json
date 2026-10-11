@@ -1,0 +1,34 @@
+{
+  "metadata": {
+    "title": "Rate-Distortion Immunology: Defragmenting the Aging Immune Repertoire",
+    "upload_type": "publication",
+    "publication_type": "preprint",
+    "description": "Theoretical and methods preprint proposing a prior-sensitive coverage-gap framework for T-cell receptor repertoires. Numerical results are synthetic only; no human cohort was analyzed. Biological interventions are not recommended. See the public GitHub archive for the source, verification code, and limitations.",
+    "creators": [
+      {
+        "name": "Debnath, Devanik",
+        "affiliation": "Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India",
+        "orcid": "0009-0001-8310-6921"
+      }
+    ],
+    "keywords": [
+      "T-cell receptor repertoire",
+      "rate-distortion theory",
+      "immune aging",
+      "antigen coverage",
+      "robust optimization",
+      "synthetic verification"
+    ],
+    "license": "cc-by-4.0",
+    "access_right": "open",
+    "communities": [],
+    "related_identifiers": [
+      {
+        "identifier": "https://github.com/Devanik21/The-Invention-Archive",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      }
+    ],
+    "notes": "Metadata draft only. This record has not been deposited; no DOI is claimed for this manuscript. The DOI of Zenodo record 10.5281/zenodo.20545037 identifies an external dataset, not this paper."
+  }
+}
