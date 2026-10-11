@@ -1,0 +1,176 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=0.88in]{geometry}
+\usepackage{amsmath,amssymb,mathtools,bm}
+\usepackage{booktabs,longtable,tabularx,array}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue,pdftitle={Cohomological Rejuvenation: Tissues That Heal Their Own Incoherence},pdfauthor={Devanik Debnath}}
+\setstretch{1.05}
+\setlist{nosep,leftmargin=*}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\kerop}{\operatorname{ker}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\KL}{D_{\mathrm{KL}}}
+\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
+\newcommand{\E}{\mathbb{E}}
+\title{\textbf{Cohomological Rejuvenation: Tissues That Heal Their Own Incoherence}\\[0.35em]\large A falsifiable framework\\for separating local tissue mismatch from global compatibility obstruction}
+\author{Devanik Debnath (Devanik21)\\\small Department of Electronics and Communication Engineering\\\small National Institute of Technology Agartala, India\\\small ORCID: \href{https://orcid.org/0009-0001-8310-6921}{0009-0001-8310-6921}}
+\date{11 October 2026}
+\begin{document}
+\maketitle
+\begin{center}
+\fbox{\begin{minipage}{0.90\textwidth}
+\textbf{Research status.} This is a theoretical and computational research programme, not a biological result. No aging atlas was analysed in this release, no biomarker performance is claimed, and no intervention or circuit is demonstrated. A directly relevant 2026 paper has already proposed a sheaf-theoretic model of aging and repair failure; related sheaf-spectral methods for single-cell data also exist. The contribution here is a precise audit of what local sheaf energy can and cannot mean, a reproducible synthetic verification, and a falsifiable evaluation protocol.
+\end{minipage}}
+\end{center}
+\begin{abstract}
+Aging tissues can exhibit molecularly plausible cells embedded in increasingly dysregulated neighborhoods. We ask whether this local-to-global framing can be made mathematically testable without confusing a sheaf Laplacian energy with a cohomological obstruction. On a finite spatial cell graph, cells carry vector-valued stalks and each cell--cell incidence is equipped with a learned linear compatibility map. The coboundary operator turns a tissue state into edge-wise mismatch; its quadratic form is a nonnegative, model-dependent measure of local incompatibility. But this energy is not itself the first cohomology of the tissue. Genuine cycle-level obstruction is represented by the component of an observed edge cochain orthogonal to the image of the coboundary, subject to the chosen complex and its compatibility assumptions. We formalize both quantities, document their identifiability and confounding risks, and prove elementary finite-dimensional identities used by an executable verification script. We then propose donor-held-out tests on existing spatial aging atlases, including degree-preserving spatial nulls, baseline comparisons, uncertainty estimation, and explicit failure criteria. Schr\"odinger bridges are treated as relative-entropy-optimal path measures rather than automatically as minimum-entropy-production biological trajectories. Partial epigenetic reprogramming and contact-dependent synthetic circuits are retained only as distant, separately testable actuator hypotheses. The result is a conservative mathematical framework for asking whether tissue-scale compatibility statistics contain information beyond cell-intrinsic aging measures.
+\end{abstract}
+
+\noindent\textbf{Keywords:} cellular sheaves; sheaf Laplacian; first cohomology; spatial transcriptomics; aging; cell--cell communication; partial reprogramming; Schr\"odinger bridge; falsifiable biomarker.
+
+\section{Research question and epistemic boundary}
+The motivating hypothesis is that tissue aging may include more than the accumulation of cell-intrinsic damage. A tissue is a spatially organized system whose cells exchange signals, depend on extracellular structure, and occupy differentiated roles. Two cells can each appear individually plausible while their relationship is altered. Spatial transcriptomic studies already show that age-associated expression changes depend on cell proximity, and a lifespan-scale mouse-brain atlas has enabled spatial aging clocks and analysis of rejuvenating interventions \cite{sun2025,wu2024}. This motivates a question: \emph{does a mathematically explicit measure of local compatibility reveal reproducible age-associated information after known sources of spatial and cellular variation are controlled?}
+
+The idea is not that biology ought to be globally uniform. Neurons, glia, immune cells, vascular cells, and stromal populations are supposed to differ. A useful compatibility model must encode which differences are expected for a particular ordered cell pair and region; otherwise it simply measures tissue heterogeneity. It must also avoid treating a learned linear map as if it were a literal molecular restriction map. Cellular sheaf theory provides a language for local state spaces, incidence maps, cochains, and Laplacians, but a biological interpretation remains a modelling choice \cite{hansen2019}.
+
+The novelty claim is deliberately narrow. Segura's 2026 article explicitly presents aging as cross-hallmark obstruction amplification in a sheaf-theoretic model of repair closure, senescence, inflammation, and regenerative failure \cite{segura2026}. Wang and Wei's 2026 preprint develops hierarchical sheaf-spectral embeddings for single-cell RNA-seq data \cite{wangwei2026}. Persistent sheaf Laplacians have also appeared in molecular modeling, including protein flexibility and stability applications \cite{hayes2025,ren2026}. Therefore the broad idea of applying sheaf methods to aging or biological data is not claimed as new. The specific contribution of this proposal is to distinguish three objects that are easily conflated: (i) observed local mismatch, (ii) its least-squares reducible component under an assumed sheaf, and (iii) a residual compatibility obstruction representing a cohomology class. The work supplies definitions and tests, not evidence that a new biomarker exists.
+
+\section{\texorpdfstring{P1--P5 claim classification}{P1-P5 claim classification}}
+\begin{longtable}{p{0.12\textwidth}p{0.31\textwidth}p{0.49\textwidth}}
+\toprule
+Level & Claim class & Application in this paper \\
+\midrule
+P1 & Exact mathematical identity & For finite-dimensional coboundary matrix $B$, $L_0=B^\top B$ is positive semidefinite and $x^\top L_0x=\norm{Bx}^2$. Orthogonal projection separates exact and unexplainable edge components. \\
+P2 & Variational statement & The least-squares edge fit minimizes $\norm{y-Bx}^2$. A Schr\"odinger bridge minimizes path-space relative entropy to a specified reference measure under endpoint constraints; this is not automatically identical to physical entropy production. \\
+P3 & Statistical generalization & Whether these features predict age across independent donors, cohorts, or tissues is unknown and requires out-of-sample evidence. \\
+P4 & Cross-domain mapping & Interpreting learned compatibility maps as tissue signaling relationships is a structural correspondence that requires calibration and biological validation. \\
+P5 & Preliminary hypothesis & A coherence-gated, locally self-limiting rejuvenation actuator is speculative; neither a live tissue controller nor rejuvenation efficacy is demonstrated. \\
+\bottomrule
+\end{longtable}
+
+\section{Mathematical formulation}
+\subsection{Spatial complex and cellular sheaf}
+Let $G=(V,E)$ be a graph of cells and selected spatial neighborhoods. It may be embedded in a larger simplicial complex $K$ when higher-order constraints among triples or larger groups are justified by data. Let $x_v\in\R^d$ encode a standardized, cell-type-aware state for cell $v$. For an oriented edge $e=(u,v)$, let the edge stalk be $\R^q$ and let
+\[
+R_{u e},R_{v e}\in\R^{q\times d}
+\]
+be estimated maps from endpoint state to a common edge-level comparison space. The edge discrepancy induced by a tissue state is
+\[
+(\delta^0 x)_e=R_{u e}x_u-R_{v e}x_v.
+\]
+Stacking all vertices and edges yields a matrix $B$ with $\delta^0x=Bx$. For edge weights $W=\operatorname{diag}(w_e I_q)$ with $w_e\geq0$, define the weighted operator $A=W^{1/2}B$ and the degree-zero sheaf Laplacian
+\[
+L_0=B^\top W B=A^\top A\succeq0.
+\]
+The normalized local mismatch statistic is
+\[
+D_{\mathrm{loc}}(x;B,W)=\frac{\norm{Ax}_2^2}{\sum_{e\in E}w_e+\epsilon},\qquad \epsilon>0.
+\]
+This normalization reduces dependence on edge count but does not remove differences in graph construction, stalk dimension, map scale, or cell composition. A comparison across tissues therefore requires a fixed representation and preregistered normalization procedure.
+
+The restriction maps must be estimated from training donors only, with spatial region, cell type, batch, and measurement quality handled explicitly. Plausible designs include low-rank conditional prediction maps, calibrated ligand--receptor response models, or maps tied to independently measured functional readouts. Ligand--receptor inference alone is not an established measurement of the full signaling channel. A map fitted on the same donor later used to evaluate age can leak the age label through preprocessing or overfit idiosyncratic neighborhoods. The learned map must be frozen before held-out evaluation.
+
+\subsection{Why local energy is not \texorpdfstring{$H^1$}{H1}}
+The identity
+\[
+x^\top L_0x=\norm{W^{1/2}\delta^0x}_2^2
+\]
+follows directly from the definition. It is a P1 statement, not evidence that $D_{\mathrm{loc}}$ measures age. A small value says that the observed state is nearly compatible with the specified maps; it does not say the tissue is young, healthy, or functionally integrated. Conversely, a high value may be caused by cell-type mixing, graph errors, batch artifacts, noisy measurements, or a wrong model.
+
+More importantly, the edge residual $\delta^0x$ is by construction in $\operatorname{im}\delta^0$. It therefore cannot, simply by being nonzero, be an irreducible $H^1$ obstruction. To discuss first cohomology, consider an observed edge cochain $y\in C^1(K;\mathcal F)$, for example a calibrated edge-level relationship residual, and the cochain complex
+\[
+C^0(K;\mathcal F)\xrightarrow{\delta^0}C^1(K;\mathcal F)\xrightarrow{\delta^1}C^2(K;\mathcal F),\quad \delta^1\delta^0=0.
+\]
+The first sheaf cohomology is
+\[
+H^1(K;\mathcal F)=\ker\delta^1/\operatorname{im}\delta^0.
+\]
+An observed $y$ has a cohomology class only when $\delta^1y=0$. Under the standard finite-dimensional Hodge inner product, the harmonic subspace is $\mathcal H^1=\ker L_1$ with
+\[
+L_1=\delta^0(\delta^0)^\top+(\delta^1)^\top\delta^1.
+\]
+For a closed cochain, its orthogonal projection onto $\mathcal H^1$ is the canonical harmonic representative of its class. In a graph-only complex, there are no 2-cells, so $\delta^1=0$ and every edge cochain is closed; the harmonic component is its component orthogonal to $\operatorname{im}\delta^0$.
+
+For that graph-only case, write $A=W^{1/2}B$ and let $P_A=AA^\dagger$ denote the orthogonal projector onto $\operatorname{im}A$, using the Moore--Penrose pseudoinverse. The cycle-level residual of an observed weighted edge cochain is
+\[
+D_{\mathrm{cyc}}(y;A)=\norm{(I-P_A)W^{1/2}y}_2^2.
+\]
+It measures the part that cannot be represented as a coboundary under the learned maps. This formula is a finite-dimensional projection identity. In higher-dimensional complexes, closure against $\delta^1$ must also be checked before interpreting a residual cohomologically. For biological use, $y$ must be separately defined and measured; using $y=Bx$ would make this obstruction identically zero, by construction. Thus “coherence debt” should not be one scalar with two interchangeable meanings. We recommend reporting $D_{\mathrm{loc}}$ and $D_{\mathrm{cyc}}$ separately, calling them local mismatch and cycle-level incompatibility until empirical validation justifies any biomarker label.
+
+\subsection{What is invariant, and what is not}
+The exact nonnegativity of $L_0$ survives any real matrix $B$ and nonnegative edge weights. The numerical magnitude of energy, however, is not intrinsically comparable across learned maps: rescaling all restrictions rescales the statistic; changing stalk dimensions or graph density changes the effective degrees of freedom; changing the embedding may preserve or destroy useful biological information. If maps are estimated from the data, uncertainty in $B$ must be propagated by bootstrap or a Bayesian/posterior ensemble, not ignored.
+
+For an oriented graph with scalar stalks and identity restrictions, $B$ reduces to a signed incidence matrix. Then $\dim H^1=|E|-|V|+c$, where $c$ is the number of connected components. This cycle rank depends on graph topology alone. It does not become an aging marker just because it is cohomological. Weighted graph construction, spatial sampling, and tissue architecture can all vary by age and by technology. In a data analysis, topology itself must be controlled or explicitly treated as an explanatory variable.
+
+\section{From aging hypothesis to testable statistic}
+The target is not a universal youthful tissue state. It is the incremental predictive content of compatibility features beyond known covariates and cell-intrinsic measurements. The working statistical hypothesis is
+\[
+H_1:\quad \E[D_{\mathrm{loc}}\mid a,z]\text{ or }\E[D_{\mathrm{cyc}}\mid a,z]\text{ varies with age }a,
+\]
+where $z$ includes cell-type composition, brain region, sex, batch, donor, spatial density, technical quality, and other prespecified confounders. The null is no replicable conditional association after these variables are accounted for, not merely no unadjusted correlation.
+
+\subsection{Proposed computational study}
+An initial candidate is the mouse-brain MERFISH resource of Sun et al., which reports approximately 4.2 million cells across 20 ages and analyses cell-proximity effects with rejuvenating interventions \cite{sun2025}. A complementary spatially resolved transcriptome atlas of the aging mouse brain can test whether findings depend on assay or region \cite{wu2024}. Dataset inclusion depends on public access, documented donor/animal identifiers, available raw or minimally processed data, and enough metadata to avoid treating cells as independent biological replicates. The proposed analysis has not been performed here.
+
+\begin{enumerate}
+\item \textbf{Pre-register the estimand.} Primary endpoint: incremental prediction of age at the animal/donor level, conditional on cell-type composition and region. A claim about frailty or mortality requires a cohort with those outcomes; age prediction cannot silently substitute for either.
+\item \textbf{Build spatial graphs without outcome leakage.} Use documented physical coordinates and a prespecified radius or k-nearest-neighbor rule. Avoid crossing anatomical barriers where relevant. Fit any dimension reduction, normalization, compatibility maps, and hyperparameters on training donors only.
+\item \textbf{Estimate cell-type-aware compatibility.} Use same-type and selected cross-type relations as distinct edge classes. Fit a regularized map from each endpoint into a common comparison space. Compare the learned sheaf to a simple graph-incidence baseline, random maps, shuffled ligand--receptor labels, and maps trained on age-blinded data.
+\item \textbf{Compute separate features.} Aggregate local mismatch, cycle-level incompatibility when defined, low-frequency Laplacian spectrum, graph topology, cell-intrinsic age scores, and composition baselines. Report per-region and per-cell-type statistics, not only a pooled brain number.
+\item \textbf{Use donor-held-out validation.} Tune only inside grouped training folds; estimate uncertainty by resampling animals or donors, not individual cells. Compare against age clocks and simpler baselines only on compatible modalities and outcomes. Report calibration, held-out error, confidence intervals, and performance by sex, region, and cohort.
+\item \textbf{Challenge the result.} Use spatial label permutations, degree-preserving edge rewiring, position shuffling within anatomical regions, cell-type composition matching, negative-control genes or channels, and technical covariates. Test whether the signal survives downsampling and alternative graph radii.
+\end{enumerate}
+
+\subsection{Predeclared failure conditions}
+The proposed biomarker hypothesis should be rejected or substantially narrowed if (i) its age association vanishes after controlling for cell type, region, spatial density, or technical batch; (ii) random or shuffled restriction maps perform similarly; (iii) the feature is unstable to reasonable graph or normalization choices; (iv) improvement over a baseline disappears in donor-held-out validation; (v) uncertainty across donors overwhelms the observed effect; or (vi) the cycle statistic mostly recapitulates edge count or graph connectivity. Failure is informative: a null result would show that a sheaf construction is not automatically a useful tissue-age descriptor.
+
+\section{A controller is a separate hypothesis}
+Suppose an empirically validated compatibility statistic were found. One could then investigate a control problem over a low-dimensional tissue state $z_t$, with local proxy measurements $m_i(t)$, bounded intervention $u_i(t)$, and safety/identity constraints. A generic objective might combine terminal distance to a reference distribution, local mismatch, actuation cost, and explicit safety penalties. This is a problem definition, not a proposed therapy.
+
+A Schr\"odinger bridge between old and young endpoint distributions is the path measure $Q^*$ that minimizes $\KL(Q\Vert R)$ over path measures with specified endpoints relative to a reference path measure $R$. Related bridge methods have been used for single-cell trajectory inference \cite{hong2025,fournie2026}. It is inaccurate to call this automatically the physically gentlest or minimum-entropy-production path. That interpretation requires a justified physical reference process and a mapping from path-space relative entropy to thermodynamic cost. Without those assumptions, the bridge is a mathematically specified interpolation under a chosen prior.
+
+Partial epigenetic reprogramming is an existing experimental field, but preserving cell identity and managing risks from inappropriate dedifferentiation and proliferation remain central challenges \cite{yucel2024}. In this framework it is only a hypothetical actuator. A contact-dependent synthetic Notch (synNotch) circuit can sense a cognate neighboring-cell ligand and control transcription, but that does not mean it can sense a high-dimensional learned sheaf residual directly \cite{morsut2016}. A feasible circuit would need a measurable low-dimensional molecular proxy, a demonstrated sensor-to-residual calibration, stringent off-switches, and independent safety validation. No such mapping is supplied or claimed here. Active-inference or reinforcement-learning systems could optimize a simulation's controller gains under uncertainty, but they cannot repair missing biological observability or make an unvalidated proxy meaningful.
+
+\section{Numerical verification and scope}
+The included \texttt{verify\_model.py} uses a deterministic synthetic graph example to verify linear-algebraic identities: positive semidefiniteness of the sheaf Laplacian, equality of energy and squared residual norm, projection-based exact/harmonic decomposition, a known cycle-rank identity, and the zero obstruction for an edge cochain constructed as a coboundary. It also generates a seeded toy contrast in which increased independent node noise increases mean neighbor mismatch. This demonstrates that the statistic responds to a pattern deliberately inserted into a synthetic model; it does not show that real aging increases mismatch. The code depends on NumPy 2.x; no spatial aging atlas is downloaded, no fitted restriction map is estimated, and no biological or predictive result is claimed.
+
+Reproducibility command:
+\begin{verbatim}
+python verify_model.py
+\end{verbatim}
+The script returns a non-zero exit status if required assertions fail. Its output is intended to make mathematical checks reproducible, not to stand in for empirical validation.
+
+\section{Limitations and safeguards}
+First, the sheaf is only as good as its stalks, graph, restriction maps, inner products, and edge weights. A statistically convenient map may not represent causal signaling. Second, ligand--receptor co-expression is not proof of communication, and observed transcript abundance is not necessarily receptor activation or downstream effect. Third, spatial RNA panels can omit relevant transcripts and have measurement dropout. Fourth, sample size is the number of independent animals/donors, not the number of observed cells. Fifth, graph construction may encode age differences in tissue shape or cell density rather than regulatory inconsistency. Sixth, low local mismatch might indicate pathological homogenization rather than rejuvenation; higher mismatch might reflect legitimate adaptation. Functional outcomes are essential.
+
+The biological actuator layer is further from evidence than the statistical biomarker layer. This manuscript gives no laboratory protocol, dosing values, human-use advice, or safety guarantee. Any future work would require appropriate biological oversight, staged validation, cell-identity and tumorigenicity monitoring, and a clear separation between simulation and experiment.
+
+\section{Conclusion}
+A tissue-scale cohomological view is potentially useful only if its mathematical objects are not collapsed into a metaphor. The sheaf Laplacian provides a rigorous energy for mismatch between local states and learned compatibility maps. Cohomology can represent edge-level incompatibility that cannot be absorbed into a globally defined section, but the edge cochain and the underlying complex must be specified. Neither quantity is intrinsically a measure of aging. The immediate scientific contribution is therefore a reproducible distinction and a high-bar evaluation protocol, grounded in existing sheaf theory and spatial-aging datasets. The first experiment is computational, donor-held-out, and designed to fail: if the statistics do not beat transparent nulls and established baselines, the rejuvenation story should stop at the metaphor.
+
+\section*{Data and code availability}
+No external biological dataset was downloaded or analysed for this release. Synthetic mathematical checks are provided in \texttt{verify\_model.py}. Candidate public sources are linked in the bibliography; availability, licenses, metadata, and versioned accession records must be checked at analysis time.
+
+\section*{Competing interests}
+The author declares no competing interests for this theoretical proposal.
+
+\begin{thebibliography}{99}\small\setlength{\itemsep}{0pt}
+\bibitem{segura2026} J. J. Segura, ``Aging as cross-hallmark obstruction amplification: A sheaf-theoretic model of repair closure, senescence, inflammation, and regenerative failure,'' \emph{BioSystems}, vol. 268, art. 105924, 2026. doi: \href{https://doi.org/10.1016/j.biosystems.2026.105924}{10.1016/j.biosystems.2026.105924}.
+\bibitem{wangwei2026} X. X. Wang and G.-W. Wei, ``A hierarchical sheaf spectral embedding framework for single-cell RNA-seq analysis,'' arXiv:2603.26858, 2026. \href{https://arxiv.org/abs/2603.26858}{arXiv:2603.26858}.
+\bibitem{hansen2019} J. Hansen and R. Ghrist, ``Toward a spectral theory of cellular sheaves,'' \emph{Journal of Applied and Computational Topology}, vol. 3, pp. 315--358, 2019. doi: \href{https://doi.org/10.1007/s41468-019-00038-7}{10.1007/s41468-019-00038-7}.
+\bibitem{sun2025} E. D. Sun et al., ``Spatial transcriptomic clocks reveal cell proximity effects in brain ageing,'' \emph{Nature}, 2025. doi: \href{https://doi.org/10.1038/s41586-024-08334-8}{10.1038/s41586-024-08334-8}.
+\bibitem{wu2024} C. Wu et al., ``Spatially resolved transcriptome of the aging mouse brain,'' \emph{Aging Cell}, vol. 23, no. 5, e14109, 2024. doi: \href{https://doi.org/10.1111/acel.14109}{10.1111/acel.14109}.
+\bibitem{hong2025} W. Hong, Y. Shi, and J. Niles-Weed, ``Trajectory inference with smooth Schr\"odinger bridges,'' in \emph{Proceedings of the 42nd International Conference on Machine Learning}, PMLR, vol. 267, 2025. \href{https://proceedings.mlr.press/v267/hong25f.html}{PMLR 267}.
+\bibitem{fournie2026} C. Fourni\'e et al., ``Cell trajectory inference based on Schr\"odinger problem and a mechanistic model of stochastic gene expression,'' \emph{npj Systems Biology and Applications}, vol. 12, art. 120, 2026. doi: \href{https://doi.org/10.1038/s41540-026-00743-x}{10.1038/s41540-026-00743-x}.
+\bibitem{yucel2024} A. D. Y\"ucel and V. N. Gladyshev, ``The long and winding road of reprogramming-induced rejuvenation,'' \emph{Nature Communications}, vol. 15, art. 1941, 2024. doi: \href{https://doi.org/10.1038/s41467-024-46020-5}{10.1038/s41467-024-46020-5}.
+\bibitem{morsut2016} L. Morsut et al., ``Engineering customized cell sensing and response behaviors using synthetic Notch receptors,'' \emph{Cell}, vol. 164, no. 4, pp. 780--791, 2016. doi: \href{https://doi.org/10.1016/j.cell.2016.01.012}{10.1016/j.cell.2016.01.012}.
+\bibitem{hayes2025} N. Hayes et al., ``Persistent sheaf Laplacian analysis of protein flexibility,'' \emph{Journal of Physical Chemistry B}, vol. 129, no. 17, pp. 4169--4180, 2025. doi: \href{https://doi.org/10.1021/acs.jpcb.5c01287}{10.1021/acs.jpcb.5c01287}.
+\bibitem{ren2026} Y. Ren, J. Wee, X. Chen, G. Qian, and G.-W. Wei, ``Persistent sheaf Laplacian analysis of protein stability and solubility changes upon mutation,'' arXiv:2601.12219, 2026. \href{https://arxiv.org/abs/2601.12219}{arXiv:2601.12219}.
+\end{thebibliography}
+\end{document}

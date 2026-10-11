@@ -1,0 +1,31 @@
+{
+  "title": "Cohomological Rejuvenation: Tissues That Heal Their Own Incoherence",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "description": "A falsifiable framework separating local tissue mismatch under learned cellular-sheaf compatibility maps from cycle-level cohomological obstruction. Includes reproducible finite-dimensional checks and a proposed donor-held-out analysis of spatial aging data. This release reports no analysis of a biological atlas and no biological intervention result.",
+  "creators": [
+    {
+      "name": "Devanik Debnath",
+      "affiliation": "National Institute of Technology Agartala, India",
+      "orcid": "0009-0001-8310-6921"
+    }
+  ],
+  "keywords": [
+    "cellular sheaves",
+    "cohomology",
+    "aging",
+    "spatial transcriptomics",
+    "mathematical biology",
+    "synthetic biology",
+    "sheaf Laplacian"
+  ],
+  "license": "CC-BY-4.0",
+  "publication_date": "2026-10-11",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Devanik21/The-Invention-Archive",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ]
+}

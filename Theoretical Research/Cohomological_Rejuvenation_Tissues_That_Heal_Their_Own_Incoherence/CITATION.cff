@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this preprint or verification code, please cite this release."
+title: "Cohomological Rejuvenation: Tissues That Heal Their Own Incoherence"
+abstract: >-
+  A falsifiable framework separating local tissue mismatch under learned
+  cellular-sheaf compatibility maps from cycle-level cohomological obstruction.
+  Includes reproducible finite-dimensional checks and a proposed donor-held-out
+  analysis of spatial aging data. No biological atlas was analysed in this release.
+type: software
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    alias: Devanik21
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+date-released: "2026-10-11"
+version: "v2026.10.11"
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+url: "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Cohomological_Rejuvenation_Tissues_That_Heal_Their_Own_Incoherence"
+license: CC-BY-4.0
+keywords:
+  - cellular sheaves
+  - cohomology
+  - aging
+  - spatial transcriptomics
+  - synthetic biology
+  - mathematical biology
+  - sheaf Laplacian

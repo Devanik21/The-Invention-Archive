@@ -1,0 +1,39 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Cohomological Rejuvenation: Tissues That Heal Their Own Incoherence",
+  "alternativeHeadline": "A falsifiable framework for separating local tissue mismatch from global compatibility obstruction",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "alternateName": "Devanik21",
+    "identifier": "https://orcid.org/0009-0001-8310-6921",
+    "affiliation": {
+      "@type": "CollegeOrUniversity",
+      "name": "National Institute of Technology Agartala",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "IN"
+      }
+    }
+  },
+  "datePublished": "2026-10-11",
+  "inLanguage": "en",
+  "keywords": [
+    "cellular sheaves",
+    "cohomology",
+    "aging",
+    "spatial transcriptomics",
+    "mathematical biology",
+    "sheaf Laplacian"
+  ],
+  "description": "A falsifiable theoretical framework separating local mismatch under learned cellular-sheaf compatibility maps from cycle-level cohomological obstruction. No biological atlas was analysed in this release.",
+  "url": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Cohomological_Rejuvenation_Tissues_That_Heal_Their_Own_Incoherence",
+  "isAccessibleForFree": true,
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "citation": [
+    "https://doi.org/10.1016/j.biosystems.2026.105924",
+    "https://arxiv.org/abs/2603.26858",
+    "https://doi.org/10.1007/s41468-019-00038-7"
+  ]
+}
