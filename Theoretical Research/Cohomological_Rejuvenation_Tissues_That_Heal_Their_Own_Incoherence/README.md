@@ -6,7 +6,7 @@
 **Affiliation:** Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India  
 **ORCID:** https://orcid.org/0009-0001-8310-6921  
 **Release date:** 2026-10-11  
-**Release:** v2026.10.11
+**Release:** v2026.10.11.1
 
 ## Status and contribution
 
@@ -16,10 +16,16 @@ The narrower contribution is to formally distinguish: (1) local mismatch measure
 
 ## Mathematical core
 
-For cell states `x` on a spatial graph and learned incidence-compatibility matrix `B`, with nonnegative edge weights `W`, define the degree-zero sheaf Laplacian and local mismatch as
+For cell states `x` on a spatial graph and learned incidence-compatibility matrix `B`, with nonnegative edge weights `W`, define the degree-zero sheaf Laplacian:
 
 $$
-L_0 = B^\top W B \succeq 0, \qquad D_{\mathrm{loc}} = \frac{\|W^{1/2}Bx\|_2^2}{\sum_e w_e + \epsilon}.
+L_0 = B^\top W B \succeq 0.
+$$
+
+A normalized local-mismatch statistic is
+
+$$
+D_{\mathrm{loc}} = \frac{\|W^{1/2}Bx\|_2^2}{\sum_e w_e + \epsilon}.
 $$
 
 For an observed edge cochain `y` on a graph-only complex, define `A = W^{1/2}B`, `P_A = A A^\dagger`, and the cycle-level residual

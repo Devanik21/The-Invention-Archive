@@ -27,7 +27,7 @@ FILES = [
 ]
 TITLE = "Cohomological Rejuvenation: Tissues That Heal Their Own Incoherence"
 SLUG = "Cohomological_Rejuvenation_Tissues_That_Heal_Their_Own_Incoherence"
-VERSION = "v2026.10.11"
+VERSION = "v2026.10.11.1"
 INDEX_REL = Path("Theoretical Research/Readme.md")
 
 
@@ -82,8 +82,10 @@ def validate(src: Path, *, build: bool) -> None:
     if len(re.findall(r"(?m)^\*\*\d+/12\*\*", thread)) != 12:
         raise RuntimeError("X thread must contain exactly 12 numbered posts.")
     readme = (src / "README.md").read_text(encoding="utf-8")
-    if readme.count("$$") != 6 or r"\n" in readme:
-        raise RuntimeError("README math typography check failed.")
+    if readme.count(chr(36) * 2) != 8 or r"\n" in readme or r"\operatorname" in readme:
+        raise RuntimeError("README math typography check failed: use four separate display blocks, no literal escaped newlines, and no operatorname macros.")
+    if "Co-equal research-process credit is given to Devanik Debnath and Xylia" not in tex:
+        raise RuntimeError("Manuscript is missing the required Xylia research-process credit/disclosure.")
     tex = (src / "paper.tex").read_text(encoding="utf-8")
     bib = (src / "paper.bib").read_text(encoding="utf-8")
     bib_keys = set(re.findall(r"@\w+\s*\{\s*([^,\s]+)", bib))
@@ -96,7 +98,15 @@ def validate(src: Path, *, build: bool) -> None:
         compile_pdf(src)
     if not (src / "paper.pdf").read_bytes().startswith(b"%PDF-"):
         raise RuntimeError("paper.pdf has an invalid PDF signature.")
-    print(f"PASS: exact 11-file manifest; Medium={medium_words} words; X=12 posts; metadata and bibliography valid.")
+    pdfinfo = shutil.which("pdfinfo")
+    if pdfinfo is None:
+        raise RuntimeError("pdfinfo is required to verify the seven-page minimum; install poppler-utils.")
+    pdf_meta = run([pdfinfo, str(src / "paper.pdf")], src, capture=True)
+    page_match = re.search(r"(?m)^Pages:\s+(\d+)\s*$", pdf_meta)
+    if page_match is None or int(page_match.group(1)) < 7:
+        observed = page_match.group(1) if page_match else "unknown"
+        raise RuntimeError(f"paper.pdf must contain at least 7 pages; found {observed}.")
+    print(f"PASS: exact 11-file manifest; Medium={medium_words} words; X=12 posts; PDF pages={page_match.group(1)}; metadata and bibliography valid.")
 
 
 def locate_repo(start: Path, explicit: Path | None) -> Path:

@@ -21,7 +21,7 @@ jobs:
         run: |
           python -m pip install "numpy>=2,<3" PyYAML
           sudo apt-get update
-          sudo apt-get install -y texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended
+          sudo apt-get install -y texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended poppler-utils
       - name: Verify model, metadata, essay, thread, and PDF
         shell: bash
         run: |
@@ -41,7 +41,13 @@ jobs:
           thread = (d / "x_thread.md").read_text(encoding="utf-8")
           posts = re.findall(r"^\*\*\d+/12\*\*", thread, flags=re.M)
           assert len(posts) == 12, f"Expected 12 X posts, found {len(posts)}"
-          print(f"Metadata valid; Medium words={len(words)}; X posts={len(posts)}")
+          readme = (d / "README.md").read_text(encoding="utf-8")
+          assert readme.count(chr(36) * 2) == 8, "README must use four separate display-math blocks"
+          assert r"\operatorname" not in readme, "Prohibited operatorname macro in README"
+          assert r"\n" not in readme, "Literal escaped newlines in README"
+          tex = (d / "paper.tex").read_text(encoding="utf-8")
+          assert "Co-equal research-process credit is given to Devanik Debnath and Xylia" in tex, "Missing Xylia research-process disclosure"
+          print(f"Metadata valid; Medium words={len(words)}; X posts={len(posts)}; README math and disclosure checks passed")
           PY
           cp "$RELEASE_DIR/paper.tex" "$BUILD_DIR/paper.tex"
           cp "$RELEASE_DIR/paper.bib" "$BUILD_DIR/paper.bib"
@@ -51,6 +57,9 @@ jobs:
           pdflatex -interaction=nonstopmode -halt-on-error paper.tex
           test -s paper.pdf
           python -c "from pathlib import Path; p=Path('paper.pdf'); assert p.read_bytes()[:5] == b'%PDF-', 'invalid PDF signature'; print(f'Compiled PDF: {p.stat().st_size} bytes')"
+          PAGE_COUNT="$(pdfinfo "$BUILD_DIR/paper.pdf" | awk '/^Pages:/ {print $2}')"
+          test "$PAGE_COUNT" -ge 7 || { echo "PDF must contain at least 7 pages; found $PAGE_COUNT" >&2; exit 1; }
+          echo "PDF page-count gate passed: $PAGE_COUNT pages"
           cd "$GITHUB_WORKSPACE"
           cp "$BUILD_DIR/paper.pdf" "$RELEASE_DIR/paper.pdf"
           python - "$RELEASE_DIR" <<'PY'
@@ -80,7 +89,7 @@ jobs:
 
       - name: Create and verify semantic tag
         env:
-          RELEASE_TAG: "v2026.10.11"
+          RELEASE_TAG: "v2026.10.11.1"
         run: |
           set -euo pipefail
           git fetch origin main --tags
