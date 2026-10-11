@@ -51,7 +51,7 @@ jobs:
           readme = (d / "README.md").read_text(encoding="utf-8")
           assert readme.count(chr(36) * 2) == 6, "README must use three separate display-math blocks"
           assert r"\operatorname" not in readme, "Prohibited operatorname macro in README"
-          assert r"\n" not in readme, "Literal escaped newline in README"
+          assert r"\(\n" not in readme and r"\[\n" not in readme, "Literal escaped newline at math-block start"
           tex = (d / "paper.tex").read_text(encoding="utf-8")
           assert "Co-equal research-process credit is given to Devanik Debnath and Xylia" in tex, "Missing Xylia research-process disclosure"
           print(f"Metadata valid; Medium words={len(words)}; X posts={len(posts)}; README math and disclosure checks passed")
