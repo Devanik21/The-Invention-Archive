@@ -124,6 +124,7 @@ jobs:
           print(f"PASS: release files=11; PDF pages={pages}; Medium words={len(words)}; X posts={len(posts)}")
           PY
 
+          sed -i 's/[[:blank:]]*$//' "$RELEASE_DIR/README.md"
           rm -f damage-r0-payload-part-*.txt
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
