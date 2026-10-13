@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this theoretical preprint or its synthetic verifier, please cite it and preserve its limitations."
+title: "Damage R0: A Next-Generation Theory of Aging in Interdependent Living Systems"
+abstract: >-
+  A multitype, age-dependent framework defines a damage reproduction operator
+  from causal damage-generation rates and repair/turnover transitions. The
+  paper states a local threshold condition, proposes a sensitivity-based
+  control objective, and outlines uncertainty-aware comparative tests. All
+  numerical results are synthetic; no biological dataset was analyzed.
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+    affiliation: "National Institute of Technology Agartala, India"
+license: MIT
+version: "v2026.10.13-01"
+date-released: "2026-10-13"
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+url: "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Damage_R0_A_Next_Generation_Theory_of_Aging_in_Interdependent_Living_Systems"
+type: article

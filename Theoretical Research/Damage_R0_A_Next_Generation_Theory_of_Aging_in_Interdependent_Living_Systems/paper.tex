@@ -1,0 +1,221 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=0.88in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,tabularx,array}
+\usepackage{enumitem}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!45!black,pdftitle={Damage R0: A Next-Generation Theory of Aging in Interdependent Living Systems},pdfauthor={Devanik Debnath}}
+\setlist{nosep,leftmargin=1.5em}
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\newcommand{\Rd}{\mathcal{R}_{d}}
+\newcommand{\rhoop}{\rho}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\one}{\mathbf{1}}
+\title{\textbf{Damage $R_0$: A Next-Generation Theory of Aging in Interdependent Living Systems}\\[0.35em]\large A multitype, age-dependent framework for damage reproduction, repair, and hub-targeted control}
+\author{Devanik Debnath\\\small National Institute of Technology Agartala, India\\\small \href{https://orcid.org/0009-0001-8310-6921}{ORCID: 0009-0001-8310-6921}\\[0.4em]\small Research-process system: Xylia}
+\date{13 October 2026\\[0.25em]\small Theoretical preprint; no empirical cross-species analysis is claimed}
+\begin{document}
+\maketitle
+\begin{abstract}
+Biological aging is often described as damage accumulation, loss of repair capacity, and failure propagation across coupled molecular and tissue systems. A tempting analogy is epidemic reproduction: a damaged component can induce new damage in dependent components, while repair and turnover remove damaged states. This paper formalizes that analogy using a multitype next-generation operator. Let $F$ represent causally propagative damage-generating transitions and let $V$ represent repair, clearance, turnover, and non-reproductive state transitions. The local damage reproduction number is defined as $\Rd=\rho(FV^{-1})$, subject to explicit positivity and stability assumptions. For the corresponding autonomous low-damage linearization, $\Rd<1$ is equivalent to local decay of an unforced damage perturbation; $\Rd>1$ signals local amplification. This threshold is not a universal biological age, does not imply that aging disappears below one, and does not alone determine a mortality curve. We derive a sensitivity-based control objective for selecting interventions that reduce propagation or increase repair, distinguish causal dependency from correlation, and outline an AI-assisted, uncertainty-aware estimation workflow for comparative aging data. A reproducible synthetic example verifies the threshold equivalence and demonstrates that a high-leverage node-specific repair intervention can move a toy system across threshold while equal repair changes at peripheral nodes do not. The example is constructed and not empirically calibrated. Prior work on interdependency-network aging, reliability theory, and optimal maintenance is close and explicitly acknowledged; this contribution is a proposed formal synthesis and falsifiable research programme, not a claim that network aging or repair hubs are newly discovered.
+\end{abstract}
+
+\textbf{Keywords:} biological aging; damage propagation; next-generation matrix; spectral radius; repair; interdependency networks; causal inference; scientific machine learning; comparative longevity
+
+\section{Research question and scope}
+Aging has no single molecular substrate. Protein homeostasis, mitochondrial integrity, DNA maintenance, epigenetic regulation, senescence, immunity, and tissue renewal interact across scales; the hallmarks framework organizes these interacting processes rather than reducing them to one lesion \citep{lopezotin2023}. This motivates a systems question: when does a perturbation in one damaged state generate enough additional damage in other states to overcome repair and turnover?
+
+The proposed analogy is to epidemic theory. In an epidemic, a reproduction number summarizes the expected production of new infections by an infected individual in a specified host environment. In an organism, the analogous quantity must summarize the generation of additional damage events by a damaged state, conditional on causal coupling, persistence, and repair. The mapping is not literal: molecular defects are not pathogens, cell states do not necessarily reproduce, and many aging processes arise from autonomous damage production rather than transmission. The useful object is therefore not a slogan but a next-generation operator whose assumptions can be checked.
+
+The guiding question is narrow: \emph{Can a damage-specific spectral threshold be estimated from perturbation-supported dependency networks, and does it predict age-related functional decline or mortality better than simpler measures after uncertainty and phylogeny are accounted for?} The manuscript supplies the mathematical definition, threshold conditions, intervention sensitivity, synthetic checks, and an empirical protocol. It does not estimate a value for any real species.
+
+\section{What already exists, and what this paper adds}
+The closest precedent is Vural, Morrison, and Mahadevan's model of aging in complex interdependency networks. It models fault-prone components, damage, repair, network dependencies, and mortality curves across several systems; it also reports that some qualitative aging patterns are not strongly dependent on detailed network architecture \citep{vural2014}. Sun, Michaels, and Mahadevan later studied optimal maintenance in interdependent aging networks using optimal control and reinforcement learning \citep{vural2020}. Reliability theory separately explains how redundancy and defect accumulation can generate rising failure rates, mortality deceleration, and late-life plateaus \citep{gavrilov2001,gavrilov2004}. The proposed framework must not claim any of those themes as new.
+
+The other source of the analogy is classical epidemic mathematics. Next-generation matrices turn transition rates between multiple infected states into a reproduction operator, and the dominant spectral value determines a threshold under defined assumptions \citep{diekmann2010}. Aging has genuine examples of state-to-state propagation: senescence-associated secretory phenotype (SASP) can cause paracrine senescence under some contexts, and a 2026 study reports cell-type-specific senescence spreading in human brain cell types with partial inhibition under selected perturbations \citep{russo2026}. This is evidence for a propagation mechanism in a particular setting, not evidence that all aging is epidemic or that a whole-organism $\Rd$ has been measured.
+
+The bounded proposed contribution is fourfold. First, it separates propagative transitions $F$ from repair/clearance and non-generative state transitions $V$, including multiple damage types. Second, it clarifies the threshold theorem's domain and the difference between $\Rd<1$ and absence of aging. Third, it turns hub targeting into a cost- and safety-constrained sensitivity problem rather than a degree-centrality slogan. Fourth, it describes a preregisterable comparative test using causal perturbation evidence, atlas-derived candidate states, lifespan records, and phylogenetic adjustment. Whether this synthesis is sufficiently novel or predictive remains to be established by literature review and data.
+
+\section{A multitype damage network}
+Let $i\in\{1,\ldots,n\}$ denote a biological compartment: a cell type, organ subsystem, molecular process, or explicitly defined functional unit. Let $\alpha\in\{1,\ldots,m\}$ denote a damage mode, such as proteostasis disruption, mitochondrial dysfunction, senescence-associated signaling, or regulatory-state instability. The state index $u=(i,\alpha)$ spans $N=nm$ damage compartments. Its component $x_u(t)\geq 0$ is a small, normalized burden of the corresponding damage state. The normalization must be defined for each dataset; $x$ is not automatically a count of damaged cells or a universal unit.
+
+A directed edge $v\rightarrow u$ is allowed only when damage in state $v$ has evidence of causing an increment in state $u$ over a specified time interval, after accounting for plausible common causes and measurement artifacts. Edges inferred from correlation alone are candidates, not established causal dependencies. Let $F\in\RR^{N\times N}_{\geq 0}$ contain the rates of new damage generation through such edges. Under a factorized network approximation, one may write
+\begin{equation}
+F_{(i,\alpha),(j,\beta)} = \beta_{i\alpha\leftarrow j\beta}\, A_{ij}\,C_{\alpha\beta},
+\label{eq:F}
+\end{equation}
+where $A_{ij}$ is a dimensionless directed dependency weight, $C_{\alpha\beta}$ describes whether damage type $\beta$ can generate type $\alpha$, and $\beta_{i\alpha\leftarrow j\beta}$ is a rate with units of inverse time. Equation \eqref{eq:F} is a modelling option, not a claim that biology factorizes neatly into network and damage layers.
+
+Let $V$ describe removal of damage by repair, autophagic or proteolytic clearance, replacement of damaged cells, and turnover, together with transitions between damage states that do not themselves constitute a newly generated damage event. Require $V$ to be a nonsingular $M$-matrix: its diagonal loss terms are positive, its off-diagonal entries are non-positive under the standard compartmental convention, and $V^{-1}\geq0$. A diagonal baseline is $V=\mathrm{diag}(\mu_1,\ldots,\mu_N)$ with $\mu_u>0$. Non-diagonal $V$ permits explicitly modelled state progression and coupled removal; it must not hide new-damage production already counted in $F$.
+
+The low-burden dynamics with continuing exogenous damage production are
+\begin{equation}
+\dot{x}(t) = (F-V)x(t) + s(t), \qquad x(t)\geq0,\; s(t)\geq0,
+\label{eq:system}
+\end{equation}
+where $s(t)$ represents independent sources such as unavoidable molecular errors, exposure, or age-dependent damage initiation. Nonlinear saturation and state-dependent repair may be added, but are not needed for the local threshold result. The central distinction is between damage that is \emph{generated by other damage} ($F x$) and damage that is \emph{generated independently} ($s$).
+
+\section{The damage reproduction number}
+\begin{definition}[Local damage reproduction number]
+For $F\geq0$ and nonsingular $M$-matrix $V$, define the next-generation operator and the local damage reproduction number by
+\begin{equation}
+K_d = FV^{-1}, \qquad \Rd = \rhoop(K_d),
+\label{eq:Rd}
+\end{equation}
+where $\rhoop(\cdot)$ is spectral radius. $K_d$ is dimensionless because $F$ and $V$ have units of inverse time. Its entry $[K_d]_{uv}$ is interpreted as an expected number of new damage events of type $u$ generated, in the linearized model, by a unit seed in type $v$ across its expected residence and transition history. That interpretation depends on the chosen compartment definitions and rate conventions.
+\end{definition}
+
+The simplest special case recovers the user's proposed ratio. If there is one damage type, a homogeneous per-edge propagation rate $\beta$, a weighted adjacency matrix $A$, and uniform repair/turnover rate $\mu$, then $F=\beta A$, $V=\mu I$, and $\Rd=(\beta/\mu)\rhoop(A)$. In a heterogeneous system, replacing all repair rates by one average generally changes the threshold and may mis-rank interventions. The appropriate generalization is the spectral radius of the full operator, not a raw degree count.
+
+\begin{proposition}[Local threshold]
+Suppose the unforced low-damage system is autonomous, $\dot{x}=(F-V)x$, with $F\geq0$ and $V$ a nonsingular $M$-matrix. Then the zero-damage linearized state is asymptotically stable if and only if $\Rd<1$. If $\Rd>1$, the Metzler matrix $F-V$ has a positive spectral abscissa and the linearized system has an amplifying mode. The boundary $\Rd=1$ is critical and requires analysis beyond the strict-threshold statement.
+\end{proposition}
+
+\textit{Proof sketch.} The matrix $V-F$ is a nonsingular $M$-matrix precisely when $\rhoop(V^{-1}F)<1$. Since $FV^{-1}$ and $V^{-1}F$ have the same nonzero eigenvalues, this is equivalent to $\rhoop(FV^{-1})<1$. For a Metzler matrix $F-V$, the nonsingular $M$-matrix condition is equivalent to all eigenvalues having negative real part. When the threshold is exceeded, the Perron--Frobenius eigenvalue crosses the stability boundary under the stated positivity structure. This is a mathematical result about the declared linear model, not a theorem that life itself stops aging at $\Rd<1$.
+
+Three qualifications matter. First, if $s(t)>0$, then even a subcritical system may approach a nonzero steady burden $x^*=(V-F)^{-1}s$ when $F,V,s$ are constant. Damage is continually produced and aging can continue while each perturbation is eventually cleared. Second, a supercritical linearization cannot grow exponentially forever in a finite organism; nonlinear saturation, loss of susceptible states, organismal collapse, or changing coefficients must eventually matter. Third, the next-generation threshold describes local damage amplification, not a universal organism-level number unless the model's scale, state space, timescale, and damage event definition remain comparable.
+
+\section{Age dependence, nonlinear feedback, and multiple time scales}
+Aging is nonstationary: repair, immune surveillance, stem-cell turnover, environmental exposures, and coupling strengths can change with age. Write $F(a)$, $V(a)$, and $s(a)$ for age-dependent functions. The frozen-coefficient statistic
+\begin{equation}
+\Rd(a)=\rhoop\!\left(F(a)V(a)^{-1}\right)
+\label{eq:ageR}
+\end{equation}
+asks whether a brief perturbation would amplify near age $a$ if those coefficients remained locally fixed. It is not, by itself, a complete summary of the trajectory from youth to old age. For a changing linear system, define the propagator $\Phi(a_2,a_1)$ by $\partial_{a_2}\Phi=[F(a_2)-V(a_2)]\Phi$ and $\Phi(a_1,a_1)=I$. Finite-window amplification can then be summarized by an appropriate weighted norm or largest singular value of $\Phi$. This catches transient growth and parameter changes that an instantaneous spectral radius can miss.
+
+A biologically plausible nonlinear extension is
+\begin{equation}
+\dot{x}=F(a)x-V(a)x+ s(a)+g(x,a),
+\label{eq:nonlinear}
+\end{equation}
+where $g$ captures saturation, damage-dependent feedback, resource competition, immune-mediated clearance, and compensatory repair. Near a low-damage reference state, the threshold uses the Jacobian of new-damage generation and the local loss operator. At high burden, the process can transition into a different regime; extrapolating the low-burden $\Rd$ to terminal failure is not justified without validating the nonlinear model.
+
+The framework should be damage-specific. A single operator can combine damage modes only when the state definitions and transition rates are meaningful on a common time scale. Otherwise define $\Rd^{(p)}$ for damage family $p$, and cross-mode coupling explicitly. For example, mitochondrial dysfunction may change inflammatory signaling, but that is not equivalent to a misfolded protein physically spreading between neighboring cells. A semelparous death programme, such as a post-reproductive die-off in an organism, can also be an evolved life-history transition rather than the consequence of damage propagation; evolutionary control must be modelled separately.
+
+\section{Evolutionary allocation sets the operating point}
+
+The operator describes a damage process once its rates are specified; it does not by itself explain why a lineage evolved those rates. A useful extension treats heritable maintenance investment $u$ as an evolutionary decision variable that changes repair/turnover $V(a;u)$ and may also alter propagative rates $F(a;u)$, reproduction, or other life-history traits. Let $m(a;u)$ be age-specific expected reproductive output and let survival to age $a$ be
+\begin{equation}
+S(a;u)=\exp\!\left[-\int_0^a h(z;u)\,dz\right].
+\end{equation}
+An illustrative evolutionary objective is
+\begin{equation}
+ u^*\in\arg\max_{u\in\mathcal U}\int_0^T m(a;u)S(a;u)\,da,
+ \qquad E(u)\leq E_{\max},
+\end{equation}
+where $E(u)$ is a declared maintenance-resource cost and $T$ is the relevant life-history horizon. This is a schematic fitness objective, not a calibrated model of a particular species. It formalizes the key distinction in the disposable-soma tradition: selection acts on reproductive success under constraints, not on maximum lifespan or on minimizing $\Rd$ in isolation \citep{kirkwood1977}. Greater repair may reduce $\Rd$ while also diverting resources from growth or early reproduction; conversely, a lineage can be selected for rapid reproduction despite long-term maintenance costs. The sign and magnitude of these trade-offs are empirical and can vary across environments.
+
+This evolutionary layer matters for the comparative test. A low observed $\Rd$ is not automatically an adaptation for longevity, and a high value is not automatically a failure of organismal design. Maximum lifespan alone cannot identify the selected investment policy. Semelparity and synchronized post-reproductive die-off should be modeled as life-history strategies that shape $m(a;u)$ and the mortality process, rather than assumed to be terminal outbreaks of propagating damage. Data should distinguish damage kinetics, repair allocation, ecological mortality, and reproductive schedule before assigning a species to a supposed universality class.
+
+\section{Why the threshold does not automatically yield Gompertz mortality}
+The Gompertz law is usually stated as an exponential increase in hazard with chronological age, $h(a)=h_0\exp(\gamma a)$. The proposed $\Rd$ does not imply this form. If an amplifying damage state grows as $B(a)\propto e^{ra}$ and hazard is proportional to $B(a)$, then hazard grows exponentially as a function of $a$ and can resemble Gompertz over the relevant range. If instead hazard obeys $h(a)=h_0\exp(\eta B(a))$, the same exponentially growing $B(a)$ yields a double-exponential hazard. A linear increase in $B(a)$ under the latter link can produce a Gompertz form. Different links are competing hypotheses, not interchangeable algebra.
+
+A recommended analysis defines a measurable burden score $B(a)=w^\top x(a)$, then compares, out of sample, plausible mappings such as $h(a)=h_0(a)[1+B(a)]^\eta$ and $h(a)=h_0(a)\exp(\eta B(a))$, with the appropriate scaling and offset fixed before fitting. Demographic heterogeneity, frailty selection, competing risks, data quality, and finite sample sizes can all affect apparent hazard slopes. Reliability theory has already derived rising mortality and late-life leveling under redundancy exhaustion and other system-failure assumptions \citep{gavrilov2001,gavrilov2004}. The epidemic analogy adds a candidate damage-propagation statistic; it does not replace these mechanisms.
+
+Likewise, a mortality plateau at extreme ages is not necessarily saturation of a damage epidemic. A nonlinear saturation model may generate plateaus, but heterogeneous risk and selective survival can do so without a universal individual-level plateau. Any plateau claim must compare at least a heterogeneous-frailty null, a reliability/defect model, and an age-varying damage-network model. Hydra provides an important boundary case: long-term cohort observations reported very low approximately constant mortality and fertility under studied conditions, but that finding does not identify a low $\Rd$ without measurements of damage propagation and repair \citep{schaible2015}. “Negligible senescence” is a demographic description; it is not mathematically equivalent to $\Rd<1$.
+
+\section{Hub targeting as constrained spectral control}
+The phrase “immunize the hubs” is useful only if “hub” means a causal, damage-propagating source or relay with a high marginal effect on the operator. High degree is insufficient. A hub may be protective—for example, a chaperone, immune cell, or regenerative compartment can support repair. Suppressing such a hub could raise total damage even while a naive centrality score looks large.
+
+Let $u$ be a vector of intervention strengths, where a component changes selected propagative rates in $F(u)$ or increases repair/turnover rates in $V(u)$. For a simple dominant eigenvalue and left/right eigenvectors $\ell,r$ of $K_d=FV^{-1}$ normalized so that $\ell^\top r=1$, the first-order sensitivity is
+\begin{equation}
+\frac{\partial\Rd}{\partial u_j}=\ell^\top\left[\frac{\partial F}{\partial u_j}V^{-1}-FV^{-1}\frac{\partial V}{\partial u_j}V^{-1}\right]r.
+\label{eq:sensitivity}
+\end{equation}
+An intervention candidate can be ranked by predicted reduction in $\Rd$ per unit cost, then filtered through constraints for essential-function preservation, immune defense, tissue regeneration, cancer risk, and uncertainty. Near repeated dominant eigenvalues, the simple derivative may be unstable; use finite perturbations or robust optimization instead.
+
+A finite-budget formulation is
+\begin{align}
+\min_{u\in\mathcal U}\quad & \rhoop\!\left(F(u)V(u)^{-1}\right)+\lambda C(u)+\omega H(u),\\
+\text{subject to}\quad & \sum_j c_j u_j\leq B,\qquad G_k(u)\leq 0.
+\end{align}
+Here $C(u)$ is intervention cost, $H(u)$ represents predicted collateral harm, $B$ is a resource budget, and $G_k$ encodes minimum functional constraints. The coefficients $\lambda$ and $\omega$ require explicit scaling or a multi-objective analysis; they are not universal constants. Most importantly, the objective is a research-design proposal, not a recommendation to manipulate a real biological hub. Safety and tissue context are decisive.
+
+\section{What AI actually does}
+AI belongs at the estimation and uncertainty layers, not as a replacement for causal evidence. Given longitudinal multi-omics, lineage-tracing, perturbation, imaging, and single-cell atlases, a model can propose candidate edges, estimate lagged propagation probabilities, harmonize cell-state labels across studies, and infer uncertainty distributions for the entries of $F$ and $V$. Perturbation-supported estimates should be prioritized over expression correlation. Models should account for donor, batch, tissue, species, developmental state, cell composition, measurement depth, and directionality.
+
+For each posterior or bootstrap draw $b$, estimate $K_d^{(b)}=F^{(b)}[V^{(b)}]^{-1}$ and $\Rd^{(b)}=\rhoop(K_d^{(b)})$. Report the median, interval, and $P(\Rd<1)$ rather than a single brittle point estimate. When the interval spans one, label the state as threshold-indeterminate. Assess sensitivity to missing nodes, graph sparsification, rate calibration, causal-edge thresholds, alternative cell-type mappings, and damage definitions. If only observational data exist, use AI to prioritize edges for intervention rather than asserting they are causal.
+
+The AI baseline must be compared with non-neural alternatives: sparse regression, mechanistic compartment models, perturbation-specific causal estimators, and expert-curated networks. AI earns its role only if it improves out-of-study edge calibration, prediction of held-out perturbation responses, or uncertainty quality. An impressive graph visualization or a trained language model's narrative is not validation.
+
+\section{Cross-species empirical protocol}
+The earliest defensible study is not a 30-species regression performed by imputing missing molecular networks. It is a preregistered overlap study that first establishes whether sufficient species have comparable age-stratified, perturbation-supported measurements. AnAge provides a substantial species-longevity resource, but its listed records and maximum-lifespan values vary in evidence quality and do not supply damage-network rates \citep{anage}. Tabula Muris Senis provides mouse single-cell profiles across 23 tissues and organs; it is valuable for within-species aging states, not a ready-made cross-species causal network \citep{tabulamuris2020}. Newer curated resources aggregate additional cross-species atlases, but differences in tissue, assay, cell annotation, and age coverage remain barriers \citep{agingatlas2020,speedatlas}.
+
+\textbf{Stage A: feasibility and inclusion.} Define eligible species before examining outcomes. Require (i) a well-documented lifespan record and phylogeny, (ii) an adult-age series with at least two comparable sampling stages, (iii) tissue or cell-type overlap, and (iv) perturbation or longitudinal evidence sufficient to estimate at least a subset of propagative and repair rates. If fewer than the preregistered target (for example, 30 species) satisfy these rules, report the shortfall and reduce the scope rather than fill gaps with predictions trained on the lifespan labels.
+
+\textbf{Stage B: construct and benchmark the operator.} Harmonize cell-state definitions, fit causal-edge models within each study, and calibrate rate scales using matched time units. Separate within-cell/molecular transitions from cell-to-cell or tissue-to-tissue damage propagation. Freeze a core damage taxonomy and record uncertainty for every edge and removal rate. As a first benchmark, compare $\Rd$ to simpler alternatives: network density, weighted degree, overall repair-marker expression, cell turnover, damage burden, and existing reliability-based features.
+
+\textbf{Stage C: survival and comparative test.} Use maximum lifespan as one outcome, but not as a substitute for mortality trajectory. Where cohort data support it, estimate the Gompertz slope and test late-life deceleration separately. Fit phylogenetic generalized least squares or an equivalent phylogenetic hierarchical model, adjusting for body mass, basal metabolic rate where quality permits, captivity/wild status, life history, temperature and major lineage effects. Avoid putting multiple highly collinear covariates into a tiny sample. Use species-level nested cross-validation, with every feature-selection and calibration step confined to training folds.
+
+\textbf{Stage D: incremental value and robustness.} Compare baseline covariates against baseline plus $\Rd$ using held-out predictive log score or cross-validated error, uncertainty intervals, calibration, and sensitivity to species inclusion. Correct for testing multiple damage modes and feature variants. Evaluate whether a high predicted $\Rd$ forecasts faster deterioration in an independent experiment, and whether interventions predicted to reduce $\Rd$ actually reduce downstream damage in perturbation experiments.
+
+\section{Synthetic numerical verification}
+The included script is a small, deterministic demonstration, not a dataset analysis. It constructs a five-node directed dependency graph with two interacting damage modes, a heterogeneous diagonal loss matrix, and a single high-connectivity node. It checks (i) that spectral-radius and dominant-growth criteria agree on both sides of threshold, (ii) the homogeneous closed-form special case, (iii) nonnegative steady damage under an ongoing source when the process is subcritical, and (iv) the difference between repairing the synthetic hub and applying the same proportional repair increase to a peripheral node.
+
+With synthetic propagation scale $\beta=0.32$, the baseline example gives $\Rd\approx1.137$ and a positive dominant growth rate of approximately $0.117$ in model time units. Increasing the hub's two repair rates by a factor of 1.8 gives $\Rd\approx0.922$; the same factor applied to any one of the four peripheral nodes leaves $\Rd$ above one in this constructed graph. Halving the outgoing damage-generation rates from the hub yields $\Rd\approx0.890$. These are illustrative numerical outcomes chosen by the model architecture, not biological measurements. Another graph, different rate values, or uncertainty in causal edges can reverse the ranking.
+
+\begin{table}[ht]
+\centering
+\caption{Synthetic five-node example; values are generated by \texttt{verify\_model.py}.}
+\begin{tabularx}{\linewidth}{Xrr}
+\toprule
+Condition & $\Rd$ & Dominant growth sign\\
+\midrule
+Baseline ($\beta=0.32$) & 1.1366 & Positive\\
+Hub repair rates multiplied by 1.8 & 0.9219 & Negative\\
+Peripheral repair rate multiplied by 1.8 (range over leaves) & $1.0543$--$1.0620$ & Positive\\
+Outgoing propagation from hub halved & 0.8901 & Negative\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The script's pass status means only that the mathematical checks in the specified synthetic model passed. It does not verify causal edges, calibrated biological rates, cross-species comparability, treatment safety, lifespan prediction, or clinical benefit. No single-cell atlas or lifespan table was downloaded or analyzed to generate the table above.
+
+\section{Falsifiable predictions and explicit failure conditions}
+The research programme should be abandoned or narrowed if its defining predictions fail.
+\begin{enumerate}
+\item \textbf{Threshold calibration:} in a controlled perturbation system, measured damage propagation and removal rates should predict which seeded perturbations decay and which amplify. If $\Rd$ does not discriminate these outcomes better than total damage burden or net growth rate, the reproduction-number interpretation adds little.
+\item \textbf{Incremental comparative prediction:} after preregistered covariates and phylogeny are included, $\Rd$ should improve held-out prediction of mortality slope or a predeclared functional-aging endpoint. If it does not, do not claim it is a comparative aging biomarker.
+\item \textbf{Perturbation direction:} increasing a measured repair rate or reducing a causal propagation edge should change downstream damage in the direction predicted by the model, subject to compensatory pathways. If interventions change $\Rd$ mathematically but not downstream biology, the inferred network or state model is inadequate.
+\item \textbf{Robustness:} species rankings and intervention rankings should remain useful across reasonable causal-edge thresholds, damage taxonomies, and uncertainty samples. If rankings are unstable, report them as indeterminate rather than choosing the most attractive point estimate.
+\item \textbf{Mortality-link challenge:} the operator must outperform reliability-theoretic and demographic heterogeneity baselines in held-out data before it is proposed as an explanation of Gompertz slopes or mortality plateaus.
+\end{enumerate}
+
+\section{Limitations and epistemological status}
+The threshold theorem is a P1 mathematical result conditional on the positivity and matrix assumptions stated above. The constrained hub-targeting objective is a P2 optimization proposal, not evidence that an organism can reach its mathematical optimum. Claims of shared cross-species scaling or universality would be P3 hypotheses requiring finite-sample and phylogenetic tests. The epidemic analogy is a P4 structural correspondence whose biological meaning must be established damage type by damage type. The phrase “aging is an epidemic” is P5 metaphor unless the proposed causal mechanism and estimand are operationalized.
+
+Several risks remain. First, omics measures state rather than propagation; single-cell snapshots rarely identify rate constants or causal direction on their own. Second, repair, turnover and damage production can be coupled in ways that violate a fixed $V$ or nonnegative $F$ decomposition. Third, any chosen state aggregation may make $\Rd$ change even when the underlying biological process does not. Fourth, small species counts, maximum-lifespan measurement error, and phylogenetic dependence can produce misleading apparent associations. Fifth, a scalar spectral radius compresses mode-specific and organ-specific effects; it is a summary, not a complete description of resilience or organismal health. Finally, more efficient repair may have cancer, immune, metabolic, or reproductive trade-offs. This proposal supplies no dose, drug, gene-editing target, or human intervention protocol.
+
+\section{Conclusion}
+A damage reproduction number is useful only when it measures a defined causal process. The proposed operator $\Rd=\rho(FV^{-1})$ turns an intuitive ratio into a multitype, rate-aware threshold with explicit stability conditions. It distinguishes local damage amplification from ongoing damage sources, and local threshold behavior from whole-life mortality. The intervention consequence is not “remove hubs” but “identify the repairable causal edges and states whose modification most reduces propagative amplification at acceptable functional risk.”
+
+The mathematical example passes internal checks, but all its rates and its graph are synthetic. The empirical question remains open: does a perturbation-supported, uncertainty-aware estimate of $\Rd$ add predictive value beyond existing damage, repair, reliability, and demographic variables across species? The correct next step is a data-feasibility audit and prospective calibration—not a claim of universal threshold, negligible senescence, Gompertz law, or human rejuvenation.
+
+\vspace{0.5em}
+\textbf{Research-process credit and responsibility.} Co-equal research-process credit is given to Devanik Debnath and Xylia, the autonomous research-orchestration system coordinating AI-assisted literature discovery, synthesis, mathematical formalization, and verification preparation. Devanik Debnath retains responsibility for the final manuscript, claims, citations, and released artifacts. Xylia is a workflow identity, not an external AI-provider endorsement. This preprint has not undergone peer review.
+
+\begin{thebibliography}{99}
+\bibitem{diekmann2010} Diekmann, O., Heesterbeek, J. A. P., and Roberts, M. G. (2010). The construction of next-generation matrices for compartmental epidemic models. \emph{Journal of the Royal Society Interface}, 7(47), 873--885. \href{https://doi.org/10.1098/rsif.2009.0386}{doi:10.1098/rsif.2009.0386}.
+\bibitem{vural2014} Vural, D. C., Morrison, G., and Mahadevan, L. (2014). Aging in complex interdependency networks. \emph{Physical Review E}, 89(2), 022811. \href{https://doi.org/10.1103/PhysRevE.89.022811}{doi:10.1103/PhysRevE.89.022811}.
+\bibitem{vural2020} Sun, E. D., Michaels, T. C. T., and Mahadevan, L. (2020). Optimal control of aging in complex networks. \emph{Proceedings of the National Academy of Sciences}, 117(34), 20404--20410. \href{https://doi.org/10.1073/pnas.2006375117}{doi:10.1073/pnas.2006375117}.
+\bibitem{gavrilov2001} Gavrilov, L. A., and Gavrilova, N. S. (2001). The reliability theory of aging and longevity. \emph{Journal of Theoretical Biology}, 213(4), 527--545. \href{https://doi.org/10.1006/jtbi.2001.2430}{doi:10.1006/jtbi.2001.2430}.
+\bibitem{gavrilov2004} Gavrilov, L. A., and Gavrilova, N. S. (2004). The reliability-engineering approach to the problem of biological aging. \emph{Annals of the New York Academy of Sciences}, 1019, 509--512. \href{https://doi.org/10.1196/annals.1297.094}{doi:10.1196/annals.1297.094}.
+\bibitem{schaible2015} Schaible, R., Scheuerlein, A., Danko, M. J., et al. (2015). Constant mortality and fertility over age in Hydra. \emph{Proceedings of the National Academy of Sciences}, 112(51), 15701--15706. \href{https://doi.org/10.1073/pnas.1521002112}{doi:10.1073/pnas.1521002112}.
+\bibitem{tabulamuris2020} The Tabula Muris Consortium (2020). A single-cell transcriptomic atlas characterizes ageing tissues in the mouse. \emph{Nature}, 583, 590--595. \href{https://doi.org/10.1038/s41586-020-2496-1}{doi:10.1038/s41586-020-2496-1}.
+\bibitem{lopezotin2023} L\'{o}pez-Ot\'{i}n, C., Blasco, M. A., Partridge, L., Serrano, M., and Kroemer, G. (2023). Hallmarks of aging: An expanding universe. \emph{Cell}, 186(2), 243--278. \href{https://doi.org/10.1016/j.cell.2022.11.001}{doi:10.1016/j.cell.2022.11.001}.
+\bibitem{russo2026} Russo, T., and Riessland, M. (2026). Characterizing the SASP-dependent paracrine spreading of senescence between human brain cell types. \emph{Aging Cell}, 25(8), e70673. \href{https://doi.org/10.1111/acel.70673}{doi:10.1111/acel.70673}.
+\bibitem{kirkwood1977} Kirkwood, T. B. L. (1977). Evolution of ageing. \emph{Nature}, 270(5635), 301--304. \href{https://doi.org/10.1038/270301a0}{doi:10.1038/270301a0}.
+\bibitem{anage} Tacutu, R., et al. (2023). AnAge: The Animal Ageing and Longevity Database, build 15. \url{https://genomics.senescence.info/species/}.
+\bibitem{agingatlas2020} Zhang, W., et al. (2021). Aging Atlas: a multi-omics database for aging biology. \emph{Nucleic Acids Research}, 49(D1), D825--D830. \href{https://doi.org/10.1093/nar/gkaa894}{doi:10.1093/nar/gkaa894}.
+\bibitem{speedatlas} SPEED Atlas Consortium (2026). SPEED: Single-cell pan-species atlas in the light of ecology and evolution for development and disease. \url{https://www.speedatlas.net/}.
+\end{thebibliography}
+\end{document}

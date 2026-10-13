@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "title": "Damage R0: A Next-Generation Theory of Aging in Interdependent Living Systems",
+    "upload_type": "publication",
+    "publication_type": "preprint",
+    "description": "Theoretical preprint defining a multitype damage reproduction operator from damage-generation rates and repair/turnover. It formalizes the local threshold assumptions, a sensitivity-based control objective, and a falsifiable comparative research plan. All numerical results are synthetic; no biological atlas, species-lifespan table, or human cohort was analyzed. The manuscript is not peer-reviewed by virtue of GitHub archival. This file is a Zenodo metadata draft only; no DOI is minted or claimed.",
+    "creators": [
+      {
+        "name": "Debnath, Devanik",
+        "affiliation": "National Institute of Technology Agartala, India",
+        "orcid": "0009-0001-8310-6921"
+      }
+    ],
+    "keywords": [
+      "biological aging",
+      "damage propagation",
+      "next-generation matrix",
+      "spectral radius",
+      "repair and turnover",
+      "causal inference",
+      "scientific machine learning",
+      "synthetic verification"
+    ],
+    "license": "mit",
+    "access_right": "open",
+    "communities": [],
+    "related_identifiers": [
+      {
+        "identifier": "https://github.com/Devanik21/The-Invention-Archive",
+        "relation": "isSupplementTo",
+        "scheme": "url"
+      }
+    ],
+    "notes": "Metadata draft only. This record has not been deposited and no DOI has been issued for this manuscript."
+  }
+}

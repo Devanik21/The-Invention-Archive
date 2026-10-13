@@ -1,0 +1,35 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Damage R₀: A Next-Generation Theory of Aging in Interdependent Living Systems",
+  "name": "Damage R0: A Next-Generation Theory of Aging in Interdependent Living Systems",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "url": "https://github.com/Devanik21",
+    "identifier": "https://orcid.org/0009-0001-8310-6921",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "National Institute of Technology Agartala"
+    }
+  },
+  "datePublished": "2026-10-13",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "license": "https://opensource.org/license/mit/",
+  "url": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Damage_R0_A_Next_Generation_Theory_of_Aging_in_Interdependent_Living_Systems",
+  "description": "A theoretical preprint defining a multitype damage reproduction operator and local spectral threshold for damage amplification under explicit repair, turnover, positivity and causality assumptions. Numerical checks use a synthetic network only; no biological dataset was analyzed.",
+  "keywords": [
+    "biological aging",
+    "damage propagation",
+    "next-generation matrix",
+    "spectral theory",
+    "causal inference",
+    "comparative longevity",
+    "evolutionary maintenance allocation"
+  ],
+  "isPartOf": {
+    "@type": "CreativeWorkSeries",
+    "name": "The-Invention-Archive Theoretical Research Releases"
+  }
+}
