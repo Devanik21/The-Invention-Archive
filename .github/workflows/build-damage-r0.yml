@@ -1,0 +1,162 @@
+name: Build and publish Damage R0 aging-network theory preprint
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/build-damage-r0.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: damage-r0-release
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Verify payload and unpack checked source
+        env:
+          RELEASE_DIR: "Theoretical Research/Damage_R0_A_Next_Generation_Theory_of_Aging_in_Interdependent_Living_Systems"
+          PAYLOAD_SHA256: "cf94d4f682b6eb9dcb534d5b902492ad73a514f40c39f41042c11f18cb3b39e7"
+        run: |
+          set -euo pipefail
+          test ! -e "$RELEASE_DIR" || { echo "Release path already exists; refusing overwrite." >&2; exit 1; }
+          cat damage-r0-payload-part-* | tr -d '\r\n' | base64 --decode > /tmp/damage-r0-source.tar.xz
+          echo "$PAYLOAD_SHA256  /tmp/damage-r0-source.tar.xz" | sha256sum --check --status || { echo "Source payload digest mismatch." >&2; exit 1; }
+          tar --extract --xz --file /tmp/damage-r0-source.tar.xz --directory 'Theoretical Research'
+          test -d "$RELEASE_DIR"
+          test ! -e "$RELEASE_DIR/paper.pdf"
+
+      - name: Verify numerical model, citations, and metadata
+        working-directory: "Theoretical Research/Damage_R0_A_Next_Generation_Theory_of_Aging_in_Interdependent_Living_Systems"
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "numpy>=1.24" "PyYAML>=6.0" "pypdf>=5.0"
+          python verify_model.py
+          python - <<'PY'
+          import json, re, yaml
+          from pathlib import Path
+          expected = {"paper.tex", "verify_model.py", "README.md", "medium_story.md",
+                      "x_thread.md", "CITATION.cff", "paper.bib", ".zenodo.json",
+                      "schema_article.jsonld", "deploy.py"}
+          present = {p.relative_to(Path(".")).as_posix() for p in Path(".").rglob("*") if p.is_file()}
+          assert present == expected, f"Source manifest mismatch: missing={expected-present}; extra={present-expected}"
+          json.loads(Path(".zenodo.json").read_text(encoding="utf-8"))
+          json.loads(Path("schema_article.jsonld").read_text(encoding="utf-8"))
+          cff = yaml.safe_load(Path("CITATION.cff").read_text(encoding="utf-8"))
+          assert cff.get("cff-version") == "1.2.0" and cff.get("authors"), "CITATION.cff validation failed"
+          words = re.findall(r"\b[\w'-]+\b", Path("medium_story.md").read_text(encoding="utf-8"))
+          assert 1500 <= len(words) <= 2000, f"Medium draft has {len(words)} words"
+          posts = re.findall(r"(?m)^\*\*\d+/12\*\*", Path("x_thread.md").read_text(encoding="utf-8"))
+          assert len(posts) == 12, f"Expected 12 X posts, found {len(posts)}"
+          readme = Path("README.md").read_text(encoding="utf-8")
+          assert len(re.findall(r"(?m)^\$\$$", readme)) == 8, "README needs four separate display equations"
+          assert r"\n" not in readme and r"\operatorname" not in readme, "README has a broken equation escape"
+          tex = Path("paper.tex").read_text(encoding="utf-8")
+          bib = Path("paper.bib").read_text(encoding="utf-8")
+          bib_keys = set(re.findall(r"@\w+\s*\{\s*([^,\s]+)", bib))
+          cited = set()
+          for group in re.findall(r"\\cite[a-zA-Z*]*\{([^}]+)\}", tex):
+              cited.update(k.strip() for k in group.split(","))
+          assert cited <= bib_keys, f"Missing BibTeX entries: {cited-bib_keys}"
+          bibitems = set(re.findall(r"\\bibitem\{([^}]+)\}", tex))
+          assert cited <= bibitems, f"Missing manuscript bibliography items: {cited-bibitems}"
+          assert "Co-equal research-process credit is given to Devanik Debnath and Xylia" in tex
+          assert "Devanik Debnath retains responsibility for the final manuscript" in tex
+          assert "No single-cell atlas or lifespan table was downloaded or analyzed" in tex
+          print(f"PASS: 10 source files; {len(words)} Medium words; 12 X posts; {len(cited)} cited references; valid metadata.")
+          PY
+
+      - name: Compile PDF from the checked-in LaTeX source
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper.tex
+          working_directory: "Theoretical Research/Damage_R0_A_Next_Generation_Theory_of_Aging_in_Interdependent_Living_Systems"
+
+      - name: Validate PDF, index, commit, tag, push, and verify remote files
+        env:
+          RELEASE_DIR: "Theoretical Research/Damage_R0_A_Next_Generation_Theory_of_Aging_in_Interdependent_Living_Systems"
+          RELEASE_SLUG: "Damage_R0_A_Next_Generation_Theory_of_Aging_in_Interdependent_Living_Systems"
+          RELEASE_TAG: "v2026.10.13-01"
+        run: |
+          set -euo pipefail
+          test -s "$RELEASE_DIR/paper.pdf"
+          head -c 5 "$RELEASE_DIR/paper.pdf" | grep -q '%PDF-'
+          python -m pip install --disable-pip-version-check "pypdf>=5.0" "PyYAML>=6.0"
+          rm -f "$RELEASE_DIR/paper.aux" "$RELEASE_DIR/paper.log" "$RELEASE_DIR/paper.out" "$RELEASE_DIR/paper.toc" "$RELEASE_DIR/paper.synctex.gz" "$RELEASE_DIR/paper.fdb_latexmk" "$RELEASE_DIR/paper.fls" "$RELEASE_DIR/paper.bbl" "$RELEASE_DIR/paper.blg" "$RELEASE_DIR/paper.lof" "$RELEASE_DIR/paper.lot" "$RELEASE_DIR/paper.nav" "$RELEASE_DIR/paper.snm" "$RELEASE_DIR/paper.vrb" "$RELEASE_DIR/paper.xdv"
+          python - <<'PY'
+          import json, re, yaml
+          from pathlib import Path
+          from pypdf import PdfReader
+          rel = Path("Theoretical Research/Damage_R0_A_Next_Generation_Theory_of_Aging_in_Interdependent_Living_Systems")
+          expected = {"paper.tex", "paper.pdf", "verify_model.py", "README.md", "medium_story.md",
+                      "x_thread.md", "CITATION.cff", "paper.bib", ".zenodo.json", "schema_article.jsonld", "deploy.py"}
+          present = {p.name for p in rel.iterdir() if p.is_file()}
+          assert present == expected, f"Final 11-file manifest mismatch: missing={expected-present}; extra={present-expected}"
+          pdf = rel / "paper.pdf"
+          assert pdf.read_bytes().startswith(b"%PDF-") and pdf.stat().st_size > 5000
+          pages = len(PdfReader(str(pdf)).pages)
+          assert pages >= 7, f"Compiled PDF has only {pages} pages"
+          json.loads((rel / ".zenodo.json").read_text(encoding="utf-8"))
+          json.loads((rel / "schema_article.jsonld").read_text(encoding="utf-8"))
+          cff = yaml.safe_load((rel / "CITATION.cff").read_text(encoding="utf-8"))
+          assert cff.get("cff-version") == "1.2.0" and cff.get("authors")
+          words = re.findall(r"\b[\w'-]+\b", (rel / "medium_story.md").read_text(encoding="utf-8"))
+          posts = re.findall(r"(?m)^\*\*\d+/12\*\*", (rel / "x_thread.md").read_text(encoding="utf-8"))
+          assert 1500 <= len(words) <= 2000 and len(posts) == 12
+          index = Path("Theoretical Research/Readme.md")
+          current = index.read_text(encoding="utf-8")
+          if rel.name in current:
+              raise SystemExit("Release already indexed; refusing duplicate entry.")
+          row = f"| 2026.10.13 | Damage R₀: A Next-Generation Theory of Aging in Interdependent Living Systems | Spectral damage-threshold preprint | [{rel.name}]({rel.name}/) |"
+          index.write_text(current.rstrip() + "\n" + row + "\n", encoding="utf-8")
+          print(f"PASS: release files=11; PDF pages={pages}; Medium words={len(words)}; X posts={len(posts)}")
+          PY
+
+          rm -f damage-r0-payload-part-*.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main --tags
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release tag $RELEASE_TAG already exists; refusing to overwrite." >&2
+            exit 1
+          fi
+          git add -A
+          git diff --cached --check
+          git commit -m "Add Damage R0 aging-network theory preprint"
+          git fetch origin main --tags
+          git rebase origin/main
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release tag $RELEASE_TAG appeared during deployment; refusing to overwrite." >&2
+            exit 1
+          fi
+          git tag -a "$RELEASE_TAG" -m "Damage R0 theoretical preprint $RELEASE_TAG"
+          git push origin HEAD:main
+          git push origin "refs/tags/$RELEASE_TAG"
+          git fetch origin main --tags
+          COMMIT="$(git rev-parse HEAD)"
+          test "$(git rev-parse origin/main)" = "$COMMIT"
+          test "$(git rev-parse "refs/tags/$RELEASE_TAG^{}")" = "$COMMIT"
+          test "$(git ls-tree -r --name-only origin/main -- "$RELEASE_DIR" | wc -l)" -eq 11
+          for name in paper.tex paper.pdf verify_model.py README.md medium_story.md x_thread.md CITATION.cff paper.bib .zenodo.json schema_article.jsonld deploy.py; do
+            local_sha="$(git hash-object "$RELEASE_DIR/$name")"
+            remote_sha="$(git rev-parse "origin/main:$RELEASE_DIR/$name")"
+            test "$local_sha" = "$remote_sha" || { echo "Remote file mismatch: $name" >&2; exit 1; }
+          done
+          echo "## Damage R0 release" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Commit: $COMMIT" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Tag: $RELEASE_TAG" >> "$GITHUB_STEP_SUMMARY"
+          echo "- PDF compiled from paper.tex; pages: $(pdfinfo "$RELEASE_DIR/paper.pdf" | awk '/^Pages:/ {print $2}')" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Remote manifest: 11/11 files hash-verified" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Repository path: https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/$RELEASE_SLUG" >> "$GITHUB_STEP_SUMMARY"
