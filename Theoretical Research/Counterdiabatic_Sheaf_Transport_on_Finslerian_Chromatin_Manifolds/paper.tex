@@ -459,3 +459,93 @@ Baseline & Maximum risk proxy & 0.010 [0.010, 0.011] \\
 Aggressive & Final age coordinate & 0.192 [0.118, 0.277] \\
 Aggressive & Maximum identity deviation & 0.874 [0.693, 1.099] \\
 Aggressive & Maximum risk proxy & 0.756 [0.623, 0.934] \\
+Constrained pulse & Final age coordinate & 0.336 [0.264, 0.417] \\
+Constrained pulse & Maximum identity deviation & 0.055 [0.045, 0.073] \\
+Constrained pulse & Maximum risk proxy & 0.050 [0.035, 0.051] \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{What the synthetic results do and do not establish}
+They establish that the implementation produces finite trajectories, respects the non-negativity handling for deviation proxies, reproduces a known trade-off under the selected differential equations, and reports a fixed-seed parameter/noise stress test. They do not test the Randers metric, sheaf cohomology, or learned port-Hamiltonian model on real measurements; those modules are presented formally and remain unimplemented as biological estimators in this initial release. This distinction matters: the toy ODE intentionally embodies an identity/risk cost for aggressive input. Its results cannot support the claim that real reprogramming necessarily causes the same quantitative trade-off or that CST is safer than a biological protocol.
+
+The correct next computational step is not to enlarge this toy model until it appears convincing. It is to validate the state estimator, graph construction, directional drift, and control model separately against observations they did not train on. If the real data fail to support one module, the module must be removed or revised.
+
+\section{Empirical programme and data feasibility}
+The proposed validation should proceed in stages. A dataset inventory must precede model construction. Its purpose is to determine which modalities, cell types, ages, replicates, time points, perturbations, and functional outcomes are actually available together. Combining an aging atlas with a different reprogramming dataset does not create a matched longitudinal cohort; it creates a cross-study transfer problem requiring explicit harmonization and additional uncertainty.
+
+\subsection{Stage 0: dataset and assay audit}
+The Tabula Muris Senis dataset is a reasonable starting point for cell-type-specific age-associated expression signatures across 23 tissues \cite{TabulaMuris2020}. Its primary modality is not a matched, longitudinal multiome of RNA, chromatin contacts, metabolic phase, and function for each cell. It can support the transcriptomic arm of model development, but it cannot alone validate a Finslerian chromatin manifold or infer mitochondrial phase dynamics. A separate search of NCBI Gene Expression Omnibus, ENCODE, and the 4D Nucleome portal should identify candidate time-resolved reprogramming, accessibility, contact-map, and perturbation datasets. Each candidate should be reviewed for donor replication, lineage specificity, assay comparability, treatment timing, and availability of an independent function or safety endpoint before inclusion.
+
+\begin{table}[htbp]
+\centering
+\caption{Candidate public-data resources and what they can realistically support. Availability must be re-audited before a future empirical study.}
+\begin{tabularx}{\textwidth}{p{0.23\textwidth}p{0.22\textwidth}X}
+\toprule
+Resource & Primary role & Limitations for CST \\
+\midrule
+Tabula Muris Senis / GSE132042 & Mouse tissue and cell-type expression across lifespan \cite{TabulaMuris2020} & Cross-sectional single-cell expression is not same-cell longitudinal dynamics; not a complete matched chromatin/metabolic/function panel. \\
+NCBI GEO & Search for time-resolved reprogramming and aging transcriptomics & Every series needs treatment, replicate, batch, and endpoint audit; many studies are small or incomparable. \\
+ENCODE & Regulatory annotations, accessibility, selected chromatin assays & Heterogeneous cell types and conditions; annotations are evidence sources, not automatically a lineage-specific causal graph. \\
+4D Nucleome & 3D genome organization and contact-map protocols/data & Data must match cell identity, age/treatment, and sampling design; chromatin contacts alone do not identify transcriptional dynamics. \\
+Published partial-reprogramming datasets & Candidate intervention trajectories and endpoint benchmarks \cite{Ocampo2016,Lu2020,Browder2022} & Published papers may not provide all raw data or same-cell multimodal time courses; matched function and safety data may be limited. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+At manuscript preparation time, no listed biological dataset was downloaded or analyzed for CST. The links and accessions specify a proposed route, not a declaration that these datasets jointly contain every required modality. Before a future analysis, a curator should create a machine-readable manifest that includes persistent accession, file checksum, license, sample-level metadata availability, biological replicate, cell type, time/age, treatment, modality, missingness, and exclusion reasons.
+
+\subsection{Stage 1: cross-sectional reference-state estimation}
+The first analysis would estimate lineage-specific reference distributions and age-associated molecular axes using donor-aware splitting. Cells from one donor, animal, plate, or experiment must not be split between training and test sets in ways that create leakage. The model should distinguish within-cell-type age shifts from cell-composition shifts. Molecular-age scores can be used as secondary endpoints, but the target distribution and metric should not be tuned until they produce a favorable intervention result.
+
+\subsection{Stage 2: directional transition estimation}
+Time-resolved or perturbation datasets are needed to estimate $\beta$. RNA velocity is one candidate method but has assumptions that require diagnostic checks \cite{LaManno2018,scVelo2020}. Alternative estimates can be based on optimal transport across known time points \cite{Schiebinger2019}, lineage tracing, or repeated live-cell measurements. All approaches should compare directional and symmetric models, evaluate calibration of transition probabilities, and check stability against cell-cycle composition, proliferation/death, and sampling imbalance.
+
+\subsection{Stage 3: regulatory-sheaf construction}
+The graph must record how each edge was supported: perturbation evidence, curated regulatory interaction, high-confidence contact, or lower-confidence correlation. Edge weights should reflect uncertainty rather than convert every correlation into a hard restriction map. Sensitivity analysis should vary thresholds and graph density. Candidate outcomes include sheaf consistency residual, selected spectral quantities, and rank stability. Those quantities must then be tested for incremental association with independent lineage markers and function, beyond simpler graph smoothness and marker-based baselines.
+
+\subsection{Stage 4: control benchmarking}
+Only after transition dynamics and safety surrogates are calibrated should control be evaluated. At minimum, compare: (i) no-control and pulse baselines; (ii) Euclidean endpoint matching; (iii) Riemannian path control; (iv) Finsler directional cost without sheaf penalty; (v) sheaf penalty without directional cost; (vi) conventional model predictive control; (vii) a generic neural-ODE controller; and (viii) full CST. Each ablation isolates a claimed contribution. Inputs must be limited to interventions that are observable, delivered with specified dose/timing, and supported by experimental response data.
+
+\section{Pre-registered hypotheses, metrics, and decision rules}
+The following hypotheses are proposals for a future preregistered study. They are not results from the present simulation.
+
+\subsection{H1: directional geometry adds transition information}
+\textbf{Hypothesis.} The fitted directional covector $\beta$ improves held-out next-state or transition-probability prediction relative to a symmetric metric after controlling for time, lineage, donor, cell cycle, and batch. \textbf{Primary metric.} Test-set negative log-likelihood or a proper scoring rule on donor- and study-disjoint data, with uncertainty intervals from resampling biological replicates. \textbf{Falsification.} No reliable improvement after calibration, or signs/magnitudes of $\beta$ vary arbitrarily across reasonable feature maps and resamples. The Finsler term is removed if falsified.
+
+\subsection{H2: sheaf residual provides independent identity information}
+\textbf{Hypothesis.} A regulatory-sheaf residual predicts independently measured lineage deviation or function beyond standard marker-gene distances, cell identity classifiers, and graph smoothness baselines. \textbf{Primary metric.} Incremental held-out predictive log score or predeclared AUROC/AUPRC where the outcome is categorical, with donor-level confidence intervals. \textbf{Falsification.} The residual adds no predictive information, is dominated by marker genes, or changes substantially under small plausible graph perturbations. A simple marker or network model replaces the sheaf component.
+
+\subsection{H3: phase-related features add conditional predictive value}
+\textbf{Hypothesis.} Time-resolved metabolic or transcriptional phase descriptors improve prediction of subsequent chromatin-state change after conditioning on age, treatment, cell cycle, and metabolite abundance. \textbf{Falsification.} No out-of-sample gain, or the estimated phase signal is a sampling artifact. If oscillatory variables are not observed repeatedly, H3 is not tested rather than inferred from cross-sectional data.
+
+\subsection{H4: structured control improves the trade-off}
+\textbf{Hypothesis.} At matched independent molecular/functional improvement, a constrained controller produces lower identity drift, lower risk-proxy excursion, or lower measured control burden than an unconstrained controller under comparable input limits. \textbf{Primary metric.} A predeclared Pareto comparison over target distance, functional outcome, lineage deviation, safety, and input burden. \textbf{Falsification.} CST fails to improve the frontier over simpler MPC or pulsed baselines, or any apparent gain disappears in held-out donors or perturbations.
+
+\subsection{Statistical plan}
+The independent unit is the biological replicate, not the individual cell. Use donor/animal-level stratified splitting and nested cross-validation for hyperparameter selection. Report calibration, uncertainty intervals, missingness, failed optimization runs, and the proportion of target-control problems declared infeasible. For multiple primary hypotheses, apply a prespecified multiplicity correction or a hierarchical testing order. Use negative controls and label permutations to detect leakage. Evaluate cell-type classifiers and lineage-marker panels on data not used in feature selection. If a perturbation dataset has too few biological replicates to provide meaningful confidence bounds, treat it as exploratory and do not promote the result as confirmatory.
+
+\section{Falsification ladder and model-ablation discipline}
+A high-complexity theory can appear successful because each component offers another opportunity to fit noise. CST is therefore governed by a staged falsification ladder:
+\begin{enumerate}
+\item \textbf{Measurement failure:} if modalities cannot be aligned or sample provenance is insufficient, do not fit a joint manifold.
+\item \textbf{Geometry failure:} if the metric is unstable or out-of-sample directionality is not improved, retain a simpler symmetric metric.
+\item \textbf{Sheaf failure:} if the sheaf score adds no independent identity information or is graph-construction sensitive, remove the topology term.
+\item \textbf{Dynamics failure:} if the port-Hamiltonian parameterization is no better calibrated than simpler models, use the simpler model.
+\item \textbf{Reachability failure:} if the desired velocity lies outside the feasible actuation range, report infeasibility rather than increasing control magnitude or relaxing safety silently.
+\item \textbf{Safety-surrogate failure:} if identity or risk scores do not correlate with external functional/pathological endpoints, do not use them as control constraints.
+\item \textbf{Translation failure:} if molecular markers improve without independent function, the result is molecular-state modulation, not demonstrated rejuvenation.
+\end{enumerate}
+
+A component survives only if it makes a reproducible difference against a prespecified baseline. A framework can be useful even if only part of it survives; it should not be protected from falsification by adding more latent variables after an unfavorable result.
+
+\section{Threats to validity and common failure modes}
+\subsection{Latent-space geometry can be an artifact}
+A nonlinear embedding can make Euclidean distances look curved or asymmetric even if the underlying transition structure is not. Metrics should be estimated in a probabilistic model where feasible, checked across embeddings, and evaluated in coordinate-independent terms. When feature scaling changes $\|\beta\|_g$, the Randers condition can be satisfied or violated by a rescaling if units are not carefully defined. Preprocessing is part of the model and must be frozen during testing.
+
+\subsection{Age is a confounder, not a trajectory label}
+Cell populations observed at young and old ages are not necessarily ancestor-descendant samples of each other. Cells may be selectively lost, recruited, proliferate, or change cell-type composition. A path between two means is not proof that a given cell can traverse that path under intervention. The study design should use temporal sampling, perturbations, and/or lineage information to distinguish transition from selection.
+
+\subsection{Cohomology depends on the model complex}
+A topological invariant is invariant relative to specific mathematical structure and transformations. It does not preserve biological identity independently of representation. If nodes, edges, restriction maps, or reference kernels are inferred from noisy data, topological summaries may change because of thresholding rather than biology. The model should quantify uncertainty over complexes and compare the cohomology score with standard graph and marker baselines.
+
