@@ -549,3 +549,93 @@ Cell populations observed at young and old ages are not necessarily ancestor-des
 \subsection{Cohomology depends on the model complex}
 A topological invariant is invariant relative to specific mathematical structure and transformations. It does not preserve biological identity independently of representation. If nodes, edges, restriction maps, or reference kernels are inferred from noisy data, topological summaries may change because of thresholding rather than biology. The model should quantify uncertainty over complexes and compare the cohomology score with standard graph and marker baselines.
 
+\subsection{Thermodynamic language requires thermodynamic evidence}
+The action $\mathcal{A}_F$, learned Hamiltonian $H_\theta$, control energy $\int\|u\|^2dt$, metabolic ATP use, and entropy production are distinct quantities. They should never share the same label without an explicit calibrated mapping. Cell state is open to nutrient supply, signaling, cell division, and environment; any local energy balance must state the boundary of the modeled system. A formal decrease in a neural network's storage function is not evidence of lower entropy production in the biological system.
+
+\subsection{Rare but catastrophic failure is hard to bound}
+A controller optimized under average loss may ignore rare dedifferentiation, clonal expansion, or oncogenic states. A finite dataset may contain no examples of an event that still has nonzero risk. Chance constraints are only as good as the tails represented in the model. For early-stage studies, the framework should be confined to in-silico and ex-vivo hypothesis prioritization, with independent oversight and established assays; it must not be used to recommend untested human interventions.
+
+\section{Safety, ethics, and translational boundary}
+Cellular reprogramming has potential for regenerative medicine but also raises questions about lineage stability, abnormal proliferation, genomic integrity, delivery, tissue mosaicism, durability, and long-term observation. The literature explicitly describes safety concerns and the need for temporal control in partial cellular reprogramming \cite{LongWinding2024,Avelar2025}. A geometric model cannot eliminate these issues by definition.
+
+CST is a research framework, not a treatment protocol. It proposes no human dose, delivery vector, target gene list, clinical schedule, or recommendation to apply OSKM or any substitute. A translational programme would require model validation, appropriate cell-type-specific experimental work, independent pathology, dose-response characterization, replication in relevant animal models where justified, and regulatory/ethical review. The threshold constraints in the model are not established clinical thresholds.
+
+Data governance also matters. Public single-cell datasets can contain sensitive biological information and licensing requirements. A future data release should retain provenance, cite accessions, distinguish derived features from source files, and document exclusions and preprocessing. AI systems should not be represented as having independently conducted experiments or verified claims beyond their available tools. Human investigators retain responsibility for scientific and ethical decisions.
+
+\section{Discussion: the strongest defensible interpretation}
+The intellectual ambition of CST is to make identity-aware rejuvenation a formal control problem rather than a task of moving a molecular age score backward. The mathematical components make different demands on evidence. Information geometry asks whether local statistical distances are meaningful. The directional covector asks whether there is a reproducible asymmetry in observed transition processes. The sheaf model asks whether local regulatory features agree under a documented set of relations. The port-Hamiltonian model asks whether an energy-accounting inductive bias improves dynamical prediction. Counterdiabatic-style control asks whether an auxiliary input can track a feasible trajectory while avoiding unacceptable excursions. None of these questions can be answered by the elegance of the equation alone.
+
+The asymmetry term is potentially useful because epigenetic transitions can be path-dependent and history-dependent. But a state transition inferred from data may be asymmetric because of sampling design, proliferation, cell selection, or unmeasured inputs. The framework explicitly leaves open a symmetric outcome. The sheaf construction is potentially useful because regulatory features have local constraints and global consistency requirements; however, a low sheaf residual is not itself a validated biological identity score. Its scientific meaning depends on edge evidence and external prediction.
+
+The port-Hamiltonian structure imposes a disciplined accounting identity that may regularize learning. The model's learned storage function, however, should not be called thermodynamic work unless calibrated to physical units and boundaries. Likewise, counterdiabatic control is a design inspiration. In a living cell, the actuators may be weak, slow, nonlocal, stochastic, or unavailable. The correct outcome of the controller may often be ``not reachable with current perturbations.'' That is a useful scientific conclusion, not an algorithmic failure.
+
+The synthetic experiment illustrates the logic of constrained optimization: if a constructed model makes high input improve one coordinate while quadratically worsening identity and risk proxies, an aggressive controller will trade away those proxies for endpoint gain. A constrained pulse controller gives a different point on the trade-off frontier. That observation is nearly tautological given the selected equations. Its value is software verification and an explicit example for testing pipeline behavior. It provides no estimate of the real biological trade-off. A future data-grounded model may show that gentle pulses are not superior, that the proposed risk proxy is inadequate, or that the target state is not reachable while maintaining function.
+
+We also reject the assumption that rejuvenation must reverse time or return a cell to an exact youthful transcriptome. A cell may benefit from restoration of specific functions while retaining disease history or age-associated features that are adaptive. An optimal state could be functional, lineage-stable, and safer without minimizing every molecular age statistic. The reference distribution must be defined scientifically for the biological context rather than chosen as the youngest point in a dataset.
+
+\subsection{A practical route to scientific value}
+The immediate useful outcome is an experimental-computational protocol: first measure a narrow lineage and intervention context; then verify the direction field, then quantify identity using independent endpoints, and only then test constrained control. A small validated module can be more informative than a large unvalidated architecture. For example, if a sheaf residual improves prediction of cardiomyocyte electrophysiological fidelity after partial reprogramming while controlling for standard marker panels, that would justify further study of the topology term. If it does not, a simpler marker-based constraint is preferable.
+
+CST's potential value is therefore conditional and testable. It offers a language for separating trajectory geometry, regulatory agreement, control effort, and function while making it harder to confuse a successful simulation with biological discovery. Such separation is essential if AI-assisted modeling is to help rather than overstate longevity science.
+
+\section{Conclusion}
+We have defined Counterdiabatic Sheaf Transport as a candidate framework for identity-constrained, energy-aware modeling of partial cellular rejuvenation. The formulation combines an information-geometric state space, a regular Randers-Finsler path cost, a regulatory cellular-sheaf residual, port-Hamiltonian-inspired dynamics, and reachability-aware constrained control. We show the mathematical conditions required by the model, explain why the directional covector cannot simply be equated with entropy production, and demonstrate why neither cohomology nor a learned storage function guarantees biological safety.
+
+A synthetic four-state simulation and a 300-replicate parameter/noise stress test confirm the implementation and illustrate how endpoint optimization can differ from safety-constrained control in a toy model. They do not validate the model against living cells. No biological dataset or experiment was analyzed. The next test is a staged, donor-aware empirical study comparing each CST component with simpler baselines and independent function and safety endpoints. If the directional term, sheaf score, or structured controller does not improve held-out performance, that component should be removed.
+
+The bold claim worth testing is not that topology makes cancer impossible, or that one geometry explains aging. It is that a careful mathematical separation of state change, lineage coherence, energy accounting, control reachability, and independently measured function could improve how rejuvenation hypotheses are designed and falsified. The scientific merit of CST depends entirely on whether that separation yields better experiments and reproducible evidence.
+
+\clearpage
+\appendix
+\section{Mathematical notes and conditions}
+\subsection{Randers positivity and directionality}
+For a positive-definite matrix $g$, denote $\alpha(v)=\sqrt{g(v,v)}$ and $\beta(v)=\beta_i v^i$. By Cauchy-Schwarz under the $g$ pairing,
+\begin{equation}
+|\beta(v)|\leq \|\beta\|_g\,\alpha(v).
+\end{equation}
+If $\|\beta\|_g<1$, then for $v\neq0$,
+\begin{equation}
+F(v)=\alpha(v)+\beta(v)\geq (1-\|\beta\|_g)\alpha(v)>0.
+\end{equation}
+This establishes positivity. The standard Randers regularity result additionally requires the metric and covector fields to meet the stated smoothness assumptions. These conditions should be checked numerically at every evaluated state. If a fitted covector norm approaches one, model uncertainty is large, or the metric becomes ill-conditioned, the estimator should shrink $\beta$ toward zero or revert to a symmetric baseline.
+
+The directional gap $F(v)-F(-v)=2\beta(v)$ is an algebraic identity. It does not prove that the physical process is irreversible: the asymmetry may reflect biased sampling, an external field, or a coarse-grained state description. Physical entropy production is a distinct measurable quantity requiring a thermodynamic model.
+
+\subsection{Sheaf consistency residual and kernel}
+Let $\delta:C^0\rightarrow C^1$ be a linear coboundary operator on finite-dimensional inner-product spaces. Then $L^0=\delta^*\delta$ is positive semidefinite because
+\begin{equation}
+\langle z,L^0z\rangle=\langle z,\delta^*\delta z\rangle=\|\delta z\|^2\geq0.
+\end{equation}
+If $L^0z=0$, then $0=\langle z,L^0z\rangle=\|\delta z\|^2$, hence $\delta z=0$. Conversely, if $\delta z=0$, then $L^0z=0$. Therefore $\ker L^0=\ker\delta$, the space of global sections in this discrete sheaf model. This statement is mathematical and exact for the chosen sheaf. Its relation to lineage identity is an empirical modeling claim, not a consequence of the kernel identity.
+
+\subsection{Port-Hamiltonian storage balance}
+For deterministic dynamics $\dot x=(J-R)\nabla H+Bu+d$ with $J=-J^\top$ and $R\succeq0$, the chain rule gives
+\begin{align}
+\dot H &= \nabla H^\top\dot x\\
+&=\nabla H^\top J\nabla H-\nabla H^\top R\nabla H+\nabla H^\top Bu+\nabla H^\top d\\
+&=-\nabla H^\top R\nabla H+y^\top u+\nabla H^\top d,
+\end{align}
+where $y=B^\top\nabla H$. The first term vanishes because a scalar $w^\top Jw$ equals its own negative and therefore is zero. For $d=0$, this yields \cref{eq:energy_balance}. With explicit time dependence in $H$, process noise, state estimation error, or stochastic calculus, additional terms appear. Thus the compact balance is not directly applicable to an arbitrary neural ODE with noise without the corresponding derivation.
+
+\subsection{Exact tracking feasibility}
+For instantaneous exact tracking, the residual $r=\dot\gamma_*-f_\theta(x,z)$ must belong to the column space of $B_\theta(x)$. If it does not, no input can produce the requested velocity at that state, regardless of optimization quality. The regularized least-squares solution in \cref{eq:control_lsq} minimizes residual mismatch plus effort. Its solution must still respect box constraints, rate limits, uncertainty, and state-dependent safety constraints. A pseudoinverse alone does not supply any of these guarantees.
+
+\section{Model variables and units}
+\begin{longtable}{p{0.17\textwidth}p{0.35\textwidth}p{0.40\textwidth}}
+\caption{Notation and interpretation.}\label{tab:notation}\\
+\toprule Symbol & Definition & Status / requirement \\
+\midrule
+\endfirsthead
+\toprule Symbol & Definition & Status / requirement \\
+\midrule
+\endhead
+$x$ & Latent cell-state representation & Estimated with uncertainty; not directly observed. \\
+$Y$ & Multimodal measurements & Assay-specific counts, images, contact features, metabolites, function. \\
+$\M$ & Local latent-state manifold & Approximation requiring stable local geometry. \\
+$g_{ij}$ & Information/Riemannian metric & Estimated; must be regularized and tested across embeddings. \\
+$\beta_i$ & Directional covector & Hypothesis estimated from temporal/perturbation evidence; not entropy production by definition. \\
+$F(x,v)$ & Randers-Finsler path norm & Valid only if $g$ positive definite and $\|\beta\|_g<1$. \\
+$\G$ & Regulatory graph or cell complex & Must track edge evidence and uncertainty. \\
+$\Fsh$ & Cellular sheaf over $\G$ & Model of local regulatory representations/compatibility. \\
+$\delta^0$ & Degree-zero coboundary & Maps local sections to compatibility residuals. \\
+$L_{\Fsh}^0$ & Sheaf Laplacian $\delta^{0*}\delta^0$ & Positive semidefinite for declared inner products. \\
