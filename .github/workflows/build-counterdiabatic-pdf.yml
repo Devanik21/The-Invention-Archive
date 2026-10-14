@@ -1,0 +1,67 @@
+name: Build Counterdiabatic Sheaf Transport PDF
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Theoretical Research/Counterdiabatic_Sheaf_Transport_on_Finslerian_Chromatin_Manifolds/paper.tex"
+      - "Theoretical Research/Counterdiabatic_Sheaf_Transport_on_Finslerian_Chromatin_Manifolds/simulate_model.py"
+      - "Theoretical Research/Counterdiabatic_Sheaf_Transport_on_Finslerian_Chromatin_Manifolds/requirements.txt"
+      - ".github/workflows/build-counterdiabatic-pdf.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Reproduce synthetic figures
+        env:
+          RELEASE_DIR: "Theoretical Research/Counterdiabatic_Sheaf_Transport_on_Finslerian_Chromatin_Manifolds"
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install -r "$RELEASE_DIR/requirements.txt"
+          python "$RELEASE_DIR/simulate_model.py" > "$RELEASE_DIR/simulation_run.log"
+
+      - name: Compile manuscript
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper.tex
+          working_directory: "Theoretical Research/Counterdiabatic_Sheaf_Transport_on_Finslerian_Chromatin_Manifolds"
+
+      - name: Validate PDF and remove staging files
+        env:
+          RELEASE_DIR: "Theoretical Research/Counterdiabatic_Sheaf_Transport_on_Finslerian_Chromatin_Manifolds"
+        run: |
+          set -euo pipefail
+          test -s "$RELEASE_DIR/paper.pdf"
+          test "$(head -c 5 "$RELEASE_DIR/paper.pdf")" = "%PDF-"
+          rm -rf "$RELEASE_DIR/assets"
+          find "$RELEASE_DIR" -maxdepth 1 -type f ! -name README.md ! -name paper.pdf -delete
+          rm -f .github/workflows/build-counterdiabatic-pdf.yml
+
+      - name: Commit the requested two-file release
+        env:
+          RELEASE_DIR: "Theoretical Research/Counterdiabatic_Sheaf_Transport_on_Finslerian_Chromatin_Manifolds"
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- "$RELEASE_DIR" ".github/workflows/build-counterdiabatic-pdf.yml"
+          if git diff --cached --quiet; then
+            echo "No release changes detected."
+            exit 0
+          fi
+          git commit -m "Add Counterdiabatic Sheaf Transport PDF"
+          git push origin HEAD:main
