@@ -209,3 +209,73 @@ Three targets must remain distinct:
 A lower predicted epigenetic age can occur without functional improvement; an age score can also change due to cell-composition or assay-distribution shifts. The primary endpoint in any real experiment must therefore be a prespecified functionally meaningful outcome or a hierarchy of molecular and functional outcomes with controlled multiplicity. CST does not identify a latent age coordinate with literal organismal youth.
 
 \subsection{Direction is not causation}
+RNA velocity and temporal optimal transport can supply directional hypotheses, but they depend on sampling, kinetic assumptions, and the observed cell-state distribution. Cross-sectional datasets do not directly identify within-cell trajectories. A vector field fitted from observational single-cell measurements can be confounded by selection, cell death, proliferation, batch differences, and missing states. Perturbation data and repeated time points are required to attribute a transition to a candidate mechanism. In CST, directional geometry will be learned only where there is sufficient evidence for an oriented transition model; otherwise, the Riemannian baseline should be used.
+
+\subsection{Identifiability questions}
+The following parameters may be confounded: metric curvature and latent-coordinate distortion; directional drift and uneven sampling; sheaf maps and graph-edge uncertainty; dissipation and unobserved driving; and intervention effectiveness and measurement delay. Identifiability will be evaluated by simulation-based parameter recovery, posterior or profile-likelihood diagnostics, intervention contrasts, and held-out prediction. If multiple parameter sets yield indistinguishable observables but divergent control recommendations, the controller is not identified well enough for intervention ranking.
+
+\section{Directional state geometry: a cautious Randers-Finsler construction}
+A Riemannian metric assigns a local quadratic cost to infinitesimal state displacements. A Finsler metric permits a more general direction-dependent norm. A Randers form is
+\begin{equation}
+F(x,v)=\sqrt{g_{ij}(x)v^iv^j}+\beta_i(x)v^i,
+\label{eq:randers}
+\end{equation}
+where $g(x)$ is positive definite and $\beta(x)$ is a covector field. The standard condition
+\begin{equation}
+\|\beta(x)\|_{g}:=\sqrt{g^{ij}(x)\beta_i(x)\beta_j(x)}<1
+\label{eq:randers_cond}
+\end{equation}
+ensures that $F$ is positive for nonzero velocities and gives a strongly convex Randers structure under the usual regularity assumptions \cite{Bao2000,Shen2001}. Units must be handled consistently: the norm of the covector must be dimensionless relative to the metric scaling. In practice, the state variables and time need explicit normalization, or scale parameters must be included.
+
+\begin{proposition}[Directional asymmetry of a Randers cost]
+For any $x$ and velocity $v$ for which \cref{eq:randers} is defined,
+\begin{equation}
+F(x,v)-F(x,-v)=2\beta_i(x)v^i.
+\end{equation}
+\end{proposition}
+\begin{proof}
+The quadratic term is even in velocity because $g_{ij}v^iv^j=g_{ij}(-v^i)(-v^j)$. The linear term changes sign. Subtracting gives twice the linear term.\end{proof}
+
+This proposition establishes an algebraic asymmetry; it does not establish that aging is a geodesic or that a fitted $\beta$ is an entropy-production field. The biological hypothesis is narrower: a directional covector estimated from time-resolved transitions may capture a reproducible difference in transition cost between forward and reverse state changes. It should be compared with a symmetric metric and with a directional diffusion/drift model.
+
+\subsection{What is the directional covector?}
+We define $\beta$ as an empirically estimated covector field linked to the asymmetry in observed transitions after correcting for sampling and covariates. Estimation might proceed by fitting a local transition model and comparing forward and reverse conditional transition likelihoods, or by minimizing a held-out transition prediction objective under the norm constraint \cref{eq:randers_cond}. The covector is not set equal to entropy production. Entropy production is typically a scalar rate or trajectory functional requiring physical fluxes and thermodynamic forces; it cannot be identified from transcriptomic expression alone. A physically motivated entropy estimate may contribute to a separate cost term if its units, boundaries, and assumptions are documented.
+
+\subsection{Trajectory action}
+For a path $\gamma:[0,T]\rightarrow\M$ define the geometric action
+\begin{equation}
+\mathcal{A}_{F}[\gamma]=\int_0^T F(\gamma(t),\dot\gamma(t))^2\,dt.
+\label{eq:path_action}
+\end{equation}
+The endpoint target is a distribution, not necessarily a single point. A complete objective can combine geometric path action, target-distribution discrepancy, control effort, and penalties:
+\begin{align}
+\mathcal{J}[\gamma,u] ={}& d_{F,T}(\gamma(T),\mu_{\mathrm{young},c})^2 + \lambda_F\mathcal{A}_{F}[\gamma]
++\lambda_u\int_0^T \|u(t)\|^2\,dt \nonumber\\
+&+\lambda_I\int_0^T \pos{r_I(\gamma(t))-\epsilon_I}^2\,dt
++\lambda_R\int_0^T \pos{r_R(\gamma(t))-\epsilon_R}^2\,dt.
+\label{eq:joint_obj}
+\end{align}
+Here $d_{F,T}$ is a target discrepancy under the chosen geometry, $r_I$ is the identity-surrogate residual and $r_R$ is the risk-surrogate residual. The nonnegative weights are tuning parameters selected without leaking held-out outcomes. $\mathcal{A}_F$ is a path-regularity cost, not automatically physical work. Actual intervention work, ATP consumption, entropy production, or toxicity must be measured separately when available.
+
+\subsection{Interpretation of the asymmetry}
+If the estimated $\beta$ is stable, improves held-out transition prediction, and remains directionally consistent across technical and biological replicates, it may help characterize barriers to state reversal. If the estimated directional term is unstable across resampling, changes sign under plausible embeddings, or gives no incremental predictive value, its contribution should be removed. A nonzero $\beta$ can also arise from incomplete sampling or nonstationary conditions; directionality alone is not evidence of irreversibility at the microscopic level.
+
+\section{A regulatory cellular sheaf as an identity diagnostic}
+A cellular sheaf assigns vector spaces to cells of a graph or cell complex and linear restriction maps that express how local data are compared on shared structure. In CST, let $\G$ be a finite complex derived from a regulatory graph or hypergraph. For each vertex $v$, let $\Fsh(v)$ be a vector space of local regulatory features; for each edge or higher-dimensional cell $e$, let $\Fsh(e)$ be a space of compatibility summaries. A restriction map $\rho_{v\to e}:\Fsh(v)\rightarrow\Fsh(e)$ encodes the agreed representation of a local feature on that regulatory relation.
+
+For simplicity, consider a graph-level cellular sheaf. The degree-zero cochain space is
+\begin{equation}
+C^0(\G;\Fsh)=\bigoplus_{v\in V}\Fsh(v),\qquad
+C^1(\G;\Fsh)=\bigoplus_{e\in E}\Fsh(e).
+\end{equation}
+The coboundary operator $\delta^0:C^0\rightarrow C^1$ computes disagreement between restrictions of local sections. The degree-zero sheaf Laplacian is
+\begin{equation}
+L_{\Fsh}^{0}=(\delta^0)^*\delta^0,
+\label{eq:sheaf_laplacian}
+\end{equation}
+where $*$ is the adjoint under the selected inner products. Then
+\begin{equation}
+\ker(L_{\Fsh}^{0})=\ker(\delta^0)\cong H^0(\G;\Fsh),
+\label{eq:H0}
+\end{equation}
+for this finite-dimensional setting. Elements of this kernel are globally consistent sections under the specified local restrictions \cite{HansenGhrist2019}.
