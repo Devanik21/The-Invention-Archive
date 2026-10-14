@@ -639,3 +639,74 @@ $\G$ & Regulatory graph or cell complex & Must track edge evidence and uncertain
 $\Fsh$ & Cellular sheaf over $\G$ & Model of local regulatory representations/compatibility. \\
 $\delta^0$ & Degree-zero coboundary & Maps local sections to compatibility residuals. \\
 $L_{\Fsh}^0$ & Sheaf Laplacian $\delta^{0*}\delta^0$ & Positive semidefinite for declared inner products. \\
+$r_I$ & Identity surrogate residual & Requires external validation against lineage/function. \\
+$H_\theta$ & Learned storage/Hamiltonian function & Not physical free energy unless calibrated. \\
+$J_\theta$ & Skew-symmetric interconnection matrix & Structural inductive bias. \\
+$R_\theta$ & Dissipation matrix & Must be constrained positive semidefinite. \\
+$B_\theta$ & Control input matrix & Encodes actuation range and limitations. \\
+$u$ & Candidate rejuvenation input & Only meaningful for a specified experimental intervention. \\
+$v$ & Illustrative repair input in toy simulation & Synthetic-only variable; not a specific therapy. \\
+$r_R$ & Risk surrogate & Requires validation against independent safety endpoints. \\
+$\mu_{\mathrm{young},c}$ & Lineage-specific reference distribution & Frozen before evaluation; not necessarily a single ideal state. \\
+\bottomrule
+\end{longtable}
+
+\section{Reproducibility and reporting checklist}
+The accompanying script \texttt{simulate\_model.py} is self-contained apart from NumPy and Matplotlib. It sets the seed to 20261014 and records all base coefficients in \texttt{assets/synthetic\_summary.json}. To reproduce the numerical demonstration, run:
+\begin{verbatim}
+python simulate_model.py
+\end{verbatim}
+The script regenerates figures and summary output. The output should be labeled synthetic in every downstream report.
+
+A future biological study should add the following before fitting a controller:
+\begin{enumerate}
+\item machine-readable dataset and sample manifest with checksums, licenses, and exclusions;
+\item frozen preprocessing and reference-state definition;
+\item donor/animal/study-level train-validation-test splits;
+\item an independently measured lineage function endpoint;
+\item a prespecified adverse-state panel and pathological follow-up appropriate to the experiment;
+\item calibration and uncertainty coverage for state and transition predictions;
+\item ablation of the Finsler term, sheaf term, phase variables, and port-Hamiltonian structure;
+\item a report of infeasible target paths and failed runs;
+\item versioned code, parameter configs, seeds, and environment lockfile;
+\item clear separation between model-predicted benefits and measured experimental outcomes.
+\end{enumerate}
+
+\section{Limitations summary}
+This preprint does not contain a biological analysis, new empirical measurements, a trained cell-state controller, or an intervention recommendation. The formal and simulation components support an executable research specification but do not establish molecular causality. The sheaf model is a proposed regularizer; the directional metric is a proposed estimator family; the port-Hamiltonian parameterization is a candidate model class; and the controller is an optimization blueprint. Existing work already covers partial reprogramming, information-geometric cell states, regulatory networks, phase separation, and energy-structured learning. The novelty and usefulness of their integration remain open. The work should be treated as a hypothesis-bearing methods preprint and subjected to expert review before any empirical or translational use.
+
+\begin{thebibliography}{99}
+\bibitem{LopezOtin2023} C. L\'opez-Ot\'in, M. A. Blasco, L. Partridge, M. Serrano, and G. Kroemer. Hallmarks of aging: An expanding universe. \emph{Cell}, 186(2):243--278, 2023. doi:10.1016/j.cell.2022.11.001.
+\bibitem{TabulaMuris2020} The Tabula Muris Consortium. A single-cell transcriptomic atlas characterizes ageing tissues in the mouse. \emph{Nature}, 583:590--595, 2020. doi:10.1038/s41586-020-2496-1.
+\bibitem{Ocampo2016} A. Ocampo et al. In vivo amelioration of age-associated hallmarks by partial reprogramming. \emph{Cell}, 167(7):1719--1733.e12, 2016. doi:10.1016/j.cell.2016.11.052.
+\bibitem{Lu2020} Y. Lu et al. Reprogramming to recover youthful epigenetic information and restore vision. \emph{Nature}, 588:124--129, 2020. doi:10.1038/s41586-020-2975-4.
+\bibitem{Browder2022} K. C. Browder et al. In vivo partial reprogramming alters age-associated molecular changes during physiological aging in mice. \emph{Nature Aging}, 2:243--253, 2022. doi:10.1038/s43587-022-00183-2.
+\bibitem{Avelar2025} R. A. Avelar, D. Palmer, A. Y. Kulaga, and G. Fuellen. Conserved biological processes in partial cellular reprogramming: Relevance to aging and rejuvenation. \emph{Ageing Research Reviews}, 108:102737, 2025. doi:10.1016/j.arr.2025.102737.
+\bibitem{LongWinding2024} A. D. Y\"ucel and V. N. Gladyshev. The long and winding road of reprogramming-induced rejuvenation. \emph{Nature Communications}, 15:1941, 2024. doi:10.1038/s41467-024-46020-5.
+\bibitem{Larson2017} A. G. Larson et al. Liquid droplet formation by HP1$\alpha$ suggests a role for phase separation in heterochromatin. \emph{Nature}, 547:236--240, 2017. doi:10.1038/nature22822.
+\bibitem{Strom2017} A. R. Strom et al. Phase separation drives heterochromatin domain formation. \emph{Nature}, 547:241--245, 2017. doi:10.1038/nature22989.
+\bibitem{Akilli2024} N. Akilli, T. Cheutin, and G. Cavalli. Phase separation and inheritance of repressive chromatin domains. \emph{Current Opinion in Genetics \& Development}, 2024. doi:10.1016/j.gde.2024.102201.
+\bibitem{LLPSAging2024} H. Wang, J. Tang, S. Yan, C. Li, Z. Li, Z. Xiong, Z. Li, and C. Tu. Liquid-liquid phase separation in aging: Novel insights in the pathogenesis and therapeutics. \emph{Ageing Research Reviews}, 102:102583, 2024. doi:10.1016/j.arr.2024.102583.
+\bibitem{Zhu2022} D. Zhu, X. Li, and Y. Tian. Mitochondrial-to-nuclear communication in aging: An epigenetic perspective. \emph{Trends in Biochemical Sciences}, 47(8):645--659, 2022. doi:10.1016/j.tibs.2022.03.008.
+\bibitem{NADChromatin2016} Y. Nakahata and Y. Bessho. The circadian NAD$^+$ metabolism: Impact on chromatin remodeling and aging. \emph{International Journal of Molecular Sciences}, 17(10):1629, 2016. doi:10.3390/ijms17101629.
+\bibitem{Schiebinger2019} G. Schiebinger et al. Optimal-transport analysis of single-cell gene expression identifies developmental trajectories in reprogramming. \emph{Cell}, 176(4):928--943.e22, 2019. doi:10.1016/j.cell.2019.01.006.
+\bibitem{LaManno2018} G. La Manno et al. RNA velocity of single cells. \emph{Nature}, 560:494--498, 2018. doi:10.1038/s41586-018-0414-6.
+\bibitem{scVelo2020} V. Bergen et al. Generalizing RNA velocity to transient cell states through dynamical modeling. \emph{Nature Biotechnology}, 38:1408--1414, 2020. doi:10.1038/s41587-020-0591-3.
+\bibitem{Huang2026} M. Huang et al. Geometric quantification of cell phenotype transition manifolds with information geometry. \emph{Cell Systems}, 17(5):101564, 2026. doi:10.1016/j.cels.2026.101564.
+\bibitem{HansenGhrist2019} J. Hansen and R. Ghrist. Toward a spectral theory of cellular sheaves. \emph{Journal of Applied and Computational Topology}, 3:315--358, 2019. doi:10.1007/s41468-019-00038-7.
+\bibitem{Bao2000} D. Bao, S.-S. Chern, and Z. Shen. \emph{An Introduction to Riemann-Finsler Geometry}. Springer, New York, 2000. doi:10.1007/978-1-4612-1268-3.
+\bibitem{Shen2001} Z. Shen. \emph{Lectures on Finsler Geometry}. World Scientific, Singapore, 2001.
+\bibitem{Sels2017} D. Sels and A. Polkovnikov. Minimizing irreversible losses in quantum systems by local counterdiabatic driving. \emph{Proceedings of the National Academy of Sciences}, 114(20):E3909--E3916, 2017. doi:10.1073/pnas.1619826114.
+\bibitem{Desai2021} S. A. Desai, M. Mattheakis, D. Sondak, P. Protopapas, and S. J. Roberts. Port-Hamiltonian neural networks for learning explicit time-dependent dynamical systems. \emph{Physical Review E}, 104:034312, 2021. doi:10.1103/PhysRevE.104.034312.
+\bibitem{Cherifi2020} K. Cherifi. An overview on recent machine learning techniques for port Hamiltonian systems. \emph{Physica D: Nonlinear Phenomena}, 411:132620, 2020. doi:10.1016/j.physd.2020.132620.
+\bibitem{Waddington1957} C. H. Waddington. \emph{The Strategy of the Genes}. George Allen \& Unwin, London, 1957.
+\bibitem{Horvath2013} S. Horvath. DNA methylation age of human tissues and cell types. \emph{Genome Biology}, 14:R115, 2013. doi:10.1186/gb-2013-14-10-r115.
+\bibitem{Weinreb2020} C. Weinreb et al. Lineage tracing on transcriptional landscapes links state to fate during differentiation. \emph{Science}, 367(6479):eaaw3381, 2020. doi:10.1126/science.aaw3381.
+\bibitem{Demirplak2003} M. Demirplak and S. A. Rice. Assisted adiabatic passage revisited. \emph{Journal of Physical Chemistry A}, 107:9937--9945, 2003. doi:10.1021/jp030708a.
+\bibitem{Berry2009} M. V. Berry. Transitionless quantum driving. \emph{Journal of Physics A: Mathematical and Theoretical}, 42:365303, 2009. doi:10.1088/1751-8113/42/36/365303.
+\bibitem{FourDNUCLEOME} 4D Nucleome Consortium. The 4D Nucleome project: A resource for understanding the structure and function of the human genome. Project information and data portal. \url{https://www.4dnucleome.org/}.
+\bibitem{ENCODE} ENCODE Project Consortium. Expanded encyclopaedias of DNA elements in the human and mouse genomes. \emph{Nature}, 583:699--710, 2020. doi:10.1038/s41586-020-2493-4.
+\bibitem{GEO} National Center for Biotechnology Information. Gene Expression Omnibus (GEO): Functional genomics data repository. \url{https://www.ncbi.nlm.nih.gov/geo/}.
+\end{thebibliography}
+
+\end{document}
