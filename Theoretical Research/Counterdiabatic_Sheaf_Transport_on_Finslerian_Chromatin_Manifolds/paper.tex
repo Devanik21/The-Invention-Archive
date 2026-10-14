@@ -369,3 +369,93 @@ subject to \cref{eq:ph}, $u_t\in\mathcal{U}$, initial state distribution $x_0\si
 A robust version optimizes against a set of plausible dynamics $\Theta$ or worst-case risk:
 \begin{equation}
 \min_u\max_{\theta\in\Theta}\mathcal{J}_{\theta}(u),\qquad x_t\in\mathcal{S}_{\mathrm{safe},\theta}\text{ for plausible }\theta.
+\end{equation}
+This version may be computationally expensive and can produce conservative controls. A practical study should begin with small systems and compare nominal model predictive control, constrained linear-quadratic control where applicable, a neural ODE policy, and a simple pulsed baseline. The counterdiabatic component has value only if it improves the risk-benefit frontier under matched targets and comparable control resources.
+
+\subsection{Proposed algorithm}
+The algorithm is modular by design. The state estimator produces a posterior distribution rather than one exact $x_t$. The geometry module estimates the metric and directional covector. The sheaf module produces a consistency residual and its uncertainty. The dynamics module predicts states under candidate inputs. The optimizer selects a bounded action or declares infeasibility. During the control proposal, no action is applied to a biological system until independent experimentation has calibrated the relevant transitions and guard functions.
+
+\begin{algorithm}[htbp]
+\caption{CST inference and candidate-control loop (research blueprint)}
+\begin{algorithmic}[1]
+\Require Matched time-resolved data $Y$, lineage label $c$, reference distributions, candidate input set $\mathcal{U}$
+\Ensure Predictive model, risk/identity diagnostics, and either a candidate policy or an infeasibility report
+\State Fit a measurement model and latent state estimator with donor/study-aware validation.
+\State Estimate the information metric $g$ and test a symmetric baseline before fitting directional $\beta$.
+\State Retain $\beta$ only if regularity, directionality, and held-out prediction checks pass.
+\State Construct a documented regulatory complex $\G$ and uncertain restriction maps; compute $r_I(x)$.
+\State Fit unconstrained and port-Hamiltonian-inspired dynamics with identical data splits.
+\State Calibrate risk surrogates using independent functional and pathological observations where available.
+\State Propose a reference path from the aged-state distribution toward the lineage-matched target distribution.
+\State Solve the bounded least-squares control problem with identity and risk guards.
+\If{reachability or uncertainty constraints fail}
+  \State Return ``infeasible / insufficiently identified'' and the active failure reason.
+\Else
+  \State Return candidate schedule, uncertainty envelope, model version, and preregistered validation tests.
+\EndIf
+\State Evaluate only on held-out donors, perturbations, and endpoints; record all negative results and ablations.
+\end{algorithmic}
+\end{algorithm}
+
+\section{Synthetic demonstration: methods and results}
+\textbf{Data status.} This section uses a hand-constructed four-state differential equation and a fixed random seed. No biological data, measured parameter, training atlas, or published single-cell count was used. The numerical experiment exists to verify code execution and to expose the consequences of selected structural assumptions. It is not evidence that CST predicts or safely controls living cells.
+
+\subsection{Toy dynamics}
+The dimensionless state is $x=(a,\ell,r,\phi)$, where $a$ is an abstract age-associated coordinate (lower is labelled the target direction), $\ell$ is an identity-deviation proxy, $r$ is an oncogenic-stress proxy, and $\phi$ is a phase-decoherence proxy. These names are labels within the toy system, not biological biomarkers. The dynamics are
+\begin{align}
+\dot a &= k_a+k_{a\phi}\phi-\gamma_a a-\eta_a u,\\
+\dot\ell&=-\gamma_\ell\ell+\eta_\ell u^2-\rho_\ell v,\\
+\dot r&=-\gamma_r r+\eta_r u^2-\rho_r v,\\
+\dot\phi&=-\gamma_\phi\phi+\eta_\phi u,
+\label{eq:toy}
+\end{align}
+where $u\geq0$ is a generic reprogramming input and $v\geq0$ is a generic repair input. The quadratic coupling $u^2$ means high inputs carry larger identity- and risk-proxy costs in this deliberately chosen example. Nothing in biology compels this exact equation; different models may produce different rankings.
+
+The starting state is $(1.0,0.02,0.01,0.18)$ and the integration interval is $T=12$ dimensionless time units with step $\Delta t=0.01$. The base coefficients are $k_a=0.018$, $k_{a\phi}=0.040$, $\gamma_a=0.10$, $\eta_a=0.24$, $\gamma_\ell=0.40$, $\eta_\ell=0.55$, $\rho_\ell=0.45$, $\gamma_r=0.38$, $\eta_r=0.45$, $\rho_r=0.35$, $\gamma_\phi=0.20$, and $\eta_\phi=0.25$. All coefficients are synthetic and unitless. The baseline has no control; the aggressive protocol applies $u=0.90$ from $t=0.4$ through $4.4$ without repair; the constrained protocol applies $u=0.62$ in pulses when the identity and risk proxies are below illustrative thresholds and uses a feedback repair input. Details are fully specified in \texttt{simulate\_model.py}.
+
+\subsection{Deterministic demonstration}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth]{assets/synthetic_trajectories.png}
+\caption{Synthetic trajectories under the selected toy model. The age-associated coordinate is a model label; identity and risk axes are synthetic proxies. The dotted lines are illustrative guardrails, not clinical thresholds.}
+\label{fig:trajectories}
+\end{figure}
+The aggressive policy lowers the endpoint age-associated coordinate from 1.0 to approximately 0.193, but its maximum identity-deviation proxy reaches 0.894 and its maximum risk proxy reaches 0.753. The constrained pulsed policy ends at approximately 0.325, with maximum identity deviation 0.056 and maximum risk proxy 0.049. The no-control baseline ends at approximately 0.442 with the lowest input effort. These numbers follow from the constructed coefficients. They demonstrate a logical point---endpoint optimization and constrained optimization can choose different trajectories---not a biological effect size.
+
+\begin{table}[htbp]
+\centering
+\caption{Deterministic outcomes of the toy model (unitless).}
+\begin{tabularx}{\textwidth}{lrrrrrr}
+\toprule
+Policy & Final $a$ & Peak $\ell$ & Peak $r$ & Peak $\phi$ & $\int u^2dt$ & $\int v^2dt$ \\
+\midrule
+Baseline & 0.442 & 0.020 & 0.010 & 0.180 & 0.000 & 0.000 \\
+Aggressive & 0.193 & 0.894 & 0.753 & 0.695 & 3.248 & 0.000 \\
+Constrained pulse & 0.325 & 0.056 & 0.049 & 0.234 & 0.823 & 0.160 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Parameter/noise stress test}
+We generated 300 replicates. For each replicate, every base coefficient was independently multiplied by a factor sampled uniformly between 0.8 and 1.2, and independent normalized process noise was added to the state derivatives. This is a deliberately broad but arbitrary robustness check, not a posterior distribution learned from biology. All results use seed 20261014. The experiment checks whether the toy model's qualitative trade-off persists under its chosen parameter perturbations.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\textwidth]{assets/synthetic_monte_carlo.png}
+\caption{Monte Carlo distributions across 300 synthetic parameter/noise replicates. The boxes do not represent biological uncertainty; they summarize only the stated toy simulation.}
+\label{fig:mc}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Monte Carlo medians and 5th--95th percentile ranges across 300 synthetic replicates.}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+Policy & Quantity & Median [5th, 95th percentile] \\
+\midrule
+Baseline & Final age coordinate & 0.443 [0.370, 0.536] \\
+Baseline & Maximum identity deviation & 0.020 [0.020, 0.020] \\
+Baseline & Maximum risk proxy & 0.010 [0.010, 0.011] \\
+Aggressive & Final age coordinate & 0.192 [0.118, 0.277] \\
+Aggressive & Maximum identity deviation & 0.874 [0.693, 1.099] \\
+Aggressive & Maximum risk proxy & 0.756 [0.623, 0.934] \\
