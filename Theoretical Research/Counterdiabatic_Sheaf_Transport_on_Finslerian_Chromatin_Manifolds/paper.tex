@@ -279,3 +279,93 @@ where $*$ is the adjoint under the selected inner products. Then
 \label{eq:H0}
 \end{equation}
 for this finite-dimensional setting. Elements of this kernel are globally consistent sections under the specified local restrictions \cite{HansenGhrist2019}.
+
+\subsection{What sheaf consistency does and does not mean}
+The equation above is a mathematical description of consistency given a chosen graph, feature spaces, maps, and inner products. Biological interpretation is supplied by how those ingredients are constructed and validated. If edges are based on correlations, the sheaf residual measures agreement under correlational constraints, not causal regulatory control. If the graph excludes important enhancers, transcription factors, or feedback loops, a low residual may only indicate that the model omitted disagreements. If the sheaf is rebuilt after treatment, a changing kernel can make apparent invariance vacuous unless the comparison is transported through a documented correspondence.
+
+Most importantly, \textbf{$H^0$ preservation does not prove that a cell cannot become cancerous}. Neoplastic transformation can occur through mutations, genomic instability, altered signaling, epigenetic changes, or other routes not represented in the sheaf. It is invalid to describe a sheaf cohomology invariant as a hard theorem of oncological safety. CST uses the sheaf as one regulatory-consistency diagnostic, to be triangulated with independent lineage markers, cell-cycle behavior, genome stability, morphology, and functional assays.
+
+\subsection{Identity reference and admissible set}
+Let $z=\Phi(x)$ map the latent state into the cochain representation. A reference sheaf and reference section set $\mathcal{Q}_{c}$ are constructed for lineage $c$ from multiple healthy reference donors and, where appropriate, known functional states. Define
+\begin{equation}
+r_I(x)=\underbrace{\|\delta^0\Phi(x)\|_{W}^{2}}_{\text{regulatory inconsistency}}
++\lambda_m\underbrace{d_m(\Phi(x),\mathcal{Q}_{c})^2}_{\text{distance to reference identity}}
++\lambda_f\underbrace{d_f(q(x),\mathcal{Q}_{c}^{\mathrm{func}})^2}_{\text{functional deviation}},
+\label{eq:identity_residual}
+\end{equation}
+where $W$ is a declared positive-semidefinite weighting matrix and the last two terms compare molecular markers and independent function with a lineage-specific reference. The admissible identity region is
+\begin{equation}
+\Iset=\{x:r_I(x)\leq\epsilon_I\}.
+\end{equation}
+This is more defensible than requiring a raw coordinate vector to lie in the orthogonal complement of a fixed harmonic subspace. It also acknowledges that healthy states vary and that perfect preservation of every baseline coordinate would prevent legitimate adaptation.
+
+\subsection{A limitation of hard projection}
+Projection onto $\ker L_{\Fsh}^0$ can be useful as a regularizer, but a hard projection can suppress biologically meaningful responses or amplify errors from a misspecified graph. It can also be discontinuous if the estimated rank of $L$ changes with noise or treatment. We therefore recommend a soft residual penalty and a sensitivity analysis over graph construction, edge confidence, and regularization. A hard invariant should only be introduced when external evidence supports it and the chosen state representation demonstrates stable, meaningful equivalence across conditions.
+
+\section{Port-Hamiltonian-inspired cell dynamics}
+Port-Hamiltonian systems decompose dynamics into interconnection, dissipation, and external input. For a differentiable scalar function $H_\theta(x)$, define
+\begin{equation}
+\dot{x}=\big(J_\theta(x)-R_\theta(x)\big)\nabla H_\theta(x)+B_\theta(x)u+d_\theta(x,z)+\xi(t),
+\label{eq:ph}
+\end{equation}
+where $J_\theta(x)=-J_\theta(x)^\top$, $R_\theta(x)\succeq0$, $B_\theta$ is an input matrix, $d_\theta$ represents measured context or unmodeled drift, and $\xi$ is process noise. With output $y=B_\theta^\top\nabla H_\theta$, in a deterministic time-invariant model with $d=0$ and no noise,
+\begin{equation}
+\dot H_\theta=-\nabla H_\theta^\top R_\theta\nabla H_\theta+y^\top u.
+\label{eq:energy_balance}
+\end{equation}
+The skew-symmetric interconnection contributes no net change to $H_\theta$ because $v^\top Jv=0$ for any real vector $v$; the $R$ term is nonpositive; the input port may add or remove energy relative to this learned function.
+
+The model is useful because it constrains the learned dynamics instead of allowing an arbitrary neural vector field. But a learned $H_\theta$ is not automatically measured Gibbs free energy, ATP cost, or cellular enthalpy. Unless the model is grounded in physically calibrated state variables and energetic measurements, $H_\theta$ should be described as a learned storage/Lyapunov-like function. Likewise, $J$ and $R$ are a parameterization of an inductive bias; fitting them does not establish that mitochondria are a conservative oscillator and chromatin drift is a purely dissipative process.
+
+\subsection{Metabolic and phase variables as candidate features}
+A candidate state may include oscillator phases $\vartheta_k$ for metabolic or transcriptional signals. A Kuramoto-inspired summary is
+\begin{equation}
+Z(t)=\frac{1}{N}\sum_{k=1}^{N}w_k\ee^{\ii\vartheta_k(t)},\qquad r_{\phi}(t)=1-|Z(t)|,
+\label{eq:phase_order}
+\end{equation}
+where weights $w_k$ and phase definitions are specified before testing. This is only meaningful when time series support stable phase estimation; single snapshots cannot recover oscillation phase. The synchrony statistic is not a universal aging measure. It should be evaluated as an additional covariate and tested for incremental predictive value over metabolite levels, circadian phase, mitochondrial function, cell cycle, and environmental context.
+
+\subsection{Model classes and baselines}
+We recommend three nested model classes: (1) a conventional state-space or neural ODE without structured energy constraints; (2) the port-Hamiltonian-inspired model with input-output structure; and (3) the same model plus candidate phase features. All should share comparable data splits, parameter budgets where possible, uncertainty calibration, and missing-modality handling. A structured model should be retained only if it improves out-of-sample prediction, calibration, or intervention-effect estimation, not because it looks more physically sophisticated.
+
+\section{Counterdiabatic-style control with reachability checks}
+Suppose the learned uncontrolled drift is
+\begin{equation}
+f_\theta(x,z)=\big(J_\theta(x)-R_\theta(x)\big)\nabla H_\theta(x)+d_\theta(x,z).
+\end{equation}
+Given a proposed reference path $\gamma_*(t)$, the instantaneous residual velocity is $r(t)=\dot\gamma_*(t)-f_\theta(\gamma_*(t),z_t)$. A formal exact input would solve $B_\theta(x)u=r$. This is feasible only if $r\in\operatorname{Range}(B_\theta(x))$. A Moore-Penrose pseudoinverse returns a least-squares solution when exact matching is impossible; it does not guarantee safety, boundedness, or feasibility.
+
+We therefore define an approximate control step
+\begin{equation}
+u^*(t)=\argmin_{u\in\mathcal{U}}\left\{\|B_\theta u-r\|_{W_u}^{2}+\lambda_u\|u\|_2^2\right\}
+\label{eq:control_lsq}
+\end{equation}
+subject to the state dynamics, input amplitude and slew constraints, identity set $x_t\in\Iset$, risk guards, and an uncertainty margin. The allowed input set $\mathcal{U}$ represents real candidate perturbations only after their directions, delivery mechanism, dose range, and observed effects are characterized. It should not mix transcript-factor pulses, bioelectric stimulation, and small molecules as though they were interchangeable controls.
+
+\subsection{Safety constraints are independent of topology}
+Let $h_k(x)\leq0$ denote empirically defined guard functions for such outcomes as sustained proliferation, a lineage-specific function score, DNA-damage responses, or transformation-related phenotypes. The set
+\begin{equation}
+\Ssafe=\{x:r_I(x)\leq\epsilon_I,\ h_k(x)\leq0\text{ for all }k\}
+\end{equation}
+can be used in model-predictive control or chance-constrained optimization. In a stochastic model, a chance constraint could be written
+\begin{equation}
+\Pr\left(\sup_{t\in[0,T]}h_k(x_t)>0\right)\leq\alpha_k.
+\end{equation}
+A guarantee is only as credible as the probability model, calibration, coverage of rare events, and validation data. Without a sufficient biological safety dataset, these are design targets rather than certified bounds. No in-silico model can establish absence of tumorigenicity.
+
+\subsection{The control target may be infeasible}
+Identity preservation, target closeness, and low control energy can be mutually incompatible. The framework must report the attainable Pareto frontier rather than return a single overconfident ``optimal'' intervention. A solution should be declared infeasible if no allowed control reaches a prespecified target while satisfying constraints under uncertainty. The target can then be relaxed only through a transparent scientific decision and a preregistered revision, not by silent tuning after seeing outcomes.
+
+\section{Joint optimization problem}
+Let $u(\cdot)$ be an admissible control and let $x(\cdot)$ satisfy the model. A risk-aware objective is
+\begin{align}
+\min_{u(\cdot)}\quad & \E\left[ D_{\mathrm{target}}(x_T,\mu_{\mathrm{young},c}) + \lambda_F\int_0^T F(x_t,\dot{x}_t)^2\,dt \right.\nonumber\\
+&\left.+\lambda_u\int_0^T\|u_t\|^2dt+\lambda_I\int_0^T\pos{r_I(x_t)-\epsilon_I}^2dt\right.\nonumber\\
+&\left.+\lambda_R\int_0^T\pos{r_R(x_t)-\epsilon_R}^2dt+\lambda_S\,\mathcal{R}_{\mathrm{uncertainty}}(u)\right]
+\label{eq:objective_full}
+\end{align}
+subject to \cref{eq:ph}, $u_t\in\mathcal{U}$, initial state distribution $x_0\sim\mu_{\mathrm{aged},c}$, identity constraints, and risk guardrails. $D_{\mathrm{target}}$ must not be chosen solely because it is easy for the model to optimize; at least one endpoint must remain independent of the state representation used for control.
+
+A robust version optimizes against a set of plausible dynamics $\Theta$ or worst-case risk:
+\begin{equation}
+\min_u\max_{\theta\in\Theta}\mathcal{J}_{\theta}(u),\qquad x_t\in\mathcal{S}_{\mathrm{safe},\theta}\text{ for plausible }\theta.
