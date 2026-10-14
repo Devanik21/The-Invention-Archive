@@ -138,3 +138,74 @@ Class & Meaning in this paper \\
 Established background & Results already supported in cited literature, such as the existence of cell-type-specific aging signatures and selected partial-reprogramming effects. \\
 Mathematical identity & A claim that follows from explicit algebraic assumptions, such as $F(v)-F(-v)=2\beta(v)$ for a Randers norm. \\
 Modeling choice & A proposed representation selected for usefulness, not a discovered fact, such as a learned phase-decoherence coordinate. \\
+\\
+Empirical hypothesis & A prediction that must be tested on independent biological observations. \\
+Synthetic demonstration & Behavior observed only in a constructed simulation with chosen parameters. \\
+Unsupported stronger claim & A proposition explicitly rejected as unproven, such as cohomology invariance being sufficient to prevent cancer. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Prior art and the boundary of novelty}
+A serious framework must acknowledge the mature traditions it borrows from. This paper is built by connecting these traditions in a testable way; it does not claim to have invented them.
+
+\subsection{Epigenetic aging and partial reprogramming}
+DNA methylation clocks and cell-type-specific aging signatures have made it possible to quantify some age-associated molecular changes, but such measures are not complete descriptions of biological age or function. The Tabula Muris Senis consortium generated a single-cell transcriptomic atlas across the lifespan of mice covering 23 tissues, providing a foundational resource for cross-tissue aging analyses \cite{TabulaMuris2020}. The atlas also illustrates a key modeling constraint: cellular composition and within-cell expression can both change with age. Analyses that do not separate these effects can confuse shifts in cell population proportions with within-lineage state transitions.
+
+Partial cellular reprogramming is likewise prior art. Ocampo et al., Lu et al., and Browder et al. report encouraging but context-bounded results in mice \cite{Ocampo2016,Lu2020,Browder2022}. Reviews emphasize both the potential of partial reprogramming and remaining questions about mechanism, durability, and safety \cite{Avelar2025,LongWinding2024}. CST does not frame OSKM as a uniformly harmful sledgehammer: outcomes depend on factors, delivery, duration, tissue, and biological context. The framework instead asks how to quantify a target state change while separately observing lineage and safety.
+
+\subsection{Chromatin organization and phase separation}
+The idea that chromatin organization is influenced by condensate-like phase behavior is supported by experiments on HP1 and heterochromatin domain formation \cite{Larson2017,Strom2017}. Reviews discuss roles of phase separation and the inheritance of repressive chromatin states \cite{Akilli2024,LLPSAging2024}. However, the broad analogy between age-related chromatin change and spinodal coarsening is not sufficient to prove that a particular thermodynamic phase-separation process drives aging in vivo. CST therefore treats chromatin condensation, domain boundaries, and associated features as potential observed coordinates, not as a universal mechanism. A claimed phase transition would require measured order parameters, finite-size and noise analyses, hysteresis or scaling signatures, and independent replication.
+
+\subsection{Mitochondria, metabolism, and nuclear state}
+Mitochondrial metabolites and stress signals participate in mitochondria-to-nucleus communication and can influence epigenetic regulation \cite{Zhu2022}. Circadian NAD$^+$ metabolism has also been linked to chromatin remodeling \cite{NADChromatin2016}. These data motivate measurement of metabolic context and temporal variation. They do not establish the stronger chain proposed in the original concept: mitochondrial membrane-potential and NAD$^+$/NADH rhythms phase-lock all chromatin organization, their decoherence causes spinodal coarsening, and this is the primary arrow of biological aging. CST treats that causal chain as a specific hypothesis to test against alternatives, not a premise to assume.
+
+\subsection{Information geometry and optimal transport}
+Information geometry supplies metrics on statistical models, including Fisher information metrics. In cell biology, single-cell state transitions have been analyzed using optimal transport and inferred temporal trajectories \cite{Schiebinger2019}, and RNA velocity estimates short-term transcriptional dynamics from spliced and unspliced RNA under model assumptions \cite{LaManno2018,scVelo2020}. Importantly, a recent 2026 study introduced SCIM, using Fisher information geometry and RNA velocity to quantify cell-phenotype transition manifolds \cite{Huang2026}. Thus, using information geometry for cell-state trajectories is not new. CST's question is whether an explicitly asymmetric path cost, tied to a separately measured drift field and combined with structural and safety constraints, adds predictive or control value beyond these precedents.
+
+\subsection{Cellular sheaves and cohomology}
+Cellular sheaves have been developed as a way to represent local data and compatibility conditions across a cell complex. Hansen and Ghrist provide a spectral treatment relating sheaf Laplacians to cohomology \cite{HansenGhrist2019}. In this paper, a sheaf assigns vector spaces to regulatory loci and complexes and restriction maps that encode a selected abstraction of consistency across regulatory relations. This is a new proposed application within CST, but no priority claim is made that it is the first possible use of a sheaf in gene regulation, and no claim is made that cohomology constitutes a sufficient representation of biological identity.
+
+\subsection{Counterdiabatic control and port-Hamiltonian learning}
+Counterdiabatic driving originated in quantum control as a method for tracking prescribed state changes while suppressing unwanted transitions, and approximate protocols can be derived under constraints on available control terms \cite{Sels2017}. Exact tracking is not generally available under arbitrary actuation constraints. Port-Hamiltonian systems separate interconnection structure, dissipation, and input ports; learned port-Hamiltonian neural networks have been used to model time-dependent dynamical systems \cite{Desai2021,Cherifi2020}. CST transfers these modeling principles into a proposed cell-state control problem. Such an analogy is mathematical, not evidence that a cell literally obeys a quantum adiabatic theorem or that the learned Hamiltonian is physical free energy.
+
+\subsection{Novelty statement}
+The defensible novelty claim is a \emph{specific, falsifiable integration proposal}: an asymmetric state-space path cost, sheaf-based regulatory-consistency diagnostics, port-Hamiltonian-inspired dynamics, reachability-aware counterdiabatic-style control, and independent identity/function/safety tests are evaluated as one framework. A scoped literature search through 14 October 2026 found close prior work on every component and direct precedent for information-geometric cell manifolds. We did not perform a formal systematic review of all publications, patent filings, or unpublished work. Absolute novelty and priority are therefore unverified. The core result of this paper is the explicit formulation and validation plan rather than a claim of experimental discovery.
+
+\section{Problem formulation and assumptions}
+Let $c$ index a cell type or lineage, $d$ a donor or biological replicate, and $t$ a measured time or age. The desired state is not an arbitrary low-age point in latent space; it is a reference distribution $\mu_{\mathrm{young},c}$ conditional on lineage and assay. The state at time $t$ is latent and only partially observed. Define
+\begin{equation}
+Y_t = \mathcal{H}(x_t, z_t, q_t; \eta) + \epsilon_t,
+\label{eq:observation}
+\end{equation}
+where $x_t$ is the molecular state, $z_t$ denotes external and metabolic context, $q_t$ denotes functional phenotype, $\eta$ denotes platform and batch effects, and $\epsilon_t$ denotes measurement noise. $Y_t$ may include RNA counts, chromatin accessibility, chromatin contacts, histone/DNA modifications, metabolite measurements, imaging features, and functional readouts. These modalities have different noise models and cannot be treated as interchangeable coordinates without a validated integration method.
+
+We use a low-dimensional latent representation $x_t\in\M\subseteq\R^d$ only as an approximation to the relevant state manifold. The latent chart may be local and can fail across poorly sampled transitions. A coordinate transformation should not change a properly defined geometric result; neural embeddings and dimension reduction, in contrast, can distort distances and orientation unless checked. The target distribution, features, normalization, and state-estimation procedure must be frozen before held-out evaluation.
+
+\subsection{Assumption ledger}
+\begin{enumerate}
+\item \textbf{Measurement sufficiency (A1).} The measured features resolve the molecular and functional dimensions material to the tested lineage and intervention. This assumption is unlikely to hold universally; it must be tested with residual diagnostics and additional modalities.
+\item \textbf{Local smoothness (A2).} Within a restricted state region, the latent manifold admits a local smooth metric and differentiable drift approximation. Discrete fate switches, clonal selection, and rare states may violate it.
+\item \textbf{Directional identifiability (A3).} Directional bias is estimated from time-ordered or perturbation data, not inferred from cross-sectional age labels alone.
+\item \textbf{Regulatory graph reliability (A4).} The regulatory relations used to define sheaf maps are sufficiently supported by perturbation, chromatin-contact, or carefully qualified evidence. Correlation alone is not causal dependence.
+\item \textbf{Control observability and reachability (A5).} The state variables needed for constraints are observable at the relevant update cadence, and the intended target is reachable under the available perturbations. Failure of reachability must be reported, not hidden by a large control signal.
+\item \textbf{Safety surrogate validity (A6).} The identity and risk surrogates correlate with independent functional and pathological endpoints. They cannot replace direct safety measurement.
+\end{enumerate}
+
+The framework is not valid merely because an optimizer converges. The assumptions form a checklist against which the data and the model must be audited. When an assumption fails, the appropriate result is model restriction, uncertainty inflation, or rejection of the relevant component.
+
+\section{Observables, state representation, and identifiability}
+The state vector should be constructed around measurable features rather than metaphors. A candidate feature stack includes: (i) cell-type-specific expression modules and transcription-factor activity estimates; (ii) chromatin accessibility and methylation summaries; (iii) 3D contact features such as compartment scores or reproducible domain-level statistics; (iv) chromatin-protein localization or condensate descriptors where valid imaging exists; (v) metabolic context including NAD$^+$/NADH-related measures and mitochondrial function; (vi) independent lineage-specific functional assays; and (vii) adverse-state indicators such as sustained cell-cycle re-entry, DNA-damage responses, loss of lineage markers, apoptosis, and transformation-associated phenotypes. Which measurements are required depends on the biological system.
+
+Not every experiment can measure every modality longitudinally in the same cell. Multi-omic assays often consume the cell, while repeated imaging can perturb the system and may only observe proxies. Consequently, a practical architecture may combine matched populations, lineage tracing, repeated live-cell measurements, and time-staggered destructive assays. The mapping between measurements and latent state must include uncertainty and technical batch effects.
+
+\subsection{Separating chronological age, molecular age, and function}
+Three targets must remain distinct:
+\begin{itemize}
+\item chronological age is an experimental covariate or elapsed time;
+\item molecular age is a score trained to correlate with age or a reference molecular state;
+\item functional rejuvenation is improvement or restoration of a relevant phenotype, such as contractility, barrier function, electrophysiological fidelity, stress tolerance, or tissue repair.
+\end{itemize}
+A lower predicted epigenetic age can occur without functional improvement; an age score can also change due to cell-composition or assay-distribution shifts. The primary endpoint in any real experiment must therefore be a prespecified functionally meaningful outcome or a hierarchy of molecular and functional outcomes with controlled multiplicity. CST does not identify a latent age coordinate with literal organismal youth.
+
+\subsection{Direction is not causation}
