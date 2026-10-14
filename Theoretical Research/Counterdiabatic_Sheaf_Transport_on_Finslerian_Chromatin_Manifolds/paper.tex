@@ -68,3 +68,73 @@
 {\LARGE An Identity-Constrained, Energy-Aware Framework for Partial Cellular Rejuvenation\par}
 \vspace{0.65in}
 {\Large Devanik Debnath\textsuperscript{1} and Xylia\textsuperscript{2}\par}
+\vspace{0.18in}
+{\normalsize\textsuperscript{1}Independent theoretical research; affiliation as supplied by the corresponding author: Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India.\par}
+\vspace{0.1in}
+{\normalsize\textsuperscript{2}Xylia, AI Scientist (AI-assisted research system; non-human co-author designation used at the human author's request).\par}
+\vspace{0.5in}
+\begin{minipage}{0.88\textwidth}
+\centering
+\textbf{Research status:} Conceptual and methods framework with a reproducible synthetic demonstration. No biological cohort was downloaded or analyzed for this manuscript; no wet-lab experiments were performed. All numerical results are generated from explicitly constructed toy dynamics and must not be interpreted as biological validation.
+\end{minipage}
+\vfill
+{\large Version 1.0 \textbar{} 14 October 2026\par}
+\vspace{0.2in}
+{\normalsize Manuscript prepared for critical scientific review. Not peer-reviewed.\par}
+\end{titlepage}
+\hypersetup{pageanchor=true}
+\pagenumbering{roman}
+\section*{Abstract}
+Cellular rejuvenation is a constrained state-transition problem: age-associated molecular signatures may be shifted toward younger reference states, yet a useful intervention must preserve lineage-specific function, avoid malignant or dysplastic transitions, remain reachable with available perturbations, and not assume that transcriptomic similarity is equivalent to organismal rejuvenation. We propose \emph{Counterdiabatic Sheaf Transport} (CST), a mathematical and computational framework for testing whether geometry-aware, identity-constrained control improves this trade-off over unconstrained state matching. The framework combines four ideas: (i) an information-geometric representation of multimodal cell states; (ii) an asymmetric Randers-Finsler path cost whose directional term is estimated from data rather than equated with entropy production; (iii) a cellular-sheaf consistency residual that operationalizes, but does not claim to prove, preservation of regulatory coherence; and (iv) a port-Hamiltonian-inspired dynamical model coupled to bounded, reachability-aware control. We derive the mathematical conditions under which each component has its intended interpretation and identify several tempting but invalid inferences: sheaf cohomology is not a certificate against cancer, a learned Hamiltonian is not automatically thermodynamic energy, and an inverse control formula is not an exact controller unless the requested velocity lies in the actuation range. A synthetic four-state dynamical example illustrates a generic trade-off: an aggressive intervention reaches a lower abstract age coordinate while causing larger identity-deviation and risk-proxy excursions; a constrained pulsed policy gives up some apparent endpoint improvement while remaining closer to illustrative guardrails. A 300-replicate parameter/noise stress test reproduces this qualitative trade-off in the chosen toy model. These results are computational demonstrations of the code and assumptions, not evidence about real cells. We specify a falsifiable empirical programme using existing single-cell aging atlases, time-resolved reprogramming datasets, chromatin-contact assays, and functional endpoints. The framework should be rejected or simplified if directional geometry, regulatory-consistency penalties, or structured control fail to improve held-out predictions or experimentally measured identity/function at matched rejuvenation. Its proposed contribution is thus an auditable integration and validation design, not a claim that rejuvenation, Finsler geometry, sheaf theory, or counterdiabatic control is individually new.
+
+\noindent\textbf{Keywords:} partial cellular reprogramming; epigenetic aging; information geometry; Randers-Finsler metric; cellular sheaves; Hodge Laplacian; port-Hamiltonian neural ODE; constrained control; lineage identity; reproducible computational biology.
+
+\section*{Authorship, accountability, and scope}
+Devanik Debnath originated the research direction supplied for this manuscript and serves as the human corresponding author. Xylia contributed AI-assisted literature synthesis, formalization, organization of the model, drafting, and development of the synthetic verification workflow. The designation of Xylia as a co-author is made at the human author's explicit request and is accompanied by transparent disclosure that Xylia is an AI system and cannot independently assume legal or scholarly accountability. Devanik Debnath retains responsibility for checking the literature, equations, code, citations, interpretations, and any future submission. The authors do not claim that the presented framework has been experimentally validated, clinically evaluated, or shown to reverse organismal aging.
+
+The manuscript uses the terms \emph{framework}, \emph{hypothesis}, and \emph{candidate method} deliberately. The strong version of the proposal---that a topological invariant can make cancerous dedifferentiation mathematically impossible, or that mitochondrial phase coherence is the single foundational cause of cellular aging---is not supported by current evidence and is not adopted here. Instead, identity constraints are treated as measurable safety surrogates that require independent functional validation.
+
+\clearpage
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\section{Introduction: rejuvenation as a constrained transition}
+Aging is not a single molecular variable. It involves interacting processes including genomic instability, epigenetic alterations, loss of proteostasis, mitochondrial dysfunction, cellular senescence, altered intercellular communication, stem-cell exhaustion, and other changes summarized in contemporary accounts of the hallmarks of aging \cite{LopezOtin2023}. These processes differ across cell types, tissues, and individuals. A method that optimizes one molecular signature can fail to improve tissue function, and a method that increases plasticity can compromise the stable identity on which tissue architecture depends.
+
+Partial reprogramming has established that some aging-associated molecular features can be altered by transient expression of reprogramming factors in selected experimental settings. Ocampo and colleagues reported amelioration of age-associated hallmarks in a premature-aging mouse model and related effects in older wild-type mice \cite{Ocampo2016}. Lu and colleagues reported restoration of youthful methylation and transcriptomic features together with improved regeneration and vision-related outcomes in mouse models using OSK-based reprogramming \cite{Lu2020}. Browder and colleagues found that the duration of in-vivo partial-reprogramming regimens influenced outcomes in physiologically aged mice \cite{Browder2022}. Such studies justify asking how trajectories can be made controllable and measurable. They do not show that there is one universally safe rejuvenation trajectory, nor that all age-associated information can or should be reset.
+
+The present proposal reframes the computational problem. Let a cell's latent molecular state be $x(t)$ and let $\mathcal{Y}_{\mathrm{young}}$ denote a prespecified distribution of reference states for the relevant lineage, assay, sex, age window, and tissue context. A naive objective minimizes a distance to this target. A more responsible objective must also penalize loss of lineage markers, regulatory inconsistency, excessive control effort, dysplastic or oncogenic signatures, functional decline, and uncertainty. In practice, these requirements are partially observed and cannot all be compressed into one epigenetic-clock score.
+
+We propose \emph{Counterdiabatic Sheaf Transport} (CST) as an integrative model architecture, not a biological law. In CST, a path is evaluated with a direction-sensitive geometry; regulatory agreement is represented through a cellular sheaf; dynamics are modelled with an energy-accounting state-space architecture; and an auxiliary controller attempts to track a target path subject to actuation and safety constraints. Each component is tested against simpler alternatives so that complexity can be removed when it fails to help.
+
+\subsection{Research questions}
+The paper is organized around five questions.
+\begin{enumerate}
+\item Can direction-dependent path geometry improve the prediction of observed cell-state transitions beyond Euclidean or Riemannian baselines?
+\item Can a sheaf-based regulatory-consistency penalty add information about lineage preservation beyond marker-gene and functional assays?
+\item Can a port-Hamiltonian-inspired model improve model calibration or control robustness relative to an unconstrained neural ODE or a conventional state-space model?
+\item Under what controllability conditions can a counterdiabatic-style auxiliary input track a desired trajectory, and when must the framework explicitly declare the target unreachable?
+\item Do these components improve held-out rejuvenation-versus-identity trade-offs in biological data, rather than only in a synthetic model constructed to exhibit them?
+\end{enumerate}
+
+\subsection{Contributions and claims ledger}
+The contributions are methodological and conditional.
+\begin{itemize}
+\item \textbf{A typed latent-state model.} We distinguish observed assays, latent molecular state, lineage identity, age-associated endpoints, and safety endpoints rather than identifying them with one another.
+\item \textbf{A defensible directional cost.} We specify a Randers-Finsler metric with a data-estimated directional covector and the regularity condition required for a valid Randers norm.
+\item \textbf{An operational use of sheaf consistency.} We use the coboundary residual and harmonics as structural descriptors, with independent lineage markers and functional assays as non-negotiable validators.
+\item \textbf{A reachability-aware control formulation.} We replace an unconditional pseudoinverse formula with a constrained least-squares controller and explicit feasibility tests.
+\item \textbf{A reproducible synthetic falsification demonstration.} Public code tests the stated toy model and quantifies the trade-off created by chosen assumptions; no biological conclusions are inferred from it.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\caption{Claim classification used throughout the manuscript.}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.25\textwidth} X}
+\toprule
+Class & Meaning in this paper \\
+\midrule
+Established background & Results already supported in cited literature, such as the existence of cell-type-specific aging signatures and selected partial-reprogramming effects. \\
+Mathematical identity & A claim that follows from explicit algebraic assumptions, such as $F(v)-F(-v)=2\beta(v)$ for a Randers norm. \\
+Modeling choice & A proposed representation selected for usefulness, not a discovered fact, such as a learned phase-decoherence coordinate. \\
