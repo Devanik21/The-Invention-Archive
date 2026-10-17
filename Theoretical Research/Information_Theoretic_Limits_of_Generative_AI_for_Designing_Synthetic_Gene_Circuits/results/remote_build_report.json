@@ -1,0 +1,28 @@
+{
+  "timestamp_utc": "2026-10-17T13:58:04.482360+00:00",
+  "source_commit": "8730f5e434c5b9f3642b98c3fdb9cb0b2c748afd",
+  "run_id": "39038633554",
+  "status": "passed",
+  "pdf": {
+    "pages": 15,
+    "bytes": 414458,
+    "signature": "passed",
+    "text_check": "passed"
+  },
+  "visuals": {
+    "tables": 7,
+    "figures_referenced": 8,
+    "svg_assets": 8,
+    "pdf_figure_assets": 8
+  },
+  "checks": {
+    "model_tests": "passed",
+    "python_syntax": "passed",
+    "deploy_self_tests": "passed",
+    "metadata": "passed",
+    "bibliography": "passed",
+    "README_math": "passed",
+    "research_records": "present",
+    "wet_lab_validation": "not performed"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "timestamp_utc": "2026-10-17T13:58:04.482360+00:00",
+  "status": "passed",
+  "steps": [
+    "Python syntax checks",
+    "10 mathematical assertions",
+    "4 temporary-fixture deployment self-tests",
+    "source/metadata/bibliography checks",
+    "current-source LaTeX build",
+    "PDF and visual-minimum checks"
+  ],
+  "pdf_pages": 15,
+  "table_environments": 7,
+  "figure_assets": 8,
+  "biological_validation": "not performed"
+}

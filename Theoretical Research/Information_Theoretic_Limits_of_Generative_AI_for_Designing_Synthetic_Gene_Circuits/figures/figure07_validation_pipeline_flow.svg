@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="405pt" height="189.036pt" viewBox="0 0 405 189.036" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-10-17T13:56:51.296290</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 189.036 
+L 405 189.036 
+L 405 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 18.918 109.79865 
+L 77.508 109.79865 
+L 77.508 72.6885 
+L 18.918 72.6885 
+z
+" clip-path="url(#p3a4b4aaca8)" style="fill: #edf3f8; stroke: #364152; stroke-width: 1.2"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 95.085 109.79865 
+L 153.675 109.79865 
+L 153.675 72.6885 
+L 95.085 72.6885 
+z
+" clip-path="url(#p3a4b4aaca8)" style="fill: #edf3f8; stroke: #364152; stroke-width: 1.2"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 171.252 109.79865 
+L 229.842 109.79865 
+L 229.842 72.6885 
+L 171.252 72.6885 
+z
+" clip-path="url(#p3a4b4aaca8)" style="fill: #edf3f8; stroke: #364152; stroke-width: 1.2"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 247.419 109.79865 
+L 306.009 109.79865 
+L 306.009 72.6885 
+L 247.419 72.6885 
+z
+" clip-path="url(#p3a4b4aaca8)" style="fill: #edf3f8; stroke: #364152; stroke-width: 1.2"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 323.586 109.79865 
+L 382.176 109.79865 
+L 382.176 72.6885 
+L 323.586 72.6885 
+z
+" clip-path="url(#p3a4b4aaca8)" style="fill: #edf3f8; stroke: #364152; stroke-width: 1.2"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'" transform="translate(25.2805 88.97195)">Target spec</text>
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'" transform="translate(28.513 97.9302)">+ context</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'" transform="translate(102.219375 88.97195)">Generative</text>
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'" transform="translate(107.205625 97.9302)">proposal</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'" transform="translate(175.01825 88.97195)">Model-based</text>
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'" transform="translate(189.80075 97.9302)">score</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'" transform="translate(251.359 88.97195)">Independent</text>
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'" transform="translate(257.02025 97.9302)">validation</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'" transform="translate(331.8885 88.97195)">Release or</text>
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'" transform="translate(341.525375 97.9302)">reject</text>
+   </g>
+   <g id="patch_7">
+    <path d="M 80.680385 91.243575 
+Q 85.907571 91.243575 89.793115 91.243575 
+" style="fill: none; stroke: #526170; stroke-width: 1.2; stroke-linecap: round"/>
+    <path d="M 86.193115 89.443575 
+L 89.793115 91.243575 
+L 86.193115 93.043575 
+" style="fill: none; stroke: #526170; stroke-width: 1.2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 156.847385 91.243575 
+Q 162.074571 91.243575 165.960115 91.243575 
+" style="fill: none; stroke: #526170; stroke-width: 1.2; stroke-linecap: round"/>
+    <path d="M 162.360115 89.443575 
+L 165.960115 91.243575 
+L 162.360115 93.043575 
+" style="fill: none; stroke: #526170; stroke-width: 1.2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 233.014385 91.243575 
+Q 238.241571 91.243575 242.127115 91.243575 
+" style="fill: none; stroke: #526170; stroke-width: 1.2; stroke-linecap: round"/>
+    <path d="M 238.527115 89.443575 
+L 242.127115 91.243575 
+L 238.527115 93.043575 
+" style="fill: none; stroke: #526170; stroke-width: 1.2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 309.181385 91.243575 
+Q 314.408571 91.243575 318.294115 91.243575 
+" style="fill: none; stroke: #526170; stroke-width: 1.2; stroke-linecap: round"/>
+    <path d="M 314.694115 89.443575 
+L 318.294115 91.243575 
+L 314.694115 93.043575 
+" style="fill: none; stroke: #526170; stroke-width: 1.2; stroke-linecap: round"/>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: middle" x="202.5" y="35.57835" transform="rotate(-0 202.5 35.57835)">Proposed workflow — each score remains conditional on its evidence</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: middle" x="202.5" y="153.45765" transform="rotate(-0 202.5 153.45765)">A high generative score is a triage signal, not experimental confirmation.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p3a4b4aaca8">
+   <rect x="7.2" y="7.2" width="390.6" height="174.636"/>
+  </clipPath>
+ </defs>
+</svg>

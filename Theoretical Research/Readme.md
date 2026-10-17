@@ -4,6 +4,7 @@ Research preprints are stored in isolated release directories. Each release incl
 
 | Release | Title | Type | Path |
 |---|---|---|---|
+| 2026.10.17 | Two Information Channels, One Design Limit | Information-theoretic framework preprint | [Information_Theoretic_Limits_of_Generative_AI_for_Designing_Synthetic_Gene_Circuits](Information_Theoretic_Limits_of_Generative_AI_for_Designing_Synthetic_Gene_Circuits/) |
 | 2026.10.10 | Functorial Epigenetic Realignment (FER) | Geometric-control preprint | [FER release](Functorial_Epigenetic_Realignment_FER_Reversing_Topological_Drift_via_Information_Geometric_Optimal_Transport_and_Mechanotransductive_Acoustic_Holography/) |
 | 2026.10.10 | The Artificial Paracrine System | Robust-control preprint | [APS release](The_Artificial_Paracrine_System_Robust_Control_of_Extracellular_Vesicle_Signaling_Under_Biological_Uncertainty/) |
 | 2026.10.10 | Source-Channel Identifiability in Aging Biomolecular Communication | Information-theoretic audit | [Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit](Source_Channel_Identifiability_in_Aging_Biomolecular_Communication_An_Information_Theoretic_Audit/) |

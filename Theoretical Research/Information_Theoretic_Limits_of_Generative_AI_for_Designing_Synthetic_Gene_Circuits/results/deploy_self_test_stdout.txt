@@ -1,0 +1,24 @@
+{
+  "timestamp_utc": "2026-10-17T13:56:51.491988+00:00",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "exact-nine-file manifest accepts fixture",
+      "status": "passed"
+    },
+    {
+      "name": "extra-root-file detection",
+      "status": "passed"
+    },
+    {
+      "name": "SHA-256 deterministic",
+      "status": "passed"
+    },
+    {
+      "name": "math delimiter detection",
+      "status": "passed"
+    }
+  ],
+  "fixture_is_temporary": true,
+  "real_repository_touched": false
+}

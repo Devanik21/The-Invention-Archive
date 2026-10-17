@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "Please cite the theoretical preprint and include the archived version identifier."
+title: "Two Information Channels, One Design Limit: An Information-Theoretic Framework for Generative AI in Synthetic Gene-Circuit Design"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+    affiliation: "National Institute of Technology Agartala, India"
+version: "2026.10.17-02"
+date-released: "2026-10-17"
+type: other
+abstract: >-
+  A theoretical information-theoretic framework separates generative proposal
+  uncertainty from context-dependent biological realization uncertainty in
+  synthetic gene-circuit design. Numerical examples are explicitly synthetic
+  and do not establish experimental performance.
+keywords:
+  - synthetic biology
+  - information theory
+  - generative models
+  - gene regulatory circuits
+  - uncertainty quantification
+license: CC-BY-4.0
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+url: "https://github.com/Devanik21/The-Invention-Archive"
+preferred-citation:
+  type: other
+  title: "Two Information Channels, One Design Limit: An Information-Theoretic Framework for Generative AI in Synthetic Gene-Circuit Design"
+  authors:
+    - family-names: Debnath
+      given-names: Devanik
+  year: 2026

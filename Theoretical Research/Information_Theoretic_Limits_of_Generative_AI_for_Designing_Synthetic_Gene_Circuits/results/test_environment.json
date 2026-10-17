@@ -1,0 +1,13 @@
+{
+  "timestamp_utc": "2026-10-17T13:58:04.482360+00:00",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "dependencies": {
+    "numpy": "2.3.5",
+    "matplotlib": "3.10.8",
+    "networkx": "3.6.1",
+    "pypdf": "6.21.1",
+    "pyyaml": "6.0.1"
+  },
+  "build": "GitHub Actions + xu-cheng/latex-action@v3"
+}

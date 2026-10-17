@@ -1,0 +1,12 @@
+VERIFY_MODEL: PASSED (10 passed, 0 failed)
+Data scope: analytical/synthetic only; no biological measurements.
+Figures: 4 plots, 2 graph-structured schematics, 2 workflow diagrams.
+Results: results/model_outputs.csv, numerical_summary.json, verification_report.json
+ channel capacity at zero error
+[PASSED] capacity zero at random-guess error
+[PASSED] error composition stays bounded
+[PASSED] binary composition identity
+[PASSED] channel rows sum to one
+[PASSED] uniform-input MI bounded by log K
+[PASSED] invalid probability rejected
+[PASSED] invalid K rejected

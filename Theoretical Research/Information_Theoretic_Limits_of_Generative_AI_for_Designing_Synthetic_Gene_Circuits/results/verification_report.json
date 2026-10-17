@@ -1,0 +1,60 @@
+{
+  "timestamp_utc": "2026-10-17T13:56:51.389488+00:00",
+  "python": "3.12.3 (main, Aug 31 2026, 10:18:26) [GCC 13.3.0]",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "seed": 20261017,
+  "dependency_versions": {
+    "numpy": "2.3.5",
+    "matplotlib": "3.10.8",
+    "networkx": "3.6.1"
+  },
+  "tests": [
+    {
+      "name": "binary entropy endpoints",
+      "status": "passed"
+    },
+    {
+      "name": "binary entropy symmetry",
+      "status": "passed"
+    },
+    {
+      "name": "K=2 channel capacity at zero error",
+      "status": "passed"
+    },
+    {
+      "name": "capacity zero at random-guess error",
+      "status": "passed"
+    },
+    {
+      "name": "error composition stays bounded",
+      "status": "passed"
+    },
+    {
+      "name": "binary composition identity",
+      "status": "passed"
+    },
+    {
+      "name": "channel rows sum to one",
+      "status": "passed"
+    },
+    {
+      "name": "uniform-input MI bounded by log K",
+      "status": "passed"
+    },
+    {
+      "name": "invalid probability rejected",
+      "status": "passed"
+    },
+    {
+      "name": "invalid K rejected",
+      "status": "passed"
+    }
+  ],
+  "passed": 10,
+  "failed": 0,
+  "status": "passed",
+  "plots_rebuilt": 4,
+  "additional_graphs_rebuilt": 2,
+  "flow_diagrams_rebuilt": 2,
+  "note": "These tests verify the equations and synthetic examples only; no biological or wet-lab claim is tested."
+}

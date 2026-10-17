@@ -1,0 +1,11 @@
+candidate_id,topic,importance,evidence_gap,boldness_depth,plausibility,math_core,substantive_ai_role,human_benefit,first_validation_feasibility,falsifiability,safety_ethics,mean_score,decision_note
+C01,Information-theoretic limits of generative AI for synthetic gene-circuit design,5.0,4.4,4.5,4.8,4.8,4.5,4.1,4.3,4.8,4.8,4.6,Broad user topic; important but needs a tractable mechanism.
+C02,Two-channel information bounds separating AI proposal uncertainty from biological realization uncertainty,5.0,4.8,4.6,4.6,5.0,4.8,4.6,4.6,4.9,4.9,4.78,SELECTED: sharp formal core; testable analytical null model; directly preserves the requested topic.
+C03,Rate-distortion theory for multi-objective generative circuit design,4.6,4.2,4.7,4.2,4.9,4.8,4.4,3.8,4.5,4.8,4.49,Promising; would require a justified distortion function and richer empirical data.
+C04,Context-shift limits and robust generalization of circuit-design models,4.8,4.4,4.2,4.5,4.5,4.7,4.4,4.6,4.8,4.9,4.58,"Strong follow-up, but does not isolate the channel-composition question."
+C05,Active learning: value of information for closed-loop circuit design,4.7,4.1,4.3,4.3,4.8,4.8,4.2,4.4,4.7,4.7,4.5,Would require an explicit experiment-cost and feedback model.
+C06,Conformal uncertainty for generative biological design candidates,4.1,3.9,3.7,4.4,4.1,4.6,4.7,4.5,4.7,4.8,4.35,Useful evaluation method but narrower and less conceptually integrative.
+C07,Identifiability limits of phenotype from generated circuit representations,4.3,4.0,4.0,4.7,4.8,4.3,4.1,4.5,4.8,4.9,4.44,Potentially strong but depends on specific observational models.
+C08,Information gain per measurement in synthetic biology validation,4.3,4.0,3.8,4.1,4.3,4.1,4.2,4.5,4.9,4.9,4.31,Practical; less direct fit to limits of generative proposal quality.
+C09,Interpretable latent representations for circuit topology generation,4.3,3.7,4.2,3.9,4.4,4.5,4.0,3.8,4.6,4.8,4.22,Adjacent to the 2026 generative-circuit paper; harder to claim novelty without reproducing model/data.
+C10,Evolutionary robustness as an information-theoretic design objective,4.5,3.8,4.5,4.0,4.4,4.5,3.7,3.9,4.6,4.5,4.24,Biologically meaningful but requires a defined evolutionary simulator or fitness landscape.
