@@ -1,0 +1,56 @@
+where $F_s$ and $H_s^{(m)}$ are unknown, while $\eta_t$ and $\epsilon_t^{(m)}$ represent process and measurement noise. The substrate-agnostic aspiration is to compare functions of response, not to pretend that units, sensor physics, or state spaces are identical. A practical deployment would need modality-specific normalization and an instrument model; this preprint tests only a dimensionless toy representation.
+
+We define five candidate probes, each returning a scalar synthetic feature scaled approximately to $[0,1]$. The values are *not* measured biological quantities and should not be used as instrument specifications.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Operational probe set. Every feature has plausible abiotic analogues.}
+\label{tab:probes}
+\begin{tabularx}{\linewidth}{p{0.17\linewidth}p{0.31\linewidth}X}
+\toprule
+Probe & Measurement question & Major confounder \\
+\midrule
+Initial recovery & How much of a localized perturbation dissipates over the observation window? & Passive relaxation can mimic recovery. \\
+Drive/gradient gate & Does the response change when an available drive or gradient is altered? & Driven materials and oscillators also depend on external power. \\
+Repeated-pulse history & Does the second response depend on the first insult or recovery state? & Hysteretic materials and controllers can store history. \\
+Spatial locality & Is the response concentrated near the disturbance and then propagated or confined? & Fracture healing and material transport can be localized. \\
+Novel-context transfer & Does the response generalize to a randomized perturbation and stop/change when no repair is needed? & Programmed controllers may mimic a limited test suite. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+An interpretable repair-response hypothesis, $\Hrep$, predicts a coordinated pattern across some subset of these probes. The composite abiotic hypothesis, $\Habi$, includes any nonliving mechanism capable of producing a subset of the pattern. A positive score therefore means "more consistent with the specified repair-capable simulator than with the specified decoy family," not "life detected." Substrate agnosticism is a research objective that requires cross-modal validation; a common dimensionless feature vector is not by itself proof of invariance.
+
+\section{Sequential probe selection}
+Let the available action set be $\A=\{a_1,\ldots,a_5\}$, corresponding to Table~\ref{tab:probes}. Each test can be used at most once in an episode. Let $m_t\in\{0,\ldots,31\}$ encode previously used probes and $e_t\in[-8,8]$ denote a clipped accumulated evidence score. For a measurement $z$ under action $a$, the simulator defines a Gaussian repair density
+\begin{equation}
+ p_R(z\mid a)=\mathcal{N}(z;\mu_{R,a},\sigma_a^2),
+ \label{eq:repairdensity}
+\end{equation}
+and a finite abiotic mixture
+\begin{equation}
+ p_A(z\mid a;w)=\sum_{j=1}^{J}w_j\,\mathcal{N}(z;\mu_{j,a},\sigma_a^2),\qquad \sum_{j=1}^{J}w_j=1.
+ \label{eq:abidensity}
+\end{equation}
+Here $J=4$. The score increment and state transition are
+\begin{align}
+ \ell_a(z;w)&=\log p_R(z\mid a)-\log p_A(z\mid a;w),\label{eq:llr}\\
+ e_{t+1}&=\operatorname{clip}(e_t+\ell_{a_t}(z_t;w),-8,8).\label{eq:evidence}
+\end{align}
+This is a log-density ratio under the stated synthetic Gaussian family. It is not a universally calibrated probability. At each step the policy chooses an unused probe or a stop action, "repair-like" or "not repair-like." The finite-horizon state is $s_t=(m_t,b(e_t))$, where $b$ maps clipped evidence to one of 31 bins. The Q table has shape $32\times31\times7$.
+
+The immediate probe reward is $-0.035$. At stopping, correct classification receives $+1$, a false positive receives $-1.6$, a false negative receives $-1$, and an additional $-0.02$ is charged per probe used. The false-positive penalty is deliberately higher than the false-negative penalty, but this is a design choice rather than a mission-certified loss function. Q-learning uses discount factor $\gamma=0.96$, learning rate $\alpha=0.18$, and an exploration probability decaying from $0.30$ to a floor of $0.035$. Each observed transition is updated online and revisited once in reverse order after the episode's terminal decision.
+
+\section{Adversarial hard-negative training}
+A separate adversarial policy is not solved to a formal game-theoretic equilibrium. Instead, every 5,000 training episodes, the current greedy detector is evaluated against each abiotic family using 100 generated episodes per family. Estimated false-positive rates $f_j$ are transformed into weights
+\begin{equation}
+ \widetilde w_j=\frac{\exp(5f_j)}{\sum_k\exp(5f_k)},\qquad
+ w_j=0.65\widetilde w_j+0.35/J. \label{eq:weights}
+\end{equation}
+Future negative training episodes are sampled according to $w$. The retained uniform component prevents the sampler from completely dropping any decoy family. This is adaptive hard-negative reweighting inspired by adversarial training; it is not a learned adversary optimizing an arbitrary observation-generating mechanism, and its claims should not be extended beyond the finite decoy set.
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=0.98\linewidth]{fig7_method_flow.pdf}
+\caption{Proposed adaptive assay sequence. Perturbation safety and instrument-specific operating limits must be established before real-world use.}
+\label{fig:method}
+\end{figure}

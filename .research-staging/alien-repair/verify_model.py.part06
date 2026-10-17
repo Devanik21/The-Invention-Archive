@@ -1,0 +1,41 @@
+    assert all(0.0 <= eval_results[k]["sensitivity"] <= 1.0 for k in eval_results)
+    required_figs=[f"fig{i}_{suffix}.{ext}" for i,suffix in [(1,"roc"),(2,"decoy_fpr"),(3,"recovery_confounds"),(4,"metrics"),(5,"measurement_graph"),(6,"confounding_graph"),(7,"method_flow"),(8,"adversarial_training"),(9,"noise_sensitivity")] for ext in ("pdf","png")]
+    missing=[n for n in required_figs if not (FIG/n).exists() or (FIG/n).stat().st_size==0]
+    assert not missing, f"Missing figure files: {missing}"
+    # Write a human-readable actual output report.
+    report=["# Verification summary", "", f"Run started (UTC): {start}", f"Seed: {SEED}",
+            f"Q-learning episodes per agent: {EPISODES_ADV}", "Evaluation design: 500 repair-capable episodes and 500 episodes per each of 4 synthetic abiotic decoys, per method.",
+            "", "## Checks", "- PASS: Q tables have expected shape and contain finite values.",
+            "- PASS: five synthetic probe actions and four explicit decoy families are present.",
+            "- PASS: all evaluated sensitivity and false-positive rates are bounded in [0, 1].",
+            "- PASS: nine distinct figure assets generated in PDF and PNG formats.",
+            "- PASS: one-factor noise sensitivity evaluated at multipliers 0.75, 1.0, 1.25, and 1.5 with a fixed trained policy.",
+            "- PASS: episode-level evaluation data and synthetic trajectory data archived.",
+            "- LIMITATION: this is an internally generated synthetic benchmark; no field, spacecraft, terrestrial instrument, or alien sample data were used.",
+            "- LIMITATION: success in this simulator is not evidence of extraterrestrial life or a validated flight instrument.", "", "## Metrics", ""]
+    report += ["## One-factor observation-noise sensitivity", ""]
+    for item in noise_sensitivity:
+        report += [f"- Noise multiplier {item['noise_multiplier']}: balanced accuracy {item['balanced_accuracy']}; sensitivity {item['sensitivity']}; specificity {item['specificity']}; worst-decoy FPR {item['worst_decoy_fpr']}; per-decoy FPR \u0060{json.dumps(item['per_decoy_fpr'], sort_keys=True)}\u0060"]
+    report += [""]
+    for name,m in eval_results.items():
+        report += [f"### {name}", f"- Sensitivity: {m['sensitivity']}", f"- Specificity: {m['specificity']}",
+                   f"- Sensitivity Wilson 95% interval: {m['sensitivity_wilson_95']}",
+                   f"- Balanced accuracy: {m['balanced_accuracy']}", f"- AUROC (score ranking): {m['auroc_score']}",
+                   f"- Mean probes: {m['mean_probes']}", f"- Worst-decoy FPR: {m['worst_decoy_fpr']}",
+                   f"- Aggregate FPR Wilson 95% interval: {m['fpr_wilson_95']}",
+                   f"- Per-decoy FPR: \u0060{json.dumps(m['per_decoy_fpr'], sort_keys=True)}\u0060",
+                   f"- Per-decoy FPR Wilson 95% intervals: \u0060{json.dumps(m['per_decoy_fpr_wilson_95'], sort_keys=True)}\u0060", ""]
+    (RES/"verification_summary.md").write_text("\n".join(report)+"\n",encoding="utf-8")
+    env={"python":platform.python_version(),"platform":platform.platform(),"numpy":np.__version__,"matplotlib":matplotlib.__version__,"networkx":nx.__version__,
+         "executable":sys.executable,"run_started_utc":start,"seed":SEED,"command":"python verify_model.py"}
+    (RES/"environment.json").write_text(json.dumps(env,indent=2)+"\n",encoding="utf-8")
+    print(json.dumps({"status":"PASS","seed":SEED,"episodes_per_agent":EPISODES_ADV,"metrics":eval_results,
+                      "noise_sensitivity":noise_sensitivity,"figures":len(required_figs),"run_started_utc":start},indent=2))
+    return 0
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except AssertionError as e:
+        print(f"VERIFICATION FAILED: {e}", file=sys.stderr)
+        raise SystemExit(2)

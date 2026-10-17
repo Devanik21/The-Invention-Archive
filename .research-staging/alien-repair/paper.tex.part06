@@ -1,0 +1,41 @@
+Repair-response differs from passive relaxation & Passive controls reproduce all features within instrument noise & Compare matched material controls, energy/drive perturbations, and recovery-without-repair conditions. \\
+Policy is safe for a sample & Probe can irreversibly alter, contaminate, heat, or destroy the candidate sample & Establish risk budgets, non-destructive ranges, and mission-specific contamination controls before testing. \\
+A positive result supports life & A nonliving controller/material passes the full assay & Report indeterminate or "repair-like dynamics" until independent lines of evidence reduce abiotic alternatives. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Epistemic status and limitations}
+The assertions differ in strength. Table~\ref{tab:epistemic} classifies them using a five-level scheme: exact mathematical identity; model-dependent optimization; empirical statistical regularity; cross-domain structural correspondence; and qualitative intuition. Most claims in this preprint sit at the model-dependent level or below. No universal biological law or life-specific invariant is proven.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Claim hierarchy and current status.}
+\label{tab:epistemic}
+\begin{tabularx}{\linewidth}{p{0.13\linewidth}p{0.35\linewidth}X}
+\toprule
+Level & Interpretation & Example in this paper and status \\
+\midrule
+P1 & Exact algebraic or probabilistic consequence under stated assumptions & Equations~\ref{eq:repairdensity}--\ref{eq:evidence} define a score for the chosen Gaussian simulator; mathematically specified, not a model of all nature. \\
+P2 & Model-dependent dynamics or optimization & The RL policy improves its simulated reward with a chosen reward schedule; simulator-specific. \\
+P3 & Statistical regularity or universality & No statistical universality claim; repeated seeds and external datasets remain outstanding. \\
+P4 & Cross-domain structural correspondence & Normalized response features are proposed as cross-substrate descriptors; transfer has not been demonstrated. \\
+P5 & Intuition or preliminary hypothesis & That adaptive repair-like response may help life detection is a research hypothesis, not a confirmed biosignature. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Several limitations are central. First, all five tests and decoy distributions were hand-specified; the RL policy can exploit those distinctions. Second, evaluation used new draws from the same four decoy distributions encountered during training, not independent physical mechanisms or out-of-distribution planets. Third, the reported Wilson intervals condition on the model and training seed. Fourth, all feature scales are dimensionless, and no sensor-specific mapping has been demonstrated. Fifth, policy rewards and a balanced synthetic class mix do not encode actual planetary priors, sample damage costs, contamination risk, or asymmetric mission costs. Sixth, a sophisticated nonliving controller may implement adaptive repair functions. If an abiotic system is observationally indistinguishable from the target over the accessible action set and measurement channels, the method cannot identify the underlying ontology from those observations alone.
+
+These limitations are not peripheral implementation details: they are identifiability limits for the question. A mission-ready system would require instrument calibration, environmental context, contamination control, a broader library of plausible abiotic models, posterior or likelihood-ratio calibration under relevant priors, independent terrestrial analogue testing, and an explicit abstention option when the evidence is inconclusive.
+
+\section{A staged route to empirical validation}
+The next phase should not jump straight to extraterrestrial claims. A defensible sequence is:
+\begin{enumerate}
+\item \textbf{Software replication:} repeat training across at least 20 seeds, report uncertainty over training runs, and include parameter shifts and new decoy families that are never available to the adversary during training.
+\item \textbf{Bench-top challenge panel:} measure nonliving viscoelastic relaxation, phase-change systems, self-healing polymers, driven chemical oscillators, and closed-loop robotic/material controllers under matched, non-destructive perturbations. This requires collaborators and measured data not available in this release.
+\item \textbf{Biological analogue tests:} where ethically and safely appropriate, compare independent biological repair models against abiotic materials with matched observability. Avoid claiming universal life detection from a restricted Earth-life panel.
+\item \textbf{Sensor abstraction:} map each instrument channel to uncertainties on the normalized observables and identify which probes are physically available to a lander, plume sampler, or remote observatory. Some local perturbations may be impossible for remote observations.
+\item \textbf{Blind challenge:} have an independent team generate or select decoy systems, freeze the policy, and run blinded tests with preregistered thresholds, costs, and failure criteria.
+\end{enumerate}
+

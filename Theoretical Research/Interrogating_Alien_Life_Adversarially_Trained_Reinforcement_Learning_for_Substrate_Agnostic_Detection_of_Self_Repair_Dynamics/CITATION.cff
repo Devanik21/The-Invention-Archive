@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "If you use this research artifact, please cite it as a research preprint."
+title: "Interrogating Alien Life: Adversarially Trained Reinforcement Learning for Substrate-Agnostic Detection of Self-Repair Dynamics"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+version: 2026.10.17
+date-released: 2026-10-17

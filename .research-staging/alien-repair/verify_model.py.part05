@@ -1,0 +1,67 @@
+    def arr(p1,p2,rad=0): ax.annotate("",xy=p2,xytext=p1,xycoords=ax.transAxes,arrowprops=dict(arrowstyle="->",lw=1.3,color="#355070",connectionstyle=f"arc3,rad={rad}"))
+    arr((.31,.72),(.39,.72)); arr((.62,.72),(.70,.72)); arr((.815,.62),(.815,.40)); arr((.70,.30),(.62,.30)); arr((.505,.40),(.505,.62),-.25)
+    ax.set_title("Alternating probe-policy learning and hard-negative challenge sampling",pad=16); savefig("fig8_adversarial_training",fig)
+
+
+
+    # Fig 9: explicit observation-noise sensitivity, using the fixed learned policy.
+    fig, ax = plt.subplots(figsize=(6.2, 4.2))
+    scales = [r["noise_multiplier"] for r in noise_sensitivity]
+    ax.plot(scales, [r["balanced_accuracy"] for r in noise_sensitivity], marker="o", linewidth=1.7, label="Balanced accuracy")
+    ax.plot(scales, [r["worst_decoy_fpr"] for r in noise_sensitivity], marker="s", linewidth=1.7, label="Worst-decoy FPR")
+    ax.set(xlabel="Observation-noise multiplier", ylabel="Metric (0-1)", title="Sensitivity to increased measurement noise", ylim=(0,1))
+    ax.grid(alpha=.22); ax.legend(fontsize=8); savefig("fig9_noise_sensitivity",fig)
+
+
+def main() -> int:
+    FIG.mkdir(parents=True, exist_ok=True); RES.mkdir(parents=True, exist_ok=True)
+    start = datetime.now(timezone.utc).isoformat()
+    q_adv, hist_adv, w_hist = train_agent(EPISODES_ADV, True, SEED + 1)
+    q_uni, hist_uni, _ = train_agent(EPISODES_UNI, False, SEED + 2)
+    eval_results, eval_rows = {}, {}
+    m, rows = evaluate_policy(q_adv, 500, np.ones(4)/4, SEED+10); eval_results["Adversarial Q-RL"] = m; eval_rows["Adversarial Q-RL"] = rows
+    m, rows = evaluate_policy(q_uni, 500, np.ones(4)/4, SEED+11); eval_results["Uniform Q-RL"] = m; eval_rows["Uniform Q-RL"] = rows
+    for name,kind,seed in [("Recovery-only", "recovery_only", SEED+12), ("Fixed full panel", "full_panel", SEED+13), ("Random order panel", "random_order", SEED+14)]:
+        m, rows = policy_from_fixed_rule(kind, 500, seed); eval_results[name] = m; eval_rows[name] = rows
+    # One-factor-at-a-time sensor-noise sensitivity for the already-trained adversarial policy.
+    base_sigma = SIGMA.copy()
+    noise_sensitivity = []
+    for idx, multiplier in enumerate([0.75, 1.0, 1.25, 1.5]):
+        SIGMA[:] = base_sigma * multiplier
+        sens_metrics, sens_rows = evaluate_policy(q_adv, 200, np.ones(4)/4, SEED + 200 + idx)
+        noise_sensitivity.append({"noise_multiplier": multiplier, "balanced_accuracy": sens_metrics["balanced_accuracy"],
+                                  "sensitivity": sens_metrics["sensitivity"], "specificity": sens_metrics["specificity"],
+                                  "worst_decoy_fpr": sens_metrics["worst_decoy_fpr"],
+                                  "per_decoy_fpr": sens_metrics["per_decoy_fpr"],
+                                  "n_positive": sens_metrics["n_positive"], "n_negative": sens_metrics["n_negative"]})
+    SIGMA[:] = base_sigma
+    write_csv(RES/"noise_sensitivity.csv", noise_sensitivity)
+    results = {
+        "metadata": {"run_started_utc": start, "seed": SEED, "synthetic_only": True,
+                     "episodes_per_agent": EPISODES_ADV, "evaluation_episodes_per_positive_world": 500,
+                     "evaluation_episodes_per_each_negative_world": 500,
+                     "python": platform.python_version(), "numpy": np.__version__, "matplotlib": matplotlib.__version__,
+                     "networkx": nx.__version__, "command": "python verify_model.py"},
+        "action_names": ACTIONS, "action_labels": ACTION_LABELS,
+        "repair_means": MU_REPAIR.tolist(), "decoy_names": DECOY_NAMES, "decoy_means": MU_DECOY.tolist(), "sensor_sigma": SIGMA.tolist(),
+        "metrics": eval_results, "adversary_history": w_hist, "noise_sensitivity": noise_sensitivity,
+        "interpretation": "All values are from synthetic benchmark worlds, not observed astrobiology data."
+    }
+    (RES/"benchmark_summary.json").write_text(json.dumps(results,indent=2,sort_keys=True)+"\n",encoding="utf-8")
+    write_csv(RES/"evaluation_episodes.csv", [r for method,rows in eval_rows.items() for r in [{**row,"method":method} for row in rows]])
+    write_csv(RES/"adversarial_training_history.csv",hist_adv)
+    write_csv(RES/"uniform_training_history.csv",hist_uni)
+    write_csv(RES/"adversary_reweighting.csv",w_hist)
+    # A fixed synthetic trajectory set underlying Fig 3, preserved as data.
+    t=np.linspace(0,12,160)
+    traj=[]
+    for model,base,amp,tau,osc in [("repair_capable",.08,.86,2.1,0),("passive_relaxor",.08,.87,1.8,0),("driven_oscillator",.14,.60,3.6,.16)]:
+        vals=base+amp*np.exp(-t/tau)+osc*np.sin(2*np.pi*t/3.5)*np.exp(-t/7)
+        for tt,v in zip(t,vals):traj.append({"model":model,"time_dimensionless":round(float(tt),6),"residual_disturbance":round(float(v),8),"data_status":"synthetic illustration"})
+    write_csv(RES/"synthetic_recovery_trajectories.csv",traj)
+    make_figures(eval_results, eval_rows, hist_adv, w_hist, noise_sensitivity)
+    # Structural checks: exact dimensions, finite metrics, finite Q and figure completeness.
+    assert q_adv.shape == (32,N_BINS,7) and q_uni.shape == (32,N_BINS,7)
+    assert np.isfinite(q_adv).all() and np.isfinite(q_uni).all()
+    assert len(DECOY_NAMES)==4 and MU_DECOY.shape==(4,5) and len(ACTIONS)==5
+    assert all(0.0 <= eval_results[k]["false_positive_rate"] <= 1.0 for k in eval_results)
