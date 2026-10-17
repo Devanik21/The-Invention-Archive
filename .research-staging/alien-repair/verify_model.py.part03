@@ -1,0 +1,86 @@
+    rng = np.random.default_rng(seed)
+    rows = []
+    uniform = np.ones(4)/4
+    for lab in (1, 0):
+        worlds = [-1] if lab else list(range(4))
+        for w in worlds:
+            for _ in range(episodes_per_world):
+                did = 0 if lab else w
+                if kind == "recovery_only":
+                    obs = sample_observation(lab, did, 0, rng)
+                    # Fixed midpoint of positive and mean abiotic response; deliberately weak baseline.
+                    pred = int(obs >= (MU_REPAIR[0] + MU_DECOY[:,0].mean()) / 2)
+                    score = log_likelihood_ratio(obs, 0, uniform)
+                    nprobes = 1
+                    actions = [0]
+                    observations = [obs]
+                elif kind == "full_panel":
+                    actions = list(range(5)); observations = [sample_observation(lab, did, a, rng) for a in actions]
+                    score = sum(log_likelihood_ratio(x,a,uniform) for a,x in zip(actions,observations))
+                    pred = int(score >= 0)
+                    nprobes = 5
+                elif kind == "random_order":
+                    actions = list(rng.permutation(5)); observations = [sample_observation(lab,did,a,rng) for a in actions]
+                    score = sum(log_likelihood_ratio(x,a,uniform) for a,x in zip(actions,observations))
+                    pred = int(score >= 0); nprobes = 5
+                rows.append({"label":lab,"decoy":"repair-capable" if lab else DECOY_NAMES[w],"decoy_id":did,
+                             "pred":pred,"score":score,"probes":nprobes,"actions":";".join(ACTIONS[a] for a in actions),
+                             "observations":";".join(f"{x:.6f}" for x in observations)})
+    return metrics(rows), rows
+
+
+def write_csv(path: Path, rows: List[dict]) -> None:
+    if not rows:
+        return
+    keys = list(rows[0].keys())
+    # Serialize nested objects for portable CSV.
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=keys)
+        writer.writeheader()
+        for r in rows:
+            writer.writerow({k: json.dumps(v, sort_keys=True) if isinstance(v,(dict,list)) else v for k,v in r.items()})
+
+
+def savefig(name: str, fig=None) -> None:
+    if fig is None: fig = plt.gcf()
+    fig.savefig(FIG / f"{name}.pdf", bbox_inches="tight")
+    fig.savefig(FIG / f"{name}.png", dpi=180, bbox_inches="tight")
+    plt.close(fig)
+
+
+def make_figures(results: dict, eval_rows: dict, adv_history: list, weight_history: list, noise_sensitivity: list) -> None:
+    plt.rcParams.update({"font.size": 9, "axes.titlesize": 11, "axes.labelsize": 9,
+                         "figure.dpi": 150, "savefig.facecolor": "white"})
+    # Fig 1: ROC curves from held-out score distributions (synthetic evaluation data).
+    fig, ax = plt.subplots(figsize=(6.3, 4.5))
+    for name, rows in eval_rows.items():
+        pos = np.array([r["score"] for r in rows if r["label"] == 1]); neg = np.array([r["score"] for r in rows if r["label"] == 0])
+        thr = np.linspace(min(pos.min(), neg.min())-0.1, max(pos.max(),neg.max())+0.1, 120)
+        tprs = [np.mean(pos >= t) for t in thr]; fprs = [np.mean(neg >= t) for t in thr]
+        order = np.argsort(fprs)
+        ax.plot(np.array(fprs)[order], np.array(tprs)[order], label=f"{name} (AUC {results[name]['auroc_score']:.2f})", linewidth=1.6)
+    ax.plot([0,1],[0,1],"--",linewidth=1,color="grey",label="Chance")
+    ax.set(xlabel="False-positive rate", ylabel="True-positive rate", title="Held-out discrimination across synthetic worlds", xlim=(0,1), ylim=(0,1))
+    ax.grid(alpha=.22); ax.legend(fontsize=7, loc="lower right"); savefig("fig1_roc",fig)
+    # Fig 2: FPR by abiotic decoy.
+    fig, ax = plt.subplots(figsize=(7.2, 4.3))
+    names = list(results); xs = np.arange(len(DECOY_NAMES)); width = 0.78 / len(names)
+    for i, method in enumerate(names):
+        vals = [results[method]["per_decoy_fpr"][d] for d in DECOY_NAMES]
+        ax.bar(xs + (i-(len(names)-1)/2)*width, vals, width, label=method)
+    ax.set_xticks(xs, ["Passive\nrelaxor","Self-healing\nmaterial","Driven\noscillator","Scripted\ncontroller"])
+    ax.set(ylabel="False-positive rate", title="Hard-negative audit: each abiotic family evaluated separately", ylim=(0,1))
+    ax.grid(axis="y",alpha=.22); ax.legend(fontsize=7, ncols=2); savefig("fig2_decoy_fpr",fig)
+    # Fig 3: Recovery curves: synthetic illustrative time series, not observational data.
+    t = np.linspace(0, 12, 160)
+    fig, ax = plt.subplots(figsize=(6.8,4.2))
+    curve = lambda base, amp, tau, osc=0: base + amp*np.exp(-t/tau) + osc*np.sin(2*np.pi*t/3.5)*np.exp(-t/7)
+    ax.plot(t, curve(0.08,0.86,2.1), label="Repair-capable model")
+    ax.plot(t, curve(0.08,0.87,1.8), label="Passive relaxation decoy")
+    ax.plot(t, curve(0.14,0.60,3.6,0.16), label="Driven oscillator decoy")
+    ax.axhline(.08, color="grey", linestyle="--", linewidth=1, label="Pre-perturbation baseline")
+    ax.set(xlabel="Dimensionless time after perturbation",ylabel="Normalized residual disturbance",title="Recovery alone is deliberately non-diagnostic")
+    ax.grid(alpha=.22); ax.legend(fontsize=8); savefig("fig3_recovery_confounds",fig)
+    # Fig 4: sensitivity, specificity, balanced accuracy and mean probes.
+    fig, ax = plt.subplots(figsize=(7.0,4.3))
+    ms = list(results); met = ["sensitivity","specificity","balanced_accuracy"]
