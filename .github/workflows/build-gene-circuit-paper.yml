@@ -63,8 +63,6 @@ jobs:
           os.chdir(os.environ["RELEASE_DIR"]); root=Path('.')
           import numpy, matplotlib, networkx, pypdf, yaml, deploy
           core={"paper.tex","paper.pdf","verify_model.py","README.md","CITATION.cff","paper.bib",".zenodo.json","schema_article.jsonld","deploy.py"}
-          present={p.name for p in root.iterdir() if p.is_file()}
-          if present != core: raise SystemExit(f"Root manifest mismatch: missing={core-present}; extra={present-core}")
           raw=Path("paper.pdf").read_bytes()
           if not raw.startswith(b"%PDF-"): raise SystemExit("Invalid PDF signature")
           reader=pypdf.PdfReader("paper.pdf"); pages=len(reader.pages); body="\n".join(p.extract_text() or "" for p in reader.pages)
@@ -82,6 +80,8 @@ jobs:
           Path("results/latex_build_log.txt").write_bytes(Path("paper.log").read_bytes())
           for p in root.glob("paper.*"):
               if p.is_file() and p.name not in core: p.unlink()
+          present={p.name for p in root.iterdir() if p.is_file()}
+          if present != core: raise SystemExit(f"Root manifest mismatch after build-artifact cleanup: missing={core-present}; extra={present-core}")
           now=datetime.now(timezone.utc).isoformat()
           report={"timestamp_utc":now,"source_commit":os.environ.get("GITHUB_SHA"),"run_id":os.environ.get("GITHUB_RUN_ID"),"status":"passed","pdf":{"pages":pages,"bytes":len(raw),"signature":"passed","text_check":"passed"},"visuals":{"tables":tables,"figures_referenced":figs,"svg_assets":len(list(Path("figures").glob("figure*.svg"))),"pdf_figure_assets":len(list(Path("figures").glob("figure*.pdf")))},"checks":{"model_tests":json.loads(Path("results/verification_report.json").read_text())["status"],"python_syntax":"passed","deploy_self_tests":"passed","metadata":"passed","bibliography":"passed","README_math":"passed","research_records":"present","wet_lab_validation":"not performed"}}
           Path("results/remote_build_report.json").write_text(json.dumps(report,indent=2)+"\n")
