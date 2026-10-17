@@ -28,6 +28,8 @@ jobs:
         run: |
           set -euo pipefail
           git fetch --tags origin
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if git rev-parse --verify --quiet "refs/tags/$RELEASE_TAG" >/dev/null; then
             actual="$(git rev-list -n 1 "$RELEASE_TAG")"
             if [[ "$actual" != "$TARGET_SHA" ]]; then
