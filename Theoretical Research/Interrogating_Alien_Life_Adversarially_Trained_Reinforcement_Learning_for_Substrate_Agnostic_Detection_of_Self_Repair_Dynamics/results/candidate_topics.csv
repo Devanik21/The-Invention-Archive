@@ -1,0 +1,11 @@
+candidate,importance,gap,boldness,plausibility,math_core,ai_role,human_benefit,first_validation,falsifiability,ethics_score,mean_score,decision_note
+"Interrogating Alien Life: adversarial RL for substrate-agnostic self-repair detection",5,4,5,4,5,5,4,5,5,5,4.7,"Selected user-supplied topic; strongest combination of active sensing, adversarial false-positive testing, and an executable simulation. Empirical validity remains open."
+"Active sensing for contextual biosignature attribution in planetary plumes",5,4,4,4,4,5,4,4,4,5,4.3,"Strong adjacent direction; less focused on a reusable dynamic phenotype."
+"Persistence-homology signatures of non-equilibrium repair after perturbation",4,3,5,3,5,4,3,4,4,5,4.0,"Mathematically rich but topology alone is vulnerable to abiotic confounds."
+"Substrate-independent recovery curves from planetary spectroscopy",5,3,4,3,3,4,4,4,4,5,3.9,"Remote spectroscopy may not resolve local repair dynamics, making observability a bottleneck."
+"Adversarial false-positive discovery for mass-spectral biosignatures",5,4,3,5,4,4,4,5,5,5,4.4,"High-feasibility route with strong existing ML precedent; more chemistry-specific and closer to prior art."
+"Bayesian cross-planet abiotic baselines for biosignature gases",5,4,3,4,4,3,4,4,4,5,4.0,"Important attribution problem but less naturally sequential at the local perturbation scale."
+"Dormancy revival as non-equilibrium-capacity assay",4,3,4,3,4,3,4,3,4,4,3.6,"Conceptually interesting but hard to operationalize without assuming accessible energy and activation."
+"Adaptive multi-instrument search planning for Martian surface samples",5,3,3,5,3,4,4,5,4,5,4.1,"Feasible mission planning problem but not as conceptually distinctive as a function-level repair assay."
+"Causal directionality in reaction-network persistence",4,3,4,4,5,4,3,4,5,5,4.1,"Good formal abstraction; risk of abstract dynamics without direct instrument mapping."
+"Universal active-matter repair benchmark across living and synthetic materials",4,4,4,4,4,3,4,5,5,5,4.2,"Excellent empirical validation programme but requires substantial cross-lab data and materials collaboration."
