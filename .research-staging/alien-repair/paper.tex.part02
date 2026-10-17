@@ -1,0 +1,35 @@
+The core danger is a false inference: if a system returns toward a baseline, it may be a passive relaxor, a synthetic self-healing material, a driven oscillator, or an engineered controller. The proposed method therefore treats those mechanisms as explicit hard negatives. Reinforcement learning (RL) chooses which measurements to acquire under a probe budget; adversarial hard-negative sampling makes the policy face the most confusing decoy families encountered during training. Adversarial RL has prior methodological precedent in other detection settings, so novelty is not claimed for adversarial RL itself \citep{Tong2020AdversarialRL}.
+
+\textbf{Contributions.} This preprint contributes (i) an operational, substrate-agnostic framing for a repair-response assay; (ii) a finite-horizon active-probing formulation with five normalized response tests; (iii) a reproducible synthetic benchmark with four abiotic decoy families, a uniform-training RL control, and fixed-policy baselines; and (iv) explicit failure criteria for moving from simulation toward terrestrial analogue experiments. It does not claim a universal biosignature, a validated alien-life detector, or a new theorem about the nature of life.
+
+\section{Related work and bounded novelty claim}
+The literature contains several adjacent foundations. The 2026 review by Graham summarizes attempts to search for life without assuming Earth-like molecular or metabolic signals \citep{Graham2026Agnostic}. Cleaves and colleagues report a machine-learning approach using relational structure in pyrolysis--gas chromatography--mass spectrometry data, demonstrating that multivariate measurement patterns can carry information beyond the identification of individual compounds \citep{Cleaves2023MLBiosignature}. This is a chemical-sample result, not evidence for our intervention-based features. NASA's Ladder of Life Detection provides criteria for interpreting measurements under robotic-mission constraints and explicitly leaves room for community revision \citep{Neveu2018Ladder}. The biosignature concept itself has been critically examined because causal interpretations can be more ambiguous than the label suggests \citep{Malaterre2023Biosignature}.
+
+Two additional connections shape the method. First, formal self-healing models demonstrate that return-to-baseline behavior can arise from state-dependent interaction mechanisms and network dynamics \citep{Suki2020SelfHealing}. Second, non-equilibrium-capacity discussions distinguish a system's instantaneous state from its capacity to resume organized dynamics \citep{Youk2026NonEquilibrium}. Both motivate measuring response under controlled changes, not treating one trajectory as a universal criterion. Finally, adversarial RL has been developed for detection tasks in other fields \citep{Tong2020AdversarialRL}; its use here is a transfer of method, not evidence of performance in astrobiology.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Selected literature and the narrow role each source plays in this proposal.}
+\label{tab:literature}
+\begin{tabularx}{\linewidth}{p{0.22\linewidth}p{0.27\linewidth}X}
+\toprule
+Source & Established scope & Relevance and boundary \\
+\midrule
+Graham (2026) \citep{Graham2026Agnostic} & Review of agnostic biosignature concepts & Motivates functional, non-Earth-specific reasoning; does not establish repair as life-specific. \\
+Cleaves et al. (2023) \citep{Cleaves2023MLBiosignature} & ML over molecular mass-spectral patterns & Supports multivariate relational analysis; uses a different measurement modality and dataset. \\
+Neveu et al. (2018) \citep{Neveu2018Ladder} & Mission-aware life-detection criteria & Supports explicit ambiguity and false-positive accounting. \\
+Malaterre et al. (2023) \citep{Malaterre2023Biosignature} & Conceptual analysis of biosignature claims & Motivates restrained causal language and context-sensitive attribution. \\
+Suki et al. (2020) \citep{Suki2020SelfHealing} & Analytic and network model of tissue self-healing & Shows repair-like trajectories are modelable, not that they uniquely imply life. \\
+Tong et al. (2020) \citep{Tong2020AdversarialRL} & Adversarial RL for detection/alert prioritization & Methodological precedent outside astrobiology; no performance transfer assumed. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The scoped gap is not a claim that no earlier work studies activity-based biosignatures or adversarial active sensing. It is the lack, within the reviewed and bounded search, of an established validation showing that a sequential RL policy can discriminate a repair-response phenotype from an adversarial finite family of abiotic recovery mechanisms across unknown substrates. That gap is a motivation for a benchmark, not a demonstrated absence from the entire literature. The search was not a systematic review or a patent survey.
+
+\section{Operational question and observables}
+Let a system with unknown substrate label $s$ have a latent state $x_t$, a controllable perturbation $u_t$, an external drive or gradient proxy $r_t$, and observation channel $m$. A general observation model is
+\begin{align}
+ x_{t+1} &= F_s(x_t,u_t,r_t,\eta_t), \label{eq:dynamics}\\
+ y_t^{(m)} &= H_s^{(m)}(x_t)+\epsilon_t^{(m)}, \label{eq:observation}
+\end{align}
