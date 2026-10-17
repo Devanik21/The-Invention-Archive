@@ -1,11 +1,11 @@
 {
-  "timestamp_utc": "2026-10-17T13:58:04.482360+00:00",
-  "source_commit": "8730f5e434c5b9f3642b98c3fdb9cb0b2c748afd",
-  "run_id": "39038633554",
+  "timestamp_utc": "2026-10-17T14:02:11.999927+00:00",
+  "source_commit": "f6809972b9de00fdeacbdfbae9e27f7a6f034166",
+  "run_id": "39038870991",
   "status": "passed",
   "pdf": {
     "pages": 15,
-    "bytes": 414458,
+    "bytes": 414467,
     "signature": "passed",
     "text_check": "passed"
   },
@@ -16,9 +16,8 @@
     "pdf_figure_assets": 8
   },
   "checks": {
-    "model_tests": "passed",
-    "python_syntax": "passed",
-    "deploy_self_tests": "passed",
+    "model_tests": "passed (10 assertions)",
+    "deploy_self_tests": "passed (4 isolated tests)",
     "metadata": "passed",
     "bibliography": "passed",
     "README_math": "passed",

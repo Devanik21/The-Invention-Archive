@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-10-17T13:56:51.352114</dc:date>
+    <dc:date>2026-10-17T14:00:26.148360</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -35,7 +35,7 @@ L 238.6584 63.585961
 L 238.6584 39.148009 
 L 143.7984 39.148009 
 z
-" clip-path="url(#pa2449afeaa)" style="fill: #edf3f8; stroke: #364152; stroke-width: 1.1; stroke-linejoin: miter"/>
+" clip-path="url(#p1392c219d0)" style="fill: #edf3f8; stroke: #364152; stroke-width: 1.1; stroke-linejoin: miter"/>
    </g>
    <g id="patch_3">
     <path d="M 143.7984 107.827081 
@@ -43,7 +43,7 @@ L 238.6584 107.827081
 L 238.6584 83.389129 
 L 143.7984 83.389129 
 z
-" clip-path="url(#pa2449afeaa)" style="fill: #edf3f8; stroke: #364152; stroke-width: 1.1; stroke-linejoin: miter"/>
+" clip-path="url(#p1392c219d0)" style="fill: #edf3f8; stroke: #364152; stroke-width: 1.1; stroke-linejoin: miter"/>
    </g>
    <g id="patch_4">
     <path d="M 143.7984 152.068201 
@@ -51,7 +51,7 @@ L 238.6584 152.068201
 L 238.6584 127.630249 
 L 143.7984 127.630249 
 z
-" clip-path="url(#pa2449afeaa)" style="fill: #edf3f8; stroke: #364152; stroke-width: 1.1; stroke-linejoin: miter"/>
+" clip-path="url(#p1392c219d0)" style="fill: #edf3f8; stroke: #364152; stroke-width: 1.1; stroke-linejoin: miter"/>
    </g>
    <g id="patch_5">
     <path d="M 143.7984 196.309321 
@@ -59,7 +59,7 @@ L 238.6584 196.309321
 L 238.6584 171.871369 
 L 143.7984 171.871369 
 z
-" clip-path="url(#pa2449afeaa)" style="fill: #edf3f8; stroke: #364152; stroke-width: 1.1; stroke-linejoin: miter"/>
+" clip-path="url(#p1392c219d0)" style="fill: #edf3f8; stroke: #364152; stroke-width: 1.1; stroke-linejoin: miter"/>
    </g>
    <g id="patch_6">
     <path d="M 282.294 135.214441 
@@ -67,7 +67,7 @@ L 358.182 135.214441
 L 358.182 99.400201 
 L 282.294 99.400201 
 z
-" clip-path="url(#pa2449afeaa)" style="fill: #f8e8c8; stroke: #8a5a00; stroke-width: 1.1; stroke-linejoin: miter"/>
+" clip-path="url(#p1392c219d0)" style="fill: #f8e8c8; stroke: #8a5a00; stroke-width: 1.1; stroke-linejoin: miter"/>
    </g>
    <g id="text_1">
     <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle" x="191.2284" y="53.574485" transform="rotate(-0 191.2284 53.574485)">Define target + context</text>
@@ -139,7 +139,7 @@ L 253.337246 88.967691
   </g>
  </g>
  <defs>
-  <clipPath id="pa2449afeaa">
+  <clipPath id="p1392c219d0">
    <rect x="7.2" y="23.558281" width="379.44" height="210.672"/>
   </clipPath>
  </defs>

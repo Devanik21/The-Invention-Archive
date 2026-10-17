@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-10-17T13:58:04.482360+00:00",
+  "timestamp_utc": "2026-10-17T14:02:11.999927+00:00",
   "status": "passed",
   "steps": [
     "Python syntax checks",
@@ -7,7 +7,9 @@
     "4 temporary-fixture deployment self-tests",
     "source/metadata/bibliography checks",
     "current-source LaTeX build",
-    "PDF and visual-minimum checks"
+    "PDF and visual-minimum checks",
+    "exact-nine-root-file check",
+    "cache cleanup"
   ],
   "pdf_pages": 15,
   "table_environments": 7,
