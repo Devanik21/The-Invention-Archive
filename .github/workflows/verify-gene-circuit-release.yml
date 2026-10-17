@@ -1,0 +1,155 @@
+name: Finalize and independently verify gene-circuit research release
+on:
+  push:
+    branches: [main]
+    paths: ["gene-circuit-release-repair-ready"]
+permissions:
+  contents: write
+concurrency:
+  group: gene-circuit-release-repair
+  cancel-in-progress: false
+jobs:
+  repair-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 0}
+      - name: Rebuild outputs and run tests
+        env:
+          RELEASE_DIR: "Theoretical Research/Information_Theoretic_Limits_of_Generative_AI_for_Designing_Synthetic_Gene_Circuits"
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "numpy==2.3.5" "matplotlib==3.10.8" "networkx==3.6.1" "pypdf>=5,<7" "PyYAML>=6,<7"
+          cd "$RELEASE_DIR"
+          python -m py_compile verify_model.py deploy.py
+          python verify_model.py 2>&1 | tee results/verify_model_stdout.txt
+          python deploy.py --self-test 2>&1 | tee results/deploy_self_test_stdout.txt
+          python - <<'PY'
+          import deploy
+          from pathlib import Path
+          errors=deploy.validate_source_and_assets(Path('.'))
+          if errors: raise SystemExit("Validation failed: "+"; ".join(errors))
+          print("PASS: source, math, bibliography, metadata, figures and research records")
+          PY
+          rm -rf __pycache__
+      - name: Compile paper from current LaTeX source
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper.tex
+          working_directory: "Theoretical Research/Information_Theoretic_Limits_of_Generative_AI_for_Designing_Synthetic_Gene_Circuits"
+      - name: Clean build products and refresh final evidence manifest
+        env:
+          RELEASE_DIR: "Theoretical Research/Information_Theoretic_Limits_of_Generative_AI_for_Designing_Synthetic_Gene_Circuits"
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, os, platform, re, shutil, sys
+          from datetime import datetime, timezone
+          from pathlib import Path
+          os.chdir(os.environ["RELEASE_DIR"]); root=Path('.')
+          import numpy, matplotlib, networkx, pypdf, yaml, deploy
+          core={"paper.tex","paper.pdf","verify_model.py","README.md","CITATION.cff","paper.bib",".zenodo.json","schema_article.jsonld","deploy.py"}
+          raw=Path("paper.pdf").read_bytes()
+          if not raw.startswith(b"%PDF-"): raise SystemExit("Invalid PDF signature")
+          reader=pypdf.PdfReader("paper.pdf"); pages=len(reader.pages); body="\n".join(p.extract_text() or "" for p in reader.pages)
+          if pages<7 or "Co-equal research-process credit is given" not in body or "References" not in body: raise SystemExit("PDF page/disclosure/reference check failed")
+          tex=Path("paper.tex").read_text(); bib=Path("paper.bib").read_text(); readme=Path("README.md").read_text()
+          tables=len(re.findall(r"\\begin\{table\}(?:\[[^]]*\])?",tex)); figs=len(re.findall(r"\\includegraphics(?:\[[^]]*\])?\{([^}]+)\}",tex))
+          if tables<5 or figs<8 or len(list(Path("figures").glob("figure*.svg")))<8 or len(list(Path("figures").glob("figure*.pdf")))<8: raise SystemExit("Visual minimum not met")
+          if readme.count("$$")%2 or r"\operatorname" in readme: raise SystemExit("README math integrity failed")
+          errors=deploy.validate_bib(tex,bib)
+          if errors: raise SystemExit("BibTeX integrity failed: "+"; ".join(errors))
+          json.loads(Path(".zenodo.json").read_text()); json.loads(Path("schema_article.jsonld").read_text())
+          cff=yaml.safe_load(Path("CITATION.cff").read_text())
+          if not all(k in cff for k in ("cff-version","title","authors","version","date-released")): raise SystemExit("CFF missing required field")
+          Path("results/latex_build_log.txt").write_bytes(Path("paper.log").read_bytes())
+          for p in root.glob("paper.*"):
+              if p.is_file() and p.name not in core: p.unlink()
+          shutil.rmtree("__pycache__",ignore_errors=True)
+          present={p.name for p in root.iterdir() if p.is_file()}
+          if present!=core: raise SystemExit(f"Exact root core mismatch: missing={core-present}; extra={present-core}")
+          dirs={p.name for p in root.iterdir() if p.is_dir()}
+          if dirs!={"figures","results"}: raise SystemExit(f"Unexpected release directories: {dirs}")
+          now=datetime.now(timezone.utc).isoformat()
+          Path("results/remote_build_report.json").write_text(json.dumps({"timestamp_utc":now,"source_commit":os.environ.get("GITHUB_SHA"),"run_id":os.environ.get("GITHUB_RUN_ID"),"status":"passed","pdf":{"pages":pages,"bytes":len(raw),"signature":"passed","text_check":"passed"},"visuals":{"tables":tables,"figures_referenced":figs,"svg_assets":len(list(Path("figures").glob("figure*.svg"))),"pdf_figure_assets":len(list(Path("figures").glob("figure*.pdf")))},"checks":{"model_tests":"passed (10 assertions)","deploy_self_tests":"passed (4 isolated tests)","metadata":"passed","bibliography":"passed","README_math":"passed","research_records":"present","wet_lab_validation":"not performed"}},indent=2)+"\n")
+          Path("results/test_environment.json").write_text(json.dumps({"timestamp_utc":now,"python":sys.version,"platform":platform.platform(),"dependencies":{"numpy":numpy.__version__,"matplotlib":matplotlib.__version__,"networkx":networkx.__version__,"pypdf":pypdf.__version__,"pyyaml":yaml.__version__},"build":"GitHub Actions + xu-cheng/latex-action@v3"},indent=2)+"\n")
+          Path("results/deploy_validation_report.json").write_text(json.dumps({"timestamp_utc":now,"status":"passed","steps":["Python syntax checks","10 mathematical assertions","4 temporary-fixture deployment self-tests","source/metadata/bibliography checks","current-source LaTeX build","PDF and visual-minimum checks","exact-nine-root-file check","cache cleanup"],"pdf_pages":pages,"table_environments":tables,"figure_assets":figs,"biological_validation":"not performed"},indent=2)+"\n")
+          files=[]
+          for p in sorted(q for q in root.rglob('*') if q.is_file() and q.as_posix()!="results/sha256_manifest.json"):
+              if "__pycache__" in p.parts or p.suffix==".pyc": raise SystemExit("Cache file still present: "+p.as_posix())
+              files.append({"path":p.as_posix(),"size_bytes":p.stat().st_size,"sha256":hashlib.sha256(p.read_bytes()).hexdigest()})
+          Path("results/sha256_manifest.json").write_text(json.dumps({"generated_utc":now,"algorithm":"SHA-256","manifest_self_hash_excluded":True,"file_count":len(files),"files":files},indent=2)+"\n")
+          print(json.dumps({"status":"passed","pdf_pages":pages,"tables":tables,"figures":figs,"root_core_files":len(core),"manifest_files":len(files)},indent=2))
+          PY
+      - name: Commit cleanup, verify remote blobs and tag release
+        env:
+          RELEASE_DIR: "Theoretical Research/Information_Theoretic_Limits_of_Generative_AI_for_Designing_Synthetic_Gene_Circuits"
+          RELEASE_SLUG: "Information_Theoretic_Limits_of_Generative_AI_for_Designing_Synthetic_Gene_Circuits"
+          RELEASE_TAG: "v2026.10.17-02"
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path("Theoretical Research/Readme.md"); s=p.read_text(); slug=os.environ["RELEASE_SLUG"]
+          if slug not in s:
+              marker="\n|---|---|---|---|\n"
+              if marker not in s: raise SystemExit("Index format unrecognized")
+              row=f"| 2026.10.17 | Two Information Channels, One Design Limit | Information-theoretic framework preprint | [{slug}]({slug}/) |\n"
+              p.write_text(s.replace(marker,marker+row,1))
+          PY
+          rm -f gene-circuit-release-repair-ready
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main --tags
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then echo "Tag collision; refusing overwrite." >&2; exit 1; fi
+          git add -A
+          python - <<'PY'
+          import subprocess
+          changed=subprocess.check_output(["git","diff","--cached","--name-only"],text=True).splitlines()
+          ok=lambda p:p.startswith("Theoretical Research/Information_Theoretic_Limits_of_Generative_AI_for_Designing_Synthetic_Gene_Circuits/") or p in {"Theoretical Research/Readme.md","gene-circuit-release-repair-ready"}
+          bad=[p for p in changed if not ok(p)]
+          if not changed or bad: raise SystemExit("Unexpected staged paths: "+repr(bad))
+          PY
+          git commit -m "Finalize and clean gene-circuit information-theoretic release"
+          git fetch origin main --tags
+          git rebase origin/main
+          git push origin HEAD:main
+          COMMIT="$(git rev-parse HEAD)"
+          git fetch origin main --tags
+          test "$(git rev-parse origin/main)" = "$COMMIT"
+          mapfile -t ROOT_ENTRIES < <(git ls-tree --name-only "origin/main:$RELEASE_DIR" | sort)
+          printf '%s\n' "${ROOT_ENTRIES[@]}" > /tmp/gene-root-entries.txt
+          python - <<'PY'
+          import hashlib, json, os, subprocess
+          from pathlib import Path
+          want=sorted(["paper.tex","paper.pdf","verify_model.py","README.md","CITATION.cff","paper.bib",".zenodo.json","schema_article.jsonld","deploy.py","figures","results"])
+          got=sorted(open("/tmp/gene-root-entries.txt").read().splitlines())
+          if got!=want: raise SystemExit(f"Remote root manifest mismatch: missing={set(want)-set(got)}; extra={set(got)-set(want)}")
+          d=os.environ["RELEASE_DIR"]
+          paths=subprocess.check_output(["git","ls-tree","-r","--name-only","origin/main","--",d],text=True).splitlines()
+          if len(paths)<30: raise SystemExit(f"Remote evidence tree too small: {len(paths)}")
+          for p in paths:
+              local=subprocess.check_output(["git","hash-object",p],text=True).strip()
+              remote=subprocess.check_output(["git","rev-parse",f"origin/main:{p}"],text=True).strip()
+              if local!=remote: raise SystemExit("Remote blob mismatch: "+p)
+          release=Path(d)
+          manifest=json.loads((release/"results/sha256_manifest.json").read_text())
+          for x in manifest["files"]:
+              p=release/x["path"]
+              if not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest()!=x["sha256"]: raise SystemExit("Manifest mismatch: "+x["path"])
+          if os.environ["RELEASE_SLUG"] not in open("Theoretical Research/Readme.md").read(): raise SystemExit("Index entry missing")
+          print(f"Remote verification passed: 9 core files, figures/results, {len(paths)} matching blobs and SHA-256 manifest.")
+          PY
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then echo "Tag appeared concurrently; refusing overwrite." >&2; exit 1; fi
+          git tag -a "$RELEASE_TAG" -m "Gene-circuit information-theoretic preprint $RELEASE_TAG" "$COMMIT"
+          git push origin "refs/tags/$RELEASE_TAG"
+          git fetch origin main --tags
+          test "$(git rev-parse "refs/tags/$RELEASE_TAG^{commit}")" = "$COMMIT"
+          echo "## Gene-circuit information-theoretic release" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Tag: $RELEASE_TAG" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Commit: $COMMIT" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Release: https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/$RELEASE_SLUG" >> "$GITHUB_STEP_SUMMARY"
+          echo "- PDF: https://github.com/Devanik21/The-Invention-Archive/blob/main/Theoretical%20Research/$RELEASE_SLUG/paper.pdf" >> "$GITHUB_STEP_SUMMARY"
+          echo "- All release blobs independently matched the pushed tree." >> "$GITHUB_STEP_SUMMARY"
