@@ -1,0 +1,165 @@
+name: Build and publish Interrogating Alien Life research preprint
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".research-staging/alien-repair/**"
+      - ".github/workflows/build-alien-repair-rl.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: alien-repair-rl-release
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    # The bot's artifact commit removes the staging payload and must not trigger an infinite loop.
+    if: ${{ !startsWith(github.event.head_commit.message, 'publish(alien-repair):') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Assemble checked-in manuscript and model source
+        shell: bash
+        run: |
+          set -euo pipefail
+          RELEASE_DIR="Theoretical Research/Interrogating_Alien_Life_Adversarially_Trained_Reinforcement_Learning_for_Substrate_Agnostic_Detection_of_Self_Repair_Dynamics"
+          test -d .research-staging/alien-repair
+          test ! -e "$RELEASE_DIR/paper.pdf" || { echo "Release PDF already exists; refusing overwrite." >&2; exit 1; }
+          cat .research-staging/alien-repair/paper.tex.part* > "$RELEASE_DIR/paper.tex"
+          cat .research-staging/alien-repair/verify_model.py.part* > "$RELEASE_DIR/verify_model.py"
+          test -s "$RELEASE_DIR/paper.tex"
+          test -s "$RELEASE_DIR/verify_model.py"
+          mkdir -p "$RELEASE_DIR/figures" "$RELEASE_DIR/results"
+
+      - name: Install benchmark and validation dependencies
+        run: |
+          python -m pip install --disable-pip-version-check "numpy>=1.24" "matplotlib>=3.7" "networkx>=3.0" "PyYAML>=6.0" "PyMuPDF>=1.23"
+
+      - name: Execute synthetic benchmark and code checks
+        working-directory: "Theoretical Research/Interrogating_Alien_Life_Adversarially_Trained_Reinforcement_Learning_for_Substrate_Agnostic_Detection_of_Self_Repair_Dynamics"
+        shell: bash
+        run: |
+          set -euo pipefail
+          python verify_model.py > results/verification_run.log 2>&1
+          python -m py_compile verify_model.py deploy.py > results/python_compile.log 2>&1
+          rm -rf __pycache__
+          python deploy.py --self-test > results/deploy_self_test.log 2>&1
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("results/benchmark_summary.json")
+          d = json.loads(p.read_text(encoding="utf-8"))
+          assert d["metadata"]["synthetic_only"] is True
+          assert set(d["metrics"]) == {"Adversarial Q-RL", "Uniform Q-RL", "Recovery-only", "Fixed full panel", "Random order panel"}
+          assert len(d["noise_sensitivity"]) == 4
+          print("PASS: benchmark outputs and smoke checks; synthetic-only label retained.")
+          PY
+
+      - name: Compile the PDF from current LaTeX sources
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: paper.tex
+          working_directory: "Theoretical Research/Interrogating_Alien_Life_Adversarially_Trained_Reinforcement_Learning_for_Substrate_Agnostic_Detection_of_Self_Repair_Dynamics"
+          latexmk_use_xelatex: false
+
+      - name: Validate release artifacts and preserve evidence
+        working-directory: "Theoretical Research/Interrogating_Alien_Life_Adversarially_Trained_Reinforcement_Learning_for_Substrate_Agnostic_Detection_of_Self_Repair_Dynamics"
+        env:
+          SOURCE_COMMIT: ${{ github.sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Keep only the compiled PDF; LaTeX intermediate files belong in the temporary build, not the release.
+          rm -f paper.aux paper.bbl paper.bcf paper.blg paper.fdb_latexmk paper.fls paper.lof paper.log paper.lot paper.out paper.run.xml paper.synctex.gz paper.toc paper.xdv
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+          import deploy
+          root = Path(".")
+          tex = (root / "paper.tex").read_text(encoding="utf-8")
+          assert len(re.findall(r"\\begin\\{table\\}", tex)) >= 5
+          assert len(re.findall(r"\\begin\\{figure\\}", tex)) >= 8
+          pages, chars = deploy.inspect_pdf(root / "paper.pdf")
+          assert pages >= 7 and chars > 15000
+          metadata = deploy.validate_current(root, check_root=True)
+          summary = json.loads((root / "results" / "benchmark_summary.json").read_text(encoding="utf-8"))
+          status = {
+            "status": "passed",
+            "pdf_pages": pages,
+            "pdf_text_characters": chars,
+            "table_environments": len(re.findall(r"\\begin\\{table\\}", tex)),
+            "figure_environments": len(re.findall(r"\\begin\\{figure\\}", tex)),
+            "benchmark_methods": list(summary["metrics"]),
+            "synthetic_only": True,
+            "metadata_validation": metadata,
+            "empirical_validation": "not performed"
+          }
+          (root / "results" / "deployment_validation.json").write_text(json.dumps(status, indent=2) + "\\n", encoding="utf-8")
+          print(json.dumps(status, indent=2))
+          PY
+          cat > results/remote_deployment_status.md <<EOF
+          # Remote build provenance
+
+          - Workflow run: ${RUN_URL}
+          - Source commit: ${SOURCE_COMMIT}
+          - Build status: model executed, LaTeX PDF compiled from the staged source, and artifact checks passed.
+          - Scope: synthetic benchmark only; empirical or planetary-sample validation was not performed.
+          EOF
+          rm -rf __pycache__
+          python - <<'PY'
+          import deploy
+          from pathlib import Path
+          deploy.make_manifest(Path("."))
+          PY
+          rm -rf __pycache__
+          # py_compile outputs must not be part of a release archive.
+          test ! -d __pycache__
+          python - <<'PY'
+          from pathlib import Path
+          CORE = {"paper.tex","paper.pdf","verify_model.py","README.md","CITATION.cff","paper.bib",".zenodo.json","schema_article.jsonld","deploy.py"}
+          found = {p.name for p in Path(".").iterdir() if p.is_file()}
+          assert found == CORE, f"Core-file manifest mismatch: missing={CORE-found}; extra={found-CORE}"
+          print("PASS: exactly nine root-level core files.")
+          PY
+
+      - name: Commit all generated outputs and verify push
+        shell: bash
+        env:
+          RELEASE_DIR: "Theoretical Research/Interrogating_Alien_Life_Adversarially_Trained_Reinforcement_Learning_for_Substrate_Agnostic_Detection_of_Self_Repair_Dynamics"
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -r --ignore-unmatch .research-staging/alien-repair
+          git add -- "$RELEASE_DIR"
+          if git diff --cached --quiet; then
+            echo "No release payload changes were staged; refusing a false-success run." >&2
+            exit 1
+          fi
+          git commit -m "publish(alien-repair): build and archive research preprint"
+          # Do not overwrite concurrent work. Rebase onto the observed current main and retry a rejected non-fast-forward push.
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase FETCH_HEAD
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Push attempt $attempt failed; refetching main before retry." >&2
+          done
+          echo "Unable to push the verified release after three safe attempts." >&2
+          exit 1
