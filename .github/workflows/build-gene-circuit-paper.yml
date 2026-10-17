@@ -60,8 +60,8 @@ jobs:
           import hashlib, json, os, platform, re, sys
           from datetime import datetime, timezone
           from pathlib import Path
-          import numpy, matplotlib, networkx, pypdf, yaml, deploy
           os.chdir(os.environ["RELEASE_DIR"]); root=Path('.')
+          import numpy, matplotlib, networkx, pypdf, yaml, deploy
           core={"paper.tex","paper.pdf","verify_model.py","README.md","CITATION.cff","paper.bib",".zenodo.json","schema_article.jsonld","deploy.py"}
           present={p.name for p in root.iterdir() if p.is_file()}
           if present != core: raise SystemExit(f"Root manifest mismatch: missing={core-present}; extra={present-core}")
