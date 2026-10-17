@@ -1,0 +1,30 @@
+{
+  "title": "Interrogating Alien Life: Adversarially Trained Reinforcement Learning for Substrate-Agnostic Detection of Self-Repair Dynamics",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "creators": [
+    {
+      "name": "Debnath, Devanik"
+    }
+  ],
+  "description": "Methodological proposal and synthetic benchmark for adversarially trained sequential probing of repair-like dynamics. No field, spacecraft, planetary, or biological sample data were used. This metadata is prepared for future use; no Zenodo deposit or DOI is claimed.",
+  "keywords": [
+    "astrobiology",
+    "agnostic biosignatures",
+    "reinforcement learning",
+    "adversarial evaluation",
+    "self-repair dynamics",
+    "false-positive control",
+    "synthetic benchmark"
+  ],
+  "version": "2026.10.17",
+  "access_right": "open",
+  "license": "MIT",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Devanik21/The-Invention-Archive",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
