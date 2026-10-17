@@ -1,0 +1,47 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.82in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[backend=biber,style=numeric,natbib=true,sorting=none]{biblatex}
+\addbibresource{paper.bib}
+\usepackage{multirow}
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!45!black,pdftitle={Interrogating Alien Life: Adversarially Trained Reinforcement Learning for Substrate-Agnostic Detection of Self-Repair Dynamics},pdfauthor={Devanik Debnath}}
+\graphicspath{{figures/}}
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+\captionsetup{font=small,labelfont=bf}
+\setlist{itemsep=0.15em,topsep=0.2em}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\Hrep}{H_{\mathrm{rep}}}
+\newcommand{\Habi}{H_{\mathrm{abi}}}
+\newcommand{\clip}{\operatorname{clip}}
+
+\title{\vspace{-1.2em}\textbf{Interrogating Alien Life: Adversarially Trained Reinforcement Learning for Substrate-Agnostic Detection of Self-Repair Dynamics}}
+\author{Devanik Debnath\\\small Independent research preprint; author profile: \href{https://github.com/Devanik21}{Devanik21}}
+\date{17 October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A search for life that presupposes terrestrial molecules or familiar morphology risks missing unfamiliar systems, yet broad dynamical traits such as recovery after damage are not unique to biology. We propose an intervention-based framework for evaluating self-repair-like dynamics without requiring a particular chemical substrate. A sensor policy selects among five bounded probes: initial recovery, dependence on an external drive or gradient, response to repeated perturbation, spatial localization, and transfer to a novel perturbation context. A finite family of synthetic abiotic decoys---passive relaxation, self-healing material, driven oscillator, and scripted controller---acts as a deliberately confounding null set. A tabular reinforcement-learning policy is trained with adaptive hard-negative reweighting, which shifts training probability toward decoys that currently trigger false positives. In one fixed-seed synthetic benchmark, adversarial Q-learning reaches 0.935 balanced accuracy and 0.979 score AUROC while using an average of 3.75 probes; its worst-decoy false-positive rate is 0.168, versus 0.244 for uniformly trained Q-learning and 0.328 for a fixed five-probe likelihood-ratio panel. A recovery-only baseline has 0.746 worst-decoy false-positive rate, illustrating why recovery alone is weak evidence. A one-factor noise sweep reduces balanced accuracy from 0.975 at 0.75 times nominal noise to 0.848 at 1.5 times nominal noise. These are results from hand-specified synthetic worlds, not observations from planetary samples or proof of extraterrestrial life. The contribution is a falsifiable assay design and reproducible computational baseline; empirical transfer across substrates and instruments remains untested.
+\end{abstract}
+
+\textbf{Keywords:} agnostic biosignatures; astrobiology; self-repair; active sensing; adversarial reinforcement learning; hard-negative mining; nonequilibrium dynamics; false-positive control
+
+\section{Introduction}
+How should an instrument interrogate a system when the target substrate is unknown, but the system can be perturbed and observed over time? A conventional life-detection pipeline often starts from specific chemical, isotopic, morphological, or atmospheric signals. Agnostic biosignature research broadens that search by asking what observations may be informative without assuming a familiar terrestrial molecular inventory \citep{Graham2026Agnostic,Cleaves2023MLBiosignature}. Mission-oriented frameworks also stress contextual interpretation, ambiguity, and false-positive analysis rather than a single decisive feature \citep{Neveu2018Ladder,Malaterre2023Biosignature,Walker2018Exoplanet}.
+
+This paper asks whether a more active strategy is useful: instead of merely observing a candidate system, select small, bounded perturbations and compare the resulting response with competing abiotic explanations. The focal pattern is *self-repair-like dynamics*: a localized disturbance is reduced, the response may depend on available drive or resources, repeated insults may reveal state or history dependence, and activity may cease or change once the disturbance has been resolved. These operational features are inspired by known biological repair and nonequilibrium organization, but none is assumed to be unique to life. Biological tissue models can display self-healing trajectories, while nonliving materials and driven processes can also relax or recover \citep{Suki2020SelfHealing,Youk2026NonEquilibrium}.
