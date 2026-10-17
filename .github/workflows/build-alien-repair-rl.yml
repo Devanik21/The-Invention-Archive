@@ -92,8 +92,8 @@ jobs:
           import deploy
           root = Path(".")
           tex = (root / "paper.tex").read_text(encoding="utf-8")
-          assert tex.count(r"\\begin{table}") >= 5
-          assert tex.count(r"\\begin{figure}") >= 8
+          assert tex.count(chr(92) + "begin{table}") >= 5
+          assert tex.count(chr(92) + "begin{figure}") >= 8
           pages, chars = deploy.inspect_pdf(root / "paper.pdf")
           assert pages >= 7 and chars > 15000
           metadata = deploy.validate_current(root, check_root=True)
@@ -102,14 +102,14 @@ jobs:
             "status": "passed",
             "pdf_pages": pages,
             "pdf_text_characters": chars,
-            "table_environments": tex.count(r"\\begin{table}"),
-            "figure_environments": tex.count(r"\\begin{figure}"),
+            "table_environments": tex.count(chr(92) + "begin{table}"),
+            "figure_environments": tex.count(chr(92) + "begin{figure}"),
             "benchmark_methods": list(summary["metrics"]),
             "synthetic_only": True,
             "metadata_validation": metadata,
             "empirical_validation": "not performed"
           }
-          (root / "results" / "deployment_validation.json").write_text(json.dumps(status, indent=2) + "\\n", encoding="utf-8")
+          (root / "results" / "deployment_validation.json").write_text(json.dumps(status, indent=2) + chr(10), encoding="utf-8")
           print(json.dumps(status, indent=2))
           PY
           cat > results/remote_deployment_status.md <<EOF
