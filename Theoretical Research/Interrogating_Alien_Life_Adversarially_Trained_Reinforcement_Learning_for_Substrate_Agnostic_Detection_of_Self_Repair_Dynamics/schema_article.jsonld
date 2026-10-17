@@ -1,0 +1,30 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Interrogating Alien Life: Adversarially Trained Reinforcement Learning for Substrate-Agnostic Detection of Self-Repair Dynamics",
+  "name": "Interrogating Alien Life: Adversarially Trained Reinforcement Learning for Substrate-Agnostic Detection of Self-Repair Dynamics",
+  "datePublished": "2026-10-17",
+  "version": "2026.10.17",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath"
+  },
+  "description": "A methodological proposal and internally generated synthetic benchmark for adaptive reinforcement-learning probes that distinguish repair-like dynamics from a finite family of hand-specified abiotic decoys. Not empirical evidence of life.",
+  "keywords": [
+    "astrobiology",
+    "agnostic biosignatures",
+    "reinforcement learning",
+    "adversarial evaluation",
+    "self-repair dynamics",
+    "synthetic benchmark"
+  ],
+  "isAccessibleForFree": true,
+  "inLanguage": "en",
+  "encodingFormat": "application/pdf",
+  "url": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Interrogating_Alien_Life_Adversarially_Trained_Reinforcement_Learning_for_Substrate_Agnostic_Detection_of_Self_Repair_Dynamics",
+  "isPartOf": {
+    "@type": "CreativeWork",
+    "name": "The-Invention-Archive",
+    "url": "https://github.com/Devanik21/The-Invention-Archive"
+  }
+}
