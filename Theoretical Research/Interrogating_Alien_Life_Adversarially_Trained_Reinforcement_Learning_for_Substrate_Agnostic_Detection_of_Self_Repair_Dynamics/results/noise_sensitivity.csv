@@ -1,0 +1,5 @@
+noise_multiplier,balanced_accuracy,sensitivity,specificity,worst_decoy_fpr,per_decoy_fpr,n_positive,n_negative
+0.75,0.975,0.98,0.97,0.085,"{""Driven oscillator"": 0.0, ""Passive relaxor"": 0.0, ""Scripted controller"": 0.085, ""Self-healing material"": 0.035}",200,800
+1.0,0.92625,0.93,0.9225,0.235,"{""Driven oscillator"": 0.0, ""Passive relaxor"": 0.0, ""Scripted controller"": 0.235, ""Self-healing material"": 0.075}",200,800
+1.25,0.87062,0.81,0.93125,0.165,"{""Driven oscillator"": 0.015, ""Passive relaxor"": 0.0, ""Scripted controller"": 0.165, ""Self-healing material"": 0.095}",200,800
+1.5,0.84813,0.775,0.92125,0.21,"{""Driven oscillator"": 0.005, ""Passive relaxor"": 0.0, ""Scripted controller"": 0.21, ""Self-healing material"": 0.1}",200,800

@@ -1,0 +1,326 @@
+/home/runner/work/The-Invention-Archive/The-Invention-Archive/Theoretical Research/Interrogating_Alien_Life_Adversarially_Trained_Reinforcement_Learning_for_Substrate_Agnostic_Detection_of_Self_Repair_Dynamics/verify_model.py:343: UserWarning: 
+
+The min_source_margin keyword argument is not applicable when drawing edges
+with LineCollection.
+
+To make this warning go away, either specify `arrows=True` to
+force FancyArrowPatches or use the default values.
+Note that using FancyArrowPatches may be slow for large graphs.
+
+  nx.draw_networkx_edges(G,pos,width=1.2,edge_color="#8b8b8b",min_source_margin=23,min_target_margin=23,node_size=1700,ax=ax)
+/home/runner/work/The-Invention-Archive/The-Invention-Archive/Theoretical Research/Interrogating_Alien_Life_Adversarially_Trained_Reinforcement_Learning_for_Substrate_Agnostic_Detection_of_Self_Repair_Dynamics/verify_model.py:343: UserWarning: 
+
+The min_target_margin keyword argument is not applicable when drawing edges
+with LineCollection.
+
+To make this warning go away, either specify `arrows=True` to
+force FancyArrowPatches or use the default values.
+Note that using FancyArrowPatches may be slow for large graphs.
+
+  nx.draw_networkx_edges(G,pos,width=1.2,edge_color="#8b8b8b",min_source_margin=23,min_target_margin=23,node_size=1700,ax=ax)
+{
+  "status": "PASS",
+  "seed": 20261017,
+  "episodes_per_agent": 30000,
+  "metrics": {
+    "Adversarial Q-RL": {
+      "sensitivity": 0.932,
+      "sensitivity_wilson_95": [
+        0.90648,
+        0.95093
+      ],
+      "specificity": 0.9375,
+      "specificity_wilson_95": [
+        0.92603,
+        0.94729
+      ],
+      "false_positive_rate": 0.0625,
+      "fpr_wilson_95": [
+        0.05271,
+        0.07397
+      ],
+      "worst_decoy_fpr": 0.168,
+      "balanced_accuracy": 0.93475,
+      "auroc_score": 0.97851,
+      "mean_probes": 3.7516,
+      "n_positive": 500,
+      "n_negative": 2000,
+      "per_decoy_fpr": {
+        "Passive relaxor": 0.002,
+        "Self-healing material": 0.078,
+        "Driven oscillator": 0.002,
+        "Scripted controller": 0.168
+      },
+      "per_decoy_fpr_wilson_95": {
+        "Passive relaxor": [
+          0.00035,
+          0.01124
+        ],
+        "Self-healing material": [
+          0.05758,
+          0.10485
+        ],
+        "Driven oscillator": [
+          0.00035,
+          0.01124
+        ],
+        "Scripted controller": [
+          0.13779,
+          0.20328
+        ]
+      }
+    },
+    "Uniform Q-RL": {
+      "sensitivity": 0.942,
+      "sensitivity_wilson_95": [
+        0.91794,
+        0.95932
+      ],
+      "specificity": 0.919,
+      "specificity_wilson_95": [
+        0.90622,
+        0.93017
+      ],
+      "false_positive_rate": 0.081,
+      "fpr_wilson_95": [
+        0.06983,
+        0.09378
+      ],
+      "worst_decoy_fpr": 0.244,
+      "balanced_accuracy": 0.9305,
+      "auroc_score": 0.98295,
+      "mean_probes": 3.5076,
+      "n_positive": 500,
+      "n_negative": 2000,
+      "per_decoy_fpr": {
+        "Passive relaxor": 0.0,
+        "Self-healing material": 0.08,
+        "Driven oscillator": 0.0,
+        "Scripted controller": 0.244
+      },
+      "per_decoy_fpr_wilson_95": {
+        "Passive relaxor": [
+          0.0,
+          0.00762
+        ],
+        "Self-healing material": [
+          0.0593,
+          0.10711
+        ],
+        "Driven oscillator": [
+          0.0,
+          0.00762
+        ],
+        "Scripted controller": [
+          0.2084,
+          0.28351
+        ]
+      }
+    },
+    "Recovery-only": {
+      "sensitivity": 0.552,
+      "sensitivity_wilson_95": [
+        0.50818,
+        0.59503
+      ],
+      "specificity": 0.496,
+      "specificity_wilson_95": [
+        0.47412,
+        0.5179
+      ],
+      "false_positive_rate": 0.504,
+      "fpr_wilson_95": [
+        0.4821,
+        0.52588
+      ],
+      "worst_decoy_fpr": 0.746,
+      "balanced_accuracy": 0.524,
+      "auroc_score": 0.60445,
+      "mean_probes": 1.0,
+      "n_positive": 500,
+      "n_negative": 2000,
+      "per_decoy_fpr": {
+        "Passive relaxor": 0.69,
+        "Self-healing material": 0.746,
+        "Driven oscillator": 0.048,
+        "Scripted controller": 0.532
+      },
+      "per_decoy_fpr_wilson_95": {
+        "Passive relaxor": [
+          0.64814,
+          0.72896
+        ],
+        "Self-healing material": [
+          0.70607,
+          0.78218
+        ],
+        "Driven oscillator": [
+          0.03246,
+          0.07043
+        ],
+        "Scripted controller": [
+          0.48819,
+          0.57533
+        ]
+      }
+    },
+    "Fixed full panel": {
+      "sensitivity": 0.976,
+      "sensitivity_wilson_95": [
+        0.95852,
+        0.98622
+      ],
+      "specificity": 0.876,
+      "specificity_wilson_95": [
+        0.86083,
+        0.88973
+      ],
+      "false_positive_rate": 0.124,
+      "fpr_wilson_95": [
+        0.11027,
+        0.13917
+      ],
+      "worst_decoy_fpr": 0.328,
+      "balanced_accuracy": 0.926,
+      "auroc_score": 0.98274,
+      "mean_probes": 5.0,
+      "n_positive": 500,
+      "n_negative": 2000,
+      "per_decoy_fpr": {
+        "Passive relaxor": 0.0,
+        "Self-healing material": 0.168,
+        "Driven oscillator": 0.0,
+        "Scripted controller": 0.328
+      },
+      "per_decoy_fpr_wilson_95": {
+        "Passive relaxor": [
+          0.0,
+          0.00762
+        ],
+        "Self-healing material": [
+          0.13779,
+          0.20328
+        ],
+        "Driven oscillator": [
+          0.0,
+          0.00762
+        ],
+        "Scripted controller": [
+          0.2883,
+          0.37033
+        ]
+      }
+    },
+    "Random order panel": {
+      "sensitivity": 0.972,
+      "sensitivity_wilson_95": [
+        0.95355,
+        0.98325
+      ],
+      "specificity": 0.8945,
+      "specificity_wilson_95": [
+        0.88027,
+        0.90722
+      ],
+      "false_positive_rate": 0.1055,
+      "fpr_wilson_95": [
+        0.09278,
+        0.11973
+      ],
+      "worst_decoy_fpr": 0.288,
+      "balanced_accuracy": 0.93325,
+      "auroc_score": 0.98443,
+      "mean_probes": 5.0,
+      "n_positive": 500,
+      "n_negative": 2000,
+      "per_decoy_fpr": {
+        "Passive relaxor": 0.0,
+        "Self-healing material": 0.126,
+        "Driven oscillator": 0.008,
+        "Scripted controller": 0.288
+      },
+      "per_decoy_fpr_wilson_95": {
+        "Passive relaxor": [
+          0.0,
+          0.00762
+        ],
+        "Self-healing material": [
+          0.09973,
+          0.15797
+        ],
+        "Driven oscillator": [
+          0.00312,
+          0.02039
+        ],
+        "Scripted controller": [
+          0.25004,
+          0.32919
+        ]
+      }
+    }
+  },
+  "noise_sensitivity": [
+    {
+      "noise_multiplier": 0.75,
+      "balanced_accuracy": 0.975,
+      "sensitivity": 0.98,
+      "specificity": 0.97,
+      "worst_decoy_fpr": 0.085,
+      "per_decoy_fpr": {
+        "Passive relaxor": 0.0,
+        "Self-healing material": 0.035,
+        "Driven oscillator": 0.0,
+        "Scripted controller": 0.085
+      },
+      "n_positive": 200,
+      "n_negative": 800
+    },
+    {
+      "noise_multiplier": 1.0,
+      "balanced_accuracy": 0.92625,
+      "sensitivity": 0.93,
+      "specificity": 0.9225,
+      "worst_decoy_fpr": 0.235,
+      "per_decoy_fpr": {
+        "Passive relaxor": 0.0,
+        "Self-healing material": 0.075,
+        "Driven oscillator": 0.0,
+        "Scripted controller": 0.235
+      },
+      "n_positive": 200,
+      "n_negative": 800
+    },
+    {
+      "noise_multiplier": 1.25,
+      "balanced_accuracy": 0.87062,
+      "sensitivity": 0.81,
+      "specificity": 0.93125,
+      "worst_decoy_fpr": 0.165,
+      "per_decoy_fpr": {
+        "Passive relaxor": 0.0,
+        "Self-healing material": 0.095,
+        "Driven oscillator": 0.015,
+        "Scripted controller": 0.165
+      },
+      "n_positive": 200,
+      "n_negative": 800
+    },
+    {
+      "noise_multiplier": 1.5,
+      "balanced_accuracy": 0.84813,
+      "sensitivity": 0.775,
+      "specificity": 0.92125,
+      "worst_decoy_fpr": 0.21,
+      "per_decoy_fpr": {
+        "Passive relaxor": 0.0,
+        "Self-healing material": 0.1,
+        "Driven oscillator": 0.005,
+        "Scripted controller": 0.21
+      },
+      "n_positive": 200,
+      "n_negative": 800
+    }
+  ],
+  "figures": 18,
+  "run_started_utc": "2026-10-17T08:36:43.340722+00:00"
+}

@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "pdf_pages": 16,
+  "pdf_text_characters": 33762,
+  "table_environments": 8,
+  "figure_environments": 9,
+  "benchmark_methods": [
+    "Adversarial Q-RL",
+    "Fixed full panel",
+    "Random order panel",
+    "Recovery-only",
+    "Uniform Q-RL"
+  ],
+  "synthetic_only": true,
+  "metadata_validation": {
+    "cff": "pass",
+    "zenodo_json": "pass",
+    "jsonld": "pass",
+    "bib_keys": "pass"
+  },
+  "empirical_validation": "not performed"
+}
