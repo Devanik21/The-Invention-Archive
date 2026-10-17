@@ -1,0 +1,54 @@
+    x=np.arange(len(ms)); w=.22
+    for j,m in enumerate(met): ax.bar(x+(j-1)*w,[results[n][m] for n in ms],w,label=m.replace("_"," "))
+    ax.set_xticks(x,ms,rotation=14,ha="right"); ax.set_ylim(0,1); ax.set_ylabel("Metric (0-1)"); ax.set_title("Aggregate held-out metrics; prevalence is balanced by construction")
+    ax.grid(axis="y",alpha=.22); ax.legend(fontsize=8); savefig("fig4_metrics",fig)
+    # Fig 5: graph of cross-domain observation process.
+    G=nx.DiGraph()
+    nodes={"u":"Perturbation","x":"Latent\nstate","r":"Repair-like\nresponse","v":"Drive /\nresource","y1":"Temporal\ntrajectory","y2":"Spatial\nresponse","y3":"History /\ntransfer","agent":"Probe\npolicy","decision":"Evidence /\nuncertainty"}
+    G.add_edges_from([("u","x"),("x","r"),("v","r"),("r","y1"),("r","y2"),("r","y3"),("y1","agent"),("y2","agent"),("y3","agent"),("agent","decision")])
+    pos={"u":(0,1),"x":(2,1),"r":(4,1),"v":(2,-.45),"y1":(6,2.2),"y2":(6,1),"y3":(6,-.2),"agent":(8,1),"decision":(10.3,1)}
+    fig, ax=plt.subplots(figsize=(8.8,3.9))
+    # Draw directed edges first so node disks mask edge interiors and labels remain legible.
+    nx.draw_networkx_edges(G,pos,arrows=True,arrowstyle="-|>",arrowsize=14,width=1.2,connectionstyle="arc3,rad=0.03",min_source_margin=28,min_target_margin=28,node_size=2500,ax=ax)
+    nx.draw_networkx_nodes(G,pos,node_size=2500,node_color="#e9f0fb",edgecolors="#355070",linewidths=1,ax=ax)
+    nx.draw_networkx_labels(G,pos,labels=nodes,font_size=6.4,ax=ax)
+    ax.set_xlim(-.8,11.2); ax.set_ylim(-1.0,2.8)
+    ax.set_title("Causal measurement graph: substrate labels are not inputs to the detector"); ax.axis("off"); savefig("fig5_measurement_graph",fig)
+    # Fig 6: signatures versus strongest confounders as an undirected design graph.
+    G=nx.Graph()
+    sig=["Recovery", "Drive coupling", "History dependence", "Locality", "Cessation", "Transfer"]
+    conf=["Passive relaxation", "Self-healing material", "Oscillator", "Scripted controller"]
+    G.add_nodes_from(sig,bipartite=0); G.add_nodes_from(conf,bipartite=1)
+    links={"Recovery":["Passive relaxation","Self-healing material","Scripted controller"],
+           "Drive coupling":["Oscillator","Scripted controller","Self-healing material"],
+           "History dependence":["Self-healing material","Scripted controller"],
+           "Locality":["Self-healing material","Scripted controller"],
+           "Cessation":["Passive relaxation","Self-healing material","Scripted controller"],
+           "Transfer":["Scripted controller","Self-healing material"]}
+    for s,cs in links.items():
+        for c in cs:G.add_edge(s,c)
+    pos={**{s:(0, i) for i,s in enumerate(sig)},**{c:(2.7,i+0.7) for i,c in enumerate(conf)}}
+    fig,ax=plt.subplots(figsize=(7.5,4.8)); col=["#d8ead1" if n in sig else "#f7dfc4" for n in G.nodes()]
+    # Edges must be below nodes/labels to prevent them crossing node text.
+    nx.draw_networkx_edges(G,pos,width=1.2,edge_color="#8b8b8b",min_source_margin=23,min_target_margin=23,node_size=1700,ax=ax)
+    nx.draw_networkx_nodes(G,pos,node_color=col,node_size=1700,edgecolors="#555",ax=ax)
+    display_labels={n:n.replace(" ","\n",1) if " " in n else n for n in G.nodes()}
+    nx.draw_networkx_labels(G,pos,labels=display_labels,font_size=6.5,ax=ax)
+    ax.set_title("Confounding graph: no single response feature is life-specific"); ax.axis("off"); savefig("fig6_confounding_graph",fig)
+    # Fig 7: method flow diagram
+    fig,ax=plt.subplots(figsize=(7.3,3.6)); ax.axis("off")
+    steps=[("1. Define context", "Safe perturbation limits\n+ sensor resolution"),("2. Probe", "Choose action under\nremaining budget"),("3. Measure", "Time, space, drive,\nhistory, transfer"),("4. Update", "Evidence vs hard-negative\nmodel family"),("5. Decide", "Continue / stop; report\nlikelihood + uncertainty")]
+    xpos=np.linspace(.1,.9,len(steps))
+    for i,((title,desc),x) in enumerate(zip(steps,xpos)):
+        ax.add_patch(plt.Rectangle((x-.085,.39),.17,.28,facecolor="#eef4fb",edgecolor="#355070",linewidth=1.1,transform=ax.transAxes))
+        ax.text(x,.58,title,ha="center",va="center",fontsize=8,weight="bold",transform=ax.transAxes)
+        ax.text(x,.47,desc,ha="center",va="center",fontsize=6.8,transform=ax.transAxes)
+        if i<len(steps)-1: ax.annotate("",xy=(xpos[i+1]-.09,.53),xytext=(x+.09,.53),xycoords=ax.transAxes,arrowprops=dict(arrowstyle="->",lw=1.3,color="#355070"))
+    ax.set_title("Proposed adaptive assay workflow (design, not flight hardware)",pad=16); savefig("fig7_method_flow",fig)
+    # Fig 8: adversarial RL training flow.
+    fig,ax=plt.subplots(figsize=(7.1,4.1)); ax.axis("off")
+    boxes=[(.08,.62,.23,.20,"Probe policy / Q-table","Select untested probe"),(.39,.62,.23,.20,"Synthetic environment","Repair model or decoy"),(.70,.62,.23,.20,"Observation + reward","Evidence, cost, decision"),(.39,.20,.23,.20,"Hard-negative adversary","Reweight confusing decoys"),(.70,.20,.23,.20,"Held-out stress test","Report worst-decoy FPR")]
+    for x,y,w,h,t,sub in boxes:
+        ax.add_patch(plt.Rectangle((x,y),w,h,facecolor="#f0f3f8",edgecolor="#3d5266",transform=ax.transAxes,linewidth=1.1))
+        ax.text(x+w/2,y+h*.65,t,ha="center",va="center",fontsize=8,weight="bold",transform=ax.transAxes)
+        ax.text(x+w/2,y+h*.34,sub,ha="center",va="center",fontsize=7,transform=ax.transAxes)
