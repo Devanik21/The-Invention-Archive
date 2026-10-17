@@ -1,0 +1,79 @@
+Method & Sensitivity (95\% Wilson CI) & Specificity & Balanced accuracy & AUROC & Worst-decoy FPR & Mean probes \\
+\midrule
+Adversarial Q-RL & 0.932 (0.906--0.951) & 0.938 & 0.935 & 0.979 & 0.168 & 3.75 \\
+Uniform Q-RL & 0.942 (0.918--0.959) & 0.919 & 0.931 & 0.983 & 0.244 & 3.51 \\
+Recovery-only & 0.552 (0.508--0.595) & 0.496 & 0.524 & 0.604 & 0.746 & 1.00 \\
+Fixed full panel & 0.976 (0.959--0.986) & 0.876 & 0.926 & 0.983 & 0.328 & 5.00 \\
+Random-order panel & 0.972 (0.954--0.983) & 0.895 & 0.933 & 0.984 & 0.288 & 5.00 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=0.92\linewidth]{fig1_roc.pdf}
+\caption{ROC curves over held-out samples from the synthetic benchmark. AUROC reflects score ranking under the current generative model and must not be interpreted as field-detection accuracy.}
+\label{fig:roc}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=0.98\linewidth]{fig2_decoy_fpr.pdf}
+\caption{FPR by abiotic decoy class. The scripted controller is the hardest family for all policies shown; average FPR conceals this failure mode.}
+\label{fig:fpr}
+\end{figure}
+
+The recovery-only baseline has balanced accuracy $0.524$ and a worst-decoy FPR of $0.746$ because passive relaxation and synthetic self-healing share a high initial-recovery mean with the repair-capable model. This supports a narrow design conclusion: the benchmark requires multiple perturbation-response dimensions to separate the chosen hypotheses. It does not show that these five dimensions are universal or sufficient in nature.
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=0.92\linewidth]{fig4_metrics.pdf}
+\caption{Aggregate held-out metrics. The panel methods sample all five probes; the RL policies can stop early, so the comparison includes a measurement-budget dimension.}
+\label{fig:metrics}
+\end{figure}
+
+\subsection{Noise sensitivity}
+For a one-factor test, the trained adversarial policy was kept fixed while probe noise standard deviations were multiplied by $0.75$, $1.0$, $1.25$, and $1.5$. Each point used 200 positive episodes and 200 episodes from each negative family. Balanced accuracy decreased from $0.975$ at $0.75\times$ noise to $0.848$ at $1.5\times$ noise. The worst-decoy FPR did not vary monotonically because the evaluation is finite and decision outcomes change discretely, emphasizing the need for repeated seeds and larger evaluation sets. The full sweep is archived in \texttt{results/noise\_sensitivity.csv}.
+
+\begin{table}[htbp]
+\centering\small
+\caption{One-factor noise sensitivity with a fixed learned policy. The nominal-noise point uses 1,000 episodes, whereas the main table uses 2,500; small differences are expected.}
+\label{tab:noise}
+\begin{tabular}{rrrrr}
+\toprule
+Noise multiplier & Sensitivity & Specificity & Balanced accuracy & Worst-decoy FPR \\
+\midrule
+0.75 & 0.980 & 0.970 & 0.975 & 0.085 \\
+1.00 & 0.930 & 0.923 & 0.926 & 0.235 \\
+1.25 & 0.810 & 0.931 & 0.871 & 0.165 \\
+1.50 & 0.775 & 0.921 & 0.848 & 0.210 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=0.88\linewidth]{fig9_noise_sensitivity.pdf}
+\caption{Balanced accuracy and worst-decoy FPR as measurement noise changes. The plotted benchmark has one fixed training seed and finite evaluation draws.}
+\label{fig:noise}
+\end{figure}
+
+\subsection{Measurement and confounding structure}
+Figure~\ref{fig:measurementgraph} summarizes the proposed causal measurement flow: controlled perturbations reach a latent system; temporal, spatial, drive-coupling, and transfer observations feed the probe-selection policy. The substrate label is intentionally absent from the policy inputs, but absence of a label is not proof of substrate invariance. Figure~\ref{fig:confounds} depicts feature overlap with confounder families. Recovery overlaps with several abiotic hypotheses, and even locality or history dependence can be mimicked by engineered systems.
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=0.98\linewidth]{fig5_measurement_graph.pdf}
+\caption{Measurement graph for the proposed assay. It represents a design-level causal abstraction, not a verified causal graph of all living systems.}
+\label{fig:measurementgraph}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=0.91\linewidth]{fig6_confounding_graph.pdf}
+\caption{Bipartite graph linking candidate features to plausible abiotic confounders. Edge inclusion expresses a qualitative challenge-design judgement rather than an empirically estimated probability.}
+\label{fig:confounds}
+\end{figure}
+
+\begin{table}[htbp]
+\centering\small
+\caption{Main failure modes, falsifiers, and next validation requirements. The future tests below have not yet been run.}
+\label{tab:falsification}
+\begin{tabularx}{\linewidth}{p{0.23\linewidth}X X}
+\toprule
+Claim under test & Falsifying observation & Required next test \\
+\midrule
