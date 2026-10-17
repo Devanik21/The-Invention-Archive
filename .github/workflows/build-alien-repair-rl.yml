@@ -92,8 +92,8 @@ jobs:
           import deploy
           root = Path(".")
           tex = (root / "paper.tex").read_text(encoding="utf-8")
-          assert len(re.findall(r"\\begin\\{table\\}", tex)) >= 5
-          assert len(re.findall(r"\\begin\\{figure\\}", tex)) >= 8
+          assert tex.count(r"\\begin{table}") >= 5
+          assert tex.count(r"\\begin{figure}") >= 8
           pages, chars = deploy.inspect_pdf(root / "paper.pdf")
           assert pages >= 7 and chars > 15000
           metadata = deploy.validate_current(root, check_root=True)
@@ -102,8 +102,8 @@ jobs:
             "status": "passed",
             "pdf_pages": pages,
             "pdf_text_characters": chars,
-            "table_environments": len(re.findall(r"\\begin\\{table\\}", tex)),
-            "figure_environments": len(re.findall(r"\\begin\\{figure\\}", tex)),
+            "table_environments": tex.count(r"\\begin{table}"),
+            "figure_environments": tex.count(r"\\begin{figure}"),
             "benchmark_methods": list(summary["metrics"]),
             "synthetic_only": True,
             "metadata_validation": metadata,
