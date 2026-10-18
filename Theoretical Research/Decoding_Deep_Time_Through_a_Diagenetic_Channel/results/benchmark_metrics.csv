@@ -1,0 +1,7 @@
+scenario,model,rmse,coverage90,nll,evidence_type
+in_distribution,single_proxy,0.4289,0.8853,0.5755,synthetic
+in_distribution,multi_proxy,0.2739,0.8956,0.1242,synthetic
+in_distribution,channel_aware,0.2686,0.8962,0.1047,synthetic
+shifted_alteration,single_proxy,0.6616,0.6721,1.3442,synthetic
+shifted_alteration,multi_proxy,0.3132,0.8356,0.2813,synthetic
+shifted_alteration,channel_aware,0.3007,0.8471,0.2351,synthetic
