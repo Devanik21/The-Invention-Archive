@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "root": "/home/runner/work/The-Invention-Archive/The-Invention-Archive/Theoretical Research/Silica_Light_Meters_Physics_Constrained_Inverse_Learning_of_Past_Underwater_Light_Regimes_from_Diatom_Frustule_Photonic_Crystals",
+  "pdf_sha256": "5b67b54a908a762361973eec9cf0c5b35b1e30279e87beca1cf3be1d2e3913c7",
+  "pdf_pages": 14,
+  "pdf_extracted_characters": 39391,
+  "core_file_count": 9,
+  "figure_pdf_count": 8,
+  "figure_png_count": 8,
+  "table_environments": 7,
+  "figure_environments": 8,
+  "checks": [
+    {
+      "check": "verify_model.py",
+      "exit_code": 0,
+      "output_tail": "{\n  \"status\": \"PASS\",\n  \"checks\": 11,\n  \"synthetic_only\": true,\n  \"scenarios\": {\n    \"optical_signal\": {\n      \"n_replicates\": 90,\n      \"mean_delta_r2_spectral_minus_pore\": 0.5170488993336672,\n      \"median_delta_r2_spectral_minus_pore\": 0.5311108315207341,\n      \"q025_delta\": 0.281225400104557,\n      \"q975_delta\": 0.7507874797313672,\n      \"interpretation\": \"synthetic only; not an empirical estimate\"\n    },\n    \"phylogeny_confounded\": {\n      \"n_replicates\": 90,\n      \"mean_delta_r2_spectral_minus_pore\": -0.0009039775436358267,\n      \"median_delta_r2_spectral_minus_pore\": -0.002656778144905003,\n      \"q025_delta\": -0.10547727034835212,\n      \"q975_delta\": 0.09443688547529588,\n      \"interpretation\": \"synthetic only; not an empirical estimate\"\n    },\n    \"no_direct_signal\": {\n      \"n_replicates\": 90,\n      \"mean_delta_r2_spectral_minus_pore\": -0.0016819503497254166,\n      \"median_delta_r2_spectral_minus_pore\": -0.00032827786084221877,\n      \"q025_delta\": -0.1235257543269388,\n      \"q975_delta\": 0.1220900868967954,\n      \"interpretation\": \"synthetic only; not an empirical estimate\"\n    }\n  }\n}\n"
+    }
+  ],
+  "empirical_validation": "NOT_PERFORMED",
+  "visual_quality": "PENDING_REMOTE_VISUAL_INSPECTION: visual gate not fully cleared",
+  "visual_review_status": "PENDING_REMOTE_VISUAL_INSPECTION"
+}

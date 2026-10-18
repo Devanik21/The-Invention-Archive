@@ -1,0 +1,7 @@
+claim,evidence_type,sources_or_artifact,epistemic_status,limitation
+Frustules display optical effects,Empirical literature,Ferrara 2014; Chen 2015; Romann 2015,High for selected taxa/configurations,Not a pale-light proxy
+Pore size can correlate indirectly with light,Single undergraduate thesis,Welchans 2020,Preliminary / single species-site,Needs independent multispecies validation
+Diatom morphology can support environmental reconstruction,Morphotype/core literature,Kloster 2018; Glemser 2019; Hofmann 2020,Established in particular systems,Proxy target and confounders vary
+Spectral descriptors add predictive value after phylogeny,Proposed hypothesis,No empirical test in this release,Untested,Primary falsifiable gate
+Inverse light posterior is calibrated,Proposed method only,No real data in this release,Untested,Requires independent modern/core ground truth
+Synthetic code checks pass,Current-run software output,verification_report.json,Tested when generated,Does not validate biological claims

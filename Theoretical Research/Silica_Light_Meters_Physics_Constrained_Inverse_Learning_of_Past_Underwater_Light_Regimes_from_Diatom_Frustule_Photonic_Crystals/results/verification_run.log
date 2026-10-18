@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "checks": 11,
+  "synthetic_only": true,
+  "scenarios": {
+    "optical_signal": {
+      "n_replicates": 90,
+      "mean_delta_r2_spectral_minus_pore": 0.5170488993336672,
+      "median_delta_r2_spectral_minus_pore": 0.5311108315207341,
+      "q025_delta": 0.281225400104557,
+      "q975_delta": 0.7507874797313672,
+      "interpretation": "synthetic only; not an empirical estimate"
+    },
+    "phylogeny_confounded": {
+      "n_replicates": 90,
+      "mean_delta_r2_spectral_minus_pore": -0.0009039775436358267,
+      "median_delta_r2_spectral_minus_pore": -0.002656778144905003,
+      "q025_delta": -0.10547727034835212,
+      "q975_delta": 0.09443688547529588,
+      "interpretation": "synthetic only; not an empirical estimate"
+    },
+    "no_direct_signal": {
+      "n_replicates": 90,
+      "mean_delta_r2_spectral_minus_pore": -0.0016819503497254166,
+      "median_delta_r2_spectral_minus_pore": -0.00032827786084221877,
+      "q025_delta": -0.1235257543269388,
+      "q975_delta": 0.1220900868967954,
+      "interpretation": "synthetic only; not an empirical estimate"
+    }
+  }
+}

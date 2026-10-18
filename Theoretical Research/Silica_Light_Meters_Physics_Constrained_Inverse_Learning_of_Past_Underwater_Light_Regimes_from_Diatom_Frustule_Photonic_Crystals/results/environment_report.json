@@ -1,0 +1,22 @@
+{
+  "timestamp_utc": "2026-10-18T16:40:48.888742+00:00",
+  "python": "3.12.15",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "generator": "build_release.py",
+  "dependencies_requested": [
+    "numpy>=2.0",
+    "matplotlib>=3.7",
+    "networkx>=3.0",
+    "PyMuPDF>=1.23",
+    "PyYAML>=6.0"
+  ],
+  "dependencies_observed": {
+    "numpy": "2.5.4",
+    "matplotlib": "3.11.2",
+    "networkx": "3.7",
+    "PyMuPDF": "1.28.2",
+    "PyYAML": "6.0.3"
+  },
+  "empirical_data_used": false,
+  "network_or_credentials_required_for_verification": false
+}

@@ -1,0 +1,65 @@
+{
+  "release_status": "BLOCKED",
+  "generated_at_utc": "2026-10-18T16:42:30.795050+00:00",
+  "repository": "Devanik21/The-Invention-Archive",
+  "target_branch": "main",
+  "release_version": "v2026.10.18",
+  "pdf_sha256": "5b67b54a908a762361973eec9cf0c5b35b1e30279e87beca1cf3be1d2e3913c7",
+  "pdf_pages": 14,
+  "source_commit": "3730851dbee7318c0e42ddb13fa7e3401135ed4e",
+  "checks": [
+    {
+      "name": "LaTeX build and PDF preflight",
+      "status": "PASS",
+      "evidence": "paper.pdf and build log",
+      "details": "14 pages; 39391 extracted characters."
+    },
+    {
+      "name": "Synthetic verification",
+      "status": "PASS",
+      "evidence": "results/verification_run.log",
+      "details": "Synthetic checks only."
+    },
+    {
+      "name": "Python syntax and deployment self-test",
+      "status": "PASS",
+      "evidence": "results/deploy_self_test.log",
+      "details": "Source syntax and invalid-input fixture tested."
+    },
+    {
+      "name": "Citation and metadata syntax",
+      "status": "PASS",
+      "evidence": "paper.bib; CITATION.cff; JSON metadata",
+      "details": "Parser checks passed."
+    },
+    {
+      "name": "Root manifest and supporting evidence",
+      "status": "PASS",
+      "evidence": "GitHub Actions build job",
+      "details": "Nine core root files and evidence directories verified."
+    },
+    {
+      "name": "Post-commit read-back and terminal Actions state",
+      "status": "PENDING",
+      "evidence": "https://github.com/Devanik21/The-Invention-Archive/actions/runs/39146062261",
+      "details": "Must be confirmed after push."
+    },
+    {
+      "name": "Page-by-page visual review",
+      "status": "PENDING",
+      "evidence": "results/pdf_visual_review.json and uploaded artifact",
+      "details": "Every page rendered; no independent visual gate asserted."
+    },
+    {
+      "name": "Version tag target",
+      "status": "PENDING",
+      "evidence": "separate reviewed-release tag workflow",
+      "details": "Tag stays blocked until all required gates pass."
+    }
+  ],
+  "blockers": [
+    "Independent visual inspection of exact remote PDF",
+    "Post-commit read-back and terminal run-state verification"
+  ],
+  "closure_rule": "Set PASS only after page-by-page visual review of this PDF hash and post-commit remote read-back; a CI build alone is not final sign-off."
+}

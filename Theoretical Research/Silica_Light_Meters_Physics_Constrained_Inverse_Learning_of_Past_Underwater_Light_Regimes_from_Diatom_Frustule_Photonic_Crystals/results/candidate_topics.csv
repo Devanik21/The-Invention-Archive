@@ -1,0 +1,11 @@
+candidate,importance_1to5,gap_evidence_1to5,boldness_1to5,plausibility_1to5,math_coherence_1to5,AI_role_1to5,human_benefit_1to5,first_validation_1to5,falsifiability_1to5,ethics_1to5,sum_unweighted,rationale
+Physics-derived spectral trait + phylogenetic model,5,5,5,4,5,4,4,5,5,5,43,Selected narrow contribution; empirical first test is feasible
+Raw pore size as single-site light proxy,3,2,2,4,2,1,2,4,3,5,28,Already partially explored; weak cross-taxon generality
+RCWA/FDTD optical taxonomy atlas only,3,3,3,5,2,1,2,4,3,5,31,Valuable optics study but does not solve ecological inverse mapping
+Species-controlled irradiance response atlas,4,4,3,4,3,2,4,5,5,5,39,Strong calibration stage but less direct inverse-learning contribution
+Core-based pale-light inversion without modern calibration,4,2,4,2,4,3,4,1,2,5,31,Reject: weak identifiability and no ground-truth calibration
+Assemblage-level diatom transparency model,4,2,2,4,2,1,4,4,4,5,32,Existing paleolimnological baselines require strong comparison
+UV-shielding morphology under controlled exposure,3,3,4,4,2,1,3,5,4,5,34,Interesting secondary experiment; not the primary inverse question
+Frustule optical design for solar materials,3,2,3,5,2,1,3,5,3,5,32,Established nanophotonic direction; less connected to the supplied paleoclimate goal
+Morphotype paleotemperature transfer to light,3,2,3,3,2,1,3,3,3,5,28,Conflates distinct targets without evidence
+Bayesian identifiability map for core inversion,4,4,3,5,4,3,4,4,5,5,41,"Selected as a supporting component, not sole contribution"

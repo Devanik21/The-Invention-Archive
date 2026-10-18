@@ -1,0 +1,29 @@
+{
+  "title": "Silica Light Meters: Physics-Constrained Inverse Learning of Past Underwater Light Regimes from Diatom Frustule Photonic Crystals",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "creators": [
+    {
+      "name": "Devanik Debnath",
+      "orcid": "0009-0001-8310-6921"
+    }
+  ],
+  "description": "Theoretical research proposal and synthetic pipeline demonstration. No empirical species data, measured spectra, or real sediment-core reconstruction are included. The synthetic spectral generator is not RCWA/FDTD. No DOI is assigned by this metadata draft.",
+  "keywords": [
+    "diatom frustules",
+    "paleolimnology",
+    "inverse problems",
+    "physics-informed machine learning",
+    "phylogenetic comparative methods"
+  ],
+  "license": "MIT",
+  "version": "v2026.10.18",
+  "publication_date": "2026-10-18",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Devanik21/The-Invention-Archive",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

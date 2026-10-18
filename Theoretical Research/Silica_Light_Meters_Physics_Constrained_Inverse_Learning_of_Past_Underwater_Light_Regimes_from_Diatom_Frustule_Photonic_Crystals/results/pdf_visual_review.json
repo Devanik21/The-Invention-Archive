@@ -1,0 +1,41 @@
+{
+  "status": "PENDING_REMOTE_VISUAL_INSPECTION",
+  "pdf_sha256": "5b67b54a908a762361973eec9cf0c5b35b1e30279e87beca1cf3be1d2e3913c7",
+  "page_count": 14,
+  "render_dpi": 150,
+  "rendered_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "pages_reviewed": [],
+  "inspection_timestamp_utc": "2026-10-18T16:42:30.793938+00:00",
+  "inspection_method": "CI rendered every page; independent page-by-page visual review of this exact remote PDF is still pending.",
+  "automated_checks": {
+    "pdf_parses": true,
+    "page_count_verified": true,
+    "extracted_text_characters": 39391,
+    "font_and_vector_review": "pending independent review",
+    "table_environments": 7,
+    "figure_environments": 8
+  },
+  "issues": [
+    {
+      "severity": "pending",
+      "issue": "Exact remote PDF requires independent visual inspection.",
+      "remediation": "Review uploaded page renders and update this record against the exact PDF SHA-256."
+    }
+  ],
+  "final_disposition": "Not marked publication-quality PASS until independent inspection closes."
+}

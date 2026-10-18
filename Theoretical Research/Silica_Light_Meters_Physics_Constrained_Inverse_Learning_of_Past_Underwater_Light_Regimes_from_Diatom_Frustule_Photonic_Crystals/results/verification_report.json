@@ -1,0 +1,72 @@
+{
+  "status": "PASS",
+  "seed": 20261018,
+  "checks": [
+    {
+      "name": "surrogate_bounds",
+      "status": "PASS",
+      "detail": "All surrogate transmission values are within [0,1]."
+    },
+    {
+      "name": "nonnegative_attenuation_clear",
+      "status": "PASS",
+      "detail": "Synthetic coefficients are nonnegative."
+    },
+    {
+      "name": "depth_monotonicity_clear",
+      "status": "PASS",
+      "detail": "For nonnegative K, deeper irradiance is no larger at same wavelength."
+    },
+    {
+      "name": "nonnegative_attenuation_mixed",
+      "status": "PASS",
+      "detail": "Synthetic coefficients are nonnegative."
+    },
+    {
+      "name": "depth_monotonicity_mixed",
+      "status": "PASS",
+      "detail": "For nonnegative K, deeper irradiance is no larger at same wavelength."
+    },
+    {
+      "name": "nonnegative_attenuation_turbid",
+      "status": "PASS",
+      "detail": "Synthetic coefficients are nonnegative."
+    },
+    {
+      "name": "depth_monotonicity_turbid",
+      "status": "PASS",
+      "detail": "For nonnegative K, deeper irradiance is no larger at same wavelength."
+    },
+    {
+      "name": "all_three_worlds",
+      "status": "PASS",
+      "detail": "Positive-signal and negative-control worlds are present."
+    },
+    {
+      "name": "heldout_predictions_finite",
+      "status": "PASS",
+      "detail": "Held-out metrics are finite."
+    },
+    {
+      "name": "expected_csvs",
+      "status": "PASS",
+      "detail": "Data tables needed for plots exist and are nonempty."
+    },
+    {
+      "name": "eight_figure_sources",
+      "status": "PASS",
+      "detail": "Eight plot/graph/flow assets were generated in PDF and PNG."
+    }
+  ],
+  "limits": "All checks apply to synthetic software pipeline only.",
+  "python": "3.12.15",
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "numpy": "2.5.4",
+  "matplotlib": "3.11.2",
+  "networkx": "3.7",
+  "figure_count": 8,
+  "plot_count": 4,
+  "additional_graph_count": 2,
+  "flow_diagram_count": 2,
+  "empirical_validation": "NOT_PERFORMED"
+}
