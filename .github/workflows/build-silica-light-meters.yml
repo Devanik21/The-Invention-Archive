@@ -178,10 +178,24 @@ jobs:
           git add -- "$RELEASE_DIR" "Theoretical Research/Readme.md"
           if git diff --cached --quiet; then echo "No release changes staged." >&2; exit 1; fi
           git commit -m "publish(silica-light-meters): build and archive research release"
+          # Container-based LaTeX compilation may leave tracked filesystem metadata dirty.
+          if ! git diff --quiet; then
+            git add -u -- "$RELEASE_DIR" "Theoretical Research/Readme.md"
+            git commit --amend --no-edit
+          fi
           pushed=false
           for attempt in 1 2 3; do
             git fetch origin main --tags
-            git rebase origin/main
+            # A rebase is needed only if main moved beyond this commit's parent.
+            if ! git merge-base --is-ancestor origin/main HEAD; then
+              git stash push -u -m "temporary Silica Light Meters workspace before rebase"
+              git rebase origin/main
+              git stash pop
+              if ! git diff --quiet; then
+                git add -u -- "$RELEASE_DIR" "Theoretical Research/Readme.md"
+                git commit --amend --no-edit
+              fi
+            fi
             if git push origin HEAD:main; then pushed=true; break; fi
             echo "Push attempt $attempt failed; refreshing main." >&2
           done
