@@ -1,0 +1,60 @@
+name: Tag reviewed Silica Light Meters release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Theoretical Research/Silica_Light_Meters_Physics_Constrained_Inverse_Learning_of_Past_Underwater_Light_Regimes_from_Diatom_Frustule_Photonic_Crystals/results/release_check_matrix.json"
+
+permissions:
+  contents: write
+
+jobs:
+  tag-reviewed-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out reviewed release commit
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Check reviewed-release gate
+        id: gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          RELEASE_DIR="Theoretical Research/Silica_Light_Meters_Physics_Constrained_Inverse_Learning_of_Past_Underwater_Light_Regimes_from_Diatom_Frustule_Photonic_Crystals"
+          python - "$RELEASE_DIR" "$GITHUB_OUTPUT" <<'PY'
+          import hashlib,json,sys
+          from pathlib import Path
+          root=Path(sys.argv[1])
+          matrix=json.loads((root/'results/release_check_matrix.json').read_text())
+          review=json.loads((root/'results/pdf_visual_review.json').read_text())
+          actual=hashlib.sha256((root/'paper.pdf').read_bytes()).hexdigest()
+          count=review.get('page_count')
+          expected=list(range(1,count+1)) if isinstance(count,int) else []
+          approved=(matrix.get('release_status')=='PASS' and review.get('status')=='PASS' and review.get('pdf_sha256')==actual and bool(expected) and review.get('pages_reviewed')==expected and all(x.get('status') in ('PASS','NOT_APPLICABLE') for x in matrix.get('checks',[])))
+          with open(sys.argv[2],'a',encoding='utf-8') as f:
+              f.write(f"approved={'true' if approved else 'false'}\n")
+          if approved:
+              print(f'PASS: reviewed PDF {actual}; pages reviewed={len(expected)}; release checks closed.')
+          else:
+              print('No tag: release matrix or exact-PDF visual review is not fully PASS.')
+          PY
+      - name: Create dated tag without overwriting
+        if: steps.gate.outputs.approved == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="v2026.10.18"
+          git fetch origin --tags
+          if git show-ref --verify --quiet "refs/tags/$TAG"; then
+            existing="$(git rev-list -n 1 "$TAG")"
+            head="$(git rev-parse HEAD)"
+            test "$existing" = "$head" || { echo "Tag exists on another commit; refusing to move it." >&2; exit 1; }
+            echo "Tag already points to this reviewed commit: $TAG"
+          else
+            git tag -a "$TAG" -m "Reviewed Silica Light Meters release $TAG" HEAD
+            git push origin "$TAG"
+          fi
+          echo "PASS: $TAG resolves to $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
