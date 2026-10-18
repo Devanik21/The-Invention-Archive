@@ -1,0 +1,11 @@
+claim_id,claim,evidence_class,supporting_source_or_artifact,disposition
+C01,SISALv3 is a published global speleothem stable-isotope and trace-element compilation,Established literature,Kaushal et al. 2024; ESSD article / DOI 10.5194/essd-16-1933-2024,Supported as background only; no dataset rows analyzed
+C02,Calcite fabric logging can encode texture/context relevant to speleothem interpretation,Established literature,Frisia 2015; DOI 10.5038/1827-806X.44.1.1,Supported as background; labels not assumed perfect
+C03,Diagenesis can affect speleothem geochemistry and U-series age interpretation,Established literature,Scholz et al. 2014; DOI 10.1016/j.chemgeo.2014.08.005,Supported as background; not modeled kinetically here
+C04,Existing process-based proxy models and multi-proxy Bayesian methods are relevant baselines,Established literature,Owen et al. 2018; Hu et al. 2021; Cahill et al. 2023,Supported as prior art; not numerically rerun
+C05,An explicit fabric-informed recoverability/identifiability gate is a useful synthesis,Proposed methodological contribution,"Definition, identifiability argument, acceptance criteria in paper.tex","Novelty scoped, no absolute priority claim"
+C06,Channel-aware OLS modestly improves synthetic RMSE in the stated simulator,Synthetic model result,results/benchmark_metrics.csv; verify_model.py; fixed seed 20261018,Observed for this generator only; not real cave data
+C07,90% prediction intervals are not calibrated under the tested synthetic alteration shift,Synthetic model result,results/benchmark_metrics.csv; results/verification_report.json,Coverage 0.8471 for channel-aware method; uncertainty gate fails in shift scenario
+C08,Public record availability suffices for a real-world paired benchmark now,Unresolved feasibility claim,SISALv3 publication and repository metadata,Not established; aligned proxy/fabric/chronology/monitoring fields not audited
+
+"SISAL_monv1 is a candidate modern monitoring resource; paired fabric/proxy/target coverage is not established","Public discussion preprint DOI 10.5194/essd-2026-31; repository access challenged; no row-level analysis","Scoped literature/source claim only; empirical availability remains blocked","P4 / limitation"

@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "seed": 20261018,
+  "tests": [
+    {
+      "name": "OLS fit and residual scale",
+      "status": "PASS"
+    },
+    {
+      "name": "Deterministic seeded generation",
+      "status": "PASS"
+    },
+    {
+      "name": "Dataset shapes and finite values",
+      "status": "PASS"
+    },
+    {
+      "name": "Fabric-label noise process",
+      "status": "PASS"
+    },
+    {
+      "name": "Decoder feature dimensions",
+      "status": "PASS"
+    },
+    {
+      "name": "Finite predictions and positive predictive uncertainty",
+      "status": "PASS"
+    },
+    {
+      "name": "Invalid empty dataset rejected explicitly",
+      "status": "PASS"
+    },
+    {
+      "name": "Invalid channel probabilities rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Illustrative proxy-response matrix full rank",
+      "status": "PASS"
+    },
+    {
+      "name": "Nominal Gaussian 90-percent interval coverage sanity check",
+      "status": "PASS"
+    }
+  ],
+  "test_count": 10,
+  "dataset": "synthetic-only",
+  "python": "3.13.5",
+  "numpy": "2.3.5",
+  "matplotlib": "3.10.8",
+  "n_benchmark_rows": 6,
+  "n_sensitivity_rows": 27,
+  "n_example_timepoints": 180,
+  "figure_source": "verify_model.py",
+  "empirical_validation": "NOT_PERFORMED",
+  "limitations": [
+    "No SISAL rows were imported or analyzed.",
+    "All forward coefficients and channel regimes are assumptions.",
+    "The fitted linear decoder is a transparent reference model, not a learned diffusion/transformer.",
+    "Results establish only behavior under the stated synthetic simulator."
+  ]
+}

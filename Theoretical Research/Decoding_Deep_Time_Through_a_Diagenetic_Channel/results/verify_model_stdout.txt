@@ -1,0 +1,12 @@
+Synthetic channel-decoder verification
+Seed: 20261018
+Tests passed: 10/10
+Training records: 12240
+Test records per scenario: 3400
+
+In-distribution | Single proxy | RMSE=0.4289 | 90% coverage=0.8853 | width=1.3364 | NLL=0.5755
+Shifted alteration | Single proxy | RMSE=0.6616 | 90% coverage=0.6721 | width=1.3364 | NLL=1.3442
+In-distribution | Multi-proxy | RMSE=0.2739 | 90% coverage=0.8956 | width=0.8910 | NLL=0.1242
+Shifted alteration | Multi-proxy | RMSE=0.3132 | 90% coverage=0.8356 | width=0.8911 | NLL=0.2813
+In-distribution | Channel-aware | RMSE=0.2686 | 90% coverage=0.8962 | width=0.8705 | NLL=0.1047
+Shifted alteration | Channel-aware | RMSE=0.3007 | 90% coverage=0.8471 | width=0.8705 | NLL=0.2351

@@ -1,0 +1,38 @@
+{
+  "status": "synthetic model-generated benchmark; not empirical cave data",
+  "seed": 20261018,
+  "training_caves": 72,
+  "training_steps_per_cave": 170,
+  "test_caves_per_scenario": 20,
+  "test_steps_per_cave": 170,
+  "climate_ar1_phi": 0.78,
+  "label_accuracy_assumed": 0.9,
+  "training_state_probabilities": [
+    0.55,
+    0.27,
+    0.18
+  ],
+  "shifted_state_probabilities": [
+    0.22,
+    0.6,
+    0.18
+  ],
+  "shifted_alteration_scale": 1.45,
+  "climate_loadings": [
+    1.0,
+    0.7,
+    0.42
+  ],
+  "diagenetic_loadings": [
+    0.86,
+    -0.43,
+    0.24
+  ],
+  "microbial_loadings": [
+    -0.2,
+    0.66,
+    -0.78
+  ],
+  "background_noise_sd": 0.34,
+  "note": "Parameters are illustrative assumptions chosen to stress test identifiability, not fitted to cave measurements."
+}

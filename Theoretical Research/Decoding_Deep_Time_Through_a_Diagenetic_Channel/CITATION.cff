@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this theoretical and synthetic computational preprint, please cite it as below."
+title: "Decoding Deep Time Through a Diagenetic Channel: An Information-Theoretic Recoverability Framework for Speleothem Climate Archives"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    affiliation: National Institute of Technology Agartala, India
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+date-released: "2026-10-18"
+version: "2026.10.18-01"
+type: software
+abstract: >-
+  A theoretical recoverability framework and reproducible synthetic stress test
+  for climate inference from speleothem proxies under structured diagenetic and
+  microbial alteration. No empirical cave data were analyzed.
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+license: CC-BY-4.0
+keywords:
+  - speleothems
+  - paleoclimate
+  - proxy-system models
+  - diagenesis
+  - information theory
+  - inverse problems

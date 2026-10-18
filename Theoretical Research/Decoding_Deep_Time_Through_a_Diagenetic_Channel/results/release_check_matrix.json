@@ -1,0 +1,67 @@
+{
+  "title": "Decoding Deep Time Through a Diagenetic Channel",
+  "updated": "2026-10-18",
+  "scope": "local release checks only; empirical validation blocked; remote publication pending",
+  "checks": [
+    {
+      "check": "literature_audit",
+      "status": "PASS",
+      "evidence": "results/literature_audit.md"
+    },
+    {
+      "check": "aligned_public_empirical_data",
+      "status": "BLOCKED",
+      "evidence": "No SISAL rows or aligned monitoring data analyzed."
+    },
+    {
+      "check": "synthetic_model",
+      "status": "PASS",
+      "evidence": "10 assertions; fixed-seed synthetic-only benchmark."
+    },
+    {
+      "check": "python_syntax",
+      "status": "PASS",
+      "evidence": "python -m py_compile verify_model.py deploy.py"
+    },
+    {
+      "check": "deployment_self_tests",
+      "status": "PASS",
+      "evidence": "3/3 fail-closed fixtures rejected."
+    },
+    {
+      "check": "metadata_and_links",
+      "status": "PASS",
+      "evidence": "9 bibliography keys; 8 cited; 33 README links."
+    },
+    {
+      "check": "fresh_pdf_build",
+      "status": "PASS",
+      "evidence": "16 pages; SHA-256 afd1067f02742b71bc3ac792416a7b7534264d6168c93df5535afc5d6e83b4b4"
+    },
+    {
+      "check": "visual_qa",
+      "status": "PASS",
+      "evidence": "All pages reviewed; results/pdf_visual_review.json"
+    },
+    {
+      "check": "local_sha256_manifest",
+      "status": "PASS",
+      "evidence": "results/sha256_manifest.txt; remote equality pending."
+    },
+    {
+      "check": "remote_content_and_index",
+      "status": "NOT_RUN",
+      "evidence": "Release not published."
+    },
+    {
+      "check": "exact_sha_actions",
+      "status": "NOT_RUN",
+      "evidence": "Requires published release commit."
+    },
+    {
+      "check": "release_tag",
+      "status": "NOT_RUN",
+      "evidence": "Tag not created."
+    }
+  ]
+}

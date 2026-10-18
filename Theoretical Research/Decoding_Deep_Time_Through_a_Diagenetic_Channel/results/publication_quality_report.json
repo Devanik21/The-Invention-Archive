@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "structure": "PASS",
+  "metadata": {
+    "bib_keys": 9,
+    "cited_keys": 8,
+    "readme_links": 33
+  },
+  "build": {
+    "pages": 16,
+    "pdf_bytes": 507311,
+    "pdf_sha256": "afd1067f02742b71bc3ac792416a7b7534264d6168c93df5535afc5d6e83b4b4",
+    "compile_log": "results/pdf_build_log.txt"
+  },
+  "pdf_preflight": {
+    "pages": 16,
+    "bytes": 507311,
+    "sha256": "afd1067f02742b71bc3ac792416a7b7534264d6168c93df5535afc5d6e83b4b4"
+  },
+  "model": "PASS \u2014 synthetic-only, 10 assertions",
+  "visual_review": "PASS \u2014 all pages 1\u201316 reviewed; results/pdf_visual_review.json",
+  "font_review": {
+    "status": "PASS",
+    "evidence": "pdffonts paper.pdf; all listed fonts embedded; no Type 3 fonts found"
+  },
+  "remote_deployment": "NOT PERFORMED; this package is locally validated and has not been published to GitHub or deposited in Zenodo"
+}

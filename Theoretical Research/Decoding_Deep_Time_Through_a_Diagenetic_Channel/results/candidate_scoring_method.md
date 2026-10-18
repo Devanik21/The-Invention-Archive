@@ -1,0 +1,3 @@
+# Candidate scoring method — 2026-10-18
+
+Ten candidate directions were compared on ten criteria scored 1–5: importance, evidence for a gap, conceptual depth, plausibility, mathematical core, substantive AI role, human benefit, first validation feasibility, falsifiability, and safety. Values are expert-elicited internal judgments, not empirical measures or probabilities. The chosen speleothem topic scored 4.5/5 on the mean; the next-best option scored 4.4/5. The broad competitor scan informed selection, while only the selected topic received the detailed source-by-source audit in `literature_audit.md`.

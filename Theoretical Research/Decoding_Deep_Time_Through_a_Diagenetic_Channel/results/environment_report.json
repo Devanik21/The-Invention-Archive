@@ -1,0 +1,30 @@
+{
+  "timestamp_utc": "2026-10-18T14:50:00Z",
+  "python": "3.13.5",
+  "numpy": "2.3.5",
+  "matplotlib": "3.10.8",
+  "latexmk": "Latexmk, John Collins, 11 Dec. 2024. Version 4.86",
+  "pdflatex": "pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian)",
+  "pdftoppm": "pdftoppm version 25.06.0",
+  "font_inspection": "PASS: final rebuilt paper.pdf inspected with pdffonts; all listed fonts embedded and no Type 3 fonts found.",
+  "bibtex_note": "Base image's /usr/bin/bibtex alternative is broken, but /usr/bin/bibtex.original works. Local clean build uses a temporary wrapper on PATH. GitHub CI must use a standard TeX Live toolchain.",
+  "data_source_status": "No empirical dataset downloaded; all numerical outputs synthetic.",
+  "checks_performed": [
+    "python verify_model.py after final figure-generator revision (10 assertions; synthetic only)",
+    "python -m py_compile verify_model.py deploy.py",
+    "python deploy.py --self-test (3/3 fail-closed fixtures)",
+    "python deploy.py --validate-only (structure, metadata, links, reproducibility, 16-page PDF preflight)",
+    "python deploy.py (fresh isolated 16-page PDF build)",
+    "Rendered and visually reviewed all 16 PDF pages at 90 dpi; repaired figure layouts confirmed",
+    "pdffonts paper.pdf (embedded fonts; no Type 3 fonts)",
+    "SHA-256 manifest generated for final release artifacts"
+  ],
+  "not_tested": [
+    "real cave-data reconstruction",
+    "field validation",
+    "laboratory analyses",
+    "cross-cave validation on observed records",
+    "official branch-protection requirements (connector returned 403)",
+    "remote GitHub deployment and exact-SHA Actions closure"
+  ]
+}

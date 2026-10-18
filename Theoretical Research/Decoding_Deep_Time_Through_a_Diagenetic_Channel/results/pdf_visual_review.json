@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "pdf_sha256": "afd1067f02742b71bc3ac792416a7b7534264d6168c93df5535afc5d6e83b4b4",
+  "page_count": 16,
+  "render_dpi": 90,
+  "pages_reviewed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16
+  ],
+  "issues": [
+    {
+      "severity": "major",
+      "stage": "pre-fix inspection",
+      "page": 5,
+      "issue": "Node labels on response/dependency graph were cramped/clipped.",
+      "fix": "Expanded node layout and label treatment in verify_model.py; final rebuild reviewed."
+    },
+    {
+      "severity": "major",
+      "stage": "pre-fix inspection",
+      "page": 8,
+      "issue": "Methodological flow arrows intruded on adjacent box labels.",
+      "fix": "Expanded nodes and set explicit arrow gutters in verify_model.py; final rebuild reviewed."
+    }
+  ],
+  "final_disposition": "PASS \u2014 rebuilt current paper.tex and paper.bib, visually reviewed all 16 rendered pages at 90 dpi including the repaired figures on pages 6 and 9; no remaining clipping, overlap, missing figure, or obvious typesetting defect observed. PDF hash recorded above."
+}
