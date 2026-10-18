@@ -1,0 +1,84 @@
+name: Import Speleothem Research Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "staging/Speleothems_as_Noisy_Channels_Research_Release.zip"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: import-speleothem-release
+  cancel-in-progress: false
+
+jobs:
+  import-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
+
+      - name: Validate and extract package
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          ARCHIVE="staging/Speleothems_as_Noisy_Channels_Research_Release.zip"
+          test -s "$ARCHIVE"
+          python - <<'PY'
+          import zipfile
+          archive = "staging/Speleothems_as_Noisy_Channels_Research_Release.zip"
+          expected = "Speleothems_as_Noisy_Channels_Research_Release/"
+          with zipfile.ZipFile(archive) as z:
+              bad = z.testzip()
+              if bad:
+                  raise SystemExit(f"ZIP CRC check failed: {bad}")
+              names = z.namelist()
+              if not names or any(not n.startswith(expected) for n in names):
+                  raise SystemExit("Unexpected ZIP top-level path")
+              if any(n.startswith("/") or ".." in n.split("/") for n in names):
+                  raise SystemExit("Unsafe archive path")
+              required = {
+                  expected + "paper.pdf",
+                  expected + "paper.tex",
+                  expected + "paper.bib",
+                  expected + "verify_model.py",
+                  expected + "deploy.py",
+                  expected + "results/sha256_manifest.txt",
+              }
+              missing = required.difference(names)
+              if missing:
+                  raise SystemExit(f"Required package files missing: {sorted(missing)}")
+          PY
+          mkdir -p "$RUNNER_TEMP/speleothem-extract"
+          unzip -q "$ARCHIVE" -d "$RUNNER_TEMP/speleothem-extract"
+          PACKAGE="$RUNNER_TEMP/speleothem-extract/Speleothems_as_Noisy_Channels_Research_Release"
+          (
+            cd "$PACKAGE"
+            sha256sum -c results/sha256_manifest.txt
+            test "$(head -c 5 paper.pdf)" = "%PDF-"
+          )
+          DEST="Theoretical Research/Decoding_Deep_Time_Through_a_Diagenetic_Channel"
+          rm -rf "$DEST"
+          mkdir -p "$DEST"
+          cp -a "$PACKAGE/." "$DEST/"
+          rm -f "$ARCHIVE"
+          rmdir staging 2>/dev/null || true
+
+      - name: Commit the full release
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- "Theoretical Research/Decoding_Deep_Time_Through_a_Diagenetic_Channel" staging
+          if git diff --cached --quiet; then
+            echo "No release changes detected."
+            exit 0
+          fi
+          git commit -m "Publish complete speleothem noisy-channel research release"
+          git push origin HEAD:main
