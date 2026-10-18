@@ -1,0 +1,1 @@
+| 2026.10.18 | Silica Light Meters | Physics-constrained inverse-learning preprint | [Silica Light Meters](Silica_Light_Meters_Physics_Constrained_Inverse_Learning_of_Past_Underwater_Light_Regimes_from_Diatom_Frustule_Photonic_Crystals/) |
