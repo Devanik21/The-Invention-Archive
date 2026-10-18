@@ -142,7 +142,7 @@ jobs:
           matrix={"release_status":"BLOCKED","generated_at_utc":datetime.now(timezone.utc).isoformat(),"repository":"Devanik21/The-Invention-Archive","target_branch":"main","release_version":"v2026.10.18","pdf_sha256":digest,"pdf_pages":page_count,"source_commit":os.environ['SOURCE_COMMIT'],"checks":checks,"blockers":["Independent visual inspection of exact remote PDF","Post-commit read-back and terminal run-state verification"],"closure_rule":"Set PASS only after page-by-page visual review of this PDF hash and post-commit remote read-back; a CI build alone is not final sign-off."}
           (root/'results'/'release_check_matrix.json').write_text(json.dumps(matrix,indent=2)+'\n',encoding='utf-8')
           PY
-          python "$RELEASE_DIR/deploy.py" --validate-only > "$RELEASE_DIR/results/deploy_validate_run.log" 2>&1
+          python "$RELEASE_DIR/deploy.py" --validate-only --root "$RELEASE_DIR" > "$RELEASE_DIR/results/deploy_validate_run.log" 2>&1
           rm -rf "$RELEASE_DIR/__pycache__"
           python - "$RELEASE_DIR" <<'PY'
           import hashlib,json,sys
