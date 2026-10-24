@@ -44,10 +44,10 @@ def simulate(kappa, perm=(0,1,2,3), mode="schedule", repair=R_TOTAL, threshold=T
     total_old = sum(x)
     nsteps = int(round(tmax / dt))
     steps_per_slot = int(round(SLOT / dt))
-    steps_per_period = 4 * steps_per_slo
+    steps_per_period = 4 * steps_per_slot
     for step in range(nsteps):
         if mode == "schedule":
-            slot_i = (step % steps_per_period) // steps_per_slo
+            slot_i = (step % steps_per_period) // steps_per_slot
             u = [0.0] * 4
             u[perm[slot_i]] = repair
         elif mode == "uniform":
@@ -64,7 +64,7 @@ def simulate(kappa, perm=(0,1,2,3), mode="schedule", repair=R_TOTAL, threshold=T
         total_new = sum(xn)
         if total_new >= threshold:
             if total_new == total_old:
-                return (step+1)*d
+                return (step+1)*dt
             frac = (threshold-total_old)/(total_new-total_old)
             return step*dt + dt*max(0.0, min(1.0, frac))
         x = xn
@@ -76,7 +76,7 @@ def generate_outputs(root: Path):
     import numpy as np
     import matplotlib
     matplotlib.use("Agg")
-    import matplotlib.pyplot as pl
+    import matplotlib.pyplot as plt
     import networkx as nx
     from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
     figures = root / "figures"
@@ -132,7 +132,7 @@ def generate_outputs(root: Path):
     # State trajectories for selected order and uniform control at kappa=1.
     def trajectory(kappa, perm=None, mode="schedule", repair=R_TOTAL, dt=DT, tmax=14.0):
         x=np.array(X0,float); ts=[0.0]; xs=[x.copy()]
-        nsteps=int(round(tmax/dt)); nslot=int(round(SLOT/dt)); nperiod=4*nslo
+        nsteps=int(round(tmax/dt)); nslot=int(round(SLOT/dt)); nperiod=4*nslot
         for s in range(nsteps):
             if mode=="schedule":
                 u=np.zeros(4);u[perm[(s%nperiod)//nslot]]=repair
@@ -296,7 +296,7 @@ def generate_outputs(root: Path):
     (results/"verification_report.json").write_text(json.dumps(report,indent=2)+"\n",encoding="utf-8")
     (results/"verification_stdout.txt").write_text("Repair-scheduling model audit\n"+"\n".join(f"{'PASS' if ok else 'FAIL'} {n}: {msg}" for n,ok,msg in checks)+f"\nStatus: {report['status']} ({report['checks_passed']}/{report['checks_total']})\n",encoding="utf-8")
     if not all(ok for _,ok,_ in checks): raise RuntimeError("One or more model verification checks failed")
-    return summaries, budget_rows, repor
+    return summaries, budget_rows, report
 
 
 def write_csv(path, headers, rows):
@@ -329,7 +329,7 @@ def build_release(root: Path):
     with (res/"candidate_topics.csv").open("w",newline="",encoding="utf-8") as f:
         w=csv.writer(f);w.writerow(["candidate"]+crit+["mean_score_1_to_5","decision","rationale"])
         for i,(name,scores,rationale) in enumerate(candidates):w.writerow([name]+scores+[f"{sum(scores)/len(scores):.2f}","SELECTED" if i==0 else "ALTERNATIVE",rationale])
-    (res/"author_profile_audit.md").write_text(f"""# Author profile audi
+    (res/"author_profile_audit.md").write_text(f"""# Author profile audit
 
 **Audit date:** {TODAY}. **Coverage:** targeted web and repository audit; not exhaustive.
 
@@ -353,7 +353,7 @@ def build_release(root: Path):
 6. Hamazaki & Murata (2024) review the relationships among protein degradation, senescence, and organismal aging. DOI: <https://doi.org/10.1093/jb/mvae016>.
 7. The destination archive already contained “Heteroplasmy Phase Control” and “Damage R₀”, both close in motif. The present release explicitly treats these as related, not independent proof or priority.
 
-## Bounded novelty statemen
+## Bounded novelty statement
 
 The defensible contribution here is a reproducible, four-state counterexample-oriented audit that (i) enumerates every periodic repair order at fixed offered total flux, (ii) separates schedule-order dispersion from total-budget changes, and (iii) gives limiting-case and step-halving checks. It is **not** a claim that schedule control for aging is new, that tropical algebra or ultrametrics improve biological repair decisions, or that any simulation extends lifespan. Literature coverage can miss neighboring work; expert review remains necessary before submission.
 """,encoding="utf-8")
@@ -488,12 +488,12 @@ The Information Theory of Aging discusses loss of youthful epigenetic informatio
 \caption{Position relative to closely related concepts. Classification is qualitative, based on the cited papers and current archive inspection.}
 \begin{tabularx}{\linewidth}{p{0.22\linewidth}p{0.31\linewidth}X}
 \toprule
-\textbf{Area} & \textbf{Established contribution} & \textbf{What this paper adds / does not claim}
+\textbf{Area} & \textbf{Established contribution} & \textbf{What this paper adds / does not claim}\\
 \midrule
-Aging network control & Optimal control and maintenance-schedule analysis in interdependent networks \cite{Sun2020OptimalControl}. & Exhaustive 24-order matched-offered-flux audit for a four-state toy model; not a new general scheduling theory.
-Control theory of aging & Feedback and control language applied to interacting physiological variables \cite{MurphyPartridge2008Control}. & Makes one state threshold and one order-vs-budget contrast explicit; no calibrated biological controller.
-Information theory of aging & Epigenetic information preservation/retrieval hypothesis \cite{Lu2023InformationAging}. & Defines a functional threshold analogue only; no information-theoretic aging mechanism is demonstrated.
-Mitochondrial maintenance & Mitophagy/biogenesis coupling and longevity relevance in \textit{C. elegans} \cite{Palikaras2015Mitophagy}. & Motivates coupling as a concern; does not infer actual pathway flux or organismal outcomes.
+Aging network control & Optimal control and maintenance-schedule analysis in interdependent networks \cite{Sun2020OptimalControl}. & Exhaustive 24-order matched-offered-flux audit for a four-state toy model; not a new general scheduling theory.\\
+Control theory of aging & Feedback and control language applied to interacting physiological variables \cite{MurphyPartridge2008Control}. & Makes one state threshold and one order-vs-budget contrast explicit; no calibrated biological controller.\\
+Information theory of aging & Epigenetic information preservation/retrieval hypothesis \cite{Lu2023InformationAging}. & Defines a functional threshold analogue only; no information-theoretic aging mechanism is demonstrated.\\
+Mitochondrial maintenance & Mitophagy/biogenesis coupling and longevity relevance in \textit{C. elegans} \cite{Palikaras2015Mitophagy}. & Motivates coupling as a concern; does not infer actual pathway flux or organismal outcomes.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -517,12 +517,12 @@ Here $\tau_f$ is a model first-passage time. Calling it “lifespan” would be 
 \label{tab:states}
 \begin{tabularx}{\linewidth}{p{0.19\linewidth}p{0.18\linewidth}X}
 \toprule
-\textbf{Coordinate} & \textbf{Symbol} & \textbf{Interpretation and boundary}
+\textbf{Coordinate} & \textbf{Symbol} & \textbf{Interpretation and boundary}\\
 \midrule
-Proteostasis & $x_1$ & Abstract burden proxy for misfolded/aggregation-related dysfunction; not a measured protein-quality variable.
-Mitochondrial state & $x_2$ & Abstract burden proxy for mitochondrial dysfunction; it does not distinguish mitophagy from biogenesis.
-Genome maintenance & $x_3$ & Abstract burden proxy for lesions and repair load; mutations are not assumed to be reversible by the input.
-Regulatory drift & $x_4$ & Abstract burden proxy for regulatory/epigenetic deviation; no specific epigenetic clock is modeled.
+Proteostasis & $x_1$ & Abstract burden proxy for misfolded/aggregation-related dysfunction; not a measured protein-quality variable.\\
+Mitochondrial state & $x_2$ & Abstract burden proxy for mitochondrial dysfunction; it does not distinguish mitophagy from biogenesis.\\
+Genome maintenance & $x_3$ & Abstract burden proxy for lesions and repair load; mutations are not assumed to be reversible by the input.\\
+Regulatory drift & $x_4$ & Abstract burden proxy for regulatory/epigenetic deviation; no specific epigenetic clock is modeled.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -533,16 +533,16 @@ Regulatory drift & $x_4$ & Abstract burden proxy for regulatory/epigenetic devia
 \label{tab:params}
 \begin{tabular}{lll}
 \toprule
-\textbf{Quantity} & \textbf{Value} & \textbf{Role}
+\textbf{Quantity} & \textbf{Value} & \textbf{Role}\\
 \midrule
-$A$ & $\begin{bmatrix}0&.08&0&.04\\.05&0&.02&.08\\.08&.03&0&0\\.02&0&.07&0\end{bmatrix}$ & Directed coupling topology
-$b_i$ & $0.04$ & Constant source per class
-$R$ & $0.12$ & Offered total repair capacity
-$\tau$ & $3$ & Slot duration
-$T_c$ & $12$ & Repair-order cycle
-$\theta$ & $8$ & Failure threshold
-$\kappa$ & $0$ to $1.25$ & Synthetic propagation multiplier
-$\Delta t$ & $0.02$ & RK4 step size, halved in convergence check
+$A$ & $\begin{bmatrix}0&.08&0&.04\\.05&0&.02&.08\\.08&.03&0&0\\.02&0&.07&0\end{bmatrix}$ & Directed coupling topology\\
+$b_i$ & $0.04$ & Constant source per class\\
+$R$ & $0.12$ & Offered total repair capacity\\
+$\tau$ & $3$ & Slot duration\\
+$T_c$ & $12$ & Repair-order cycle\\
+$\theta$ & $8$ & Failure threshold\\
+$\kappa$ & $0$ to $1.25$ & Synthetic propagation multiplier\\
+$\Delta t$ & $0.02$ & RK4 step size, halved in convergence check\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -567,14 +567,14 @@ We enumerate every permutation $\pi\in S_4$ for $\kappa\in\{0,0.25,0.5,0.75,1,1.
 \label{tab:checks}
 \begin{tabularx}{\linewidth}{p{0.25\linewidth}p{0.18\linewidth}X}
 \toprule
-\textbf{Check} & \textbf{Status} & \textbf{Interpretation}
+\textbf{Check} & \textbf{Status} & \textbf{Interpretation}\\
 \midrule
-Nonnegative coupling matrix & \texttt{PASS} & Off-diagonal entries are nonnegative by construction.
-All schedule orders & \texttt{PASS} & 24 orders are evaluated for each of six coupling values (144 runs).
-Equal offered dose & \texttt{PASS} & Each class is allocated $R\tau=0.36$ per cycle.
-Decoupled limiting case & \texttt{PASS} & Numerical result agrees with the analytic summed-state threshold time within tolerance.
-Time-step refinement & \texttt{PASS} & Representative trajectories are re-evaluated with half the step size; maximum difference is reported in \texttt{results/convergence\_checks.csv}.
-Experimental validity & \texttt{NOT TESTED} & The model contains no measured biological rates or organismal observations.
+Nonnegative coupling matrix & \texttt{PASS} & Off-diagonal entries are nonnegative by construction.\\
+All schedule orders & \texttt{PASS} & 24 orders are evaluated for each of six coupling values (144 runs).\\
+Equal offered dose & \texttt{PASS} & Each class is allocated $R\tau=0.36$ per cycle.\\
+Decoupled limiting case & \texttt{PASS} & Numerical result agrees with the analytic summed-state threshold time within tolerance.\\
+Time-step refinement & \texttt{PASS} & Representative trajectories are re-evaluated with half the step size; maximum difference is reported in \texttt{results/convergence\_checks.csv}.\\
+Experimental validity & \texttt{NOT TESTED} & The model contains no measured biological rates or organismal observations.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -591,14 +591,14 @@ The exhaustive sweep verifies that schedule order is irrelevant in the decoupled
 \label{tab:summary}
 \begin{tabular}{rrrrr}
 \toprule
-$\kappa$ & Min order & Median order & Max order & Equal-share
+$\kappa$ & Min order & Median order & Max order & Equal-share\\
 \midrule
-0.00 & 120.00 & 120.00 & 120.00 & 120.00
-0.25 & 24.23 & 24.48 & 24.71 & 24.47
-0.50 & 13.56 & 13.71 & 13.84 & 13.70
-0.75 & 9.40 & 9.52 & 9.63 & 9.52
-1.00 & 7.20 & 7.29 & 7.38 & 7.29
-1.25 & 5.84 & 5.91 & 5.97 & 5.91
+0.00 & 120.00 & 120.00 & 120.00 & 120.00\\
+0.25 & 24.23 & 24.48 & 24.71 & 24.47\\
+0.50 & 13.56 & 13.71 & 13.84 & 13.70\\
+0.75 & 9.40 & 9.52 & 9.63 & 9.52\\
+1.00 & 7.20 & 7.29 & 7.38 & 7.29\\
+1.25 & 5.84 & 5.91 & 5.97 & 5.91\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -614,15 +614,15 @@ Table~\ref{tab:summary} uses a rounded display of the deterministic output. Full
 \label{tab:fields}
 \begin{tabularx}{\linewidth}{p{0.21\linewidth}p{0.35\linewidth}X}
 \toprule
-\textbf{Field} & \textbf{Concrete role} & \textbf{Status in this release}
+\textbf{Field} & \textbf{Concrete role} & \textbf{Status in this release}\\
 \midrule
-Coding theory & A threshold is analogous to an uncorrectable functional error pattern; define the boundary through an observable. & Analogy only; no codeword or decoder is modeled.
-Max-plus / tropical scheduling & Precedence completion: $C_j=p_j+\max_{i\in\mathrm{Pred}(j)}C_i$. & Illustrative precedence DAG only; no measured pathway precedence constraints.
-Percolation & Potential cluster/connectivity-based failure criterion for spatially localized damage. & Deferred; no spatial graph, cluster distribution, or percolation threshold is fitted.
-Stochastic optimal control & Minimize expected first-passage time subject to a capacity constraint. & Motivation only; the present solver is deterministic and enumerative, not an HJB solver.
-Ultrametric / p-adic analysis & Could cluster damage lineages if distances derive from a measured branching hierarchy. & Excluded from the core; no lineage data or calibrated ultrametric is available.
-Reinforcement learning & Learn policy under a validated simulator and compare to exact/heuristic baselines. & Not run. Adding RL without a calibrated objective would add complexity, not evidence.
-Comparative biology & Test parameter transfer and external validity across species. & Not performed; no interspecies data were downloaded or analyzed.
+Coding theory & A threshold is analogous to an uncorrectable functional error pattern; define the boundary through an observable. & Analogy only; no codeword or decoder is modeled.\\
+Max-plus / tropical scheduling & Precedence completion: $C_j=p_j+\max_{i\in\mathrm{Pred}(j)}C_i$. & Illustrative precedence DAG only; no measured pathway precedence constraints.\\
+Percolation & Potential cluster/connectivity-based failure criterion for spatially localized damage. & Deferred; no spatial graph, cluster distribution, or percolation threshold is fitted.\\
+Stochastic optimal control & Minimize expected first-passage time subject to a capacity constraint. & Motivation only; the present solver is deterministic and enumerative, not an HJB solver.\\
+Ultrametric / p-adic analysis & Could cluster damage lineages if distances derive from a measured branching hierarchy. & Excluded from the core; no lineage data or calibrated ultrametric is available.\\
+Reinforcement learning & Learn policy under a validated simulator and compare to exact/heuristic baselines. & Not run. Adding RL without a calibrated objective would add complexity, not evidence.\\
+Comparative biology & Test parameter transfer and external validity across species. & Not performed; no interspecies data were downloaded or analyzed.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -660,14 +660,14 @@ The hypothesis that schedule order helps in this context is falsified if order e
 \label{tab:falsification}
 \begin{tabularx}{\linewidth}{p{0.22\linewidth}p{0.33\linewidth}X}
 \toprule
-\textbf{Failure mode} & \textbf{Observable / diagnostic} & \textbf{Decision rule}
+\textbf{Failure mode} & \textbf{Observable / diagnostic} & \textbf{Decision rule}\\
 \midrule
-No true interaction & $\kappa\approx0$ or empirical off-diagonal effects near zero. & Order advantage should vanish; any estimated persistent effect suggests model/measurement misspecification.
-Repair actuator delayed & Measured response-time distribution by pathway. & Add pathway state and delay; reject zero-delay ordering predictions if the new model does not reproduce held-out responses.
-Flux mismatch & Integrated reporter/turnover activity per pathway. & Do not attribute survival differences to order until equivalence bounds on total and per-class flux are met.
-Threshold arbitrary & Change-point/functional endpoint uncertainty. & Report sensitivity to the threshold definition; reject claims that depend on one unsupported cutoff.
-Compensatory turnover & Biogenesis, growth, or replenishment changes. & Extend the state vector and re-test; current result is not valid if omitted feedback reverses rankings.
-No external validity & Held-out perturbations or species. & If order rankings do not transfer, limit claim to the calibrated system.
+No true interaction & $\kappa\approx0$ or empirical off-diagonal effects near zero. & Order advantage should vanish; any estimated persistent effect suggests model/measurement misspecification.\\
+Repair actuator delayed & Measured response-time distribution by pathway. & Add pathway state and delay; reject zero-delay ordering predictions if the new model does not reproduce held-out responses.\\
+Flux mismatch & Integrated reporter/turnover activity per pathway. & Do not attribute survival differences to order until equivalence bounds on total and per-class flux are met.\\
+Threshold arbitrary & Change-point/functional endpoint uncertainty. & Report sensitivity to the threshold definition; reject claims that depend on one unsupported cutoff.\\
+Compensatory turnover & Biogenesis, growth, or replenishment changes. & Extend the state vector and re-test; current result is not valid if omitted feedback reverses rankings.\\
+No external validity & Held-out perturbations or species. & If order rankings do not transfer, limit claim to the calibrated system.\\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -846,7 +846,7 @@ def main():
     # If invoked under the name verify_model.py, only generate the model sweep / figs / outputs.
     me=Path(__file__).name
     if me=="verify_model.py":
-        root=Path(__file__).resolve().paren
+        root=Path(__file__).resolve().parent
         _,_,rep=generate_outputs(root)
         print((root/"results"/"verification_stdout.txt").read_text())
     else:

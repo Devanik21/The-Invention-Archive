@@ -1,4 +1,4 @@
-time,best_order_total,worst_order_total,uniform_total,best_proteostasis,best_mitochondrial,best_genome_maintenance,best_regulatory_drif
+time,best_order_total,worst_order_total,uniform_total,best_proteostasis,best_mitochondrial,best_genome_maintenance,best_regulatory_drift
 0.0,3.2,3.2,3.2,0.8,0.8,0.8,0.8
 0.02,3.2083289994816258,3.2083304402020647,3.2083297796898265,0.800323457810194,0.8032024663050972,0.8025612183370693,0.8022418570292652
 0.04,3.2166760278874023,3.216681793654436,3.2166791495546083,0.8006538384905848,0.8064098744495737,0.8051248827051225,0.8044874322421212

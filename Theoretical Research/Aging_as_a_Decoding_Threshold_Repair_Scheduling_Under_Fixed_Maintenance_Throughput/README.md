@@ -1,4 +1,4 @@
-# Aging as a Decoding Threshold: Repair Scheduling Under Fixed Maintenance Throughpu
+# Aging as a Decoding Threshold: Repair Scheduling Under Fixed Maintenance Throughput
 
 **Author:** Devanik Debnath (Devanik21)<br>
 **Affiliation:** Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India<br>

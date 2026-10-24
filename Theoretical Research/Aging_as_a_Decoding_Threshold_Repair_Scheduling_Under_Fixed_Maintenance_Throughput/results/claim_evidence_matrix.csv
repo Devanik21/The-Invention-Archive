@@ -1,7 +1,7 @@
 claim_id,claim,status,evidence,limitation
 C1,At zero cross-coupling order has no effect on summed threshold trajectory,PASS,results/verification_report.json,Only under symmetric synthetic model setup
-C2,At nonzero coupling some periodic orders have different first-passage times,PASS,results/schedule_sweep.csv,Model-dependent deterministic resul
+C2,At nonzero coupling some periodic orders have different first-passage times,PASS,results/schedule_sweep.csv,Model-dependent deterministic result
 C3,All periodic orders deliver equal nominal dose per state per cycle,PASS,results/schedule_sweep.csv,Allocated capacity is fixed; biological realized flux not modelled
 C4,Optimal schedule extends real organismal lifespan,NOT_TESTED,No biological dataset or experiment,Lifespan extension is not established
-C5,Ultrametric clustering improves repair choice,HYPOTHESIS,Future-work discussion,No lineage data or quantitative tes
+C5,Ultrametric clustering improves repair choice,HYPOTHESIS,Future-work discussion,No lineage data or quantitative test
 C6,Additional repair capacity can be compared against order effects,PASS,results/repair_budget_sensitivity.csv,Not a matched-budget comparison

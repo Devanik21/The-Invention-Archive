@@ -1,11 +1,11 @@
 Aging as a Decoding Threshold:
-Repair Scheduling Under Fixed Maintenance Throughpu
+Repair Scheduling Under Fixed Maintenance Throughput
 Devanik Debnath
 Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India
 GitHub: Devanik21 | ORCID record supplied by author
 
-24 October 2026 | Theoretical and computational preprin
-Abstrac
+24 October 2026 | Theoretical and computational preprint
+Abstract
 Cells accumulate heterogeneous lesions while repair pathways have finite throughput. This paper tests a narrow version
 of the hypothesis that repair order can alter a threshold-defined failure time even when the offered repair budget is fixed. We
 construct a deterministic four-state damage-propagation model with a nonnegative interaction matrix and periodically allocate
@@ -13,7 +13,7 @@ the same repair capacity to each of four abstract damage classes. All 24 class o
 every order gives each class the same nominal repair dose per cycle. In the decoupled limit, order is analytically irrelevant.
 Under nonzero coupling, order changes first-passage time, but the effect is modest in the illustrative parameter range and a
 continuous equal-share policy is generally competitive or better. A 10% increase in offered repair changes the threshold time
-more than the difference between schedules in these simulations. The results support a conditional mathematical statement—no
+more than the difference between schedules in these simulations. The results support a conditional mathematical statement—not
 a theory of organismal lifespan extension. We distinguish the coding-threshold analogy from literal error-correcting codes, and
 identify tropical scheduling, percolation, stochastic control, ultrametric clustering, and reinforcement learning as candidate
 extensions that require their own operational definitions and evidence.
@@ -28,7 +28,7 @@ Aging is associated with changes across proteostasis, mitochondrial quality cont
 state. These processes interact, and the timing of interventions can matter when repair is delayed, state-dependent, or coupled to
 downstream damage. Control-theoretic approaches to aging networks and optimal maintenance schedules already exist; in
 particular, Sun, Michaels, and Mahadevan studied longevity optimization in interdependent networks and repair allocation [1].
-Control-theoretic perspectives on aging predate that work [2]. The broad proposition that maintenance schedules can affec
+Control-theoretic perspectives on aging predate that work [2]. The broad proposition that maintenance schedules can affect
 longevity is therefore not novel by itself.
 The present paper asks a more constrained question: in a transparent model, does the ordering of repair jobs alter a thresholdcrossing time when the total offered capacity and per-class dose per cycle are fixed? We also quantify the comparison against an
 equal-share policy and a modest increase in repair capacity. The result is intentionally model-first and counterexample-oriented.
@@ -56,7 +56,7 @@ to expose when scheduling order has an effect and when it does not.
 
 Devanik Debnath
 
-Repair Scheduling Under Fixed Throughpu
+Repair Scheduling Under Fixed Throughput
 
 2.2
 
@@ -149,7 +149,7 @@ Genome maintenance
 
 x3
 
-Regulatory drif
+Regulatory drift
 
 x4
 
@@ -166,7 +166,7 @@ Abstract burden proxy for regulatory/epigenetic deviation; no specific epigeneti
 
 Devanik Debnath
 
-Repair Scheduling Under Fixed Throughpu
+Repair Scheduling Under Fixed Throughput
 
 Table 3: Synthetic model parameterization; values are chosen for illustration and not fitted to biology.
 Quantity
@@ -178,7 +178,7 @@ R
 Tc
 θ
 κ
-∆
+∆t
 
 3.1
 
@@ -227,13 +227,13 @@ Exact solution identity and a limiting case
 For any piecewise-constant offered input and constant matrix M = κA, Eq. 1 has the variation-of-constants identity
 x(t) = eMt x(0) +
 
-Z
+Z t
 
 eM(t−s) b ds −
 
 0
 
-Z
+Z t
 
 eM(t−s) u(s) ds.
 
@@ -249,12 +249,12 @@ do not generally imply equal states when M ̸= 0. At κ = 0, however, the sum ob
 0
 d ⊤
 1 x(t) = 1⊤ b − 1⊤ u(t),
-d
+dt
 
 (4)
 
 which depends only on the total offered repair rate. With a symmetric initial state and equal per-cycle dose, changing the class
-order cannot change the summed burden; the predicted threshold times are identical. This is an analytic limiting-case check, no
+order cannot change the summed burden; the predicted threshold times are identical. This is an analytic limiting-case check, not
 a universal theorem about real repair systems.
 
 4
@@ -282,7 +282,7 @@ PASS
 PASS
 PASS
 
-Time-step refinemen
+Time-step refinement
 
 PASS
 
@@ -311,7 +311,7 @@ The model contains no measured biological rates or organismal observations.
 
 Devanik Debnath
 
-Repair Scheduling Under Fixed Throughpu
+Repair Scheduling Under Fixed Throughput
 
 First-passage time (model units; log scale)
 
@@ -378,7 +378,7 @@ CSV; the exact best and worst orders are preserved in the machine-readable outpu
 
 Devanik Debnath
 
-Repair Scheduling Under Fixed Throughpu
+Repair Scheduling Under Fixed Throughput
 
 useful baseline and is close to the median scheduled outcome. In this configuration, some orders are slightly better and some
 slightly worse than the equal-share policy. This is precisely why “repair order matters” is too weak to imply “a learned schedule
@@ -466,7 +466,7 @@ continuous equal-share repair at each capacity. This comparison changes the tota
 
 Devanik Debnath
 
-Repair Scheduling Under Fixed Throughpu
+Repair Scheduling Under Fixed Throughput
 
 Schedule effects and total-budget effects are different questions
 Across-order range / median (left axis)
@@ -566,11 +566,11 @@ Not performed; no interspecies data were downloaded or analyzed.
 
 Devanik Debnath
 
-Repair Scheduling Under Fixed Throughpu
+Repair Scheduling Under Fixed Throughput
 
 Synthetic directed damage-dependency graph
 Regulatory
-drif
+drift
 
 0.04
 
@@ -641,7 +641,7 @@ criterion for loss of function, and evidence that distinct lesions combine nonli
 
 Devanik Debnath
 
-Repair Scheduling Under Fixed Throughpu
+Repair Scheduling Under Fixed Throughput
 
 6.2
 
@@ -658,7 +658,7 @@ repair completion delay better than a sum-of-times baseline, out of sample.
 Percolation and damage correlation
 
 Percolation theory offers tools to study when connected damaged regions lose connectivity [8]. But the current model has no
-spatial lattice or measured damage clusters; κ scales causal cross-state propagation and is not a correlation coefficient. A nex
+spatial lattice or measured damage clusters; κ scales causal cross-state propagation and is not a correlation coefficient. A next
 study could compare threshold time with a cluster-percolation order parameter on image-registered mitochondrial networks or
 chromatin domains. It should test whether cluster statistics add predictive value beyond total damage and local burden.
 
@@ -705,7 +705,7 @@ sources of uncertainty.
 
 Devanik Debnath
 
-Repair Scheduling Under Fixed Throughpu
+Repair Scheduling Under Fixed Throughput
 
 Reproducible model-audit pipeline
 
@@ -747,7 +747,7 @@ intervention.
 
 Devanik Debnath
 
-Repair Scheduling Under Fixed Throughpu
+Repair Scheduling Under Fixed Throughput
 
 Table 7: Failure modes, observable consequences, and the result that would weaken the central claim.
 Failure mode
@@ -787,7 +787,7 @@ held-out responses.
 Do not attribute survival differences to order until
 equivalence bounds on total and per-class flux are
 met.
-Report sensitivity to the threshold definition; rejec
+Report sensitivity to the threshold definition; reject
 claims that depend on one unsupported cutoff.
 Extend the state vector and re-test; current result is
 not valid if omitted feedback reverses rankings.
@@ -798,8 +798,8 @@ calibrated system.
 
 Limitations
 
-The model is deliberately small and deterministic. Damage is assumed to separate into four nonnegative classes with constan
-source and linear interactions, while the repair input has no observation noise, delays, toxicity, saturation, or state-dependen
+The model is deliberately small and deterministic. Damage is assumed to separate into four nonnegative classes with constant
+source and linear interactions, while the repair input has no observation noise, delays, toxicity, saturation, or state-dependent
 effectiveness. The failure threshold is a scalar sum and omits compensatory mechanisms, cell turnover, organismal physiology,
 and competing risks. The matrix and all numerical constants are synthetic, dimensionless choices. Thus the numerical range is
 a proof-of-implementation for this toy model, not a prediction of days of life, percent lifespan extension, or treatment effect.
@@ -835,7 +835,7 @@ the National Academy of Sciences, 117(34):20404–20410, 2020.
 
 Devanik Debnath
 
-Repair Scheduling Under Fixed Throughpu
+Repair Scheduling Under Fixed Throughput
 
 [2] Michael P. Murphy and Linda Partridge. Toward a control theory analysis of aging. Annual Review of Biochemistry,
 77:777–798, 2008.

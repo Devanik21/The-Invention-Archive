@@ -273,7 +273,7 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 
 Package rerunfilecheck Warning: File `paper.out' has changed.
-(rerunfilecheck)                Rerun to get outlines righ
+(rerunfilecheck)                Rerun to get outlines right
 (rerunfilecheck)                or use package `bookmark'.
 
  )
@@ -337,7 +337,7 @@ mktexpk: /home/runner/.texlive2023/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt090
  </home/runner/.texlive20
 23/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0900.600pk></usr/share/texlive/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fon
+t/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/font
 s/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
 c/amsfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/sy
@@ -345,7 +345,7 @@ mbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/f
 onts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (10 pages, 235962 bytes).
+Output written on paper.pdf (10 pages, 235970 bytes).
 Transcript written on paper.log.
 Latexmk: Missing bbl file 'paper.bbl' in following:
  No file paper.bbl.
@@ -371,7 +371,7 @@ Running 'bibtex  "paper.aux"'
 ------------
 This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
 The top-level auxiliary file: paper.aux
-The style file: unsrt.bs
+The style file: unsrt.bst
 Database file #1: paper.bib
 Warning--empty author in Autophagy2017Wang
 (There was 1 warning)
@@ -380,7 +380,7 @@ Rule 'pdflatex':  Reasons for rerun
 Changed files or newly in use/created:
   paper.aux
   paper.bbl
-  paper.ou
+  paper.out
 
 ------------
 Run number 2 of rule 'pdflatex'
@@ -574,7 +574,7 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 /texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk> </home/runner/.texlive20
 23/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0900.600pk></usr/share/texlive/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fon
+t/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/font
 s/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
 c/amsfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/sy
@@ -582,7 +582,7 @@ mbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/f
 onts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (11 pages, 244158 bytes).
+Output written on paper.pdf (11 pages, 244159 bytes).
 Transcript written on paper.log.
 Latexmk: Getting log file 'paper.log'
 Latexmk: Examining 'paper.fls'
@@ -606,7 +606,7 @@ Running 'bibtex  "paper.aux"'
 ------------
 This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
 The top-level auxiliary file: paper.aux
-The style file: unsrt.bs
+The style file: unsrt.bst
 Database file #1: paper.bib
 Warning--empty author in Autophagy2017Wang
 (There was 1 warning)
@@ -742,7 +742,7 @@ low.pdf> <./figures/figure8_experiment_flow.pdf>] (./paper.bbl [10]) [11]
 /texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1000.600pk> </home/runner/.texlive20
 23/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt0900.600pk></usr/share/texlive/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fon
+t/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/font
 s/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
 c/amsfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/sy
@@ -750,7 +750,7 @@ mbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/f
 onts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (11 pages, 244286 bytes).
+Output written on paper.pdf (11 pages, 244293 bytes).
 Transcript written on paper.log.
 Latexmk: Getting log file 'paper.log'
 Latexmk: Examining 'paper.fls'

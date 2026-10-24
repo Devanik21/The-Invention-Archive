@@ -1,4 +1,4 @@
-Repair-scheduling model audi
+Repair-scheduling model audit
 PASS matrix_nonnegative: All cross-damage entries are nonnegative
 PASS zero_coupling_order_invariance: At kappa=0, order cannot change summed damage trajectory under symmetric initial/source/repair dose
 PASS all_24_orders_each_coupling: Every permutation enumerated at every coupling value
