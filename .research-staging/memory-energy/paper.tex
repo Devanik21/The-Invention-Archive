@@ -1,0 +1,264 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=0.88in,headheight=14pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,longtable,array}
+\usepackage{enumitem,xcolor,fancyhdr}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{caption,float}
+\hypersetup{colorlinks=true,linkcolor=blue!38!black,citecolor=blue!38!black,urlcolor=blue!48!black,pdfauthor={Devanik Debnath},pdftitle={The Memory--Energy Frontier in Noisy Recurrent Inference}}
+\graphicspath{{figures/}}
+\setlength{\parskip}{0.25em}
+\setlength{\parindent}{1em}
+\setlist{itemsep=0.15em,topsep=0.25em}
+\captionsetup{font=small,labelfont=bf,justification=raggedright,singlelinecheck=false}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\textsc{Memory--Energy Frontier}}
+\fancyhead[R]{\small Debnath}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.35pt}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newcommand{\MSE}{\mathrm{MSE}}
+\input{results/metrics.tex}
+\title{\vspace{-1em}\bfseries The Memory--Energy Frontier in Noisy Recurrent Inference:\\[0.25em]\large A Spectral Rate--Distortion Framework for Neural and Neuromorphic Systems}
+\author{Devanik Debnath\\\small Electronics and Communication Engineering\\\small National Institute of Technology Agartala, India}
+\date{\small Research preprint \textbullet\ 24 October 2026}
+\begin{document}
+\maketitle
+\vspace{-0.7em}
+\begin{abstract}
+Recurrent estimators trade memory persistence against correction from noisy observations, yet algorithmic activity budgets and estimation distortion are often represented by incompatible abstractions. This paper defines a falsifiable benchmark for that trade-off rather than proposing a physical law of neural metabolism. For a stable scalar latent process observed through additive noise, we derive the stationary mean-squared error (MSE) of a one-parameter recurrent estimator and define a transparent activity proxy that penalizes observation correction and recurrent carry. A small machine-learning policy approximates the budget-feasible gain selected by grid search; a deterministic projection step enforces the declared proxy budget even when the predictor is wrong. In the fixed-seed synthetic benchmark, mean in-distribution relative regret is \MeanIDRegret{} and the shifted evaluation mean regret is \MeanOODRegret{}. Projection produces \BudgetViolationCount{} budget violations across held-out cases. These are model-generated results, not measured joules, ATP costs, neural recordings, or hardware benchmarks. The contribution is a reproducible coupling of a closed-form error model, an explicit activity proxy, a feasibility wrapper, and a distribution-shift stress test. Its practical value depends on future calibration against measured energy and task error in a specified device or biological system.
+\end{abstract}
+\noindent\textbf{Keywords:} recurrent inference; Kalman filtering; energy-aware estimation; neuromorphic computing; constrained optimization; distribution shift
+
+\section{Research posture and contribution}
+The question is narrow: when a recurrent estimator must operate under a declared activity budget, how much estimation error is paid for a lower-cost gain, and can a learned policy approximate the constrained optimum without violating the budget? This is an algorithmic question, not a direct statement about neural metabolism or device power.
+
+The bounded contributions are: (i) an exact stationary error expression for a scalar linear recurrence; (ii) a declared quadratic activity proxy and budget-constrained objective; (iii) a learned gain surrogate evaluated against a grid-search oracle, with feasibility projection and an out-of-distribution (OOD) stress test; and (iv) an empirical validation contract. The recurrence, Kalman filtering, constrained estimation, and neural energy literature are established. This paper is not claimed to be the first energy-aware estimator, a new Kalman filter, or a new law of metabolism. Its scoped contribution is an executable benchmark that keeps mathematical error, algorithmic cost, policy approximation, and empirical validation separate.
+
+\section{Closest prior work}
+Kalman developed recursive linear filtering and covariance updates \citep{kalman1960}. Hopfield's recurrent associative-memory model illustrated how network dynamics can support memory and error correction \citep{hopfield1982}. Energy-aware estimation is already established: Nourian, Leong, and Dey optimize transmission-energy allocation for Kalman filtering over packet-dropping links \citep{nourian2014}; Ye, Roy, and Sundaram study budgeted sensor placement and resilient filtering \citep{ye2020}. These works include communication, sensor, or placement decisions omitted from our scalar model and are important prior art.
+
+Neuroscience provides motivation and a warning. Laughlin, de Ruyter van Steveninck, and Anderson estimated energetic costs of neural information from blowfly-retina measurements \citep{laughlin1998}; Attwell and Laughlin constructed a signaling energy budget for grey matter \citep{attwell2001}. Their quantities concern physical processes. The proxy here is dimensionless unless calibrated and cannot be converted to ATP or joules by algebra alone. Neuromorphic reviews emphasize device-specific switching, memory, data movement, and implementation details \citep{ferreira2025,abuhamra2025}. Landauer's principle concerns a thermodynamic lower bound for logically irreversible operations under specified conditions \citep{landauer1961}; it does not imply that the proxy below equals dissipated heat.
+
+\begin{table}[htbp]\centering
+\caption{Positioning against adjacent work; this is a scope comparison, not a performance claim.}\label{tab:prior}\small
+\begin{tabularx}{\linewidth}{@{}p{0.22\linewidth}X X@{}}
+\toprule
+Line & Established contribution & Difference here\\\midrule
+Kalman filtering \citep{kalman1960} & Recursive linear estimation & Adds an explicit activity proxy and learned gain surrogate\\
+Energy-aware estimation \citep{nourian2014,ye2020} & Sensor, channel, or placement budgets & Simplified internal recurrence cost; no network or packet model\\
+Neural energetics \citep{laughlin1998,attwell2001} & Biophysical estimates of signaling cost & No mapping from proxy to ATP or oxygen use\\
+Neuromorphic reviews \citep{ferreira2025,abuhamra2025} & Device and architecture trade-offs & No circuit-level joule measurements here\\
+This benchmark & Closed-form MSE, projection, shift test & Synthetic only; not a new physical law\\
+\bottomrule
+\end{tabularx}\end{table}
+
+\section{Model and assumptions}
+Let
+\begin{equation}
+x_t=ax_{t-1}+w_t,\quad |a|<1,\quad w_t\sim\mathcal{N}(0,q),
+\label{eq:state}
+\end{equation}
+and
+\begin{equation}
+y_t=x_t+v_t,\quad v_t\sim\mathcal{N}(0,r).
+\label{eq:obs}
+\end{equation}
+The noises are mutually independent, temporally white, zero-mean Gaussian variables with $q,r>0$. The estimator is
+\begin{equation}
+\widehat{x}_t=a(1-k)\widehat{x}_{t-1}+ky_t,\quad k\in[0,1].
+\label{eq:est}
+\end{equation}
+The gain balances model-based persistence and observation correction. Restricting $k$ to $[0,1]$ is a benchmark design choice, not a universal constraint on neural systems.
+
+\begin{table}[htbp]\centering
+\caption{Notation and interpretation limits.}\label{tab:notation}\small
+\begin{tabularx}{\linewidth}{@{}p{0.18\linewidth}p{0.30\linewidth}X@{}}
+\toprule
+Symbol & Definition & Scope\\\midrule
+$x_t,y_t$ & Latent state and observation & Synthetic normalized units\\
+$a$ & Persistence coefficient & $|a|<1$\\
+$q,r$ & Noise variances & Strictly positive\\
+$k$ & Observation gain & Restricted to $[0,1]$\\
+$P(k)$ & Stationary MSE & State units squared\\
+$C(k)$ & Activity proxy & Dimensionless unless calibrated\\
+$B$ & Proxy budget & Same units as $C(k)$\\
+$\widehat{k}_\theta$ & Learned gain prediction & Projected before use\\
+$\Delta$ & Gain-grid spacing & Numerical resolution\\
+\bottomrule
+\end{tabularx}\end{table}
+
+\subsection{Stationary error derivation}
+Set $e_t=x_t-\widehat{x}_t$. Substituting \cref{eq:state,eq:obs,eq:est} gives
+\begin{equation}
+e_t=a(1-k)e_{t-1}+(1-k)w_t-kv_t.
+\label{eq:error}
+\end{equation}
+Since $|a(1-k)|<1$, the error recurrence is stable. Independence yields
+\begin{equation}
+P_t=a^2(1-k)^2P_{t-1}+(1-k)^2q+k^2r.
+\label{eq:variance}
+\end{equation}
+\begin{proposition}[Stationary error variance]
+Under the stated model, the estimator's stationary MSE is
+\begin{equation}
+P(k)=\frac{(1-k)^2q+k^2r}{1-a^2(1-k)^2}.
+\label{eq:mse}
+\end{equation}
+\end{proposition}
+\begin{proof}
+Set $P_t=P_{t-1}=P$ in \cref{eq:variance} and rearrange. The denominator is positive because $a^2(1-k)^2<1$. The error is zero-mean, so its variance is the MSE.
+\end{proof}
+This is a P1 consequence of the model, not evidence that real neural tissue follows the recurrence. For $a=0$, \cref{eq:mse} reduces to $(1-k)^2q+k^2r$, minimized at $k=q/(q+r)$. For general $a$, the code searches a dense grid and makes no unproved global-convexity claim.
+
+\subsection{Activity proxy and constrained optimum}
+Define
+\begin{equation}
+C(k)=\alpha k^2+\beta a^2(1-k)^2,\quad \alpha,\beta>0.
+\label{eq:cost}
+\end{equation}
+The terms represent correction activity and recurrent carry. This is a modeling choice, not a measured energy equation; it omits memory access, sparsity, leakage, switching capacitance, spikes, synaptic transmission, and device-specific effects. For budget $B$, define
+\begin{equation}
+\mathcal{K}_B=\{k\in[0,1]:C(k)\leq B\},
+\label{eq:feasible}
+\end{equation}
+and
+\begin{equation}
+k_B^\star\in\arg\min_{k\in\mathcal{K}_B}P(k).
+\label{eq:opt}
+\end{equation}
+Because $C$ is quadratic with positive leading coefficient, the nonempty feasible set is an interval intersected with $[0,1]$. Empty feasible sets are rejected.
+
+\begin{proposition}[Feasibility of projection]
+Let $\widetilde{k}$ be any predicted gain and $\Pi_{\mathcal{K}_B}(\widetilde{k})$ its Euclidean projection onto the nonempty feasible interval. Then $C(\Pi_{\mathcal{K}_B}(\widetilde{k}))\leq B$. For any $k^\star\in\mathcal{K}_B$, the projection also satisfies $|\Pi_{\mathcal{K}_B}(\widetilde{k})-k^\star|\leq|\widetilde{k}-k^\star|$.
+\end{proposition}
+\begin{proof}
+Feasibility follows from membership in $\mathcal{K}_B$. Projection onto a closed convex subset of $\R$ is non-expansive, giving the distance inequality.
+\end{proof}
+\begin{corollary}[Conditional regret bound]
+If $P$ is differentiable on $\mathcal{K}_B$ and $L_B=\sup_{u\in\mathcal{K}_B}|P'(u)|<\infty$, then for $\bar{k}=\Pi_{\mathcal{K}_B}(\widetilde{k})$ and a global minimizer $k_B^\star$,
+\[
+0\leq P(\bar{k})-P(k_B^\star)\leq L_B|\widetilde{k}-k_B^\star|.
+\]
+\end{corollary}
+The mean-value theorem and the projection distance inequality prove the upper bound; optimality proves the lower bound. This is conditional on prediction error and derivative control, not a guarantee of low regret for arbitrary models. The implementation projects to a feasible grid point and directly tests the budget.
+
+\begin{table}[htbp]\centering
+\caption{Epistemic classification of central claims.}\label{tab:epistemic}\small
+\begin{tabularx}{\linewidth}{@{}p{0.10\linewidth}p{0.34\linewidth}X@{}}
+\toprule
+Class & Claim & Status\\\midrule
+P1 & Stationary MSE and projection feasibility & Exact under stated assumptions\\
+P2 & Constrained gain selection & Grid-optimal over the declared finite grid\\
+P3 & Shifted policy performance & Synthetic stress test only; no universality claim\\
+P4 & Analogy to neural and neuromorphic systems & Structural correspondence; requires calibration\\
+P5 & Memory as a resource competing with correction & Intuition, not a biological mechanism\\
+\bottomrule
+\end{tabularx}\end{table}
+
+\section{Learning protocol}
+Synthetic draws of $(a,q,r,\alpha,\beta,B)$ are generated with a fixed seed. For each draw, a dense grid over $k\in[0,1]$ is filtered by $C(k)\leq B$, and the feasible point with smallest $P(k)$ becomes the oracle label. A scikit-learn MLP with hidden layers $(48,32)$, ReLU, Adam, early stopping, and fixed random seed predicts a gain from model descriptors. The raw prediction is clipped to $[0,1]$ and projected to the nearest feasible grid point. A fixed-gain baseline receives the same projection. Relative regret is
+\begin{equation}
+\mathcal{R}(\widehat{k})=\frac{P(\widehat{k})-P(k_B^\star)}{P(k_B^\star)}.
+\label{eq:regret}
+\end{equation}
+The ID test uses independent draws from the training generator. The OOD stress generator changes persistence and noise ranges. These are synthetic software-defined shifts, not measurements of real-world domain shift.
+
+\begin{table}[htbp]\centering
+\caption{Numerical protocol and failure controls.}\label{tab:protocol}\small
+\begin{tabularx}{\linewidth}{@{}p{0.24\linewidth}X@{}}
+\toprule
+Element & Specification\\\midrule
+Seed & 20261024; independent deterministic streams\\
+Oracle & Exhaustive gain grid with explicit budget filter\\
+Policy & MLP with $(48,32)$ hidden units and early stopping\\
+Projection & Nearest feasible grid point; budget rechecked after projection\\
+ID set & Independent draws from the training generator\\
+OOD set & Higher persistence and shifted process/observation noise\\
+Negative checks & Invalid variances, empty feasible set, finite-value assertions, Monte Carlo identity check\\
+Data provenance & All plotted values are generated by released code; no external data are used\\
+\bottomrule
+\end{tabularx}\end{table}
+
+\begin{figure}[htbp]\centering\includegraphics[width=0.82\linewidth]{figure01_error_gain.pdf}
+\caption{Analytical stationary MSE versus gain for several persistence values at fixed synthetic noise variances. These are model curves, not neural observations.}\label{fig:mse}\end{figure}
+\begin{figure}[htbp]\centering\includegraphics[width=0.82\linewidth]{figure02_cost_gain.pdf}
+\caption{Declared quadratic activity proxy versus gain. The proxy is dimensionless and is not measured power.}\label{fig:cost}\end{figure}
+\begin{figure}[htbp]\centering\includegraphics[width=0.82\linewidth]{figure03_frontier.pdf}
+\caption{Model-generated activity--distortion points and the finite-grid Pareto frontier for one synthetic parameter tuple.}\label{fig:frontier}\end{figure}
+\begin{figure}[htbp]\centering\includegraphics[width=0.82\linewidth]{figure04_policy_regret.pdf}
+\caption{Held-out regret distributions for projected learned and fixed-gain policies on the ID and OOD synthetic sets.}\label{fig:regret}\end{figure}
+
+\section{Results}
+\Cref{fig:mse,fig:cost,fig:frontier} expose the geometry of the scalar model and the chosen proxy. Increasing observation gain can raise or lower MSE depending on persistence and the noise ratio; the activity proxy is not necessarily monotonic. Thus the model does not support a universal claim that more memory is always cheaper. \Cref{tab:results} summarizes policy approximation relative to the finite-grid oracle. The hard projection is evaluated separately from prediction accuracy: its role is constraint satisfaction, not a guarantee of optimality. Per-case outputs and the sensitivity sweep are archived in the results directory.
+
+\begin{table}[htbp]\centering
+\caption{Held-out synthetic policy results regenerated by the verification script.}\label{tab:results}\small
+\begin{tabularx}{\linewidth}{@{}p{0.36\linewidth}XX@{}}
+\toprule
+Metric & In-distribution & OOD stress set\\\midrule
+Test cases & \TestIDCount{} & \TestOODCount{}\\
+Mean relative regret & \MeanIDRegret{} & \MeanOODRegret{}\\
+Median relative regret & \MedianIDRegret{} & \MedianOODRegret{}\\
+95th-percentile regret & \P95IDRegret{} & \P95OODRegret{}\\
+Mean absolute gain-label error & \PolicyMAE{} & \PolicyMAEOOD{}\\
+Budget violations after projection & \BudgetViolationCount{} & Included in total\\
+\bottomrule
+\end{tabularx}\end{table}
+
+\begin{figure}[htbp]\centering\includegraphics[width=0.82\linewidth]{figure05_dependency_graph.pdf}
+\caption{Dependency graph: latent process and observation feed the estimator; gain affects error and proxy cost; the budget gate constrains the selected gain. Edges denote model dependencies, not biological causation.}\label{fig:dependency}\end{figure}
+\begin{figure}[htbp]\centering\includegraphics[width=0.82\linewidth]{figure06_mode_graph.pdf}
+\caption{Conceptual mode-wise extension with separate gains and costs. It is a diagonal model, not a claim that real neural circuits are uncoupled.}\label{fig:modes}\end{figure}
+
+\begin{table}[htbp]\centering
+\caption{Sensitivity by budget regime, computed from held-out synthetic cases.}\label{tab:sensitivity}\small
+\begin{tabularx}{\linewidth}{@{}p{0.30\linewidth}XXX@{}}
+\toprule
+Budget regime & Cases & Mean policy regret & Violations\\\midrule
+Tight (lowest third) & \TightCount{} & \TightRegret{} & \TightViolations{}\\
+Intermediate (middle third) & \MidCount{} & \MidRegret{} & \MidViolations{}\\
+Relaxed (highest third) & \RelaxedCount{} & \RelaxedRegret{} & \RelaxedViolations{}\\
+All held-out cases & \TestAllCount{} & \AllRegret{} & \BudgetViolationCount{}\\
+\bottomrule
+\end{tabularx}\end{table}
+
+\begin{figure}[htbp]\centering\includegraphics[width=0.88\linewidth]{figure07_training_flow.pdf}
+\caption{Reproducible synthetic training and evaluation path: grid oracle, learned surrogate, feasibility projection, and held-out checks.}\label{fig:training}\end{figure}
+\begin{figure}[htbp]\centering\includegraphics[width=0.88\linewidth]{figure08_validation_flow.pdf}
+\caption{Proposed route from synthetic benchmark to empirical calibration. Later stages are a plan, not experiments performed here.}\label{fig:validation}\end{figure}
+
+\section{Falsification and empirical bridge}
+The empirical hypothesis is not that the proxy predicts neural energy. It is that a low-dimensional recurrence plus explicit cost function can be a useful screening benchmark for gain-selection policies. A simpler explanation for any learned-policy performance is that the oracle labels and training examples are generated by the same smooth simulator. OOD evaluation only probes selected parameter shifts and cannot rule out stronger misspecification.
+
+\begin{table}[htbp]\centering
+\caption{Falsification and validation matrix.}\label{tab:falsification}\small
+\begin{tabularx}{\linewidth}{@{}p{0.22\linewidth}p{0.31\linewidth}X@{}}
+\toprule
+Claim & Supporting observable & Falsifying or limiting result\\\midrule
+Analytic MSE is correct & Monte Carlo error variance matches formula within declared tolerance & Persistent mismatch after burn-in\\
+Projection enforces budget & Every projected gain satisfies $C(k)\leq B$ & Any cost violation beyond tolerance\\
+Learned surrogate is useful & Low regret against oracle and simple baselines on held-out draws & Regret worse than fixed gain or severe shift sensitivity\\
+Proxy tracks device energy & Proxy ranking predicts measured joules on a named device & Rank reversals or no out-of-sample association\\
+Proxy informs biology & Independent energetic cost and task error are predicted in a defined preparation & No value beyond established biophysical variables\\
+\bottomrule
+\end{tabularx}\end{table}
+
+A credible hardware validation would implement the recurrence on a named platform and measure energy per update with calibrated instrumentation, reporting task error, latency, precision, memory placement, temperature, and uncertainty. A biological study would require a defined preparation, a defensible energetic measurement, appropriate ethics and approvals, and independent task-performance measures. Neither was performed here. No clinical or physiological recommendation follows from the simulation.
+
+\section{Limitations and conclusion}
+The model is scalar and linear; nonlinear, nonstationary, multimodal, and partially observed systems may behave differently. The gain grid introduces discretization error, the MLP is trained on synthetic labels, and the OOD generator is not comprehensive. The activity proxy omits physical implementation details and is not a substitute for measuring energy. The release therefore contributes a reproducible benchmark and a falsifiable calibration path, not a claim of demonstrated neural or hardware energy savings.
+
+\section*{AI assistance and research-process credit}
+Co-equal research-process credit is given to Devanik Debnath and Xylia, the autonomous multi-model research engine coordinating AI-assisted discovery, synthesis, and verification. Devanik Debnath retains responsibility for the final manuscript, scientific claims, citations, and released artifacts.
+
+\bibliographystyle{plainnat}
+\bibliography{paper}
+\end{document}
