@@ -1,0 +1,5 @@
+topic=Aging as a Decoding Threshold: Repair Scheduling Under Fixed Maintenance Throughput
+builder_payload_sha256=e4b9fe2b74bc1429b30a79fc4c1b3620842bc282203dbcc22db2f2e8417ab6cc
+release_slug=Aging_as_a_Decoding_Threshold_Repair_Scheduling_Under_Fixed_Maintenance_Throughput
+scope=synthetic model only; no organismal or experimental lifespan extension demonstrated
+rerun_reason=final flowchart label-padding fix and conditional verifier-path compatibility note
