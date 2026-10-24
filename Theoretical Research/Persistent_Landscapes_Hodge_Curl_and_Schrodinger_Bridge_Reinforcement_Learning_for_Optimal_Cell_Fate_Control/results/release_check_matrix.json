@@ -1,57 +1,124 @@
 {
   "schema_version": "1.0",
-  "execution_timestamp_utc": "2026-10-24T14:55:51+00:00",
+  "execution_timestamp_utc": "2026-10-24T15:06:26+00:00",
   "repository": "Devanik21/The-Invention-Archive",
   "target_branch": "main",
   "release_slug": "Persistent_Landscapes_Hodge_Curl_and_Schrodinger_Bridge_Reinforcement_Learning_for_Optimal_Cell_Fate_Control",
   "release_status": "BLOCKED",
-  "trigger_commit_sha": "960145ce198591ea600a6291a72b862d1a062ab5",
-  "release_artifact_commit_sha": null,
-  "final_head_sha": null,
-  "tag": null,
-  "tag_target_sha": null,
+  "release_artifact_commit_sha": "f6ffd78f52a50f1ff4f3916a29db9c06ff127416",
+  "branch_head_before_audit_record_commit_sha": "a8ff9c52a559aaee3aeb05338282b13f28123425",
   "pdf_sha256": "21af08297de80c49599e86ff84f90ad608b57dad2f863d9ea7d5e8d3a97b3fde",
   "pdf_pages": 25,
   "main_text_pages_physical": 20,
+  "tag": "v2026.10.24",
+  "tag_target_sha": "f6ffd78f52a50f1ff4f3916a29db9c06ff127416",
   "checks": [
     {
-      "name": "Synthetic numerical verification",
+      "name": "Scientific claim/evidence boundaries",
       "status": "PASS",
-      "evidence": "results/verification_report.json"
+      "evidence": "results/claim_evidence_matrix.csv; paper.tex; README.md",
+      "note": "Synthetic/model evidence, mathematical counterexamples, and unexecuted public-data/wet-lab work are explicitly distinguished."
+    },
+    {
+      "name": "Numerical model verification",
+      "status": "PASS",
+      "evidence": "results/verification_report.json; results/verify_model_stdout.txt"
     },
     {
       "name": "Python syntax and deployment self-tests",
       "status": "PASS",
-      "evidence": "results/deploy_self_test.log"
+      "evidence": "results/deploy_self_test.log; results/deploy_validate_run.log"
     },
     {
-      "name": "LaTeX build and page floors",
+      "name": "LaTeX compilation and page floors",
       "status": "PASS",
-      "evidence": "results/latex_build_stdout.txt; results/pdfinfo.txt"
+      "evidence": "results/latex_build_stdout.txt; results/pdfinfo.txt",
+      "note": "Final CI-built PDF has 25 pages and 20 substantive main-text pages."
     },
     {
-      "name": "Bibliography and metadata preflight",
+      "name": "Metadata, bibliography and figure inventory",
       "status": "PASS",
-      "evidence": "paper.bib; metadata files; source preflight"
+      "evidence": "paper.bib; CITATION.cff; .zenodo.json; schema_article.jsonld; results/figure_inventory.csv"
     },
     {
-      "name": "Rendered every page",
+      "name": "Full-page PDF visual review",
       "status": "PASS",
-      "evidence": "results/pdf_pages/; results/pdf_contact_sheet.jpg"
+      "evidence": "results/pdf_visual_review.json; results/publication_quality_report.md",
+      "note": "Every page of the exact PDF hash was inspected; two minor whitespace/table-wrapping issues are recorded. No critical or major visual defects."
     },
     {
-      "name": "Independent visual-quality review",
-      "status": "PENDING",
-      "evidence": "results/pdf_visual_review.json"
+      "name": "Publication workflow and remote artifact read-back",
+      "status": "PASS",
+      "evidence": "https://github.com/Devanik21/The-Invention-Archive/actions/runs/40104481818",
+      "run_id": 40104481818,
+      "event_head_sha": "960145ce198591ea600a6291a72b862d1a062ab5",
+      "artifact_commit_sha": "f6ffd78f52a50f1ff4f3916a29db9c06ff127416",
+      "conclusion": "success",
+      "note": "The action compiled and published the PDF; its publish step checked the nine root-file hashes and release-index entry against origin/main."
     },
     {
-      "name": "Remote read-back and Actions closure",
-      "status": "PENDING",
-      "evidence": "post-commit verification"
+      "name": "Semantic tag creation and read-back",
+      "status": "PASS",
+      "evidence": "https://github.com/Devanik21/The-Invention-Archive/actions/runs/40105353368",
+      "run_id": 40105353368,
+      "event_head_sha": "7ee7bfb759dae594b2d4d5957a0030a91ad7f040",
+      "tag": "v2026.10.24",
+      "tag_target_sha": "f6ffd78f52a50f1ff4f3916a29db9c06ff127416",
+      "conclusion": "success",
+      "note": "The annotated tag v2026.10.24 resolves to the release artifact commit; the one-time trigger marker was removed."
+    },
+    {
+      "name": "GitHub-rendered README view",
+      "status": "BLOCKED",
+      "evidence": "README.md source and automated README preflight were inspected.",
+      "note": "The available GitHub connector returned the source rather than the rendered GitHub page; a rendered-view inspection could not be completed in this execution."
+    },
+    {
+      "name": "Repository branch protection/ruleset requirements",
+      "status": "BLOCKED",
+      "evidence": "GET /repos/Devanik21/The-Invention-Archive/branches/main/protection returned HTTP 403 Resource not accessible by integration.",
+      "note": "Required-check/ruleset configuration could not be inspected; no assumption is made that no required checks exist."
+    },
+    {
+      "name": "Build workflow on evidence-only follow-up",
+      "status": "NOT_APPLICABLE",
+      "evidence": ".github/workflows/publish-cell-fate-control.yml",
+      "note": "This workflow is path-filtered to .research-staging/cell-fate-control/READY; the audit-record follow-up changes only release results reports and their manifest, not build inputs."
+    },
+    {
+      "name": "Zenodo deposit",
+      "status": "NOT_APPLICABLE",
+      "evidence": ".zenodo.json",
+      "note": "Metadata preparation is included, but no external deposit was requested or performed and no DOI is claimed."
+    }
+  ],
+  "remediation_history": [
+    {
+      "run_id": 40104024953,
+      "conclusion": "failure",
+      "reason": "The main-text page-floor parser matched an appendix heading in the table of contents.",
+      "remediation": "Restricted the appendix boundary search to pages after the main text begins."
+    },
+    {
+      "run_id": 40104284082,
+      "conclusion": "failure",
+      "reason": "git diff --cached --check found trailing whitespace in generated CSV/TXT evidence.",
+      "remediation": "Normalized generated text outputs before checksum generation and staging."
+    },
+    {
+      "run_id": 40104481818,
+      "conclusion": "success",
+      "reason": "All build, model, deployment, PDF-preflight, publication and remote read-back steps completed successfully."
+    },
+    {
+      "run_id": 40105353368,
+      "conclusion": "success",
+      "reason": "The semantic tag was created and verified at the release artifact commit; the temporary marker was removed."
     }
   ],
   "blockers": [
-    "Independent page-by-page review of the exact published PDF",
-    "Final remote Actions run reconciliation"
-  ]
+    "Independently inspect the actual rendered GitHub README page; source and syntax preflight passed but rendered UI inspection was unavailable.",
+    "Inspect required branch-protection/ruleset status checks using an authorized permission; the connected integration returned 403."
+  ],
+  "matrix_self_reference_note": "This matrix records checks against the verified artifact commit and the branch head observed before this audit-record commit. The final audit-record commit SHA is reported separately in the final release report to avoid a self-referential commit/checksum loop."
 }
