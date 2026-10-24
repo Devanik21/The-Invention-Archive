@@ -86,7 +86,7 @@ jobs:
           from pathlib import Path
           import fitz,yaml
           from PIL import Image,ImageDraw
-          root=Path(sys.argv[1]); pages=Path(sys.argv[2]); pages.mkdir(parents=True,exist_ok=True)
+          root=Path.cwd(); pages=Path(sys.argv[2]); pages.mkdir(parents=True,exist_ok=True)
           source=(root/'paper.tex').read_text(encoding='utf-8'); bib=(root/'paper.bib').read_text(encoding='utf-8')
           assert len(re.findall(r'\\begin\{table\}',source))>=5
           assert len(re.findall(r'\\begin\{figure\}',source))>=8
