@@ -1,0 +1,29 @@
+{
+  "status": "PENDING",
+  "inspection_timestamp_utc": "2026-10-24T07:24:11.649048+00:00",
+  "paper_pdf_sha256": "71b2a3974120d082bdd7ee2ed4481532cbe3186de44c0f133c33fa4d8f7b3382",
+  "page_count": 11,
+  "render_dpi": 140,
+  "all_pages_rendered": true,
+  "pages_rendered": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "pages_individually_reviewed": [],
+  "issues": [
+    {
+      "severity": "pending",
+      "issue": "Independent visual review of the exact CI-built PDF is not yet closed."
+    }
+  ],
+  "final_disposition": "BLOCKED pending page-by-page review of this exact PDF hash."
+}

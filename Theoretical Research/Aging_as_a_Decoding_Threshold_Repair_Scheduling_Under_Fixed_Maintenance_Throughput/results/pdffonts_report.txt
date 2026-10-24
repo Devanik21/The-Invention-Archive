@@ -1,0 +1,26 @@
+name                                 type              encoding         emb sub uni object ID
+------------------------------------ ----------------- ---------------- --- --- --- ---------
+YKZXQT+NimbusRomNo9L-Medi            Type 1            Custom           yes yes yes     84  0
+IEQWHO+NimbusRomNo9L-Regu            Type 1            Custom           yes yes yes     85  0
+VIIVGE+CMSY10                        Type 1            Builtin          yes yes yes     86  0
+JHDQQI+NimbusRomNo9L-ReguItal        Type 1            Custom           yes yes yes    108  0
+SOSTRQ+CMR10                         Type 1            Builtin          yes yes yes    110  0
+XSBJNE+MSBM10                        Type 1            Builtin          yes yes yes    111  0
+ETQZWT+StandardSymL-Slant_167        Type 1            Builtin          yes yes yes    113  0
+BKFRPT+CMMI10                        Type 1            Builtin          yes yes yes    114  0
+JATCEJ+CMEX10                        Type 1            Builtin          yes yes yes    129  0
+IZMDER+StandardSymL                  Type 1            Builtin          yes yes yes    130  0
+F266                                 Type 3            Custom           yes no  no     134  0
+GCWXDV+DejaVuSans-Oblique            Type 3            Custom           yes yes no     143  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     144  0
+GCWXDV+DejaVuSans-Oblique            Type 3            Custom           yes yes no     192  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     193  0
+GCWXDV+DejaVuSans-Oblique            Type 3            Custom           yes yes no     244  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     245  0
+F299                                 Type 3            Custom           yes no  no     305  0
+GCWXDV+DejaVuSans-Oblique            Type 3            Custom           yes yes no     308  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     309  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     372  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     411  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     469  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     505  0

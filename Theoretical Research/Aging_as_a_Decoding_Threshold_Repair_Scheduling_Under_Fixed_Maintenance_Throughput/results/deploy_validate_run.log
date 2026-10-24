@@ -1,0 +1,16 @@
+{
+  "root_files": [
+    ".zenodo.json",
+    "CITATION.cff",
+    "README.md",
+    "deploy.py",
+    "paper.bib",
+    "paper.pdf",
+    "paper.tex",
+    "schema_article.jsonld",
+    "verify_model.py"
+  ],
+  "figure_pdf_count": 8,
+  "figure_png_count": 8,
+  "verification_status": "PASS"
+}

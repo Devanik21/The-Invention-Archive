@@ -1,0 +1,11 @@
+Repair-scheduling model audi
+PASS matrix_nonnegative: All cross-damage entries are nonnegative
+PASS zero_coupling_order_invariance: At kappa=0, order cannot change summed damage trajectory under symmetric initial/source/repair dose
+PASS all_24_orders_each_coupling: Every permutation enumerated at every coupling value
+PASS fixed_flux_dose_match: Every schedule gives each class equal offered dose per cycle
+PASS positive_first_passage_times: Every specified synthetic schedule reaches threshold in the simulated horizon
+PASS rk4_step_halving: Maximum first-passage difference after step halving is 0.000004
+PASS analytical_decoupled_limit: Analytic 120.000000, simulated 120.000000
+PASS invalid_order_rejected: Malformed order raises ValueError
+PASS negative_coupling_rejected: Negative coupling raises ValueError
+Status: PASS (9/9)

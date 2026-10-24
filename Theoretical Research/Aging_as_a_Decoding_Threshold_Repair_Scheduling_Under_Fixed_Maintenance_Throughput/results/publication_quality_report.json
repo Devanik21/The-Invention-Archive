@@ -1,0 +1,14 @@
+{
+  "status": "BLOCKED_PENDING_VISUAL_REVIEW",
+  "paper_pdf_sha256": "71b2a3974120d082bdd7ee2ed4481532cbe3186de44c0f133c33fa4d8f7b3382",
+  "pages": 11,
+  "table_environments": 7,
+  "figure_environments": 8,
+  "model_verification": {
+    "status": "PASS",
+    "checks_passed": 9,
+    "checks_total": 9
+  },
+  "biological_or_lifespan_validation": "NOT_PERFORMED",
+  "trigger_commit_sha": "c95c9cf035b849043352173e48e2f7952cb93751"
+}

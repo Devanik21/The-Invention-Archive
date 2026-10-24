@@ -1,0 +1,9 @@
+date=2026-10-24
+python=3.12.15
+platform=Linux-6.17.0-1022-azure-x86_64-with-glibc2.39
+numpy=2.3.5
+matplotlib=3.10.8
+networkx=3.6.1
+solver=classical fixed-step RK4
+dt=0.02
+seed=none (deterministic model)

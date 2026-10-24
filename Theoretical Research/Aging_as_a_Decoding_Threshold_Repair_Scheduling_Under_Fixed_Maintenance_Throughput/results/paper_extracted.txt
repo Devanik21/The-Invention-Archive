@@ -1,0 +1,854 @@
+Aging as a Decoding Threshold:
+Repair Scheduling Under Fixed Maintenance Throughpu
+Devanik Debnath
+Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India
+GitHub: Devanik21 | ORCID record supplied by author
+
+24 October 2026 | Theoretical and computational preprin
+Abstrac
+Cells accumulate heterogeneous lesions while repair pathways have finite throughput. This paper tests a narrow version
+of the hypothesis that repair order can alter a threshold-defined failure time even when the offered repair budget is fixed. We
+construct a deterministic four-state damage-propagation model with a nonnegative interaction matrix and periodically allocate
+the same repair capacity to each of four abstract damage classes. All 24 class orders are enumerated across six coupling strengths;
+every order gives each class the same nominal repair dose per cycle. In the decoupled limit, order is analytically irrelevant.
+Under nonzero coupling, order changes first-passage time, but the effect is modest in the illustrative parameter range and a
+continuous equal-share policy is generally competitive or better. A 10% increase in offered repair changes the threshold time
+more than the difference between schedules in these simulations. The results support a conditional mathematical statement—no
+a theory of organismal lifespan extension. We distinguish the coding-threshold analogy from literal error-correcting codes, and
+identify tropical scheduling, percolation, stochastic control, ultrametric clustering, and reinforcement learning as candidate
+extensions that require their own operational definitions and evidence.
+
+Keywords: aging; damage propagation; repair scheduling; first-passage time; control theory; threshold models; reproducibility
+
+1
+
+Question and contribution
+
+Aging is associated with changes across proteostasis, mitochondrial quality control, genome maintenance, and gene-regulatory
+state. These processes interact, and the timing of interventions can matter when repair is delayed, state-dependent, or coupled to
+downstream damage. Control-theoretic approaches to aging networks and optimal maintenance schedules already exist; in
+particular, Sun, Michaels, and Mahadevan studied longevity optimization in interdependent networks and repair allocation [1].
+Control-theoretic perspectives on aging predate that work [2]. The broad proposition that maintenance schedules can affec
+longevity is therefore not novel by itself.
+The present paper asks a more constrained question: in a transparent model, does the ordering of repair jobs alter a thresholdcrossing time when the total offered capacity and per-class dose per cycle are fixed? We also quantify the comparison against an
+equal-share policy and a modest increase in repair capacity. The result is intentionally model-first and counterexample-oriented.
+It does not infer that an organism has a literal biological decoder, or that changing pathway priority will extend lifespan.
+The main contributions are: (i) a compact model with explicit variables, threshold, and scheduling constraints; (ii) exhaustive
+enumeration of 24 periodic repair orders at matched nominal throughput; (iii) a limiting-case result and numerical convergence
+checks; and (iv) a falsification-oriented interpretation that separates schedule-order effects from total-budget effects. This
+release makes no empirical claim and uses no animal, patient, cell-line, or comparative-species dataset.
+
+2
+
+Prior work and scope
+
+2.1
+
+Aging control and maintenance
+
+The network-optimal-control literature directly addresses repair scheduling and longevity trade-offs [1]. Our contribution is
+not a replacement for this framework. It narrows the explanatory object to a controlled comparison in which nominal repair
+throughput is fixed and every class receives identical cumulative offered dose over a cycle. The paper’s small system is designed
+to expose when scheduling order has an effect and when it does not.
+
+1
+
+
+Devanik Debnath
+
+Repair Scheduling Under Fixed Throughpu
+
+2.2
+
+Biological interactions relevant to calibration
+
+Mitophagy and mitochondrial biogenesis are coupled in C. elegans; perturbing one process can alter the other, so “repair flux”
+cannot safely be treated as a single independent actuator without measurement [3]. Autophagy regulation varies with age, tissue,
+and physiological context [4]. Proteostasis, degradation, senescence, and organismal aging also have complex relationships [5].
+These studies motivate interactions but do not calibrate the abstract matrix used here.
+The Information Theory of Aging discusses loss of youthful epigenetic information as a proposed aging mechanism [6]. The
+present “decoding threshold” phrasing is a separate operational analogy: it means an externally defined functional boundary
+in a state space. It does not assert that the cell is a digital communication system or that coding theory derives the biological
+threshold.
+Table 1: Position relative to closely related concepts. Classification is qualitative, based on the cited papers and current archive inspection.
+Area
+
+Established contribution
+
+What this paper adds / does not claim
+
+Aging network control
+
+Optimal control and maintenance-schedule
+analysis in interdependent networks [1].
+
+Control theory of aging
+
+Feedback and control language applied to
+interacting physiological variables [2].
+Epigenetic
+information
+preservation/retrieval hypothesis [6].
+Mitophagy/biogenesis
+coupling
+and
+longevity relevance in C. elegans [3].
+
+Exhaustive 24-order matched-offered-flux audit for a
+four-state toy model; not a new general scheduling theory.
+Makes one state threshold and one order-vs-budget contrast explicit; no calibrated biological controller.
+Defines a functional threshold analogue only; no
+information-theoretic aging mechanism is demonstrated.
+Motivates coupling as a concern; does not infer actual
+pathway flux or organismal outcomes.
+
+Information theory of aging
+Mitochondrial maintenance
+
+3
+
+Model and assumptions
+
+Let x(t) ∈ R4≥0 denote abstract burdens in proteostasis (x1 ), mitochondrial state (x2 ), genome maintenance (x3 ), and regulatory
+drift (x4 ). Units are dimensionless model units. We define
+ẋ(t) = b + κAx(t) − u(t),
+
+(1)
+
+where bi = 0.04 is a constant independent damage source, κ ≥ 0 scales cross-state propagation, and A is the nonnegative
+off-diagonal matrix shown in Table 3. The input ui (t) is offered repair capacity allocated to class i. In the scheduled policy,
+exactly one class receives capacity R = 0.12 for a slot of duration τ = 3; slots repeat in a cycle of duration Tc = 12. Each
+class therefore receives nominal dose Rτ = 0.36 per cycle, and the offered total flux is R at every time. In the continuous
+equal-share comparison, every class receives R/4 at all times. The two policies match in total offered flux and per-class dose
+over a complete cycle.
+Define the failure proxy as the first time the sum of burdens reaches a threshold θ = 8:
+τ f = inf{t ≥ 0 : 1⊤ x(t) ≥ θ },
+
+x(0) = (0.8, 0.8, 0.8, 0.8)⊤ .
+
+(2)
+
+Here τ f is a model first-passage time. Calling it “lifespan” would be unjustified without a map from state variables to a measured
+organismal endpoint.
+Table 2: State variables, units, and modeled interpretation.
+Coordinate
+
+Symbol
+
+Interpretation and boundary
+
+Proteostasis
+
+x1
+
+Mitochondrial state
+
+x2
+
+Genome maintenance
+
+x3
+
+Regulatory drif
+
+x4
+
+Abstract burden proxy for misfolded/aggregation-related dysfunction; not a
+measured protein-quality variable.
+Abstract burden proxy for mitochondrial dysfunction; it does not distinguish
+mitophagy from biogenesis.
+Abstract burden proxy for lesions and repair load; mutations are not assumed
+to be reversible by the input.
+Abstract burden proxy for regulatory/epigenetic deviation; no specific epigenetic clock is modeled.
+
+2
+
+
+Devanik Debnath
+
+Repair Scheduling Under Fixed Throughpu
+
+Table 3: Synthetic model parameterization; values are chosen for illustration and not fitted to biology.
+Quantity
+
+A
+bi
+R
+τ
+Tc
+θ
+κ
+∆
+
+3.1
+
+Value
+
+0 .08
+.05
+0
+
+.08 .03
+.02
+0
+0.04
+0.12
+3
+12
+8
+0 to 1.25
+0.02
+
+Role
+0
+.02
+0
+.07
+
+
+
+.04
+.08
+
+0
+0
+
+Directed coupling topology
+Constant source per class
+Offered total repair capacity
+Slot duration
+Repair-order cycle
+Failure threshold
+Synthetic propagation multiplier
+RK4 step size, halved in convergence check
+
+Exact solution identity and a limiting case
+
+For any piecewise-constant offered input and constant matrix M = κA, Eq. 1 has the variation-of-constants identity
+x(t) = eMt x(0) +
+
+Z
+
+eM(t−s) b ds −
+
+0
+
+Z
+
+eM(t−s) u(s) ds.
+
+(3)
+
+0
+
+The
+final term weights each repair action by how much time remains for its effect to propagate. Therefore equal integrals
+R Tc
+u(s)ds
+do not generally imply equal states when M ̸= 0. At κ = 0, however, the sum obeys
+0
+d ⊤
+1 x(t) = 1⊤ b − 1⊤ u(t),
+d
+
+(4)
+
+which depends only on the total offered repair rate. With a symmetric initial state and equal per-cycle dose, changing the class
+order cannot change the summed burden; the predicted threshold times are identical. This is an analytic limiting-case check, no
+a universal theorem about real repair systems.
+
+4
+
+Numerical protocol
+
+We enumerate every permutation π ∈ S4 for κ ∈ {0, 0.25, 0.5, 0.75, 1, 1.25}. The system is integrated using fixed-step fourthorder Runge–Kutta with ∆t = 0.02; this step divides the 3-unit slot exactly. First-passage time is linearly interpolated across
+the threshold crossing. We compare (i) all 24 scheduled orders, (ii) continuous equal-share repair at the same offered total
+flux, and (iii) continuous equal-share repair with a 10% larger total offered flux. The third comparison is deliberately not a
+matched-budget comparison; it measures whether a small budget increase can dominate the scheduling effect.
+Table 4: Model checks and evidence produced by the executable verifier.
+Check
+
+Status
+
+Interpretation
+
+Nonnegative coupling matrix
+All schedule orders
+Equal offered dose
+Decoupled limiting case
+
+PASS
+PASS
+PASS
+PASS
+
+Time-step refinemen
+
+PASS
+
+Experimental validity
+
+NOT TESTED
+
+Off-diagonal entries are nonnegative by construction.
+24 orders are evaluated for each of six coupling values (144 runs).
+Each class is allocated Rτ = 0.36 per cycle.
+Numerical result agrees with the analytic summed-state threshold time
+within tolerance.
+Representative
+trajectories
+are
+re-evaluated
+with
+half
+the step size;
+maximum difference is reported in
+results/convergence_checks.csv.
+The model contains no measured biological rates or organismal observations.
+
+3
+
+
+Devanik Debnath
+
+Repair Scheduling Under Fixed Throughpu
+
+First-passage time (model units; log scale)
+
+Interaction strength changes failure-time scale; order spread stays bounded
+Range across 24 orders
+Median scheduled order
+Continuous equal-share control
+
+102
+
+101
+
+0.0
+
+0.2
+
+0.4
+0.6
+0.8
+Coupling multiplier (synthetic parameter)
+
+1.0
+
+1.2
+
+Figure 1: First-passage time as cross-state coupling multiplier varies. Shaded band covers all 24 periodic orders; the dashed curve is
+continuous equal-share repair at the same offered total flux. The coupling multiplier is not an empirical correlation coefficient.
+
+Order effects are small relative to the threshold-time scale
+Deviation from the per-coupling median (%)
+
+1.5
+1.0
+0.5
+0.0
+0.5
+1.0
+1.5
+0.0
+
+0.25
+
+0.5
+0.75
+Coupling multiplier
+
+1.0
+
+1.25
+
+Figure 2: Distribution of threshold times across all 24 repair orders at each coupling value. This is a deterministic enumeration of schedules,
+not a sample of organisms.
+
+5
+
+Results
+
+The exhaustive sweep verifies that schedule order is irrelevant in the decoupled limit under the symmetric set-up, but the
+first-passage time depends on order once the off-diagonal coupling terms are active. The spread is small relative to the absolute
+first-passage scale in the tested range. At κ = 1, the simulated schedule-order range is reported in Table 5 from the generated
+CSV; the exact best and worst orders are preserved in the machine-readable outputs. A continuous equal-share policy provides a
+4
+
+
+Devanik Debnath
+
+Repair Scheduling Under Fixed Throughpu
+
+useful baseline and is close to the median scheduled outcome. In this configuration, some orders are slightly better and some
+slightly worse than the equal-share policy. This is precisely why “repair order matters” is too weak to imply “a learned schedule
+is superior.”
+Table 5: Summary of fixed-throughput sweep. Values are generated by verify_model.py; units are abstract model time.
+κ
+
+Min order
+
+Median order
+
+Max order
+
+Equal-share
+
+0.00
+0.25
+0.50
+0.75
+1.00
+1.25
+
+120.00
+24.23
+13.56
+9.40
+7.20
+5.84
+
+120.00
+24.48
+13.71
+9.52
+7.29
+5.91
+
+120.00
+24.71
+13.84
+9.63
+7.38
+5.97
+
+120.00
+24.47
+13.70
+9.52
+7.29
+5.91
+
+Repair budget sensitivity at = 1.0
+
+First-passage time (model units)
+
+7.7
+7.6
+
+Scheduled-order range
+Scheduled median
+Continuous equal-share
+
+7.5
+7.4
+7.3
+7.2
+7.1
+10
+
+5
+
+0
+5
+10
+Change in offered total repair flux (%)
+
+15
+
+20
+
+Figure 3: Changing offered repair capacity at κ = 1. The shaded range represents schedule-order variation, while the dashed line represents
+continuous equal-share repair at each capacity. This comparison changes the total budget and must not be mistaken for an equal-budget test.
+
+5
+
+
+Devanik Debnath
+
+Repair Scheduling Under Fixed Throughpu
+
+Schedule effects and total-budget effects are different questions
+Across-order range / median (left axis)
+Best order vs equal-share (left axis)
++10% total repair (right axis)
+
+40
+
+Threshold-time increase from +10% repair (%)
+
+2.5
+
+Schedule-order effect (%)
+
+2.0
+
+30
+1.5
+
+20
+
+1.0
+
+10
+
+0.5
+0.0
+0.0
+
+0.2
+
+0.4
+
+0.6
+0.8
+Coupling multiplier
+
+1.0
+
+1.2
+
+0
+
+Figure 4: Relative schedule dispersion, best-order comparison, and a 10% total-repair increase. The budget increase generally changes the
+threshold time more than choosing among the 24 orders in this toy model.
+
+Table 5 uses a rounded display of the deterministic output. Full precision, order labels, and all 144 runs are available in
+results/schedule_sweep.csv. The budget experiment shows that a uniform increase in offered repair can dominate the
+matched-budget schedule-order range near the threshold. This result is not universal: it depends on the chosen A, source, initial
+state, threshold, and repair actuator. It does, however, contradict any unqualified claim that order alone should outperform a
+modest increase in repair capacity.
+Table 6: Interdisciplinary ingredients: operational role and decision to include or defer.
+Field
+
+Concrete role
+
+Status in this release
+
+Coding theory
+
+A threshold is analogous to an uncorrectable functional error pattern; define the boundary through
+an observable.
+Precedence completion:
+Cj = pj +
+maxi∈Pred( j) Ci .
+Potential cluster/connectivity-based failure criterion for spatially localized damage.
+Minimize expected first-passage time subject to a
+capacity constraint.
+Could cluster damage lineages if distances derive
+from a measured branching hierarchy.
+Learn policy under a validated simulator and compare to exact/heuristic baselines.
+Test parameter transfer and external validity
+across species.
+
+Analogy only; no codeword or decoder is modeled.
+
+Max-plus / tropical scheduling
+Percolation
+Stochastic optimal control
+Ultrametric / p-adic analysis
+Reinforcement learning
+Comparative biology
+
+6
+
+Illustrative precedence DAG only; no measured pathway precedence constraints.
+Deferred; no spatial graph, cluster distribution, or
+percolation threshold is fitted.
+Motivation only; the present solver is deterministic
+and enumerative, not an HJB solver.
+Excluded from the core; no lineage data or calibrated
+ultrametric is available.
+Not run. Adding RL without a calibrated objective
+would add complexity, not evidence.
+Not performed; no interspecies data were downloaded or analyzed.
+
+
+Devanik Debnath
+
+Repair Scheduling Under Fixed Throughpu
+
+Synthetic directed damage-dependency graph
+Regulatory
+drif
+
+0.04
+
+0.02
+
+Proteostasis
+
+0.07
+
+0.08
+
+0.08
+
+Genome
+maintenance
+
+0.08
+
+0.05
+
+0.02
+
+0.03
+
+Mitochondrial
+
+Figure 5: Directed dependency graph used by the synthetic linear model. Arrow weights are the entries of the illustrative matrix A; they are
+not measured biological interaction strengths.
+
+Max-plus precedence example (conceptual, not inferred biology)
+
+Mitochondrial
+QC
+
+Genome
+maintenance
+
+Signal
+arrives
+
+Integrate /
+stop
+
+Proteostasis
+QC
+
+Regulatory
+QC
+
+Figure 6: A conceptual max-plus precedence graph. Edges are hypothetical constraints for explaining scheduling algebra and are not inferred
+from biology or used as measured causal edges in the simulation.
+
+6
+
+Interpretation and theoretical boundaries
+
+6.1
+
+The decoding-threshold analogy
+
+The term “decoding threshold” can be useful only if the failure criterion is operational. In this work it is the scalar boundary
+1⊤ x = θ , not a threshold theorem for biological codes. Classical error correction depends on a defined code, channel, error
+model, and decoder; none is identified here. A biological application would need a measurable functional state, a task-specific
+criterion for loss of function, and evidence that distinct lesions combine nonlinearly around that criterion.
+
+7
+
+
+Devanik Debnath
+
+Repair Scheduling Under Fixed Throughpu
+
+6.2
+
+Max-plus and tropical geometry
+
+Max-plus algebra is natural for discrete-event systems with precedence constraints, in which completion of a job depends on
+the maximum completion time among its predecessors [7]. It predicts a scheduling bottleneck only if pathway or repair-task
+dependencies can be written as actual prerequisites with identifiable processing times. Figure 6 is therefore a vocabulary
+illustration, not a biological discovery. A falsifiable quantitative prediction would be that the measured critical path predicts
+repair completion delay better than a sum-of-times baseline, out of sample.
+
+6.3
+
+Percolation and damage correlation
+
+Percolation theory offers tools to study when connected damaged regions lose connectivity [8]. But the current model has no
+spatial lattice or measured damage clusters; κ scales causal cross-state propagation and is not a correlation coefficient. A nex
+study could compare threshold time with a cluster-percolation order parameter on image-registered mitochondrial networks or
+chromatin domains. It should test whether cluster statistics add predictive value beyond total damage and local burden.
+
+6.4
+
+Stochastic control and reinforcement learning
+
+An optimal-control formulation could minimize expected first-passage time, E[τ f ], while limiting total repair capacity. A
+proper stochastic model would require process noise, state-dependent repair effectiveness, observation noise, and a justified
+policy constraint. Reinforcement learning is relevant only after a calibrated environment exists and must be compared with
+a non-learning policy, the uniform baseline, and an exact small-state solution where available [9]. No RL training result is
+claimed in this paper.
+
+6.5
+
+Ultrametrics and damage lineages
+
+An ultrametric distance might be appropriate for damage states that descend through a branching lineage, but only if a lineage
+tree or ancestry-aware distance is measured rather than imposed. P-adic language is not used as decorative machinery here
+because no biological observation currently makes that extra structure necessary. A meaningful future test would ask whether
+lineage-derived ultrametric clustering predicts the best repair priority across held-out perturbations after controlling for burden,
+cell identity, and lineage depth.
+
+7
+
+Falsification and experimental plan
+
+A realistic validation programme should begin with a tractable system such as C. elegans or yeast, but only after directly
+measuring the candidate actuator and total repair activity. The proposed experiment is not performed in this release. A minimal
+study would: (1) characterize autophagy and mitophagy reporters and their response delays; (2) estimate the interaction matrix
+and threshold using independently measured perturbations; (3) randomize two or more pathway-priority schedules while
+matching integrated repair flux and per-pathway dose; (4) pre-register a functional endpoint and a minimum relevant effect size;
+and (5) report survival curves, uncertainty intervals, flux matching error, and off-target effects. A reporter-derived flux proxy is
+not automatically the amount of functional damage removed.
+The hypothesis that schedule order helps in this context is falsified if order effects are absent within a pre-specified equivalence
+margin despite sufficient temporal resolution and verified flux matching, or if any apparent benefit disappears after controlling
+for total activity, delay, toxicity, and baseline damage. A null result with wide uncertainty is inconclusive. If continuous
+equal-share or a simple rule-based schedule equals or beats a learned policy on held-out data, the claimed advantage of AI
+scheduling fails. In multicellular models, lineage-level damage tracing and species-specific calibration would remain major
+sources of uncertainty.
+
+8
+
+
+Devanik Debnath
+
+Repair Scheduling Under Fixed Throughpu
+
+Reproducible model-audit pipeline
+
+Define state +
+threshold
+
+Enumerate 24
+repair orders
+
+Simulate matched
+flux
+
+Numerical +
+edge-case tests
+
+Compare with
+controls
+
+Report conditional result +
+falsification gate
+
+Figure 7: Actual computational workflow in this release: model specification, exhaustive order sweep, matched-flux comparison, and
+verification.
+
+Prospective falsification study (not performed)
+1. Measure pathway reporters and total flux
+
+2. Calibrate interaction + threshold model
+
+3. Randomize schedules at matched flux
+
+4. Compare survival / function; preregister failure rule
+
+Figure 8: Prospective experimental sequence. It is a proposed validation design, not a completed experiment or protocol for lifespan
+intervention.
+
+9
+
+
+Devanik Debnath
+
+Repair Scheduling Under Fixed Throughpu
+
+Table 7: Failure modes, observable consequences, and the result that would weaken the central claim.
+Failure mode
+
+Observable / diagnostic
+
+Decision rule
+
+No true interaction
+
+κ ≈ 0 or empirical off-diagonal effects near
+zero.
+
+Repair actuator delayed
+
+Measured response-time distribution by pathway.
+
+Flux mismatch
+
+Integrated reporter/turnover activity per pathway.
+
+Threshold arbitrary
+
+Change-point/functional endpoint uncertainty.
+
+Compensatory turnover
+
+Biogenesis, growth, or replenishment changes.
+
+No external validity
+
+Held-out perturbations or species.
+
+Order advantage should vanish; any estimated persistent effect suggests model/measurement misspecification.
+Add pathway state and delay; reject zero-delay ordering predictions if the new model does not reproduce
+held-out responses.
+Do not attribute survival differences to order until
+equivalence bounds on total and per-class flux are
+met.
+Report sensitivity to the threshold definition; rejec
+claims that depend on one unsupported cutoff.
+Extend the state vector and re-test; current result is
+not valid if omitted feedback reverses rankings.
+If order rankings do not transfer, limit claim to the
+calibrated system.
+
+8
+
+Limitations
+
+The model is deliberately small and deterministic. Damage is assumed to separate into four nonnegative classes with constan
+source and linear interactions, while the repair input has no observation noise, delays, toxicity, saturation, or state-dependen
+effectiveness. The failure threshold is a scalar sum and omits compensatory mechanisms, cell turnover, organismal physiology,
+and competing risks. The matrix and all numerical constants are synthetic, dimensionless choices. Thus the numerical range is
+a proof-of-implementation for this toy model, not a prediction of days of life, percent lifespan extension, or treatment effect.
+Even the “matched flux” comparator matches offered repair capacity; it does not represent measured realized biochemical flux
+under a real pathway.
+The tropical, percolation, ultrametric, HJB, and RL concepts are not integrated into the numerical core because doing
+so without data or independently validated assumptions would be mathematical decoration. The paper gives each one an
+operational prerequisite and a falsification route instead. The topic’s broader claim that optimal scheduling can extend lifespan
+remains open and requires experiments and model calibration that are outside this release.
+
+9
+
+Conclusion
+
+Repair order can affect threshold-crossing time in an interacting damage model even when the offered total repair rate and
+dose per class per cycle are fixed. In the specified four-state example, however, the observed order effect is conditional and
+comparatively modest; a continuous equal-share policy is competitive, and a 10% budget increase can produce a larger change.
+The decoupled limit provides an exact null case in which order is irrelevant. These results do not prove that repair scheduling
+extends lifespan. They motivate a more restrictive experimental question: after verifying interactions, delay, and matched
+pathway activity, does repair order improve a predefined functional threshold or survival endpoint over a simple equal-share
+baseline?
+
+Research-process disclosure
+Co-equal research-process credit is given to Devanik Debnath and Xylia, the autonomous multi-model research engine
+coordinating AI-assisted discovery, synthesis, and verification. Devanik Debnath retains responsibility for the final manuscript,
+scientific claims, citations, and released artifacts.
+
+References
+[1] Eric D. Sun, Thomas C. T. Michaels, and L. Mahadevan. Optimal control of aging in complex networks. Proceedings of
+the National Academy of Sciences, 117(34):20404–20410, 2020.
+10
+
+
+Devanik Debnath
+
+Repair Scheduling Under Fixed Throughpu
+
+[2] Michael P. Murphy and Linda Partridge. Toward a control theory analysis of aging. Annual Review of Biochemistry,
+77:777–798, 2008.
+[3] Konstantinos Palikaras, Eirini Lionaki, and Nektarios Tavernarakis. Coordination of mitophagy and mitochondrial
+biogenesis during ageing in C. elegans. Nature, 521:525–528, 2015.
+[4] Spatiotemporal regulation of autophagy during Caenorhabditis elegans aging. eLife, 6:e18459, 2017.
+[5] Jun Hamazaki and Shigeo Murata. Relationships between protein degradation, cellular senescence, and organismal aging.
+Journal of Biochemistry, 175(5):473–480, 2024.
+[6] Yuancheng Ryan Lu, Xiao Tian, and David A. Sinclair. The information theory of aging. Nature Aging, 3:1486–1499,
+2023.
+[7] François Baccelli, Guy Cohen, Geert Jan Olsder, and Jean-Pierre Quadrat. Synchronization and Linearity: An Algebra for
+Discrete Event Systems. Wiley, 1992.
+[8] Dietrich Stauffer and Amnon Aharony. Introduction to Percolation Theory. Taylor & Francis, 2 edition, 1994.
+[9] Richard S. Sutton and Andrew G. Barto. Reinforcement Learning: An Introduction. MIT Press, 2 edition, 2018.
+
+11

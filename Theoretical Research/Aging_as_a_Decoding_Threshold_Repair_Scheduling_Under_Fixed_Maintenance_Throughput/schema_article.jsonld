@@ -1,0 +1,24 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Aging as a Decoding Threshold: Repair Scheduling Under Fixed Maintenance Throughput",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "sameAs": [
+      "https://github.com/Devanik21",
+      "https://orcid.org/0009-0001-8310-6921"
+    ]
+  },
+  "datePublished": "2026-10-24",
+  "description": "A reproducible synthetic model audit of repair-order effects under fixed offered maintenance throughput; no empirical lifespan extension is claimed.",
+  "keywords": [
+    "aging",
+    "repair scheduling",
+    "mathematical biology",
+    "first-passage time"
+  ],
+  "url": "https://github.com/Devanik21/The-Invention-Archive",
+  "isAccessibleForFree": true,
+  "creativeWorkStatus": "Preprint draft archived in GitHub"
+}

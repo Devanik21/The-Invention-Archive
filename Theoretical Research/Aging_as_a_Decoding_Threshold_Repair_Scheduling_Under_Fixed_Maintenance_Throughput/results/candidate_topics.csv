@@ -1,0 +1,11 @@
+candidate,importance,gap_evidence,boldness,plausibility,math_core,AI_role,human_benefit,validation_feasibility,falsifiability,safety,mean_score_1_to_5,decision,rationale
+Repair-order effects with propagation thresholds,5,4,5,4,5,4,4,5,5,5,4.60,SELECTED,Selected; directly tests the supplied hypothesis and is falsifiable in a compact model.
+Heteroplasmy-phase control by front-loaded mitophagy,4,4,4,4,4,4,4,3,5,4,4.00,ALTERNATIVE,Close to an existing archived release; do not duplicate.
+Spectral damage-reproduction threshold,4,4,4,4,5,4,4,4,5,5,4.30,ALTERNATIVE,Close to the existing Damage R0 release; retain as related work.
+Information loss as an aging mechanism,5,4,3,3,4,3,5,3,4,4,3.80,ALTERNATIVE,Substantial existing literature including the 2023 Information Theory of Aging.
+Percolation of mitochondrial damage clusters,4,3,5,3,4,3,4,3,5,4,3.80,ALTERNATIVE,Potential extension; current model has no spatial/cluster data.
+Max-plus scheduling for multi-pathway repair jobs,3,3,4,5,5,4,3,5,5,5,4.20,ALTERNATIVE,Useful engineering abstraction when genuine precedence constraints are measured.
+Ultrametric repair priorities from damage lineage trees,3,2,5,2,4,3,3,2,4,4,3.20,ALTERNATIVE,High novelty risk and weak operational grounding without lineage data.
+Stochastic HJB repair policy with first-passage objective,5,4,4,4,5,5,5,3,5,5,4.50,ALTERNATIVE,Strong future route; full HJB solver and calibration beyond this release.
+Reinforcement-learned cross-species longevity control,5,3,5,2,4,5,5,2,4,2,3.70,ALTERNATIVE,Empirical calibration absent; unsafe to imply actionable longevity benefit.
+Repair flux as a threshold in cellular coding capacity,5,3,5,3,4,3,4,4,5,5,4.10,ALTERNATIVE,The coding analogy is useful only after defining an observable decoder-like threshold.

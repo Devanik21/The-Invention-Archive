@@ -1,0 +1,10 @@
+check,status,evidence
+matrix_nonnegative,PASS,All cross-damage entries are nonnegative
+zero_coupling_order_invariance,PASS,"At kappa=0, order cannot change summed damage trajectory under symmetric initial/source/repair dose"
+all_24_orders_each_coupling,PASS,Every permutation enumerated at every coupling value
+fixed_flux_dose_match,PASS,Every schedule gives each class equal offered dose per cycle
+positive_first_passage_times,PASS,Every specified synthetic schedule reaches threshold in the simulated horizon
+rk4_step_halving,PASS,Maximum first-passage difference after step halving is 0.000004
+analytical_decoupled_limit,PASS,"Analytic 120.000000, simulated 120.000000"
+invalid_order_rejected,PASS,Malformed order raises ValueError
+negative_coupling_rejected,PASS,Negative coupling raises ValueError

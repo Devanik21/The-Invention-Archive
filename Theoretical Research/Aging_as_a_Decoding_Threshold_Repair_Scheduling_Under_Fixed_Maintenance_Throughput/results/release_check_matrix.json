@@ -1,0 +1,39 @@
+{
+  "release_status": "BLOCKED",
+  "repository": "Devanik21/The-Invention-Archive",
+  "target_branch": "main",
+  "trigger_commit_sha": "c95c9cf035b849043352173e48e2f7952cb93751",
+  "pdf_sha256": "71b2a3974120d082bdd7ee2ed4481532cbe3186de44c0f133c33fa4d8f7b3382",
+  "pdf_pages": 11,
+  "checks": [
+    {
+      "name": "Model verification",
+      "status": "PASS",
+      "evidence": "results/verify_model_stdout.txt"
+    },
+    {
+      "name": "LaTeX compilation and page count",
+      "status": "PASS",
+      "evidence": "GitHub Actions build log and paper.pdf"
+    },
+    {
+      "name": "Metadata and bibliography preflight",
+      "status": "PASS",
+      "evidence": "CITATION.cff; paper.bib; JSON metadata"
+    },
+    {
+      "name": "Full-page visual review",
+      "status": "PENDING",
+      "evidence": "results/pdf_visual_review.json; uploaded page-render artifact"
+    },
+    {
+      "name": "Remote read-back and final-SHA CI closure",
+      "status": "PENDING",
+      "evidence": "post-commit reconciliation"
+    }
+  ],
+  "blockers": [
+    "Independent inspection of exact PDF",
+    "Final-SHA remote check reconciliation"
+  ]
+}
