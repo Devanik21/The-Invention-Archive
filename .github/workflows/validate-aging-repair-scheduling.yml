@@ -8,6 +8,7 @@ permissions:
   contents: read
 jobs:
   validate:
+    if: ${{ github.event.workflow_run.name == 'Repair and close repair-scheduling release' && github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
@@ -61,6 +62,12 @@ jobs:
           assert vr.get('paper_pdf_sha256')==hashlib.sha256((root/'paper.pdf').read_bytes()).hexdigest()
           matrix=json.loads((root/'results'/'release_check_matrix.json').read_text(encoding='utf-8'))
           assert matrix.get('pdf_sha256')==vr['paper_pdf_sha256']
+          assert vr.get('status')=='PASS', 'full-page visual review is not PASS'
+          assert vr.get('pages_individually_reviewed')==list(range(1,len(doc)+1)), 'visual review does not cover every page'
+          assert matrix.get('release_status')=='PASS' and not matrix.get('blockers'), matrix
+          assert all(c.get('status') in ('PASS','NOT_APPLICABLE') for c in matrix.get('checks',[])), matrix
+          quality=json.loads((root/'results'/'publication_quality_report.json').read_text(encoding='utf-8'))
+          assert quality.get('status')=='PASS' and quality.get('release_status')=='PASS', quality
           bundle=Path('Theoretical Research')/(slug+'_complete_bundle.zip')
           assert bundle.is_file() and bundle.stat().st_size>100000
           with zipfile.ZipFile(bundle) as z:
