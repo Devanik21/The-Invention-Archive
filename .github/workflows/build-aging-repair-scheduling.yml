@@ -87,8 +87,9 @@ jobs:
           (root/'results'/'publication_quality_report.json').write_text(json.dumps({'status':'BLOCKED_PENDING_VISUAL_REVIEW','paper_pdf_sha256':digest,'pages':len(doc),'table_environments':len(re.findall(r'\\begin\{table\}',source)),'figure_environments':len(re.findall(r'\\begin\{figure\}',source)), 'model_verification':{'status':vr['status'],'checks_passed':vr['checks_passed'],'checks_total':vr['checks_total']},'biological_or_lifespan_validation':'NOT_PERFORMED','trigger_commit_sha':sys.argv[3]},indent=2)+'\n')
           (root/'results'/'release_check_matrix.json').write_text(json.dumps({'release_status':'BLOCKED','repository':'Devanik21/The-Invention-Archive','target_branch':'main','trigger_commit_sha':sys.argv[3],'pdf_sha256':digest,'pdf_pages':len(doc),'checks':[{'name':'Model verification','status':'PASS','evidence':'results/verify_model_stdout.txt'},{'name':'LaTeX compilation and page count','status':'PASS','evidence':'GitHub Actions build log and paper.pdf'},{'name':'Metadata and bibliography preflight','status':'PASS','evidence':'CITATION.cff; paper.bib; JSON metadata'},{'name':'Full-page visual review','status':'PENDING','evidence':'results/pdf_visual_review.json; uploaded page-render artifact'},{'name':'Remote read-back and final-SHA CI closure','status':'PENDING','evidence':'post-commit reconciliation'}],'blockers':['Independent inspection of exact PDF','Final-SHA remote check reconciliation']},indent=2)+'\n')
           PY
+          rm -f paper.aux paper.bbl paper.blg paper.fdb_latexmk paper.fls paper.log paper.out paper.toc paper.lof paper.lot paper.synctex.gz paper.run.xml paper.nav paper.snm paper.xdv paper.vrb paper.upa
           python deploy.py --validate-only > results/deploy_validate_run.log
-          rm -f paper.aux paper.bbl paper.blg paper.fdb_latexmk paper.fls paper.log paper.out paper.toc paper.lof paper.lot paper.synctex.gz
+          rm -rf __pycache__ results/__pycache__
           cd "$GITHUB_WORKSPACE"
           python - "$RELEASE_DIR" <<'PY'
           import sys,hashlib,json
