@@ -75,8 +75,10 @@ jobs:
           import re
           pattern=r'(root=Path\(__file__\)\.resolve\(\)\.)paren\b'
           fixed,n=re.subn(pattern,r'\1parent',source)
-          assert n==1, f'expected exactly one invalid root-path attribute, found {n}'
+          assert n in (0,1), f'found {n} invalid root-path attributes; expected at most one'
           assert 'root=Path(__file__).resolve().parentt' not in fixed
+          if n==0:
+              assert 'root=Path(__file__).resolve().parent' in fixed, 'generated verifier root path missing'
           p.write_text(fixed,encoding='utf-8')
           report=root/'results'/'tex_toolchain_compatibility.md'
           with report.open('a',encoding='utf-8') as f:
