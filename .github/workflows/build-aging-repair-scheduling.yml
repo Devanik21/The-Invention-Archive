@@ -157,6 +157,17 @@ jobs:
           p=root/"verify_model.py"
           text=p.read_text(encoding="utf-8").replace("\r\n","\n").replace("\r","\n")
           p.write_text("\n".join(line.rstrip(" \\t") for line in text.splitlines()).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
+          # README metadata uses Markdown hard breaks; express them as explicit HTML breaks.
+          p=root/"README.md"
+          text=p.read_text(encoding="utf-8").replace("\r\n","\n").replace("\r","\n")
+          lines=[]
+          for line in text.splitlines():
+              if line.endswith("  "):
+                  line=line.rstrip(" \\t")+"<br>"
+              else:
+                  line=line.rstrip(" \\t")
+              lines.append(line)
+          p.write_text("\n".join(lines).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
           PY
           INDEX="Theoretical Research/Readme.md"
           BUNDLE="Theoretical Research/${SLUG}_complete_bundle.zip"
