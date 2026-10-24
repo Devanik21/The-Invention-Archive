@@ -1,39 +1,44 @@
 {
-  "release_status": "BLOCKED",
+  "release_status": "BLOCKED_PENDING_REMOTE_READBACK",
   "repository": "Devanik21/The-Invention-Archive",
   "target_branch": "main",
-  "trigger_commit_sha": "927c15fd05f99de5df82bee4a8fa53c99f7dd9f9",
-  "pdf_sha256": "258580b1a2441129290477ac3dfac3ca52c36654a388db9d82f461d2e18af25e",
+  "close_workflow_run_id": "40075801847",
+  "close_workflow_run_url": "https://github.com/Devanik21/The-Invention-Archive/actions/runs/40075801847",
+  "reviewed_pdf_sha256": "258580b1a2441129290477ac3dfac3ca52c36654a388db9d82f461d2e18af25e",
   "pdf_pages": 11,
   "checks": [
     {
       "name": "Model verification",
       "status": "PASS",
-      "evidence": "results/verify_model_stdout.txt"
+      "evidence": "results/verification_report.json; results/verify_model_stdout.txt"
     },
     {
-      "name": "LaTeX compilation and page count",
+      "name": "LaTeX compilation and PDF page count",
       "status": "PASS",
-      "evidence": "GitHub Actions build log and paper.pdf"
+      "evidence": "results/latex_build_stdout.txt; results/pdfinfo.txt"
     },
     {
       "name": "Metadata and bibliography preflight",
       "status": "PASS",
-      "evidence": "CITATION.cff; paper.bib; JSON metadata"
+      "evidence": "CITATION.cff; paper.bib; .zenodo.json; schema_article.jsonld"
     },
     {
       "name": "Full-page visual review",
-      "status": "PENDING",
-      "evidence": "results/pdf_visual_review.json; uploaded page-render artifact"
+      "status": "PASS",
+      "evidence": "results/pdf_visual_review.json; exact PDF SHA-256 258580b1a2441129290477ac3dfac3ca52c36654a388db9d82f461d2e18af25e"
     },
     {
-      "name": "Remote read-back and final-SHA CI closure",
+      "name": "Empirical organismal lifespan validation",
+      "status": "NOT_APPLICABLE",
+      "reason": "This is explicitly a synthetic theoretical preprint and makes no organismal or experimental lifespan-extension claim."
+    },
+    {
+      "name": "ZIP/PDF consistency and remote read-back",
       "status": "PENDING",
-      "evidence": "post-commit reconciliation"
+      "evidence": "This closure workflow will build the final bundle, commit, and independently read back the resulting tree."
     }
   ],
   "blockers": [
-    "Independent inspection of exact PDF",
-    "Final-SHA remote check reconciliation"
+    "Final bundle creation and remote read-back have not yet completed."
   ]
 }
