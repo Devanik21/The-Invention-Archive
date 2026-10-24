@@ -66,6 +66,21 @@ jobs:
               encoding='utf-8')
           print('Applied documented TeX font dependency compatibility adjustment.')
           PY
+          # Repair a one-character typo in the generated verifier before its first execution.
+          python - "$RELEASE_DIR" <<'PY'
+          import sys
+          from pathlib import Path
+          root=Path(sys.argv[1]); p=root/'verify_model.py'
+          source=p.read_text(encoding='utf-8')
+          bad='Path(__file__).resolve().paren'
+          good='Path(__file__).resolve().parent'
+          assert source.count(bad)==1, f'expected exactly one verifier path typo, found {source.count(bad)}'
+          p.write_text(source.replace(bad,good),encoding='utf-8')
+          report=root/'results'/'tex_toolchain_compatibility.md'
+          with report.open('a',encoding='utf-8') as f:
+              f.write('\nThe generated verifier also contained a path-attribute typo (.paren); the workflow corrects it to .parent before model verification.\n')
+          print('Applied and documented verifier path fix.')
+          PY
 
       - name: Verify model, build PDF, and render every page
         shell: bash
@@ -172,8 +187,8 @@ jobs:
           p.write_text("\n".join(lines).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
           PY
           INDEX="Theoretical Research/Readme.md"
-          BUNDLE="Theoretical Research/\${SLUG}_complete_bundle.zip"
-          ROW="| 2026.10.24 | Aging as a Decoding Threshold: Repair Scheduling Under Fixed Maintenance Throughput | Synthetic-model methods preprint | [\${SLUG}](\${SLUG}/) |"
+          BUNDLE="Theoretical Research/${SLUG}_complete_bundle.zip"
+          ROW="| 2026.10.24 | Aging as a Decoding Threshold: Repair Scheduling Under Fixed Maintenance Throughput | Synthetic-model methods preprint | [${SLUG}](${SLUG}/) |"
           python - "$INDEX" "$SLUG" "$ROW" <<'PY'
           import sys
           from pathlib import Path
@@ -189,7 +204,7 @@ jobs:
           p.write_text("\n".join(lines).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
           PY
           rm -f "$BUNDLE"
-          (cd "Theoretical Research" && zip -qr "\${SLUG}_complete_bundle.zip" "$SLUG" -x '*/__pycache__/*' '*.pyc')
+          (cd "Theoretical Research" && zip -qr "${SLUG}_complete_bundle.zip" "$SLUG" -x '*/__pycache__/*' '*.pyc')
           rm -rf "$STAGING_DIR"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
