@@ -15,7 +15,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: cell-state-observability-staging
+  group: cell-state-observability-staging-fast
   cancel-in-progress: false
 
 jobs:
@@ -35,8 +35,7 @@ jobs:
         run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0 matplotlib==3.10.8 networkx==3.6.1 pypdf==5.9.0 PyYAML==6.0.3
       - name: Install LaTeX and PDF utilities
         run: |
-          sudo apt-get update
-          sudo apt-get install -y texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended poppler-utils
+          sudo apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended poppler-utils
       - name: Validate source and metadata
         shell: bash
         run: |
@@ -109,7 +108,8 @@ jobs:
           cd "$RELEASE_DIR"
           pdfinfo paper.pdf > results/pdfinfo.txt
           pdffonts paper.pdf > results/pdf_fonts.txt
-          pdftoppm -png -r 80 paper.pdf /tmp/cell-state-page >/dev/null 2>&1
+          mkdir -p results/pdf_render_pages
+          pdftoppm -png -r 120 paper.pdf results/pdf_render_pages/page >/dev/null 2>&1
           python - <<'PY'
           import hashlib, json, math, re, subprocess
           from datetime import datetime, timezone
@@ -137,7 +137,7 @@ jobs:
           font_lines=(root/'results/pdf_fonts.txt').read_text(encoding='utf-8',errors='replace').splitlines()
           font_rows=[line.split() for line in font_lines[2:] if line.strip()]
           assert font_rows and all(len(row) >= 6 and row[3].lower() == 'yes' for row in font_rows), 'one or more PDF fonts are not embedded'
-          rendered=sorted(Path('/tmp').glob('cell-state-page-*.png'))
+          rendered=sorted((root/'results/pdf_render_pages').glob('page-*.png'))
           assert len(rendered) == pages, f'rendered {len(rendered)} pages but PDF has {pages}'
           thumbs=[]
           for path in rendered:
@@ -175,7 +175,7 @@ jobs:
             'status':'PENDING_MANUAL_VISUAL_INSPECTION',
             'final_pdf_sha256':pdf_sha,
             'page_count':pages,
-            'render_dpi':80,
+            'render_dpi':120,
             'pages_rendered':list(range(1,pages+1)),
             'pages_reviewed':[],
             'issues':[],
@@ -195,7 +195,7 @@ jobs:
             f"- Vector PDF figures: {len(pdf_figures)}",
             f"- Vector SVG figures: {len(svg_figures)}",
             "- Font embedding: PASS",
-            f"- Full-page rendering: PASS ({pages} pages at 80 DPI; contact sheet saved)",
+            f"- Full-page rendering: PASS ({pages} pages at 120 DPI; page renders and contact sheet saved)",
             "- Manual page-by-page visual inspection: PENDING",
             "- Release disposition: BLOCKED pending visual inspection and main-branch remote verification.",
             "",
