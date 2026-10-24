@@ -106,6 +106,7 @@ jobs:
             'close_workflow_run_id':run_id,
             'close_workflow_run_url':run_url,
             'reviewed_pdf_sha256':digest,
+            'pdf_sha256':digest,
             'pdf_pages':pages,
             'checks':checks,
             'blockers':['Final bundle creation and remote read-back have not yet completed.']
