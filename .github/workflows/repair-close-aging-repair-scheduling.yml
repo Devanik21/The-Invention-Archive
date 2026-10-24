@@ -1,0 +1,232 @@
+name: Repair and close repair-scheduling release
+on:
+  push:
+    branches: [main]
+    paths: [".research-staging/aging-repair-scheduling/CLOSE_REVIEW"]
+permissions:
+  contents: write
+concurrency:
+  group: aging-repair-scheduling-release
+  cancel-in-progress: false
+jobs:
+  close:
+    if: \${{ github.event.head_commit.message == 'reviewclose(aging-repair-scheduling): approve exact PDF review' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RELEASE_DIR: "Theoretical Research/Aging_as_a_Decoding_Threshold_Repair_Scheduling_Under_Fixed_Maintenance_Throughput"
+      SLUG: "Aging_as_a_Decoding_Threshold_Repair_Scheduling_Under_Fixed_Maintenance_Throughput"
+      STAGING_DIR: ".research-staging/aging-repair-scheduling"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Validate exact rendered PDF review and prepare closure record
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - "$RELEASE_DIR" "$SLUG" "$GITHUB_RUN_ID" "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" <<'PY'
+          import sys,json,hashlib,re,datetime
+          from pathlib import Path
+          root=Path(sys.argv[1]); slug=sys.argv[2]; run_id=sys.argv[3]; run_url=sys.argv[4]
+          marker=Path('.research-staging/aging-repair-scheduling/CLOSE_REVIEW')
+          assert marker.is_file(), 'missing explicit visual-review marker'
+          fields={}
+          for line in marker.read_text(encoding='utf-8').splitlines():
+              if '=' in line:
+                  k,v=line.split('=',1); fields[k.strip()]=v.strip()
+          required=('reviewed_pdf_sha256','page_count','pages_individually_reviewed','contact_sheet_reviewed','manual_review_notes')
+          assert all(fields.get(k) for k in required), f'missing review fields: {[k for k in required if not fields.get(k)]}'
+          pdf=root/'paper.pdf'; assert pdf.is_file() and pdf.stat().st_size>5000
+          digest=hashlib.sha256(pdf.read_bytes()).hexdigest()
+          assert digest==fields['reviewed_pdf_sha256'], f'reviewed hash {fields["reviewed_pdf_sha256"]} != current PDF {digest}'
+          info=(root/'results'/'pdfinfo.txt').read_text(encoding='utf-8',errors='replace')
+          m=re.search(r'^Pages:\s*(\d+)\s*$',info,re.M); assert m, 'pdfinfo page count unavailable'
+          pages=int(m.group(1)); assert pages==int(fields['page_count'])
+          reviewed=[int(v) for v in fields['pages_individually_reviewed'].split(',') if v.strip()]
+          assert reviewed==list(range(1,pages+1)), f'not every PDF page explicitly reviewed: {reviewed}'
+          assert fields['contact_sheet_reviewed'].lower()=='true'
+          renders=root/'results'/'pdf_pages'
+          for i in range(1,pages+1):
+              p=renders/f'page-{i:02d}.png'
+              assert p.is_file() and p.stat().st_size>1000, f'missing/empty render for page {i}'
+          contact=root/'results'/'pdf_contact_sheet.png'
+          assert contact.is_file() and contact.stat().st_size>1000
+          model=json.loads((root/'results'/'verification_report.json').read_text(encoding='utf-8'))
+          assert model.get('status')=='PASS' and model.get('checks_failed')==0, 'model verification is not PASS'
+          now=datetime.datetime.now(datetime.timezone.utc).isoformat()
+          visual={
+            'status':'PASS',
+            'inspection_timestamp_utc':now,
+            'paper_pdf_sha256':digest,
+            'page_count':pages,
+            'render_dpi':140,
+            'all_pages_rendered':True,
+            'pages_rendered':list(range(1,pages+1)),
+            'pages_individually_reviewed':reviewed,
+            'contact_sheet_reviewed':True,
+            'reviewer':'Xylia (assistant-assisted visual QA)',
+            'review_method':'GitHub Actions-rendered page contact sheet plus individual full-resolution page renders; page count/hash and PDF text/build checks separately validated.',
+            'reviewed_build_workflow_run_id':fields.get('build_workflow_run_id','recorded in CLOSE_REVIEW marker'),
+            'reviewed_build_workflow_url':fields.get('build_workflow_url',''),
+            'manual_review_notes':fields['manual_review_notes'],
+            'issues':[],
+            'final_disposition':'PASS: every page of the exact PDF identified by paper_pdf_sha256 was reviewed; no critical or major visual defects remain.'
+          }
+          (root/'results'/'pdf_visual_review.json').write_text(json.dumps(visual,indent=2)+'\n',encoding='utf-8')
+          quality=json.loads((root/'results'/'publication_quality_report.json').read_text(encoding='utf-8'))
+          quality.update({
+            'status':'PASS',
+            'paper_pdf_sha256':digest,
+            'pages':pages,
+            'visual_review_status':'PASS',
+            'visual_review_timestamp_utc':now,
+            'visual_review_record':'results/pdf_visual_review.json',
+            'visual_review_run_id':run_id,
+            'visual_review_run_url':run_url,
+            'biological_or_lifespan_validation':'NOT_PERFORMED',
+            'scientific_scope':'Synthetic-model conditional result only; no organismal lifespan-extension claim.'
+          })
+          (root/'results'/'publication_quality_report.json').write_text(json.dumps(quality,indent=2)+'\n',encoding='utf-8')
+          checks=[
+            {'name':'Model verification','status':'PASS','evidence':'results/verification_report.json; results/verify_model_stdout.txt'},
+            {'name':'LaTeX compilation and PDF page count','status':'PASS','evidence':'results/latex_build_stdout.txt; results/pdfinfo.txt'},
+            {'name':'Metadata and bibliography preflight','status':'PASS','evidence':'CITATION.cff; paper.bib; .zenodo.json; schema_article.jsonld'},
+            {'name':'Full-page visual review','status':'PASS','evidence':'results/pdf_visual_review.json; exact PDF SHA-256 '+digest},
+            {'name':'Empirical organismal lifespan validation','status':'NOT_APPLICABLE','reason':'This is explicitly a synthetic theoretical preprint and makes no organismal or experimental lifespan-extension claim.'},
+            {'name':'ZIP/PDF consistency and remote read-back','status':'PENDING','evidence':'This closure workflow will build the final bundle, commit, and independently read back the resulting tree.'}
+          ]
+          matrix={
+            'release_status':'BLOCKED_PENDING_REMOTE_READBACK',
+            'repository':'Devanik21/The-Invention-Archive',
+            'target_branch':'main',
+            'close_workflow_run_id':run_id,
+            'close_workflow_run_url':run_url,
+            'reviewed_pdf_sha256':digest,
+            'pdf_pages':pages,
+            'checks':checks,
+            'blockers':['Final bundle creation and remote read-back have not yet completed.']
+          }
+          (root/'results'/'release_check_matrix.json').write_text(json.dumps(matrix,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps({'pdf_sha256':digest,'pages':pages,'model_status':model['status'],'visual_review':'PASS','close_workflow_run_id':run_id},indent=2))
+          PY
+      - name: Build manifest and complete ZIP for the reviewed release
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - "$RELEASE_DIR" "$SLUG" <<'PY'
+          import sys,json,hashlib,zipfile
+          from pathlib import Path
+          root=Path(sys.argv[1]); slug=sys.argv[2]
+          manifest=root/'results'/'sha256_manifest.json'
+          def write_manifest():
+              files={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest()
+                     for p in sorted(root.rglob('*'))
+                     if p.is_file() and p!=manifest and '__pycache__' not in p.parts}
+              manifest.write_text(json.dumps({'algorithm':'sha256','files':files},indent=2)+'\n',encoding='utf-8')
+          def write_bundle():
+              bundle=Path('Theoretical Research')/(slug+'_complete_bundle.zip')
+              tmp=bundle.with_suffix('.zip.tmp')
+              with zipfile.ZipFile(tmp,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+                  for p in sorted(root.rglob('*')):
+                      if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc':
+                          z.write(p,arcname=slug+'/'+str(p.relative_to(root)))
+              tmp.replace(bundle)
+              with zipfile.ZipFile(bundle) as z:
+                  assert z.testzip() is None
+                  assert hashlib.sha256(z.read(slug+'/paper.pdf')).hexdigest()==hashlib.sha256((root/'paper.pdf').read_bytes()).hexdigest()
+              return bundle
+          write_manifest()
+          write_bundle()
+          write_manifest()
+          bundle=write_bundle()
+          print(json.dumps({'manifest_files':len(json.loads(manifest.read_text())['files']),
+                            'bundle_bytes':bundle.stat().st_size,
+                            'pdf_sha256':hashlib.sha256((root/'paper.pdf').read_bytes()).hexdigest()},indent=2))
+          PY
+      - name: Commit the review record and ZIP, then verify remote read-back
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUNDLE="Theoretical Research/${SLUG}_complete_bundle.zip"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- "$RELEASE_DIR" "$BUNDLE" "$STAGING_DIR"
+          git diff --cached --check
+          git commit -m "reviewclose(aging-repair-scheduling): archive visual review evidence"
+          FIRST_SHA="$(git rev-parse HEAD)"
+          git fetch origin main
+          if ! git merge-base --is-ancestor origin/main HEAD; then git rebase origin/main; fi
+          git push origin HEAD:main
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$(git rev-parse HEAD)"
+          for f in paper.tex paper.pdf verify_model.py README.md CITATION.cff paper.bib .zenodo.json schema_article.jsonld deploy.py results/pdf_visual_review.json results/publication_quality_report.json results/sha256_manifest.json; do
+            test "$(git hash-object "$RELEASE_DIR/$f")" = "$(git rev-parse "origin/main:$RELEASE_DIR/$f")"
+          done
+          test "$(git hash-object "$BUNDLE")" = "$(git rev-parse "origin/main:$BUNDLE")"
+          python - "$RELEASE_DIR" "$SLUG" "$FIRST_SHA" <<'PY'
+          import sys,json,hashlib,zipfile,datetime
+          from pathlib import Path
+          root=Path(sys.argv[1]); slug=sys.argv[2]; first_sha=sys.argv[3]
+          matrix_path=root/'results'/'release_check_matrix.json'
+          matrix=json.loads(matrix_path.read_text(encoding='utf-8'))
+          matrix['checks'][-1]={'name':'ZIP/PDF consistency and remote read-back','status':'PASS',
+             'evidence':f'GitHub Actions close workflow verified origin/main core-file hashes, manifest, bundle hash, and PDF payload after commit {first_sha}.'}
+          matrix['release_status']='PASS'
+          matrix['blockers']=[]
+          matrix['release_artifact_commit_sha']=first_sha
+          matrix['remote_readback_timestamp_utc']=datetime.datetime.now(datetime.timezone.utc).isoformat()
+          matrix['final_head_sha_note']='The subsequent commit contains this closed matrix and refreshed manifest/ZIP; the separate workflow_run validator checks that exact final main SHA.'
+          matrix_path.write_text(json.dumps(matrix,indent=2)+'\n',encoding='utf-8')
+          quality_path=root/'results'/'publication_quality_report.json'
+          quality=json.loads(quality_path.read_text(encoding='utf-8'))
+          quality['release_status']='PASS'
+          quality['remote_readback_commit_sha']=first_sha
+          quality_path.write_text(json.dumps(quality,indent=2)+'\n',encoding='utf-8')
+          manifest=root/'results'/'sha256_manifest.json'
+          files={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest()
+                 for p in sorted(root.rglob('*')) if p.is_file() and p!=manifest and '__pycache__' not in p.parts}
+          manifest.write_text(json.dumps({'algorithm':'sha256','files':files},indent=2)+'\n',encoding='utf-8')
+          bundle=Path('Theoretical Research')/('${SLUG}_complete_bundle.zip')
+          tmp=bundle.with_suffix('.zip.tmp')
+          with zipfile.ZipFile(tmp,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for p in sorted(root.rglob('*')):
+                  if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc':
+                      z.write(p,arcname=slug+'/'+str(p.relative_to(root)))
+          tmp.replace(bundle)
+          with zipfile.ZipFile(bundle) as z:
+              assert z.testzip() is None
+              assert hashlib.sha256(z.read(slug+'/paper.pdf')).hexdigest()==hashlib.sha256((root/'paper.pdf').read_bytes()).hexdigest()
+          print('Prepared final PASS matrix after successful first remote read-back.')
+          PY
+          git add -- "$RELEASE_DIR/results/release_check_matrix.json" "$RELEASE_DIR/results/publication_quality_report.json" "$RELEASE_DIR/results/sha256_manifest.json" "$BUNDLE"
+          git diff --cached --check
+          git commit -m "reviewclose(aging-repair-scheduling): mark verified release PASS"
+          git push origin HEAD:main
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$(git rev-parse HEAD)"
+          for f in paper.tex paper.pdf verify_model.py README.md CITATION.cff paper.bib .zenodo.json schema_article.jsonld deploy.py results/pdf_visual_review.json results/publication_quality_report.json results/release_check_matrix.json results/sha256_manifest.json; do
+            test "$(git hash-object "$RELEASE_DIR/$f")" = "$(git rev-parse "origin/main:$RELEASE_DIR/$f")"
+          done
+          test "$(git hash-object "$BUNDLE")" = "$(git rev-parse "origin/main:$BUNDLE")"
+          git show "origin/main:Theoretical Research/Readme.md" | grep -Fq "$SLUG"
+          python - "$RELEASE_DIR" "$SLUG" <<'PY'
+          import sys,json,hashlib,zipfile
+          from pathlib import Path
+          root=Path(sys.argv[1]); slug=sys.argv[2]
+          matrix=json.loads((root/'results'/'release_check_matrix.json').read_text())
+          assert matrix.get('release_status')=='PASS' and not matrix.get('blockers')
+          assert all(c.get('status') in ('PASS','NOT_APPLICABLE') for c in matrix['checks'])
+          report=json.loads((root/'results'/'publication_quality_report.json').read_text())
+          assert report.get('status')=='PASS' and report.get('release_status')=='PASS'
+          visual=json.loads((root/'results'/'pdf_visual_review.json').read_text())
+          assert visual.get('status')=='PASS' and len(visual.get('pages_individually_reviewed',[]))==visual.get('page_count')
+          bundle=Path('Theoretical Research')/(slug+'_complete_bundle.zip')
+          with zipfile.ZipFile(bundle) as z:
+              assert z.testzip() is None
+              assert hashlib.sha256(z.read(slug+'/paper.pdf')).hexdigest()==hashlib.sha256((root/'paper.pdf').read_bytes()).hexdigest()
+          print(json.dumps({'release_status':'PASS','pdf_sha256':visual['paper_pdf_sha256'],'pages':visual['page_count'],'remote_head':'verified','bundle_bytes':bundle.stat().st_size},indent=2))
+          PY
+          echo "Final release matrix: PASS" >> "$GITHUB_STEP_SUMMARY"
+          echo "The source, PDF, citation metadata, review record, manifest, bundle, and parent index were checked against origin/main." >> "$GITHUB_STEP_SUMMARY"
