@@ -148,24 +148,24 @@ jobs:
               if "__pycache__" in p.parts:
                   continue
               text=p.read_text(encoding="utf-8").replace("\r\n","\n").replace("\r","\n")
-              lines=[line.rstrip(" \\t") for line in text.splitlines()]
+              lines=[line.rstrip(" " + chr(9)) for line in text.splitlines()]
               p.write_text("\n".join(lines).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
           for p in (root/"results").glob("*.txt"):
               text=p.read_text(encoding="utf-8",errors="replace").replace("\r\n","\n").replace("\r","\n")
-              lines=[line.rstrip(" \\t") for line in text.splitlines()]
+              lines=[line.rstrip(" " + chr(9)) for line in text.splitlines()]
               p.write_text("\n".join(lines).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
           p=root/"verify_model.py"
           text=p.read_text(encoding="utf-8").replace("\r\n","\n").replace("\r","\n")
-          p.write_text("\n".join(line.rstrip(" \\t") for line in text.splitlines()).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
+          p.write_text("\n".join(line.rstrip(" " + chr(9)) for line in text.splitlines()).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
           # README metadata uses Markdown hard breaks; express them as explicit HTML breaks.
           p=root/"README.md"
           text=p.read_text(encoding="utf-8").replace("\r\n","\n").replace("\r","\n")
           lines=[]
           for line in text.splitlines():
               if line.endswith("  "):
-                  line=line.rstrip(" \\t")+"<br>"
+                  line=line.rstrip(" " + chr(9))+"<br>"
               else:
-                  line=line.rstrip(" \\t")
+                  line=line.rstrip(" " + chr(9))
               lines.append(line)
           p.write_text("\n".join(lines).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
           PY
