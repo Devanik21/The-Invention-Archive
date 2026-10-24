@@ -69,18 +69,19 @@ jobs:
           }
           (root/'results/pdf_visual_review.json').write_text(json.dumps(review,indent=2)+'\n',encoding='utf-8')
           report=(root/'results/publication_quality_report.md').read_text(encoding='utf-8')
-          report += f"""
-## Page-level visual review
-
-- Status: PASS
-- Final PDF SHA-256: {pdf_sha}
-- Pages inspected individually: {page_count}/{page_count}
-- Contact sheet: results/pdf_contact_sheet.png
-- Issue record: results/pdf_visual_review.json
-- Review method: page-by-page rendered-image inspection by Xylia plus automated checks.
-- Residual issues: {len(issues)} recorded; no critical or major issues accepted.
-- Main-branch remote verification: still pending at the time this staging review was finalized.
-"""
+          report += "\n".join([
+            "",
+            "## Page-level visual review",
+            "",
+            "- Status: PASS",
+            f"- Final PDF SHA-256: {pdf_sha}",
+            f"- Pages inspected individually: {page_count}/{page_count}",
+            "- Contact sheet: results/pdf_contact_sheet.png",
+            "- Issue record: results/pdf_visual_review.json",
+            "- Review method: page-by-page rendered-image inspection by Xylia plus automated checks.",
+            f"- Residual issues: {len(issues)} recorded; no critical or major issues accepted.",
+            "- Main-branch remote verification: still pending at the time this staging review was finalized."
+          ]) + "\n"
           (root/'results/publication_quality_report.md').write_text(report,encoding='utf-8')
           input_path.unlink()
           report_path=root/'results/review_finalization_report.json'
