@@ -2,8 +2,8 @@
   "release_status": "BLOCKED",
   "repository": "Devanik21/The-Invention-Archive",
   "target_branch": "main",
-  "trigger_commit_sha": "2121563e8474b2d53746643704ff42682257dda0",
-  "pdf_sha256": "b72dc94c6bfd4467c85e3af6ed2654d06bee4782ae1be44ce8c288a843fbf57e",
+  "trigger_commit_sha": "927c15fd05f99de5df82bee4a8fa53c99f7dd9f9",
+  "pdf_sha256": "258580b1a2441129290477ac3dfac3ca52c36654a388db9d82f461d2e18af25e",
   "pdf_pages": 11,
   "checks": [
     {

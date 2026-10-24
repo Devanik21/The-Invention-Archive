@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "generated_at_utc": "2026-10-24T07:44:09.933747+00:00",
+  "generated_at_utc": "2026-10-24T07:49:58.094056+00:00",
   "model": "4-state deterministic nonnegative linear damage propagation with periodic allocated repair capacity",
   "interpretation": "synthetic model verification only; no organismal or experimental validation",
   "parameters": {

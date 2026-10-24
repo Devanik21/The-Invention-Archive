@@ -345,7 +345,7 @@ mbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/f
 onts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (10 pages, 235970 bytes).
+Output written on paper.pdf (10 pages, 235971 bytes).
 Transcript written on paper.log.
 Latexmk: Missing bbl file 'paper.bbl' in following:
  No file paper.bbl.
@@ -582,7 +582,7 @@ mbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/f
 onts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (11 pages, 244159 bytes).
+Output written on paper.pdf (11 pages, 244167 bytes).
 Transcript written on paper.log.
 Latexmk: Getting log file 'paper.log'
 Latexmk: Examining 'paper.fls'
@@ -750,7 +750,7 @@ mbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/f
 onts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (11 pages, 244293 bytes).
+Output written on paper.pdf (11 pages, 244292 bytes).
 Transcript written on paper.log.
 Latexmk: Getting log file 'paper.log'
 Latexmk: Examining 'paper.fls'

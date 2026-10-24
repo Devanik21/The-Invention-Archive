@@ -245,7 +245,7 @@ def generate_outputs(root: Path):
     ax.set_title("Reproducible model-audit pipeline",fontsize=11);fig.savefig(figures/"figure7_research_flow.pdf");fig.savefig(figures/"figure7_research_flow.png");plt.close(fig)
     # Figure 8: proposed experiment design flow.
     fig,ax=plt.subplots(figsize=(7.2,4.0),constrained_layout=True);ax.set_xlim(0,10);ax.set_ylim(0,6);ax.axis("off")
-    nodes=[(2.9,4.7,4.2,.8,"1. Measure pathway reporters and total flux"),(2.9,3.4,4.2,.8,"2. Calibrate interaction + threshold model"),(2.9,2.1,4.2,.8,"3. Randomize schedules at matched flux"),(2.9,.8,4.2,.8,"4. Compare survival / function; preregister failure rule")]
+    nodes=[(2.4,4.7,5.2,.8,"1. Measure pathway reporters and total flux"),(2.4,3.4,5.2,.8,"2. Calibrate interaction + threshold model"),(2.4,2.1,5.2,.8,"3. Randomize schedules at matched flux"),(2.4,.8,5.2,.8,"4. Compare survival / function; preregister failure rule")]
     for x,y,w,h,txt in nodes: ax.add_patch(FancyBboxPatch((x,y),w,h,boxstyle="round,pad=0.07",fc="#ecfdf5",ec="#047857",lw=1.2));ax.text(x+w/2,y+h/2,txt,ha="center",va="center",fontsize=8.3)
     for y1,y2 in [(4.7,4.2),(3.4,2.9),(2.1,1.6)]: ax.add_patch(FancyArrowPatch((5,y1),(5,y2),arrowstyle="-|>",mutation_scale=13,color="#047857",lw=1.3))
     ax.set_title("Prospective falsification study (not performed)",fontsize=11);fig.savefig(figures/"figure8_experiment_flow.pdf");fig.savefig(figures/"figure8_experiment_flow.png");plt.close(fig)
