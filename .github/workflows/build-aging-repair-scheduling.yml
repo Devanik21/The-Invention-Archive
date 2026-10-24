@@ -36,7 +36,9 @@ jobs:
         run: |
           set -euo pipefail
           test -s "$STAGING_DIR/READY"
-          test ! -e "$RELEASE_DIR" || { echo "Release exists; refusing overwrite." >&2; exit 1; }
+          # Rebuild from the staged builder, including repairs to an earlier release.
+          rm -rf "$RELEASE_DIR"
+          mkdir -p "$(dirname "$RELEASE_DIR")"
           cat "$STAGING_DIR"/builder_xz.b64.part* | tr -d '\r\n' | base64 --decode > "$RUNNER_TEMP/builder.py.xz"
           echo "e4b9fe2b74bc1429b30a79fc4c1b3620842bc282203dbcc22db2f2e8417ab6cc  $RUNNER_TEMP/builder.py.xz" | sha256sum --check
           xz -dc "$RUNNER_TEMP/builder.py.xz" > "$RUNNER_TEMP/builder.py"
@@ -170,14 +172,24 @@ jobs:
           p.write_text("\n".join(lines).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
           PY
           INDEX="Theoretical Research/Readme.md"
-          BUNDLE="Theoretical Research/${SLUG}_complete_bundle.zip"
-          if grep -Fq "$SLUG" "$INDEX"; then
-            echo "Index collision; refusing duplicate entry." >&2
-            exit 1
-          fi
-          ROW="| 2026.10.24 | Aging as a Decoding Threshold: Repair Scheduling Under Fixed Maintenance Throughput | Synthetic-model methods preprint | [$SLUG]($SLUG/) |"
-          printf '\n%s\n' "$ROW" >> "$INDEX"
-          (cd "Theoretical Research" && zip -qr "${SLUG}_complete_bundle.zip" "$SLUG" -x '*/__pycache__/*' '*.pyc')
+          BUNDLE="Theoretical Research/\${SLUG}_complete_bundle.zip"
+          ROW="| 2026.10.24 | Aging as a Decoding Threshold: Repair Scheduling Under Fixed Maintenance Throughput | Synthetic-model methods preprint | [\${SLUG}](\${SLUG}/) |"
+          python - "$INDEX" "$SLUG" "$ROW" <<'PY'
+          import sys
+          from pathlib import Path
+          p=Path(sys.argv[1]); slug=sys.argv[2]; row=sys.argv[3]
+          lines=p.read_text(encoding="utf-8").splitlines()
+          matches=[i for i,line in enumerate(lines) if slug in line and line.lstrip().startswith("|")]
+          if len(matches)>1:
+              raise SystemExit(f"duplicate index rows for {slug}: {len(matches)}")
+          if matches:
+              lines[matches[0]]=row
+          else:
+              lines.extend(["",row])
+          p.write_text("\n".join(lines).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
+          PY
+          rm -f "$BUNDLE"
+          (cd "Theoretical Research" && zip -qr "\${SLUG}_complete_bundle.zip" "$SLUG" -x '*/__pycache__/*' '*.pyc')
           rm -rf "$STAGING_DIR"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
