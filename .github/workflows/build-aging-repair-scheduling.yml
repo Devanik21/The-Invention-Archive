@@ -72,9 +72,9 @@ jobs:
           from pathlib import Path
           root=Path(sys.argv[1]); p=root/'verify_model.py'
           source=p.read_text(encoding='utf-8')
-          bad='Path(__file__).resolve().paren'
-          good='Path(__file__).resolve().parent'
-          assert source.count(bad)==1, f'expected exactly one verifier path typo, found {source.count(bad)}'
+          bad='root=Path(__file__).resolve().paren'
+          good='root=Path(__file__).resolve().parent'
+          assert source.count(bad)==1, f'expected exactly one executable verifier root-path typo, found {source.count(bad)}'
           p.write_text(source.replace(bad,good),encoding='utf-8')
           report=root/'results'/'tex_toolchain_compatibility.md'
           with report.open('a',encoding='utf-8') as f:
