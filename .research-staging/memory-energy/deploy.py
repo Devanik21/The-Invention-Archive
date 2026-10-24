@@ -304,7 +304,7 @@ def compile_pdf(root: Path):
             if re.search(pat,final_log,re.M|re.I):
                 raise ReleaseError(f"LaTeX log contains unresolved/fatal pattern: {pat}")
         # Overfull boxes are a publication gate; a source repair is required rather than silent acceptance.
-        if re.search(r"Overfull \\\\hbox",final_log):
+        if re.search(r"Overfull \\hbox",final_log):
             raise ReleaseError("LaTeX log contains an overfull hbox; repair layout before release")
         pdf=tmp/"paper.pdf"
         if not pdf.is_file() or pdf.stat().st_size<10000:
