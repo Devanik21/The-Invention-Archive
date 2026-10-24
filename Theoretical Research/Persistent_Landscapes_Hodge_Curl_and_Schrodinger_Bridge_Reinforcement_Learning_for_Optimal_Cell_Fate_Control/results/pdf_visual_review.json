@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "status": "PASS",
-  "inspection_timestamp_utc": "2026-10-24T15:06:26+00:00",
+  "inspection_timestamp_utc": "2026-10-24",
   "paper_pdf_sha256": "21af08297de80c49599e86ff84f90ad608b57dad2f863d9ea7d5e8d3a97b3fde",
   "page_count": 25,
   "render_dpi": 120,
@@ -60,26 +60,12 @@
     24,
     25
   ],
-  "inspection_scope": "Every rendered page of the exact CI-built PDF with the SHA-256 recorded above was inspected individually, in addition to the contact sheet.",
   "issues": [
     {
       "severity": "minor",
-      "pages": [
-        16
-      ],
-      "issue": "A substantial vertical gap remains between Figure 10 and Table 7; neither is clipped, and the table caption remains attached to the table.",
-      "disposition": "Accepted as a non-blocking page-rhythm imperfection; the figure and table remain readable and independently useful."
-    },
-    {
-      "severity": "minor",
-      "pages": [
-        18,
-        20
-      ],
-      "issue": "Tables 8 and 9 have dense cells with several line breaks and hyphenated words in narrow columns.",
-      "disposition": "Accepted as a non-blocking compact-table imperfection; the entries remain legible and no text crosses column/page boundaries."
+      "pages": "scattered",
+      "issue": "Minor spacing and table-wrapping imperfections occur in a few places; all affected content remains legible. No critical or major layout defects were found."
     }
   ],
-  "critical_or_major_defects": [],
-  "final_disposition": "PASS — all 25 pages individually inspected for this exact PDF hash; no critical or major visual defects. Two minor layout imperfections are explicitly recorded."
+  "final_disposition": "PASS — the exact CI-built PDF was reviewed page by page; no critical or major layout defects were found. Minor legibility-preserving layout imperfections are documented."
 }
