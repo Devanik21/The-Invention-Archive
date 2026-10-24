@@ -1,0 +1,64 @@
+Synthetic topology/control verification
+Barrier=0.250000; H0 persistence=0.249998
+Neural drift test R2=0.999927; RMSE=0.011691
+constant-dose: success=0.0000; mean dose=3.2000
+evenly-spaced pulses: success=0.2325; mean dose=3.1650
+greedy pulses: success=0.0275; mean dose=3.2000
+RL policy: success=0.0775; mean dose=3.0730
+Rotor pulse/constant control energy ratio=3.333333 (b1=1)
+PASS: analytic barrier — barrier=0.25
+PASS: H0 finite persistence pair — persistence=0.24999830780228596; intervals=1
+PASS: FW action convergence — coarse=8.019e-05; fine=1.48e-06
+PASS: synthetic neural drift fit — R2=1.000; RMSE=0.012
+PASS: nominal-dose matching — 8 pulses x 4.0 x dt equals constant 0.8 x 40 steps x dt
+PASS: rotor constant lower energy — pulse/constant energy=3.333
+PASS: policy benchmark complete — policies=4
+PASS: all sensitivity cells produced — cells=50
+PASS: noise replicates preserved — replicates=240
+PASS: figure exists fig01_landscape.pdf — size=118691
+PASS: figure exists fig01_landscape.png — size=294992
+PASS: figure exists fig02_barrier_persistence.pdf — size=17429
+PASS: figure exists fig02_barrier_persistence.png — size=94808
+PASS: figure exists fig03_persistence_robustness.pdf — size=17981
+PASS: figure exists fig03_persistence_robustness.png — size=81042
+PASS: figure exists fig04_neural_drift_fit.pdf — Synthetic topology/control verification
+Barrier=0.250000; H0 persistence=0.249998
+Neural drift test R2=0.999927; RMSE=0.011691
+constant-dose: success=0.0000; mean dose=3.2000
+evenly-spaced pulses: success=0.2325; mean dose=3.1650
+greedy pulses: success=0.0275; mean dose=3.2000
+RL policy: success=0.0775; mean dose=3.0730
+Rotor pulse/constant control energy ratio=3.333333 (b1=1)
+PASS: analytic barrier — barrier=0.25
+PASS: H0 finite persistence pair — persistence=0.24999830780228596; intervals=1
+PASS: FW action convergence — coarse=8.019e-05; fine=1.48e-06
+PASS: synthetic neural drift fit — R2=1.000; RMSE=0.012
+PASS: nominal-dose matching — 8 pulses x 4.0 x dt equals constant 0.8 x 40 steps x dt
+PASS: rotor constant lower energy — pulse/constant energy=3.333
+PASS: policy benchmark complete — policies=4
+PASS: all sensitivity cells produced — cells=50
+PASS: noise replicates preserved — replicates=240
+PASS: figure exists fig01_landscape.pdf — size=118691
+PASS: figure exists fig01_landscape.png — size=294992
+PASS: figure exists fig02_barrier_persistence.pdf — size=17429
+PASS: figure exists fig02_barrier_persistence.png — size=94808
+PASS: figure exists fig03_persistence_robustness.pdf — size=17981
+PASS: figure exists fig03_persistence_robustness.png — size=81042
+PASS: figure exists fig04_neural_drift_fit.pdf — size=41440
+PASS: figure exists fig04_neural_drift_fit.png — size=90594
+PASS: figure exists fig05_rotor_counterexample.pdf — size=18487
+PASS: figure exists fig05_rotor_counterexample.png — size=122932
+PASS: figure exists fig06_policy_trajectories.pdf — size=21532
+PASS: figure exists fig06_policy_trajectories.png — size=254297
+PASS: figure exists fig07_rl_learning_curve.pdf — size=14873
+PASS: figure exists fig07_rl_learning_curve.png — size=100223
+PASS: figure exists fig08_toggle_network.pdf — size=17248
+PASS: figure exists fig08_toggle_network.png — size=113977
+PASS: figure exists fig09_cycle_network.pdf — size=13341
+PASS: figure exists fig09_cycle_network.png — size=86974
+PASS: figure exists fig10_pipeline_flow.pdf — size=14047
+PASS: figure exists fig10_pipeline_flow.png — size=89497
+PASS: figure exists fig11_falsification_flow.pdf — size=12765
+PASS: figure exists fig11_falsification_flow.png — size=97653
+PASS: figure exists fig12_schedule_sensitivity.pdf — size=32121
+PASS: figure exists fig12_schedule_sensitivity.png — size=113785

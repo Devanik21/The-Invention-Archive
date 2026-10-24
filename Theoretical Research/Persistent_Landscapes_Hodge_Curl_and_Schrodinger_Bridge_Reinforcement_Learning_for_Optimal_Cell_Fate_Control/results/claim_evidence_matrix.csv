@@ -1,0 +1,9 @@
+claim_id,claim,epistemic_class,evidence_type,current_result,status,limit_or_falsifier
+C1,"For V=(x^2-1)^2/4, barrier=0.25",P1,Analytic derivation + test,Exact 0.25,PASS,Only this scalar potential and stated gradient normalization
+C2,H0 persistence approximates barrier for matching min-saddle pair,P1 conditional,Synthetic numerical persistence,0.249998 vs 0.25; error 1.69e-6,PASS conditional,Pair selection and scalar-function assumptions essential
+C3,Persistence estimator robust to observation noise,P3,240 synthetic noise replicates,Median error rises to 0.17190 at SD .12; pairing 32.5%,NOT SUPPORTED,Better smoothing/uncertainty estimator might change results
+C4,H1 cycle forces pulses to be optimal,P1 universal claim,Analytic circle counterexample,Constant control energy 0.05333; pulse 0.17778,FALSIFIED,Narrower dynamical conditions may create schedule advantage
+C5,Neural drift model can learn chosen synthetic dynamics,P3 model diagnostic,Held-out synthetic transitions,"R2=0.999927, RMSE=.01169, sigma estimate=.08146 vs .08",PASS synthetic,Same simulator family train/test; no empirical generalization
+C6,RL outperforms simple schedule baselines,P3,400 synthetic rollouts/policy,RL=7.75%; even pulses=23.25%,NOT SUPPORTED,Single task/reward; preserve negative result
+C7,Schrödinger bridge objective can express population path control,P2 formulation,Formal objective definition,"Objective formulated, not solved",THEORETICAL ONLY,No SB solver executed
+C8,Framework works on reprogramming single-cell data,P3 empirical,Public accession identified only,No matrix loaded,NOT RUN,Access/data processing/model identifiability remains

@@ -1,0 +1,51 @@
+adaptation_beta,noise_sigma,policy,success_rate,trials
+0.0,0.02,constant-dose,1.0,40
+0.0,0.02,evenly-spaced pulses,1.0,40
+0.0,0.05,constant-dose,1.0,40
+0.0,0.05,evenly-spaced pulses,1.0,40
+0.0,0.08,constant-dose,1.0,40
+0.0,0.08,evenly-spaced pulses,1.0,40
+0.0,0.12,constant-dose,1.0,40
+0.0,0.12,evenly-spaced pulses,1.0,40
+0.0,0.16,constant-dose,0.975,40
+0.0,0.16,evenly-spaced pulses,1.0,40
+2.0,0.02,constant-dose,0.075,40
+2.0,0.02,evenly-spaced pulses,1.0,40
+2.0,0.05,constant-dose,0.325,40
+2.0,0.05,evenly-spaced pulses,1.0,40
+2.0,0.08,constant-dose,0.375,40
+2.0,0.08,evenly-spaced pulses,1.0,40
+2.0,0.12,constant-dose,0.5,40
+2.0,0.12,evenly-spaced pulses,0.925,40
+2.0,0.16,constant-dose,0.65,40
+2.0,0.16,evenly-spaced pulses,1.0,40
+4.0,0.02,constant-dose,0.0,40
+4.0,0.02,evenly-spaced pulses,0.95,40
+4.0,0.05,constant-dose,0.0,40
+4.0,0.05,evenly-spaced pulses,0.725,40
+4.0,0.08,constant-dose,0.0,40
+4.0,0.08,evenly-spaced pulses,0.725,40
+4.0,0.12,constant-dose,0.025,40
+4.0,0.12,evenly-spaced pulses,0.575,40
+4.0,0.16,constant-dose,0.05,40
+4.0,0.16,evenly-spaced pulses,0.625,40
+6.0,0.02,constant-dose,0.0,40
+6.0,0.02,evenly-spaced pulses,0.0,40
+6.0,0.05,constant-dose,0.0,40
+6.0,0.05,evenly-spaced pulses,0.075,40
+6.0,0.08,constant-dose,0.0,40
+6.0,0.08,evenly-spaced pulses,0.15,40
+6.0,0.12,constant-dose,0.0,40
+6.0,0.12,evenly-spaced pulses,0.35,40
+6.0,0.16,constant-dose,0.025,40
+6.0,0.16,evenly-spaced pulses,0.45,40
+8.0,0.02,constant-dose,0.0,40
+8.0,0.02,evenly-spaced pulses,0.0,40
+8.0,0.05,constant-dose,0.0,40
+8.0,0.05,evenly-spaced pulses,0.0,40
+8.0,0.08,constant-dose,0.0,40
+8.0,0.08,evenly-spaced pulses,0.075,40
+8.0,0.12,constant-dose,0.0,40
+8.0,0.12,evenly-spaced pulses,0.175,40
+8.0,0.16,constant-dose,0.0,40
+8.0,0.16,evenly-spaced pulses,0.25,40

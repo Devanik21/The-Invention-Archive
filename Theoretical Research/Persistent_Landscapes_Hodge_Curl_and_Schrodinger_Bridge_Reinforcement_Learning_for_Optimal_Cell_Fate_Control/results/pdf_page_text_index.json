@@ -1,0 +1,131 @@
+{
+  "pdf_sha256": "21af08297de80c49599e86ff84f90ad608b57dad2f863d9ea7d5e8d3a97b3fde",
+  "page_count": 25,
+  "pages": [
+    {
+      "page": 1,
+      "word_count": 249,
+      "opening_text": "Persistent Landscapes, Hodge Curl, and Schrödinger-Bridge Reinforcement Learning for Optimal Cell-Fate Control Topological Obstructions to Cellular Reprogramming Devanik Debnath (D"
+    },
+    {
+      "page": 2,
+      "word_count": 175,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint Contents 1 Research question and contribution 1 2 Prior work and novelty boundary 1 3 State space, controls, "
+    },
+    {
+      "page": 3,
+      "word_count": 601,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint 1 Research question and contribution Cell identity is not directly a point in a one-dimensional potential. It"
+    },
+    {
+      "page": 4,
+      "word_count": 539,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint Table 1: Evidence taxonomy for the paper’s main statements. Class Meaning here What the evidence supports P1 "
+    },
+    {
+      "page": 5,
+      "word_count": 556,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint Table 2: Closest literatures and the claim they do—and do not—license. Literature Established contribution Bo"
+    },
+    {
+      "page": 6,
+      "word_count": 444,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint Table 3: Notation and dimensional conventions. Symbol Definition Interpretation Xt Latent state in X Reduced "
+    },
+    {
+      "page": 7,
+      "word_count": 349,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint 1.5 1.0 0.5 0.0 0.5 1.0 1.5 latent fate coordinate x 1.0 0.5 0.0 0.5 1.0 orthogonal state coordinate y source"
+    },
+    {
+      "page": 8,
+      "word_count": 131,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint 1.5 1.0 0.5 0.0 0.5 1.0 1.5 x 0.0 0.1 0.2 0.3 0.4 0.5 V(x) V = 0.25 = H0 persistence Exact identity in the sy"
+    },
+    {
+      "page": 9,
+      "word_count": 434,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint 0.04 0.02 0.00 0.02 0.04 Gaussian potential-observation noise SD 0.240 0.245 0.250 0.255 0.260 H0 persistence"
+    },
+    {
+      "page": 10,
+      "word_count": 325,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint TF-A TF-B Target state Pulse input A minimal toggle-like regulatory motif (conceptual graph) Figure 4: Schema"
+    },
+    {
+      "page": 11,
+      "word_count": 384,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint G1 G2 G3 Repressilator-like directed cycle: motif existence is not a pulse theorem Figure 5: Directed cycle g"
+    },
+    {
+      "page": 12,
+      "word_count": 292,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint 0.0 0.1 0.2 0.3 0.4 control u(t) constant optimal control single rectangular pulse, same endpoint 0.0 0.5 1.0"
+    },
+    {
+      "page": 13,
+      "word_count": 413,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint 1.5 1.0 0.5 0.0 0.5 1.0 1.5 latent fate coordinate x 4 3 2 1 0 1 2 3 4 drift b(x) Synthetic neural-SDE drift "
+    },
+    {
+      "page": 14,
+      "word_count": 391,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint Table 6: Matched-budget synthetic policy benchmark. All values are from 400 simulator rollouts per policy; no"
+    },
+    {
+      "page": 15,
+      "word_count": 428,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint 0 1000 2000 3000 4000 5000 6000 training episode 3.0 2.5 2.0 1.5 1.0 mean shaped return (500-episode window) "
+    },
+    {
+      "page": 16,
+      "word_count": 173,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint 0.02 0.05 0.08 0.12 0.16 diffusion noise SD 0.0 2.0 4.0 6.0 8.0 adaptation strength +0.00 +0.00 +0.00 +0.00 +"
+    },
+    {
+      "page": 17,
+      "word_count": 404,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint Single-cell time course Latent-state embedding Neural drift + noise fit Topology / Hodge uncertainty Control "
+    },
+    {
+      "page": 18,
+      "word_count": 536,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint Table 8: Validation inventory with explicit status. Test Status Evidence and limitation Quartic gradient barr"
+    },
+    {
+      "page": 19,
+      "word_count": 451,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint Candidate topological statistic Test invariance + noise stability Stable + calibrated under stated assumption"
+    },
+    {
+      "page": 20,
+      "word_count": 498,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint Table 9: Failure modes and required mitigations. Failure mode How it misleads Minimum mitigation False potent"
+    },
+    {
+      "page": 21,
+      "word_count": 626,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint 16 Control-theoretic conditions for schedules The optimal control law depends not only on topology but on the"
+    },
+    {
+      "page": 22,
+      "word_count": 534,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint 18 Limitations The principal limitation is scope of validation. All numerical outputs are synthetic and drive"
+    },
+    {
+      "page": 23,
+      "word_count": 329,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint A Derivation of the gradient action identity For the gradient SDE in Eq. (2), the normalized action is ST(φ) "
+    },
+    {
+      "page": 24,
+      "word_count": 453,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint C Synthetic model and benchmark specification The release code is the authoritative executable specification "
+    },
+    {
+      "page": 25,
+      "word_count": 377,
+      "opening_text": "Persistent Landscapes and Cell-Fate Control Theory–simulation preprint References [1] C. H. Waddington. The Strategy of the Genes. George Allen & Unwin, London, 1957. [2] J. X. Zho"
+    }
+  ]
+}

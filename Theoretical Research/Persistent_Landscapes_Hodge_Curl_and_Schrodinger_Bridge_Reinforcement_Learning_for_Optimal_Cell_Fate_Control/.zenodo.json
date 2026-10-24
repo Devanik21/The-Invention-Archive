@@ -1,0 +1,29 @@
+{
+  "title": "Persistent Landscapes, Hodge Curl, and Schrödinger-Bridge Reinforcement Learning for Optimal Cell-Fate Control",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "description": "Theory-plus-simulation preprint. Synthetic outputs only; not experimentally validated. No DOI has been assigned and no deposition is implied.",
+  "creators": [
+    {
+      "name": "Debnath, Devanik",
+      "orcid": "0009-0001-8310-6921"
+    }
+  ],
+  "keywords": [
+    "cellular reprogramming",
+    "persistent homology",
+    "stochastic control",
+    "Schrödinger bridge",
+    "reinforcement learning"
+  ],
+  "license": "cc-by-4.0",
+  "publication_date": "2026-10-24",
+  "version": "2026.10.24.1",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Devanik21/The-Invention-Archive",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

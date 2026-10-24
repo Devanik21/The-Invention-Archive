@@ -18,3 +18,5 @@ Research preprints are stored in isolated release directories. Each release incl
 | 2026.10.18 | Silica Light Meters | Physics-constrained inverse-learning preprint | [Silica Light Meters](Silica_Light_Meters_Physics_Constrained_Inverse_Learning_of_Past_Underwater_Light_Regimes_from_Diatom_Frustule_Photonic_Crystals/) |
 
 | 2026.10.24 | Aging as a Decoding Threshold: Repair Scheduling Under Fixed Maintenance Throughput | Synthetic-model methods preprint | [Aging_as_a_Decoding_Threshold_Repair_Scheduling_Under_Fixed_Maintenance_Throughput](Aging_as_a_Decoding_Threshold_Repair_Scheduling_Under_Fixed_Maintenance_Throughput/) |
+
+| 2026.10.24 | Persistent Landscapes, Hodge Curl, and Schrödinger-Bridge Reinforcement Learning for Optimal Cell-Fate Control | Theory-plus-simulation preprint | [Persistent_Landscapes_Hodge_Curl_and_Schrodinger_Bridge_Reinforcement_Learning_for_Optimal_Cell_Fate_Control](Persistent_Landscapes_Hodge_Curl_and_Schrodinger_Bridge_Reinforcement_Learning_for_Optimal_Cell_Fate_Control/) |

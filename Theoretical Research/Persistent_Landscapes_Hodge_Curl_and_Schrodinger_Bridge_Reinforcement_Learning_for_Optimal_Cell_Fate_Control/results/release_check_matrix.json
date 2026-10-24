@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "execution_timestamp_utc": "2026-10-24T14:55:51+00:00",
+  "repository": "Devanik21/The-Invention-Archive",
+  "target_branch": "main",
+  "release_slug": "Persistent_Landscapes_Hodge_Curl_and_Schrodinger_Bridge_Reinforcement_Learning_for_Optimal_Cell_Fate_Control",
+  "release_status": "BLOCKED",
+  "trigger_commit_sha": "960145ce198591ea600a6291a72b862d1a062ab5",
+  "release_artifact_commit_sha": null,
+  "final_head_sha": null,
+  "tag": null,
+  "tag_target_sha": null,
+  "pdf_sha256": "21af08297de80c49599e86ff84f90ad608b57dad2f863d9ea7d5e8d3a97b3fde",
+  "pdf_pages": 25,
+  "main_text_pages_physical": 20,
+  "checks": [
+    {
+      "name": "Synthetic numerical verification",
+      "status": "PASS",
+      "evidence": "results/verification_report.json"
+    },
+    {
+      "name": "Python syntax and deployment self-tests",
+      "status": "PASS",
+      "evidence": "results/deploy_self_test.log"
+    },
+    {
+      "name": "LaTeX build and page floors",
+      "status": "PASS",
+      "evidence": "results/latex_build_stdout.txt; results/pdfinfo.txt"
+    },
+    {
+      "name": "Bibliography and metadata preflight",
+      "status": "PASS",
+      "evidence": "paper.bib; metadata files; source preflight"
+    },
+    {
+      "name": "Rendered every page",
+      "status": "PASS",
+      "evidence": "results/pdf_pages/; results/pdf_contact_sheet.jpg"
+    },
+    {
+      "name": "Independent visual-quality review",
+      "status": "PENDING",
+      "evidence": "results/pdf_visual_review.json"
+    },
+    {
+      "name": "Remote read-back and Actions closure",
+      "status": "PENDING",
+      "evidence": "post-commit verification"
+    }
+  ],
+  "blockers": [
+    "Independent page-by-page review of the exact published PDF",
+    "Final remote Actions run reconciliation"
+  ]
+}

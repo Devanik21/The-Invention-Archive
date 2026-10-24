@@ -1,0 +1,1395 @@
+    Persistent Landscapes, Hodge Curl, and
+    Schrödinger-Bridge
+    Reinforcement Learning for Optimal Cell-Fate Control
+    Topological Obstructions to Cellular Reprogramming
+    Devanik Debnath (Devanik21)
+   Department of Electronics and Communication Engineering
+National Institute of Technology Agartala, India
+Manuscript type: Theory-plus-simulation research preprint
+Version: v2026.10.24.1
+Date: 24 October 2026
+Status: Synthetic computational study; no empirical single-cell data fitted
+Scope: Mathematical analysis and falsifiable hypotheses; not a validated cellular protocol
+
+
+
+    Abstract
+     A cell-fate landscape is a useful summary, but it is not automatically a thermodynamic potential or a control-cost surface. This
+paper tests a topology-aware workflow linking persistent homology, stochastic action, Hodge decomposition, Schrödinger bridges, and
+reinforcement learning. In a one-dimensional quartic gradient model, the analytic barrier is 0.25 and the matched H-zero persistence
+estimate is 0.249998, conditional on correct minimum–saddle pairing. Under observation noise, persistence calibration and pairing
+degrade. An analytic circle example with first Betti number one shows that constant control can minimize effort: a matched-endpoint
+pulse costs 3.33 times more, falsifying the unconditional claim that a loop forces pulsing. In 400 synthetic rollouts per policy, evenly
+spaced pulses succeed in 23.25% of episodes, while the tabular RL policy achieves 7.75% and constant dosing 0% in the chosen regime.
+RL therefore loses to a simple heuristic. All results are synthetic; no single-cell data were analyzed, no wet-lab experiments were run,
+and no biological efficacy is claimed.
+Keywords: cell-fate control; persistent homology; Freidlin–Wentzell action; Hodge decomposition; Schrödinger bridge; stochastic
+optimal control; reinforcement learning; synthetic validation
+Scope: synthetic mathematical benchmark only; not a validated cellular protocol.
+
+Persistent Landscapes and Cell-Fate Control                  Theory–simulation preprint
+
+
+
+
+Contents
+
+1   Research question and contribution                                               1
+
+2   Prior work and novelty boundary                                                  1
+
+3   State space, controls, and assumptions                                           3
+
+4   Barrier height, escape action, and H0 persistence                                4
+
+5   Noisy landscapes and the stability gap                                           7
+
+6   Non-gradient drift and Hodge decomposition                                       8
+
+7   Schrödinger bridges as a population-level objective                              9
+
+8   Neural stochastic dynamics: what was fitted                                     11
+
+9   Synthetic controller benchmark                                                  11
+
+10 Dose matching and schedule sensitivity                                           13
+
+11 Evaluation protocol and baselines                                                15
+
+12 Falsifiable predictions and decisive negative tests                              15
+
+13 Failure modes, robustness, and uncertainty                                       16
+
+14 A public-data path that is not yet executed                                      17
+
+15 Synthetic network models and model-class extension                               18
+
+16 Control-theoretic conditions for schedules                                       19
+
+17 Discussion: what the evidence allows us to say                                   19
+
+18 Limitations                                                                      20
+
+19 Conclusion                                                                       20
+
+A Derivation of the gradient action identity                                        21
+
+B Derivation of the circular-control counterexample                                 21
+
+C Synthetic model and benchmark specification                                       22
+
+D Minimal public-data analysis protocol                                             22
+
+E Reproducibility and interpretation                                                22
+
+
+
+
+                                                         i
+
+Persistent Landscapes and Cell-Fate Control                                                 Theory–simulation preprint
+
+
+
+
+1 Research question and contribution
+Cell identity is not directly a point in a one-dimensional potential. It is a high-dimensional and partially observed
+state shaped by transcriptional regulation, chromatin accessibility, signaling, metabolic context, cell-cycle state,
+and stochastic molecular events. The landscape metaphor is useful because it makes stability, transition routes, and
+competing attractors discussable in a common geometric language. It is also dangerous: a plotted scalar field may
+be an inferred summary rather than a thermodynamic potential, and an attractive visual metaphor can be mistaken
+for a quantitative law.
+    This paper asks whether topological summaries can impose useful constraints on minimum-effort control
+between cell-state distributions. The motivation is practical. Reprogramming protocols typically involve time-
+varying transcription-factor expression, media changes, or other interventions whose sequence, amplitude, and
+duration matter. Trial-and-error optimization is expensive. A data-driven controller might search a much larger
+schedule space, but the optimization becomes fragile if the state representation is noisy, the dynamical model is
+misidentified, or the objective ignores hidden paths.
+    The project begins with three connected claims: (i) basin barriers are recoverable as zero-dimensional persis-
+tence when a scalar gradient potential and the relevant minimum–saddle pairing are known; (ii) rotational drift and
+topological cycles may make temporal schedules more useful than constant inputs; and (iii) reinforcement learning
+(RL), regularized by stochastic path-control objectives, may discover schedules that exploit such structure. Each
+claim has a different epistemic status, so we do not bundle them as a single theorem.
+    The first part is a conditional mathematical identity, not a universal equivalence between persistence and
+stochastic control cost. The second is a conjecture that can fail: nonzero first homology alone does not require
+pulsed input. The third is an empirical question for a specified simulator. In our initial test, the RL policy does not
+outperform an evenly spaced pulse heuristic. This negative result changes the paper’s central contribution from an
+asserted topology-to-protocol law to an audit of where such a law would need additional assumptions.
+
+1.1 Contributions and non-contributions
+The paper provides four concrete outputs. First, it specifies the assumptions under which a potential barrier and an
+H0 persistence value coincide. Second, it gives an analytic circle counterexample to an unconditional loop-implies-
+pulsing statement. Third, it implements a deterministic, reproducible synthetic benchmark covering numerical
+action convergence, persistence under noise, neural drift fitting, and matched-budget protocol comparisons. Fourth,
+it records both favorable and unfavorable outputs and turns them into a falsifiable plan for eventual analysis of a
+public reprogramming time course.
+     It does not claim a new general theorem of cellular reprogramming; it does not claim that Hodge curl creates
+a particular biological control barrier; it does not report learning from real single-cell data; it does not claim
+RL superiority; and it does not propose a wet-lab dosing schedule. The principal methodological novelty claim
+is modest: an integrated, fail-explicit workflow combining conditional landscape persistence, a Hodge-aware
+dynamical interpretation, stochastic bridge objectives, and protocol benchmarks with explicit counterexamples. A
+systematic priority search could still reveal closer integrated approaches.
+
+2 Prior work and novelty boundary
+2.1 Landscape models of cell fate
+Classical developmental biology introduced the landscape metaphor as a way of visualizing constrained develop-
+mental trajectories. Modern quantitative treatments derive or estimate a landscape from dynamical models and use
+basin geometry to discuss stability and transitions. Work by Zhou and colleagues quantified landscape topography
+and paths for differentiation, reprogramming, and transdifferentiation, reporting a relation between barrier heights
+and transition rates in a specified gene-network model [2]. That history rules out a novelty claim for the broad
+association between cell-fate landscape barriers and fate-transition difficulty.
+
+                                                          1
+
+Persistent Landscapes and Cell-Fate Control                                                   Theory–simulation preprint
+
+
+
+                              Table 1: Evidence taxonomy for the paper’s main statements.
+
+Class             Meaning here                                   What the evidence supports
+P1                Mathematical identity under stated assump-     Quartic barrier–persistence match; minimum-energy con-
+                  tions                                          trol on the circle
+P2                Variational or stochastic-control statement    FW action relation for the specified gradient SDE; bridge
+                                                                 objective definition
+P3                Statistical or robustness claim                Synthetic noise sweeps and policy estimates within the
+                                                                 tested parameter grid only
+P4                Cross-domain mapping                           Using persistence and Hodge features as summaries for
+                                                                 control; requires empirical validation
+P5                Intuition or conjecture                        Cycles may indicate schedule sensitivity; pulse-count
+                                                                 lower bound remains unproved and is not supported gener-
+                                                                 ally
+
+
+    The relevant gap is narrower: an inferred scalar landscape and the actual stochastic control problem may differ
+in metric, noise covariance, hidden variables, and non-gradient flux. A persistence interval is a property of a filtered
+scalar function. A Freidlin–Wentzell quasipotential is a dynamical quantity defined relative to a drift and noise
+covariance. They coincide in special cases, but neither object can silently substitute for the other. This distinction is
+central to the present audit.
+
+2.2 Persistent homology and uncertainty
+Persistent homology records how connected components, loops, and higher-dimensional features appear and
+disappear as a filtration threshold changes. The foundational theory and stability results give ways to compare
+persistence diagrams under controlled perturbations [3, 4]. For a Morse potential, the elder-rule pairing in H0 can
+associate a local minimum with the saddle level at which its component joins an older component. The interval
+length is then a minimum–saddle height difference. This is not automatically the barrier from an arbitrary source
+state to an arbitrary target basin: the pairing must describe that transition, and a scalar potential must exist.
+    Data-derived landscapes add estimation error. Smoothing, feature selection, dimensionality reduction, and
+sampling density affect critical points and their pairings. Persistence stability can control changes in the diagram
+under a uniform perturbation of the scalar function, but it does not guarantee that the learned function is the correct
+biological potential or that its minimum–saddle pairing corresponds to the relevant dynamic escape route. The
+noise experiment in this paper demonstrates a particularly blunt failure mode: with increasing observation noise,
+estimated persistence becomes biased upward and the target pairing is rarely identified by the simple grid-based
+procedure.
+
+2.3 Stochastic control and large deviations
+For small-noise diffusions, large-deviation theory assigns an action to paths and gives exponential-scale predictions
+for rare transitions. Kramers-type escape approximations relate transition rates to barrier structure under suitable
+assumptions [5, 6]. The gradient-diffusion setting is especially interpretable: for an isotropic-noise SDE with drift
+equal to minus the gradient of a potential, the quasipotential cost to cross a saddle agrees with the potential increase
+in the usual noise normalization. In non-gradient systems, the quasipotential solves a dynamical variational problem
+and generally cannot be reconstructed from a convenient scalar projection alone.
+
+2.4 Hodge structure, optimal transport, and RL
+Hodge decomposition separates gradient-like, divergence-free, and harmonic components relative to a chosen
+domain, metric, boundary convention, and discretization. Related combinatorial formulations have been applied
+to ranking and cyclic inconsistency [7]. The decomposition does not equate every curl component to a nontrivial
+global homology class: local rotational drift can exist on a simply connected domain. Conversely, a space with
+
+
+                                                           2
+
+Persistent Landscapes and Cell-Fate Control                                                  Theory–simulation preprint
+
+
+
+                        Table 2: Closest literatures and the claim they do—and do not—license.
+
+Literature                    Established contribution                    Boundary for this paper
+Waddington / landscape mod- Relate basin/barrier geometry to cell-fate    Does not make every inferred landscape a ther-
+els                         stability and routes                          modynamic potential
+Persistent homology         Describes multiscale connectivity and has     Does not identify dynamical escape cost without
+                            stability theorems                            a model-to-function correspondence
+Freidlin–Wentzell / Kramers Action-based rare-event and escape-rate       Gradient barrier formulas depend on drift/noise
+                            theory                                        assumptions
+Hodge decomposition         Splits discrete or continuous fields into     Curl is not synonymous with global H1 ; result
+                            components under defined geometry             depends on the domain and boundaries
+Schrödinger bridge / OT     Matches distributions through low-relative-   Endpoint transport alone does not establish
+                            entropy stochastic paths                      causal cell trajectories
+pbn-STAC and other RL ap- Learn reprogramming interventions in net-       Our toy benchmark is not a superiority result
+proaches                    work models                                   over those methods
+
+
+nontrivial first Betti number does not imply that a particular control objective favors pulses.
+    Optimal transport methods infer population-level correspondences between time-stamped single-cell distribu-
+tions. Schrödinger bridges formulate a stochastic analogue, selecting a path measure close in relative entropy to a
+reference process while meeting endpoint constraints. Contemporary work explicitly studies Schrödinger-problem
+formulations for cell-fate trajectory inference, including mechanistic bursty gene-expression references [10, 11].
+Deep RL has also been proposed for cellular reprogramming in Boolean and probabilistic Boolean gene-regulatory
+networks: pbn-STAC is an especially close neighbor [8]. The 2026 GATTACA framework further combines graph
+neural networks with deep RL to control Boolean biological networks at scale [9]. These systems establish that
+RL-based network control is not itself a novelty claim. The present study differs in its synthetic continuous-state em-
+phasis and its explicit counterexample-driven audit of proposed links between persistence, non-gradient dynamics,
+and schedules; it does not show superiority over these prior methods.
+
+2.5 Research gap and positioning
+We find substantive overlap in each ingredient and related efforts combining cell-fate inference, stochastic transport,
+landscape estimation, and RL. The paper therefore does not claim the first use of topology, RL, or Schrödinger
+bridges in cellular dynamics. The narrower question is whether a carefully separated set of topological and
+dynamical diagnostics can predict when a schedule advantage is plausible and when that prediction should be
+rejected. This work is a first reproducible stress test, not a validated universal solution. Search coverage included
+primary literature, review and methods articles, DOI/PubMed/PMC records, the pbn-STAC code repository, and
+GEO accessions. It was a focused search, not an exhaustive patent or all-databases priority review.
+
+3 State space, controls, and assumptions
+Let Xt ∈ X ⊆ Rd represent a latent cell-state embedding, not the full molecular state. Observations Yt are produced
+by an observation map h with measurement noise. A control ut ∈ U represents a coarse-grained intervention such
+as a transcription-factor induction level or media perturbation; the present simulation uses a scalar abstract control
+and does not map it to a biological dose.
+    We define the controlled diffusion
+                                                               √
+                                    dXt = b(Xt ) + B(Xt )ut dt + 2ε σ (Xt )dWt ,                                     (1)
+
+where b is the uncontrolled drift, B maps control into state velocity, σ determines noise geometry, and ε controls
+noise scale. All are unknown in a real application and would need uncertainty estimates. In our simulator the state
+is one-dimensional and synthetic. The trained neural estimator approximates a known synthetic drift; it is not
+
+                                                          3
+
+Persistent Landscapes and Cell-Fate Control                                                       Theory–simulation preprint
+
+
+
+                                     Table 3: Notation and dimensional conventions.
+
+Symbol                  Definition                                  Interpretation
+Xt                      Latent state in X                           Reduced expression-state coordinate or vector
+Yt                      Observation of Xt                           Noisy measured representation
+b(x)                    Uncontrolled drift                          State velocity before intervention
+B(x)u                   Control contribution                        Abstract intervention action
+σ (x), ε                Diffusion geometry, noise scale             Must be estimated/calibrated
+V (x)                   Scalar potential, when it exists            Not assumed for arbitrary drift
+∆V                      V (xs ) −V (xm )                            Potential rise from minimum to saddle
+Pers0                   H0 interval length                          Death threshold minus birth threshold
+S(φ )                   FW action of path φ                         Path cost under specified drift/noise
+µt , νt                 Population probability measures             Marginal distributions at time t
+D(u), E(u)              L1 dose, quadratic effort                   Distinct constraints/objectives
+β                       Synthetic drift-shape parameter             Dimensionless simulator parameter
+
+
+trained on experimental transcriptomics.
+    A protocol is a measurable control schedule satisfying amplitude, total exposure, and duration constraints. We
+separate a nominal dose budget D(u) = 0T ∥ut ∥1 dt from a quadratic effort E(u) = 12 0T ut⊤ Rut dt. These quantities
+                                         R                                            R
+
+are not interchangeable. A matched L1 dose does not guarantee matched biological toxicity, energy, or off-target
+effect. The synthetic benchmark matches nominal scalar exposure and reports the quadratic energy only in the
+analytic rotor example.
+    The endpoint is a target set B representing a desired state region. For an individual trajectory, success means
+XT ∈ B; a population objective may instead require a terminal distribution µT to match a reference ν1 . The
+distinction matters because the latter values heterogeneity and can be more faithful to population reprogramming
+than optimizing a mean trajectory. No state region in the synthetic model is labelled “pluripotent”; it is a target set
+in an abstract bistable system.
+
+3.1 Assumptions that must be exposed
+The simple barrier identity assumes a smooth enough scalar potential with a nondegenerate local minimum and
+relevant index-one saddle, sublevel-set filtration of precisely that potential, and correct persistence pairing. The
+simple FW interpretation further assumes an isotropic-noise gradient diffusion with a stated normalization and a
+transition governed by the relevant saddle. The controller comparison assumes common initial-state distributions,
+horizon, action budget, and success definition. The neural model assumes a specified state representation and
+training sampling process. None of these assumptions is guaranteed by snapshot single-cell data.
+
+4 Barrier height, escape action, and H0 persistence
+4.1 Gradient setting
+Consider the small-noise diffusion                               √
+                                              dXt = −∇V (Xt )dt + 2ε dWt .                                               (2)
+For an absolutely continuous path φ : [0, T ] → X , the Freidlin–Wentzell action under this normalization is
+                                                      Z T
+                                                  1
+                                        ST (φ ) =           ∥φ̇ (t) + ∇V (φ (t))∥2 dt.                                   (3)
+                                                  4    0
+
+For a path climbing from a minimum xm to a saddle xs , the identity
+
+                                        1              1
+                                          ∥φ̇ + ∇V ∥2 = ∥φ̇ − ∇V ∥2 + φ̇ · ∇V                                            (4)
+                                        4              4
+
+                                                               4
+
+Persistent Landscapes and Cell-Fate Control                                                                            Theory–simulation preprint
+
+
+
+
+                                             Synthetic Waddington-like potential: geometry is not the control law
+                                                                                                                                  1.44
+                                       1.0
+                                                                                                                                  1.28
+
+                                                                                                                                  1.12
+       orthogonal state coordinate y
+
+
+                                       0.5
+
+
+
+
+                                                                                                                                     synthetic potential V(x, y)
+                                                source basin                                            target basin
+                                                                                                                                  0.96
+
+                                                                                                                                  0.80
+                                       0.0
+                                                                                                                                  0.64
+                                                                           saddle                                                 0.48
+                                       0.5
+                                                                                                                                  0.32
+
+                                       1.0                                                                                        0.16
+
+                                                                                                                                  0.00
+                                              1.5          1.0       0.5            0.0           0.5         1.0       1.5
+                                                                       latent fate coordinate x
+Figure 1: Synthetic quartic landscape V (x) = (x2 − 1)2 /4. The minima and central saddle define a potential barrier of 0.25 in
+this example. The visualization is a synthetic mathematical object, not a fitted cell-state landscape.
+
+
+shows that its action is bounded below by V (xs ) −V (xm ); the lower bound is approached along the time-reversed
+deterministic descent trajectory when such a heteroclinic minimizer exists. Thus the minimum action equals
+∆V in this idealized regime. The physical transition-rate exponent scales as ∆V /ε under Eq. (2); prefactors and
+finite-noise corrections are not encoded by the barrier alone.
+
+4.2 Persistence pairing
+Given the sublevel filtration V −1 ((−∞, a]), connected components are born at local minima and merge at saddle
+levels. If a particular minimum is paired to the index-one saddle separating it from the older component according
+to the elder rule, its H0 persistence is
+
+                                                                 Pers0 (xm , xs ) = V (xs ) −V (xm ) = ∆V.                                                         (5)
+
+Equation (5) is an equality of two height differences taken from the same scalar function. It is not a theorem that
+a persistence interval computed from an arbitrary learned score equals the minimal control energy, a biological
+energy, or the quasipotential barrier for non-gradient dynamics. For anisotropic noise, state-dependent diffusion,
+non-gradient drift, or incorrect source-saddle pairing, the relevant quasipotential is defined by the controlled action
+and may differ from raw sublevel persistence.
+
+4.3 Numerical action check
+The verification script discretizes candidate paths and evaluates the action integral at successively refined resolutions.
+The absolute error declines from approximately 8.02 × 10−5 on the coarsest grid to 1.48 × 10−6 on the finest grid
+in the saved convergence test. This is evidence that the implemented quadrature converges toward the analytic
+result in this toy case. It is not an independent test of the gradient assumption or evidence that a real cell-state
+transition follows that path.
+
+
+
+                                                                                          5
+
+Persistent Landscapes and Cell-Fate Control                                                           Theory–simulation preprint
+
+
+
+
+                                       Exact identity in the symmetric gradient benchmark
+                  0.5
+
+                  0.4
+                                                                         V = 0.25 = H0 persistence
+                  0.3
+           V(x)
+
+
+
+
+                  0.2
+
+                  0.1
+
+                  0.0
+                        1.5             1.0          0.5           0.0          0.5           1.0            1.5
+                                                                   x
+Figure 2: Conditional match between the analytic potential barrier and the grid-estimated H0 persistence for the quartic
+example. Numerical agreement is a unit test of the specified scalar landscape and pairing; it does not validate a general
+biological mapping.
+
+
+
+
+                              Table 4: Analytic and numerical checks for the quartic toy potential.
+
+Quantity                                                                                      Value                       Status
+Potential minimum V (−1)                                                                   0.000000                   Analytic
+Central saddle V (0)                                                                       0.250000                   Analytic
+Analytic barrier ∆V                                                                        0.250000                   Analytic
+Grid persistence estimate                                                                  0.249998      Numerically recovered
+Absolute barrier–persistence mismatch                                                   1.69 × 10−6        Synthetic unit check
+Coarse-grid FW-action absolute error                                                    8.02 × 10−5      Numerical convergence
+Fine-grid FW-action absolute error                                                      1.48 × 10−6      Numerical convergence
+
+
+
+
+                                                               6
+
+Persistent Landscapes and Cell-Fate Control                                                                   Theory–simulation preprint
+
+
+
+
+                                                  Persistence is stable within a range, not noise-free
+                                                                                                true barrier / persistence = 0.25
+                                                                                                median and 90% interval
+                                   0.260
+         H0 persistence estimate
+
+                                   0.255
+
+
+                                   0.250
+
+
+                                   0.245
+
+
+                                   0.240
+
+
+                                           0.04            0.02             0.00             0.02               0.04
+                                                          Gaussian potential-observation noise SD
+Figure 3: Synthetic perturbation study with 40 replicates per noise level. As observation noise increases, the estimated
+persistence moves upward and the intended minimum–saddle pairing becomes less frequently identifiable. Error quantiles and
+pairing rates are outputs of the released script.
+
+
+5 Noisy landscapes and the stability gap
+The stability theorem for persistence diagrams is valuable because a small uniform perturbation of a scalar function
+constrains the bottleneck distance between diagrams. But the current use case introduces multiple uncertainties
+at once: observed counts are noisy; a low-dimensional embedding may distort distances; the true drift may be
+non-gradient; the potential may be misspecified; and the minimum-saddle pairing relevant to a transition can change
+under perturbation. The theory does not erase these distinctions.
+    We study one controlled perturbation: add Gaussian observation noise to sampled values of the synthetic quartic
+potential, recompute the grid-based persistence, and assess whether the expected source–saddle feature is identified.
+At zero noise, the median estimated persistence is 0.24994 and the target pairing is found in 100% of replicates.
+At standard deviation 0.01, median persistence is 0.25910 and pairing rate 72.5%. At noise 0.03, the median is
+0.28643 and pairing rate 35%; at noise 0.12, median persistence reaches 0.42190 and pairing rate is only 32.5%.
+The median absolute error increases from about 5.95 × 10−5 without noise to 0.17190 at noise 0.12.
+    This is a warning, not a universal estimate of the noise robustness of persistent homology. The simple grid
+and pairing procedure is intentionally transparent but crude. A production method should use a stated smoothing
+estimator, confidence sets for critical points, bootstrap persistence, sensitivity to embedding and metric, and
+comparisons across plausible landscapes. The numerical trend cannot be explained away by a stability theorem
+because the relevant function error, sampling scheme, and feature correspondence are not controlled as in the
+theorem’s hypotheses.
+
+5.1 Implication for control
+A protocol optimizer should not treat a persistence estimate as a precisely known barrier. One defensible design is a
+robust objective over an ensemble of fitted landscapes, with a penalty for policies that succeed only under a fragile
+persistence pairing. Another is to require the relevant interval to be stable over a prespecified range of preprocessing
+choices. Both choices trade performance for epistemic robustness and should be reported explicitly. The current
+study does neither policy-level uncertainty propagation nor real-data bootstrapping, so that stage remains future
+work.
+
+
+                                                                        7
+
+Persistent Landscapes and Cell-Fate Control                                                   Theory–simulation preprint
+
+
+
+
+                             A minimal toggle-like regulatory motif (conceptual graph)
+                                                         Pulse input
+
+
+
+
+                    TF-A                                                                         TF-B
+
+
+
+
+                                                         Target state
+
+
+Figure 4: Schematic toggle-switch regulatory network used to orient the synthetic model class. The graph is conceptual and
+does not encode experimentally inferred edge strengths.
+
+
+6 Non-gradient drift and Hodge decomposition
+A gradient system is only one special case. In a domain with an appropriate inner product and boundary conditions,
+a vector field can be decomposed into gradient, co-exact/curl, and harmonic components. In a schematic Euclidean
+notation,
+                                          b(x) = −∇V (x) + c(x) + h(x),                                        (6)
+where c is a rotational component orthogonal to gradients under the chosen Hodge inner product and h is a harmonic
+component associated with global topology and boundary conditions. This schematic equation hides important
+functional-analytic details: the decomposition is not unique until the domain, metric, boundary conditions, and
+function spaces are specified. A discrete state-transition graph has its own edge-flow decomposition, which is not
+automatically equivalent to a continuous gene-expression vector field.
+    The central interpretive caution is that local circulation and global topology are different objects. A planar
+vector field can have nonzero local curl even on a simply connected domain. A space with nontrivial H1 can
+host loops, yet a specific endpoint-control problem on it can still have a constant optimal input. Thus the testable
+hypothesis is not “curl creates pulses” but rather: under a stated control-affine dynamics, dose constraint, noise
+model, endpoint requirement, and set of competing schedules, a measurable curl-related statistic predicts the
+relative value of temporal variation beyond information already contained in drift, noise, and state representation.
+
+6.1 A circle counterexample
+Take the state space S1 with angular coordinate θ , natural drift ω, and scalar control u:
+
+                                    θ̇ (t) = ω + u(t),        θ (0) = 0,   θ (T ) = Θ.                                 (7)
+                                                                                                 RT      2
+Among square-integrable controls satisfying the endpoint condition, minimize E(u) =                0 u(t) dt.   Since the
+endpoint imposes 0T u(t)dt = Θ − ωT , Cauchy–Schwarz gives
+                R
+
+
+                                                            (Θ − ωT )2
+                                                  E(u) ≥               ,                                               (8)
+                                                                T
+
+                                                              8
+
+Persistent Landscapes and Cell-Fate Control                                                          Theory–simulation preprint
+
+
+
+
+                    Repressilator-like directed cycle: motif existence is not a pulse theorem
+                      G2
+
+
+
+
+                                                                                                       G1
+
+
+
+
+                      G3
+
+Figure 5: Directed cycle graph illustrating circulation as a structural motif. This graph does not establish that the neural-state
+landscape has a corresponding nontrivial harmonic component; that requires a defined complex, metric, and data-supported
+flow.
+
+
+with equality if and only if u is constant almost everywhere. For the declared parameters T = 3, ω = 0.2, and
+Θ = 1, the optimal constant is u∗ = 0.13333 and its energy is 0.05333. A rectangular pulse active for 30% of the
+horizon and chosen to satisfy the same endpoint has energy 0.17778, a ratio of 3.333. The space has first Betti
+number b1 = 1, yet the constant input wins exactly.
+    This counterexample falsifies an unconditional claim that any H1 cycle between source and target necessarily
+makes constant dosing suboptimal. It does not rule out pulsing in non-gradient multi-attractor systems, state-
+dependent input channels, thresholded success objectives, or environments where a pulse crosses a transient
+controllability window. Those are narrower conditional questions that must be tested case by case.
+
+7 Schrödinger bridges as a population-level objective
+Single-cell sequencing generally samples different cells at different time points. A population snapshot provides an
+empirical distribution, not a movie of the same cell. If µ0 and νT are source and target state distributions and P is a
+reference path measure induced by an uncontrolled diffusion, the Schrödinger bridge selects a path measure Q that
+minimizes relative entropy subject to endpoint marginals:
+
+                                              Q⋆ =       arg min          DKL (Q∥P).                                          (9)
+                                                     Q: Q0 =µ0 , QT =νT
+
+Under compatible diffusion assumptions, this path-space KL objective corresponds to a stochastic control effort.
+The exact conversion depends on diffusion and normalization; a model cannot use the phrase “minimum energy”
+without specifying the reference process and control metric. Soft endpoint penalties, finite samples, and misspecified
+noise change the optimization problem.
+    For cell-state control the bridge is a useful complement to an individual-target hitting probability. It asks for a
+low-relative-entropy evolution of an entire population while matching target marginals. This can discourage an
+optimizer from sending only a small fraction of cells to the desired state while ignoring the rest. On the other hand,
+a matching bridge between snapshots does not by itself identify cell lineages or establish a causal pathway. Multiple
+
+                                                                 9
+
+Persistent Landscapes and Cell-Fate Control                                                                             Theory–simulation preprint
+
+
+
+
+                                             A state space with b1 = 1 can still have constant optimal control
+
+                                 0.4
+
+                                 0.3
+           control u(t)
+
+
+                                                                    constant optimal control     single rectangular pulse, same endpoint
+                                 0.2
+
+                                 0.1
+
+                                 0.0
+
+                                 1.0
+           unwrapped angle (t)
+
+
+
+
+                                 0.8
+                                 0.6
+                                 0.4
+                                 0.2
+                                 0.0                                       constant trajectory     pulse trajectory         target angle
+                                       0.0            0.5           1.0              1.5         2.0              2.5              3.0
+                                                                                     time
+Figure 6: Analytic counterexample on S1 : a nontrivial loop does not force a pulsed control. With endpoints matched, the
+constant control minimizes quadratic energy and the 30%-duration pulse costs 3.33 times as much.
+
+
+path distributions can share observed marginals, and the answer depends on the reference dynamics and cost.
+    A plausible topology-aware objective could add a robust penalty for uncertain basin escape and a schedule-
+regularity penalty, for example
+
+                                              J(u) = λSB DKL (Qu ∥P) + λD D(u) + λS R(u) + λU Ulandscape (u),                                (10)
+
+where R measures temporal complexity and Ulandscape is a penalty for sensitivity to uncertainty over fitted dynamics
+or persistence pairings. This is a design template rather than a solved theorem. The weights must be chosen and
+sensitivity-analyzed; the objective could also create perverse trade-offs if target mass, toxicity, and uncertainty are
+not defined in measurable terms.
+
+
+                                              Table 5: Objective terms and the specific question each term answers.
+
+Term                                         Role                                                Limitation
+Bridge KL                                    Keeps controlled paths close to reference dynam-    Depends on reference process and diffusion
+                                             ics while matching marginals                        geometry
+Dose D(u)                                    Limits total intervention exposure                  A scalar budget is not a toxicity model
+Schedule regularity R                        Penalizes rapid switching or complex pulse trains   Regularization can rule out a genuinely useful
+                                                                                                 transient input
+Landscape uncertainty                        Discourages schedules that depend on unstable       Requires a calibrated ensemble; not imple-
+                                             inferred basins                                     mented in the toy RL benchmark
+Terminal            distribution             Rewards population-level state matching             Marginals may not identify unique lineages or
+loss                                                                                             mechanisms
+
+
+
+                                                                                10
+
+Persistent Landscapes and Cell-Fate Control                                                      Theory–simulation preprint
+
+
+
+
+                                       Synthetic neural-SDE drift fit (test R 2=1.000)
+                    4                                                                           known synthetic drift
+                                                                                                MLP-fitted drift
+                    3                                                                           model discrepancy
+
+                    2
+                    1
+       drift b(x)
+
+
+
+
+                    0
+                    1
+                    2
+                    3
+                    4
+                           1.5          1.0          0.5          0.0        0.5          1.0          1.5
+                                                      latent fate coordinate x
+Figure 7: Synthetic neural drift fit. The held-out transitions are generated by the same known simulator family as training
+data, so the high score tests implementation and interpolation under a favorable synthetic distribution; it is not evidence of
+generalization to experimental gene-expression data.
+
+
+8 Neural stochastic dynamics: what was fitted
+A data-driven drift model can support control only if its predictive accuracy is evaluated on transitions not used for
+fitting, noise is estimated separately, and errors in state regions important to the control policy are characterized.
+We generated a synthetic stochastic dataset from the declared simulator, split 7,200 transitions for training and
+1,800 for testing, then fitted an MLP regression model to predict drift. The test drift RMSE is 0.01169, and test R2
+is 0.999927. The estimated diffusion standard deviation is 0.08146 against a synthetic truth of 0.08.
+     These numbers are useful as software checks but are deliberately not framed as biological performance. The
+train/test split is drawn from a common simulator rather than a held-out perturbation family, different cell line, donor,
+or laboratory. A meaningful biological test would require independent perturbation settings and donors; calibration
+of process versus measurement noise; uncertainty-aware prediction intervals; and comparison against simple
+baselines such as linear drift, generalized additive models, or mechanistic gene-regulatory equations. Predictive
+fit must be evaluated near the boundary of the target basin, since average RMSE can hide errors where control
+decisions are most sensitive.
+
+8.1 Minimal fit protocol for real data
+For a future single-cell application, the analysis should start from an explicitly documented processed matrix and
+sample metadata, preserve donor and batch groupings, and pre-register the state representation. It should avoid
+leakage from future time points into drift training. Model choice should be compared with linear and mechanistic
+baselines. Residual diffusion should not be assumed isotropic unless diagnostics support that simplification. The fit
+should be accompanied by posterior or bootstrap ensembles, calibration metrics, out-of-distribution tests, and an
+explicit stop rule if the predicted drift is not identifiable from cross-sectional measurements.
+
+9 Synthetic controller benchmark
+The primary control test uses an abstract noisy bistable state xt and an intervention with a matched nominal dose
+upper bound of 3.2. We compare four schedules: constant dosing, evenly spaced pulses, a myopic greedy-pulse
+
+
+                                                             11
+
+Persistent Landscapes and Cell-Fate Control                                                                           Theory–simulation preprint
+
+
+
+Table 6: Matched-budget synthetic policy benchmark. All values are from 400 simulator rollouts per policy; no cell data are
+involved.
+
+Policy                                                                           Successes           Success rate   Mean dose   Mean terminal x
+Constant-dose                                                                               0/400          0.000        3.200            −0.6672
+Evenly spaced pulses                                                                       93/400         0.2325        3.165             0.2469
+Greedy pulses                                                                              11/400         0.0275        3.200            −0.8219
+Tabular RL policy                                                                          31/400         0.0775        3.073             0.0045
+
+
+                                         Synthetic controller trajectories (median and interquartile band)
+                        0.75         constant-dose                RL policy
+                                     evenly-spaced pulses         target threshold
+                        0.50         greedy pulses
+
+                        0.25
+      latent state xt
+
+
+
+
+                        0.00
+
+                        0.25
+
+                        0.50
+
+                        0.75
+
+                        1.00
+                               0.0           0.5            1.0      1.5             2.0            2.5       3.0       3.5        4.0
+                                                                                 time
+Figure 8: Median synthetic state trajectories under the evaluated policies. Endpoint and state paths come from the simulator;
+they should not be interpreted as gene-expression trajectories.
+
+
+controller, and a tabular Q-learning policy. Each benchmark contains 400 evaluation episodes using declared seeds
+and the same target condition. The pulse schedule uses up to eight pulses, and the constant schedule distributes the
+same nominal capacity over the full horizon. The objective is endpoint success at the end of the simulation horizon,
+not biological reprogramming efficiency.
+    The key result is negative for the RL hypothesis. Evenly spaced pulses succeed in 93/400 episodes (23.25%),
+compared with 31/400 (7.75%) for the trained tabular RL policy, 11/400 (2.75%) for the greedy policy, and 0/400
+for constant dosing in this one parameter regime. The RL policy also uses a mean nominal dose of 3.073 against the
+budget ceiling 3.2, whereas the even pulse policy uses 3.165. Because pulse use and constant dose are constrained
+in a simplified simulator, the empirical ordering is a property of these chosen dynamics and reward function; it is
+not a general conclusion about real cell protocols.
+
+9.1 Interpretation of the controller failure
+The current result is not rescued by pointing to the RL policy’s mean terminal state being closer to zero than the
+pulse policy. The success indicator is defined by target-set membership, so the metric relevant to the benchmark
+is the success probability, with dose and terminal state as secondary diagnostics. The policy was trained under a
+reward that mixes success, failure, progress, and exposure penalty. Different reward shaping or training budgets
+might change its ranking, but tuning until RL wins would convert a falsifiable comparison into a desired outcome.
+The published result should preserve this failed comparison and motivate stronger baseline coverage.
+
+                                                                            12
+
+Persistent Landscapes and Cell-Fate Control                                                                       Theory–simulation preprint
+
+
+
+
+                                                              Tabular Q-learning in the known synthetic model
+
+        mean shaped return (500-episode window)
+                                                  1.0
+
+
+                                                  1.5
+
+
+                                                  2.0
+
+
+                                                  2.5
+
+
+                                                  3.0
+                                                        0   1000       2000           3000        4000          5000         6000
+                                                                               training episode
+Figure 9: Training-return record for the tabular RL agent. The displayed learning curve is diagnostic of the implemented
+synthetic objective, not proof of convergence to a global optimum. The simple pulse heuristic remains a stronger test-set
+baseline.
+
+
+   The evenly spaced schedule is a heuristic, not an oracle. Before making claims about policy quality, future tests
+should include dynamic programming on a discretized known-state model, model-predictive control with a validated
+dynamics model, cross-entropy method, stochastic optimal control where tractable, and multiple independent RL
+seeds. The policy comparison also needs uncertainty intervals and a pre-registered primary outcome. Here the
+observed binomial standard errors are approximately 0.021 for the pulse schedule and 0.013 for RL; even these
+simple uncertainty measures show that the current finite simulation is not precise enough to rank small differences.
+
+10 Dose matching and schedule sensitivity
+Equal nominal dose is an important but incomplete control. The constant schedule uses a low level at every step. A
+pulse schedule can use high amplitude for fewer steps, and the same L1 integral does not mean the same internal
+state exposure when the system is nonlinear. Nor does it control the time derivative, frequency content, duration
+above threshold, or toxicity. We therefore define the dose budget explicitly, keep the horizon fixed, and report the
+amplitude bound used by the pulse baseline. This is a fairer comparison than comparing protocols with unequal
+total administered input, but it is not a complete experimental equivalence.
+    The sensitivity grid spans five values each for the adaptation parameter and noise scale, with 40 trials per policy
+and cell (50 cells in total). When the adaptation parameter is zero, both simple policies succeed nearly always at
+the lowest-noise settings. For adaptation parameter 6—the setting of the headline benchmark—the evenly spaced
+pulses are stronger than constant dosing across the reported noise grid; by noise standard deviation 0.12, their
+success frequency is 0.35 versus 0 for constant dosing. The result changes with parameter settings, so no general
+claim that temporal variation always wins is warranted.
+    The increase in success frequency with noise at high adaptation is a model-dependent stochastic-resonance-like
+pattern, not a validated biological claim. It should be compared against alternative reward definitions and trajectory
+metrics. A basic check is whether apparent success is driven by broad noise-induced target crossing rather than
+control. That comparison is not complete here and is an explicit limitation.
+
+
+
+
+                                                                                 13
+
+Persistent Landscapes and Cell-Fate Control                                                                     Theory–simulation preprint
+
+
+
+
+                        Pulse minus constant success rate (synthetic, fixed nominal-dose budget)
+                                                                                                                          1.00
+                             8.0      +0.00           +0.00           +0.07            +0.17            +0.25
+                                                                                                                          0.75
+
+                                                                                                                          0.50
+                             6.0      +0.00           +0.07           +0.15            +0.35            +0.42
+
+
+
+
+                                                                                                                                 success-rate difference
+       adaptation strength
+
+
+
+
+                                                                                                                          0.25
+
+                             4.0      +0.95           +0.72           +0.72            +0.55            +0.57             0.00
+
+                                                                                                                           0.25
+                             2.0      +0.93           +0.68           +0.62            +0.43            +0.35
+                                                                                                                           0.50
+
+                             0.0      +0.00           +0.00           +0.00            +0.00            +0.03              0.75
+
+                                                                                                                           1.00
+                                      0.02            0.05             0.08             0.12             0.16
+                                                                diffusion noise SD
+Figure 10: Success-frequency sensitivity sweep over the synthetic adaptation and noise grid. Every cell has 40 trials. This
+plot reveals parameter dependence rather than a universal advantage for pulsing.
+
+
+
+
+Table 7: Selected sensitivity outcomes at adaptation parameter β = 6. Each percentage is a frequency from 40 simulated
+trials.
+
+Noise SD                     Constant success   Pulse success   Interpretation
+     0.02                               0/40            0/40    Difficult target in this regime
+     0.05                               0/40            3/40    Pulse advantage remains low in absolute terms
+     0.08                               0/40            6/40    Consistent with main-benchmark ordering
+     0.12                               0/40           14/40    Largest pulse frequency in the selected range
+     0.16                               1/40           18/40    Success rises with noise for this model; not a biological law
+
+
+
+
+                                                                              14
+
+Persistent Landscapes and Cell-Fate Control                                                                 Theory–simulation preprint
+
+
+
+
+                      Proposed analysis pipeline; dataset fitting is a future empirical stage
+
+
+
+                   Single-cell          Latent-state           Neural drift +       Topology / Hodge          Control
+                  time course           embedding                noise fit             uncertainty          benchmark
+
+
+
+
+     Required guards: held-out time points · bootstrap persistence · matched-dose baselines · no biological claim from synthetic data
+
+
+
+
+Figure 11: Workflow diagram from model specification through synthetic verification and a separately gated future public-data
+analysis. The public-data branch is a plan only; it is not shown as completed.
+
+
+11 Evaluation protocol and baselines
+We separate three layers of evidence: (i) analytic identities and counterexamples, (ii) synthetic model tests, and
+(iii) real-data and ultimately experimental tests. In the current paper only the first two have results. The public
+single-cell resource is identified for the future third layer, but its matrix is not downloaded or analyzed in the current
+cycle. This separation is central to the interpretation of every metric.
+     A robust evaluation should include: a gradient potential with known barrier; a non-gradient system with a known
+quasipotential or numerical action solution; a circular or graph-structured state space; perturbation experiments
+over data noise; multiple control budgets; a policy test with matched action constraints; and a counterexample to
+each proposed implication. We implemented only a subset of this matrix. The completed analytic tests include the
+quartic landscape and circle endpoint problem; the simulation covers noisy persistence, synthetic drift fitting, and
+one policy regime plus a sensitivity grid. Full multi-attractor networks, uncertainty propagation from neural drift
+into policies, and a genuine Schrödinger bridge solver are not implemented.
+
+12 Falsifiable predictions and decisive negative tests
+The paper proposes a restrained set of predictions that would make a future study scientifically useful even if the
+framework fails. They are scoped to models and datasets, not phrased as clinical or wet-lab instructions.
+
+12.1 Prediction A: barrier–persistence agreement has a conditional domain
+In systems known to be close to gradient diffusions, and when the source minimum is correctly paired with the
+saddle separating it from the target basin, bootstrap persistence estimates should track an independently estimated
+quasipotential barrier within a tolerance that accounts for potential-fit and discretization error. The prediction is
+falsified if the relationship fails after controlling state representation, metric, sample size, and model uncertainty—or
+if a non-gradient alternative consistently predicts transition rates better from dynamical action than from persistence.
+This test must compare at least one non-gradient system, not only repeat the same quartic toy example.
+
+
+
+
+                                                                   15
+
+Persistent Landscapes and Cell-Fate Control                                                       Theory–simulation preprint
+
+
+
+                                       Table 8: Validation inventory with explicit status.
+
+Test                                       Status                      Evidence and limitation
+Quartic gradient barrier vs H0             PASS                        Analytic barrier and numerical pairing agree to 1.69 ×
+                                                                       10−6
+FW action discretization convergence       PASS                        Error decreases over grid refinement in the toy model
+Persistence noise robustness               PASS as executed; ro-       240 replicates reveal pairing and calibration deteriora-
+                                           bustness fails              tion
+Synthetic neural drift fit                 PASS as executed            Held-out synthetic transitions only; no empirical gener-
+                                                                       alization
+Constant vs pulse schedules                PASS as executed; RL        Even pulse policy beats RL under selected benchmark
+                                           hypothesis not supported
+Loop implies pulses                        FALSIFIED in general        Exact circle example has constant-energy optimum
+Public single-cell reprogramming fit       NOT RUN                     Dataset identified; data not downloaded or processed
+Schrödinger bridge controller              NOT IMPLEMENTED             Objective formalized; no solver run
+Wet-lab testing                            NOT RUN / outside           No biological efficacy claim or protocol recommenda-
+                                           scope                       tion
+
+
+12.2 Prediction B: schedule benefit requires dynamic evidence beyond Betti number
+A cycle-related measure should predict out-of-sample benefit from temporal variation only after controlling for
+state-space dimension, local drift magnitude, controllability Gramian, target distance, and noise covariance. The
+circle counterexample already falsifies the unconditional version. A test that uses b1 alone as a predictor should be
+considered failed if it does not outperform random topology-label permutations or if local curl explains the result
+equally well in simply connected domains.
+
+12.3 Prediction C: RL must generalize beyond the training simulator
+If RL provides value, its learned policy must improve over equally budgeted pulse, greedy, model-predictive, and
+dynamic-programming baselines on held-out parameter regimes, random seeds, and model classes. Reporting only
+training returns would be insufficient. A fair comparison freezes policy hyperparameters before test evaluation,
+uses confidence intervals, and reports all attempted seeds. If the RL policy’s mean performance is lower than a
+simple heuristic across the prespecified test grid, the RL-superiority claim is rejected even if one tuned setting
+shows a win.
+
+12.4 Prediction D: uncertainty-aware topology helps, or it should be dropped
+Landscape uncertainty is useful only if carrying an ensemble through policy optimization improves calibration or
+robustness against model misspecification. If it adds computational complexity without improving held-out success
+or reducing worst-case failure, it should not remain in the objective merely to preserve theoretical elegance.
+
+13 Failure modes, robustness, and uncertainty
+The most immediate issue is landscape non-identifiability. A scalar potential inferred from stationary density
+assumes a relationship between drift and noise. In a non-equilibrium steady state, probability currents can exist,
+and the stationary density alone does not identify those currents. A learned energy-like scalar can fit marginal
+density while failing to predict transition paths. Consequently, a persistence score should be treated as a feature of
+the estimation pipeline—not as a directly observed molecular energy.
+     Second, graph topology depends on how the data are transformed. Principal-component projections, diffusion
+maps, and latent models can merge distinct cell states or introduce apparent loops. Feature filtration and nearest-
+neighbor parameters also change the persistence diagram. Stability of the persistence diagram under perturbations
+to a fixed scalar function is not a substitute for uncertainty over the embedding and the learned drift. In the synthetic
+noise test, pairing rates deteriorate much faster than one might infer from an eyeballed smooth landscape.
+
+                                                               16
+
+Persistent Landscapes and Cell-Fate Control                                                          Theory–simulation preprint
+
+
+
+
+                                 Fail-closed decision tree for topology-to-control claims
+
+                                                  Candidate topological statistic
+
+
+
+                                                  Test invariance + noise stability
+
+
+
+
+                    Stable + calibrated                                                 Unstable / non-identifiable
+                 under stated assumptions                                                or no control implication
+
+
+
+                                               Report conditional use or reject claim
+
+
+Figure 12: Falsification path: validate the scalar/dynamical correspondence, test the cycle hypothesis against counterexamples,
+compare controllers with a prespecified benchmark, then move to public single-cell data only if the synthetic gates survive.
+
+
+    Third, the controller’s objective may be a poor proxy for actual success. Endpoint-only reward can ignore
+transient loss of viability, undesired intermediate states, off-target differentiation, and whether a trajectory is
+reversible. A nominal dose budget does not equal exposure cost, and the target basin in a toy scalar model has no
+direct biological interpretation. A future constrained objective should include feasibility and safety-related filters
+informed by experimental teams, not a reward function optimized in isolation.
+    Fourth, RL can exploit simulator artifacts, reward shaping, and distribution shifts. The present RL policy did
+not beat the evenly spaced pulse policy, which is precisely why both should remain in the evidence record. More
+iterations do not automatically fix model misspecification. A policy that wins only when the transition model is
+exact can fail when the biological system differs from the training simulator. Robust evaluation must vary drift
+parameters, diffusion, response delay, and action nonlinearities before a policy earns any real-data claim.
+
+14 A public-data path that is not yet executed
+A relevant public resource is GEO GSE242423, which documents single-cell RNA-sequencing across a 14-day
+OSKM-induced human-fibroblast reprogramming time course with samples labelled D0, D2, D4, D6, D8, D10,
+D12, D14, and iPSC. The associated super-series GSE242424 includes related chromatin-accessibility samples and
+multiome measurements. GEO’s record notes that raw data are not provided there due to privacy restrictions, while
+processed data are listed as supplementary files [12, 13]. Identifying the accession gives the project a plausible data
+target; it does not mean that the data were fetched, processed, or legally/technically accessible in this research run.
+    The next empirical-oriented phase should first verify the accessions, license/usage conditions, sample metadata,
+donor/batch structure, feature matrices, and exact availability of processed data. It should then predefine the latent
+state representation and the interpretation of the target distribution. Since cells are destructively sampled, transitions
+must be inferred as population-level stochastic evolution, not presented as observed single-cell lineages. If processed
+counts and metadata can be acquired, train drift models only on allowed time slices, validate on held-out times or
+experiments, and compare the bridge predictions against standard OT and a mechanistic bursty-reference model.
+The 2026 study by Fournié and colleagues provides a particularly important comparator because it formulates a
+Schrödinger problem with a mechanistic stochastic gene-expression reference [10].
+
+
+                                                                17
+
+Persistent Landscapes and Cell-Fate Control                                                      Theory–simulation preprint
+
+
+
+                                     Table 9: Failure modes and required mitigations.
+
+Failure mode                  How it misleads                               Minimum mitigation
+False potential interpreta-   Scalar score is treated as physical energy    Fit and compare dynamical models; test current
+tion                                                                        and non-gradient alternatives
+Incorrect persistence pair-   Interval does not correspond to source–       Track critical points, paths, and pairing across
+ing                           target saddle                                 uncertainty ensembles
+Embedding-induced topol-      Projection creates/removes apparent loops     Compare embeddings and metrics; test against
+ogy                                                                         known synthetic ground truth
+Noise-misspecified SDE        Escape action is estimated in wrong metric    Estimate diffusion covariance and validate residu-
+                                                                            als; propagate uncertainty
+RL simulator exploitation     Policy succeeds on training dynamics only     Frozen held-out regimes, strong baselines, multi-
+                                                                            ple seeds, adversarial models
+Nominal dose mismatch         Equal integral hides unequal biological ex-   Report amplitude, duration, regularity, and toxic-
+                              posure                                        ity proxies separately
+Endpoint reward pathology     Intermediate failures are ignored             Add trajectory constraints and report intermediate
+                                                                            state occupancy
+Cross-sectional ambiguity     Distribution transport mistaken for lineage   State explicitly that population marginals do not
+                              evidence                                      identify unique trajectories
+
+
+    A public-data analysis should be abandoned or narrowed if access, batch structure, measurement timing, or
+model identifiability do not support the desired estimand. In particular, time-stamped snapshots alone may not
+identify a unique drift field or noise covariance. The right output in that case is a carefully scoped identifiability
+statement, not a forced policy benchmark. No new biological observations are reported in this preprint.
+
+15 Synthetic network models and model-class extension
+Toggle-switch networks offer a compact way to create multiple attractors: mutually repressive regulators can
+support alternative stable expression states, depending on parameters and molecular noise. Ring-like repressilator
+networks illustrate oscillatory dynamics rather than a scalar basin picture. These architectures are familiar examples,
+not newly proposed biological mechanisms. They are useful because they expose the difference between basin
+topology, local rotational dynamics, and temporal protocol response.
+    The current scripts draw network schematics as conceptual diagrams and do not simulate those network graphs
+as the policy benchmark. The paper therefore does not claim that the controller result generalizes from the scalar
+bistable SDE to a toggle switch or repressilator. A credible extension would implement known synthetic regulatory
+equations, compare deterministic attractors with stochastic transitions, calculate graph- or state-space topology
+from sampled trajectories, and test whether a topology-derived metric adds predictive value beyond drift and
+controllability features. It would also compare model-generated observations with the true simulator state to
+quantify the effect of measurement noise.
+
+15.1 A minimum suite of synthetic ground truths
+We propose four escalating classes. Class I is the quartic one-dimensional gradient potential, used for analytical
+calibration. Class II is a non-gradient rotor or planar system with known circulation, used to test the cycle hypothesis.
+Class III is a multi-attractor regulatory network with known governing parameters, used to distinguish true basins
+from projection artifacts. Class IV is a partially observed stochastic system with unknown parameters, used for
+model-identification stress tests. A success in Class I is necessary for implementation verification but nowhere near
+sufficient for biological utility.
+
+
+
+
+                                                             18
+
+Persistent Landscapes and Cell-Fate Control                                                   Theory–simulation preprint
+
+
+
+
+16 Control-theoretic conditions for schedules
+The optimal control law depends not only on topology but on the control channel B(x), the endpoint set, time
+horizon, amplitude limits, state-dependent drift, noise covariance, and objective. If the system is linear with
+quadratic cost and unconstrained endpoints, the optimal controller may be smooth and continuous. If input is
+bounded, response delay matters, or the system has a threshold and strongly nonlinear drift, bang-bang or pulsed
+controls may arise. Those features are control-theoretic, not consequences of the first Betti number by itself.
+    An appropriate formal test would compare the value functions for constant and time-varying controls:
+                                       ∗                         ∗
+                                      Jconst = inf J(u),        Jtime = inf J(u).                                    (11)
+                                               ut ≡u0                  u∈Uad
+
+                                                       ∗
+Temporal variation offers a strict advantage only if Jtime    ∗
+                                                           < Jconst for the stated cost and constraints. No topological
+summary can replace that inequality. To show topology is a useful predictor, one would need an identified statistic
+                                                              ∗
+τ(X , b, σ , B) and a tested relation between τ and the gap Jconst     ∗
+                                                                    − Jtime across a prespecified collection of systems.
+    A pulse-count lower bound is even more demanding. Pulse count is not well-defined until amplitude thresholds,
+pulse segmentation, minimum gaps, and allowable bandwidth are specified. A time-varying function can be
+approximated by infinitely many control parameterizations. Any lower bound must therefore include regularity
+constraints, a model of input kinetics, and a precise admissible control class. A topological integer cannot by itself
+determine a number of pulses unless a mathematical mapping from topology to a necessary control decomposition
+has been proved. We do not prove such a mapping, and the current evidence does not support it.
+
+17 Discussion: what the evidence allows us to say
+The conceptual appeal of connecting persistent homology, Hodge decomposition, stochastic bridges, and RL is
+that each describes a different aspect of the problem: connectivity across energy thresholds, rotational versus
+potential-like flow, population-level path distributions, and sequential policy search. The difficulty is exactly that
+these quantities live at different mathematical levels. Joining them produces an explanatory hypothesis, not a result.
+A strong paper has to test whether the connection adds information instead of simply placing the terms beside one
+another.
+     The quartic potential demonstrates a real but narrow identity: with a valid scalar potential and correct pairing,
+H0 persistence equals the barrier height. The noise sweep demonstrates fragility of the simplest estimator under
+observation perturbation. The circle example decisively rules out the broad loop-implies-pulsing claim. The
+controller benchmark adds a second negative result: under this model and reward, RL fails to beat a straightforward
+pulse heuristic. Together, these findings argue for a pipeline that uses topology as an uncertain diagnostic, retains
+explicit dynamical information, and keeps simple baselines central.
+     The remaining research opportunity is still meaningful. A carefully identified Hodge-like feature might
+complement controllability and path action when predicting schedule benefit. A bridge objective may help match
+full populations better than endpoint hit-rate optimization. And RL might be valuable in a richer environment
+where policies need to adapt to state estimates and uncertain response. Each claim should remain a hypothesis until
+it beats alternatives in held-out models and eventually in suitable experimental datasets.
+
+17.1 Human benefit and translation boundary
+If future work identifies a robust relationship between state-space structure and intervention schedule, it could help
+experimentalists prioritize candidate reprogramming schedules and reduce uninformative trial-and-error. The causal
+pathway is indirect: reliable state inference would inform an in-silico schedule, which would then need independent
+experimental testing and safety assessment. The present work is far from those stages. It cannot specify doses,
+predict clinical efficacy, guarantee cell quality, or justify a protocol in human cells. There are significant barriers in
+measurement noise, batch and donor heterogeneity, biological safety, off-target states, ethics, and reproducibility.
+
+
+                                                           19
+
+Persistent Landscapes and Cell-Fate Control                                               Theory–simulation preprint
+
+
+
+
+18 Limitations
+The principal limitation is scope of validation. All numerical outputs are synthetic and driven by known model
+equations. No public single-cell expression data have been downloaded or fitted. No wet-lab experiments,
+cellular assays, or clinical outcomes are included. Consequently, the manuscript does not show that the proposed
+combination works on real cellular reprogramming.
+    Second, the neural drift estimator is trained and tested on simulated transitions generated from the same
+model family. Its excellent test score is an implementation benchmark under favorable assumptions. It does not
+demonstrate the identifiability of drift from sparse single-cell snapshots, nor does it model bursty transcription,
+nonstationary noise, donor effects, or measurement artifacts.
+    Third, the topology code uses a discretized one-dimensional potential and a simple pairing procedure. While
+adequate for a known quartic function, it does not solve the challenge of high-dimensional persistent homology on
+latent embeddings. The robustness experiment adds noise to a one-dimensional function and reveals poor feature
+correspondence; it is illustrative, not a calibrated error model for RNA sequencing.
+    Fourth, the Hodge decomposition is conceptual, and the scripts do not estimate a Hodge field from observed
+trajectories. Neither the Hodge curl nor first homology is connected empirically to the chosen control simulator.
+The circle example is a mathematical counterexample, not a cellular model.
+    Fifth, the bridge optimization is formulated but no numerical Schrödinger bridge is solved. The RL imple-
+mentation uses a tabular agent and a scalar state. The finite policy benchmark has no confidence intervals from
+independent training seeds, and the policy was not tuned against all strong baselines. These limitations narrow the
+strength of the conclusions but do not justify hiding the negative outcome.
+    Finally, the literature search was focused and current as of 24 October 2026 but not exhaustive across every
+database, patent collection, or unpublished result. Novelty is therefore deliberately stated as an integration and
+stress-test contribution, not a priority claim.
+
+19 Conclusion
+Topological summaries can constrain interpretations of a scalar landscape, but their relationship to control cost
+is conditional. In a gradient diffusion with a correctly paired source minimum and saddle, barrier height and
+H0 persistence are the same height difference. In noisy inferred landscapes, the correct pairing and calibration
+can deteriorate. In non-gradient settings, a scalar persistence value need not equal the quasipotential barrier. A
+nontrivial loop does not require a pulsed optimum, as the analytic circle counterexample shows. In the synthetic
+controller benchmark, RL does not beat evenly spaced pulses, and the paper reports that failure rather than claiming
+success.
+    The defensible next step is a preregistered, uncertainty-aware comparison across synthetic ground-truth networks
+followed—only if the synthetic gates survive—by a reproducible analysis of public time-course data. The project’s
+useful hypothesis is not that topology dictates a protocol, but that topological features may become informative
+control features under explicit, testable dynamical assumptions. Until those assumptions and out-of-sample
+advantages are demonstrated, topology, Hodge structure, bridges, and RL remain complementary tools, not a
+proven recipe for cellular reprogramming.
+Co-equal research-process credit is given to Devanik Debnath and Xylia, the autonomous multi-model
+research engine coordinating AI-assisted discovery, synthesis, and verification. Devanik Debnath retains
+responsibility for the final manuscript, scientific claims, citations, and released artifacts.
+
+
+
+
+                                                        20
+
+Persistent Landscapes and Cell-Fate Control                                                             Theory–simulation preprint
+
+
+
+
+A Derivation of the gradient action identity
+For the gradient SDE in Eq. (2), the normalized action is
+                                                              Z T
+                                                          1
+                                            ST (φ ) =               ∥φ̇ + ∇V (φ )∥2 dt.                                      (12)
+                                                          4    0
+
+The pointwise identity
+                                                ∥a + b∥2 = ∥a − b∥2 + 4a · b                                                 (13)
+with a = φ̇ and b = ∇V (φ ) yields
+                                                Z T                             Z T
+                                            1
+                                ST (φ ) =             ∥φ̇ − ∇V (φ )∥2 dt +            φ̇ · ∇V (φ )dt.                        (14)
+                                            4    0                               0
+
+By the chain rule, the second term is V (φ (T )) −V (φ (0)). If the path starts at xm and ends at xs , the nonnegative
+squared term gives ST ≥ V (xs ) − V (xm ). Equality occurs when φ̇ = ∇V (φ ), the uphill time reversal of the
+deterministic gradient flow ẋ = −∇V (x). Strict equality over a finite interval depends on endpoint asymptotics and
+whether the minimizing path is admissible; the action infimum still agrees with the barrier under the usual idealized
+assumptions.
+    This derivation also illustrates why the statement is not universal. If the drift is not −∇V , the cross-term
+does not reduce to the differential of a scalar potential. If the noise covariance is a(x) = σ (x)σ (x)⊤ , the action is
+weighted by the inverse covariance on its range. Such a metric-weighted action cannot be compared with scalar
+persistence without further structure.
+
+B Derivation of the circular-control counterexample
+With θ̇ = ω + u, endpoint feasibility imposes 0T u(t)dt = Θ − ωT =: c. By Cauchy–Schwarz,
+                                                      R
+
+                                              Z T             2        Z T
+                                                      u(t)dt        ≤T         u(t)2 dt,                                     (15)
+                                                 0                        0
+
+so E(u) ≥ c2 /T . Equality requires u(t) = c/T almost everywhere. For T = 3, ω = 0.2, and Θ = 1, c = 0.4, and the
+minimum energy is 0.42 /3 = 0.053333 . . .. If a pulse acts for a fraction p = 0.3 of the horizon, endpoint feasibility
+requires pulse amplitude c/(pT ) = 0.4/0.9 = 0.4444 . . .; its energy is pT [c/(pT )]2 = c2 /(pT ) = 0.177777 . . .. The
+ratio to the constant-control energy is 1/p = 10/3. Since S1 has b1 = 1, this exact construction is a counterexample
+to a topology-only necessary-pulse claim.
+
+
+
+
+                                                                    21
+
+Persistent Landscapes and Cell-Fate Control                                                Theory–simulation preprint
+
+
+
+
+C Synthetic model and benchmark specification
+The release code is the authoritative executable specification for simulator parameters, random seeds, action bounds,
+reward function, rollout logic, training settings, and plot generation. The model is intentionally small enough to run
+deterministically without downloading any data. The potential is V (x) = (x2 − 1)2 /4. A drift estimator is trained
+on 7,200 synthetic transitions and tested on 1,800 transitions; the policy study uses 400 evaluation rollouts for each
+of four controllers. Sensitivity results contain 50 parameter–noise–policy cells with 40 trials per cell. The random
+seed for the main verification is 20261024; the neural drift training subroutine uses seed 20261035 as recorded in
+the machine-readable report.
+    The verifier checks the analytic barrier, persistence, action convergence, neural-fit metrics, dose bounds, circle
+counterexample, policy outputs, sensitivity grid, replicate retention, and figure generation. Passing certifies code
+checks only; CSV outputs permit recomputation, and RL superiority over pulses is not asserted.
+
+D Minimal public-data analysis protocol
+A public-data follow-up should preserve the following order: (1) verify GSE242423/GSE242424 metadata and
+access conditions; (2) acquire available processed matrices and checksums; (3) predefine QC, batch handling,
+and a reduced state representation; (4) split evaluation by time, donor, or experiment to avoid leakage; (5) fit
+multiple drift/noise models and quantify uncertainty; (6) estimate persistent features across bootstrap samples
+and embeddings; (7) solve a bridge or transport baseline with documented assumptions; (8) compare constant,
+simple pulse, model-predictive, dynamic-programming, and RL policies on simulated counterfactuals only where
+identified; (9) report non-identifiability and negative results; and (10) submit protocol hypotheses for experimental
+assessment without describing simulated schedules as validated interventions.
+    The analysis should be stopped if state-space inference or noise estimation is not sufficiently identifiable. The
+current release has not run any of these data-acquisition and empirical-modeling steps. This appendix is a protocol
+for a future computational phase, not a claim that the phase has been completed.
+
+E Reproducibility and interpretation
+To reproduce the synthetic checks, install the Python dependencies listed in results/environment.json and
+execute:
+
+python verify_model.py
+
+The script regenerates output tables and figure assets. Running the script changes generated outputs if a dependency
+implementation or plotting backend differs; record exact package versions and compare CSV values before
+interpreting differences. Use a clean working directory as a test of path independence. The PDF build command is
+documented in the release README and deployment script.
+    The release deliberately distinguishes three meanings of “validation”: program assertions, agreement with an
+analytical toy result, and empirical biological confirmation. This work achieves the first two for the named tests
+and achieves none of the third. The public dataset accession is a planned candidate only. No experiment, cell line,
+sample, dose, patient, or biological treatment was studied here.
+
+
+
+
+                                                         22
+
+Persistent Landscapes and Cell-Fate Control                                              Theory–simulation preprint
+
+
+
+
+References
+ [1] C. H. Waddington. The Strategy of the Genes. George Allen & Unwin, London, 1957.
+
+ [2] J. X. Zhou, M. D. S. Aliyu, E. Aurell, and S. Huang. Quantifying Waddington landscapes and paths of
+     non-adiabatic cell fate decisions for differentiation, reprogramming and transdifferentiation. Journal of the
+     Royal Society Interface, 10(89):20130787, 2013. doi: 10.1098/rsif.2013.0787.
+
+ [3] H. Edelsbrunner, D. Letscher, and A. Zomorodian. Topological persistence and simplification. Discrete &
+     Computational Geometry, 28:511–533, 2002. doi: 10.1007/s00454-002-2885-2.
+
+ [4] D. Cohen-Steiner, H. Edelsbrunner, and J. Harer. Stability of persistence diagrams. Discrete & Computational
+     Geometry, 37:103–120, 2007. doi: 10.1007/s00454-006-1276-5.
+
+ [5] M. I. Freidlin and A. D. Wentzell. Random Perturbations of Dynamical Systems. 3rd edition, Springer, 2012.
+     doi: 10.1007/978-3-642-25847-3.
+
+ [6] H. A. Kramers. Brownian motion in a field of force and the diffusion model of chemical reactions. Physica,
+     7(4):284–304, 1940. doi: 10.1016/S0031-8914(40)90098-2.
+
+ [7] X. Jiang, L.-H. Lim, Y. Yao, and Y. Ye. Statistical ranking and combinatorial Hodge theory. Mathematical
+     Programming, 127:203–244, 2011. doi: 10.1007/s10107-010-0419-x.
+
+ [8] J. Zarzycki et al. pbn-STAC: Deep reinforcement learning-based framework for cellular reprogramming.
+     Theoretical Computer Science, 1049:115382, 2025. doi: 10.1016/j.tcs.2025.115382. Code and data: https:
+     //github.com/jakub-zarzycki2022/pbn-stac.
+
+ [9] A. Mizera and J. Zarzycki. The GATTACA framework: Graph neural network-based reinforcement learning
+     for controlling biological networks. Proceedings of the AAAI Conference on Artificial Intelligence, 40(2):873–
+     880, 2026. doi: 10.1609/aaai.v40i2.37055.
+
+[10] C. Fournié, E. Ventre, U. Herbach, A. Baradat, O. Gandrillon, and F. Crauste. Cell trajectory inference based
+     on schrödinger problem and a mechanistic model of stochastic gene expression. npj Systems Biology and
+     Applications, 12:120, 2026. doi: 10.1038/s41540-026-00743-x.
+
+[11] Z. Zhang, Z. Wang, Y. Sun, J. Shen, Q. Peng, T. Li, et al. Deciphering cell-fate trajectories using spatiotem-
+     poral single-cell transcriptomic data. npj Systems Biology and Applications, 12:2, 2026; published online 4
+     December 2025. doi: 10.1038/s41540-025-00624-9.
+
+[12] NCBI Gene Expression Omnibus. GSE242423: Transcription factor stoichiometry, motif affinity and syntax
+     regulate single-cell chromatin dynamics during fibroblast reprogramming to pluripotency [scRNA]. Public
+     accession record, 2023. https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE242423. Ac-
+     cessed 24 October 2026. Raw data restrictions are noted in the accession; the current work did not download
+     the data.
+
+[13] NCBI Gene Expression Omnibus. GSE242424: Transcription factor stoichiometry, motif affinity and syntax
+     regulate single-cell chromatin dynamics during fibroblast reprogramming to pluripotency. SuperSeries record,
+     2023. https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE242424. Accessed 24 October
+     2026.
+
+
+
+
+                                                        23

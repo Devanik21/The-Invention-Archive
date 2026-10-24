@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "model": "scikit-learn MLPRegressor drift estimator; Gaussian residual diffusion",
+  "synthetic_training_transitions": 7200,
+  "synthetic_test_transitions": 1800,
+  "time_step": 0.05,
+  "true_diffusion_sigma": 0.08,
+  "estimated_diffusion_sigma": 0.08145661258038943,
+  "test_drift_rmse": 0.011691459649621703,
+  "test_drift_r2": 0.9999266026010266,
+  "warning_count": 0,
+  "training_seed": 20261035,
+  "not_empirical": true
+}

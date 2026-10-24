@@ -1,0 +1,12 @@
+{
+  "algorithm": "tabular Q-learning",
+  "episodes": 6000,
+  "seed": 20261045,
+  "state": "time, binned fate coordinate, binned adaptation state, remaining pulses",
+  "actions": [
+    "no pulse",
+    "pulse at u_max"
+  ],
+  "reward": "target hit +10; terminal miss -3; small potential-based progress shaping and pulse penalty",
+  "warning": "This is a synthetic finite-state RL demonstration, not a validated policy for cells."
+}

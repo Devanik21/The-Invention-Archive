@@ -1,0 +1,13 @@
+number,basename,categories,vector_asset,preview_asset
+1,fig01_landscape,plot,figures/fig01_landscape.pdf,figures/fig01_landscape.png
+2,fig02_barrier_persistence,plot,figures/fig02_barrier_persistence.pdf,figures/fig02_barrier_persistence.png
+3,fig03_persistence_robustness,plot,figures/fig03_persistence_robustness.pdf,figures/fig03_persistence_robustness.png
+4,fig04_neural_drift_fit,plot,figures/fig04_neural_drift_fit.pdf,figures/fig04_neural_drift_fit.png
+5,fig05_rotor_counterexample,plot,figures/fig05_rotor_counterexample.pdf,figures/fig05_rotor_counterexample.png
+6,fig06_policy_trajectories,plot,figures/fig06_policy_trajectories.pdf,figures/fig06_policy_trajectories.png
+7,fig07_rl_learning_curve,plot,figures/fig07_rl_learning_curve.pdf,figures/fig07_rl_learning_curve.png
+8,fig08_toggle_network,graph,figures/fig08_toggle_network.pdf,figures/fig08_toggle_network.png
+9,fig09_cycle_network,graph,figures/fig09_cycle_network.pdf,figures/fig09_cycle_network.png
+10,fig10_pipeline_flow,flow_diagram,figures/fig10_pipeline_flow.pdf,figures/fig10_pipeline_flow.png
+11,fig11_falsification_flow,flow_diagram,figures/fig11_falsification_flow.pdf,figures/fig11_falsification_flow.png
+12,fig12_schedule_sensitivity,plot,figures/fig12_schedule_sensitivity.pdf,figures/fig12_schedule_sensitivity.png

@@ -1,0 +1,13 @@
+{
+  "state_space": "S^1; first Betti number b1=1",
+  "T": 3.0,
+  "natural_angular_velocity": 0.2,
+  "target_angle_unwrapped": 1.0,
+  "constant_control": 0.1333333333333333,
+  "constant_control_energy": 0.05333333333333331,
+  "pulse_fraction": 0.3,
+  "pulse_amplitude": 0.44444444444444436,
+  "pulse_control_energy": 0.1777777777777777,
+  "pulse_to_constant_energy_ratio": 3.3333333333333335,
+  "constant_is_optimal_by_cauchy_schwarz": true
+}

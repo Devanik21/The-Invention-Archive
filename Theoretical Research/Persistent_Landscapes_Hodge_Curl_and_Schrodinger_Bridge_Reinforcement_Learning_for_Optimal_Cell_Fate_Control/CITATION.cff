@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use the synthetic verification code or reproduce the methods, please cite this research preprint."
+title: "Persistent Landscapes, Hodge Curl, and Schrödinger-Bridge Reinforcement Learning for Optimal Cell-Fate Control"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    alias: Devanik21
+    affiliation: "Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India"
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+version: 2026.10.24.1
+date-released: 2026-10-24
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+url: "https://github.com/Devanik21/The-Invention-Archive"
+license: CC-BY-4.0
+abstract: "Theory-plus-simulation study of conditions under which landscape persistence can inform stochastic cell-fate control, including a counterexample to an unconditional loop-implies-pulsing hypothesis. Synthetic data only; no empirical cell data or wet-lab validation."
+keywords:
+  - cellular reprogramming
+  - persistent homology
+  - stochastic control
+  - Schrödinger bridge
+  - reinforcement learning

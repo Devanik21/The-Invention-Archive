@@ -1,0 +1,2 @@
+PASS: malformed/missing-artifact fixture rejected ( 29 issues)
+PASS: malformed JSON/YAML and missing figures are rejected

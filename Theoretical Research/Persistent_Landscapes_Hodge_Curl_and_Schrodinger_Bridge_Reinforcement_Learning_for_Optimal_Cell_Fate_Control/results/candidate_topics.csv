@@ -1,0 +1,11 @@
+candidate,importance_1_10,gap_evidence_1_10,boldness_1_10,plausibility_1_10,math_core_1_10,AI_role_1_10,human_benefit_1_10,validation_feasibility_1_10,falsifiability_1_10,decision_reason
+Topology-aware stochastic control of cell-fate transitions,8,8,9,9,8,9,8,8,9,Selected; supplied topic and realistic synthetic falsification path
+Causal inference of TF pulse timing from single-cell snapshots,9,8,8,6,8,8,9,5,9,Hard identification problem; requires causal perturbation data
+Mechanistic Schrödinger bridges with bursty gene expression,8,7,7,8,7,6,8,8,8,Strong recent prior art; differentiation narrow contribution required
+RL for Boolean gene-network reprogramming,8,5,5,8,6,8,8,9,8,Close existing pbn-STAC paper makes novelty weaker
+Persistence stability under scRNA-seq denoising,7,8,6,8,8,6,7,9,9,Potentially useful methods paper but less integrated control scope
+Hodge decomposition for regulatory trajectory cycles,7,6,7,7,8,7,7,7,8,Need clear estimator and demonstrated predictive value
+Optimal transport for reprogramming fate proportions,8,6,5,8,7,6,8,9,8,Mature literature; requires substantial new model
+Noise-aware barrier estimation from sparse snapshots,8,7,7,8,8,6,8,8,9,Good narrower alternative if combined framework fails
+Robust control under latent-state embedding uncertainty,8,8,8,8,8,8,9,8,9,Promising; synthetic validation feasible but needs novel control contribution
+Intervention design under regulatory network partial observability,9,8,8,8,8,8,9,7,9,High value but data/simulator scope larger

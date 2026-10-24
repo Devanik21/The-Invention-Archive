@@ -1,0 +1,5 @@
+policy,success_rate,successes,episodes,mean_terminal_x,mean_nominal_dose,dose_budget_upper_bound
+constant-dose,0.0,0,400,-0.6671801221340826,3.2000000000000024,3.2
+evenly-spaced pulses,0.2325,93,400,0.24693176587300897,3.165,3.2
+greedy pulses,0.0275,11,400,-0.8218527978212018,3.2,3.2
+RL policy,0.0775,31,400,0.004509913557132189,3.0729999999999995,3.2

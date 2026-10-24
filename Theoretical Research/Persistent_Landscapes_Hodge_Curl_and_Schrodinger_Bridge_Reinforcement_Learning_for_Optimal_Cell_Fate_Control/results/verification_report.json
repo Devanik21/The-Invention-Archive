@@ -1,0 +1,393 @@
+{
+  "schema_version": "1.0",
+  "execution_timestamp_utc": "2026-10-24T14:55:46.633060+00:00",
+  "status": "PASS",
+  "synthetic_only": true,
+  "empirical_data_loaded": false,
+  "seed": 20261024,
+  "potential": {
+    "V(x)": "(x^2-1)^2/4",
+    "source_minimum": 0.0,
+    "saddle": 0.25,
+    "analytic_barrier": 0.25,
+    "H0_persistence": 0.24999830780228596
+  },
+  "persistence_noise": [
+    {
+      "noise_sd": 0.0,
+      "n_replicates": 40,
+      "paired_fraction": 1.0,
+      "median_persistence": 0.24994051783438512,
+      "q05": 0.24994051783438512,
+      "q95": 0.24994051783438512,
+      "median_absolute_error": 5.948216561488251e-05
+    },
+    {
+      "noise_sd": 0.01,
+      "n_replicates": 40,
+      "paired_fraction": 0.725,
+      "median_persistence": 0.2591043045590634,
+      "q05": 0.2544313975791632,
+      "q95": 0.2646537626093419,
+      "median_absolute_error": 0.009104304559063414
+    },
+    {
+      "noise_sd": 0.03,
+      "n_replicates": 40,
+      "paired_fraction": 0.35,
+      "median_persistence": 0.28643441138658476,
+      "q05": 0.2758023508396843,
+      "q95": 0.2991956247157526,
+      "median_absolute_error": 0.03643441138658479
+    },
+    {
+      "noise_sd": 0.05,
+      "n_replicates": 40,
+      "paired_fraction": 0.35,
+      "median_persistence": 0.3112883650576059,
+      "q05": 0.3029321372323652,
+      "q95": 0.3217787737715708,
+      "median_absolute_error": 0.061288365057605876
+    },
+    {
+      "noise_sd": 0.08,
+      "n_replicates": 40,
+      "paired_fraction": 0.4,
+      "median_persistence": 0.35915396062849236,
+      "q05": 0.3329344481448785,
+      "q95": 0.3904806459517315,
+      "median_absolute_error": 0.10915396062849236
+    },
+    {
+      "noise_sd": 0.12,
+      "n_replicates": 40,
+      "paired_fraction": 0.325,
+      "median_persistence": 0.421904908355331,
+      "q05": 0.38745415789650606,
+      "q95": 0.4611266373302488,
+      "median_absolute_error": 0.171904908355331
+    }
+  ],
+  "neural_sde_fit": {
+    "status": "PASS",
+    "model": "scikit-learn MLPRegressor drift estimator; Gaussian residual diffusion",
+    "synthetic_training_transitions": 7200,
+    "synthetic_test_transitions": 1800,
+    "time_step": 0.05,
+    "true_diffusion_sigma": 0.08,
+    "estimated_diffusion_sigma": 0.08145661258038943,
+    "test_drift_rmse": 0.011691459649621703,
+    "test_drift_r2": 0.9999266026010266,
+    "warning_count": 0,
+    "training_seed": 20261035,
+    "not_empirical": true
+  },
+  "policy_benchmarks": [
+    {
+      "policy": "constant-dose",
+      "success_rate": 0.0,
+      "successes": 0,
+      "episodes": 400,
+      "mean_terminal_x": -0.6671801221340826,
+      "mean_nominal_dose": 3.2000000000000024,
+      "dose_budget_upper_bound": 3.2
+    },
+    {
+      "policy": "evenly-spaced pulses",
+      "success_rate": 0.2325,
+      "successes": 93,
+      "episodes": 400,
+      "mean_terminal_x": 0.24693176587300897,
+      "mean_nominal_dose": 3.165,
+      "dose_budget_upper_bound": 3.2
+    },
+    {
+      "policy": "greedy pulses",
+      "success_rate": 0.0275,
+      "successes": 11,
+      "episodes": 400,
+      "mean_terminal_x": -0.8218527978212018,
+      "mean_nominal_dose": 3.2,
+      "dose_budget_upper_bound": 3.2
+    },
+    {
+      "policy": "RL policy",
+      "success_rate": 0.0775,
+      "successes": 31,
+      "episodes": 400,
+      "mean_terminal_x": 0.004509913557132189,
+      "mean_nominal_dose": 3.0729999999999995,
+      "dose_budget_upper_bound": 3.2
+    }
+  ],
+  "rotor_counterexample": {
+    "state_space": "S^1; first Betti number b1=1",
+    "T": 3.0,
+    "natural_angular_velocity": 0.2,
+    "target_angle_unwrapped": 1.0,
+    "constant_control": 0.1333333333333333,
+    "constant_control_energy": 0.05333333333333331,
+    "pulse_fraction": 0.3,
+    "pulse_amplitude": 0.44444444444444436,
+    "pulse_control_energy": 0.1777777777777777,
+    "pulse_to_constant_energy_ratio": 3.3333333333333335,
+    "constant_is_optimal_by_cauchy_schwarz": true
+  },
+  "checks_total": 33,
+  "checks_passed": 33,
+  "checks_failed": 0,
+  "checks": [
+    {
+      "name": "analytic barrier",
+      "status": "PASS",
+      "detail": "barrier=0.25"
+    },
+    {
+      "name": "H0 finite persistence pair",
+      "status": "PASS",
+      "detail": "persistence=0.24999830780228596; intervals=1"
+    },
+    {
+      "name": "FW action convergence",
+      "status": "PASS",
+      "detail": "coarse=8.019e-05; fine=1.48e-06"
+    },
+    {
+      "name": "synthetic neural drift fit",
+      "status": "PASS",
+      "detail": "R2=1.000; RMSE=0.012"
+    },
+    {
+      "name": "nominal-dose matching",
+      "status": "PASS",
+      "detail": "8 pulses x 4.0 x dt equals constant 0.8 x 40 steps x dt"
+    },
+    {
+      "name": "rotor constant lower energy",
+      "status": "PASS",
+      "detail": "pulse/constant energy=3.333"
+    },
+    {
+      "name": "policy benchmark complete",
+      "status": "PASS",
+      "detail": "policies=4"
+    },
+    {
+      "name": "all sensitivity cells produced",
+      "status": "PASS",
+      "detail": "cells=50"
+    },
+    {
+      "name": "noise replicates preserved",
+      "status": "PASS",
+      "detail": "replicates=240"
+    },
+    {
+      "name": "figure exists fig01_landscape.pdf",
+      "status": "PASS",
+      "detail": "size=118691"
+    },
+    {
+      "name": "figure exists fig01_landscape.png",
+      "status": "PASS",
+      "detail": "size=294992"
+    },
+    {
+      "name": "figure exists fig02_barrier_persistence.pdf",
+      "status": "PASS",
+      "detail": "size=17429"
+    },
+    {
+      "name": "figure exists fig02_barrier_persistence.png",
+      "status": "PASS",
+      "detail": "size=94808"
+    },
+    {
+      "name": "figure exists fig03_persistence_robustness.pdf",
+      "status": "PASS",
+      "detail": "size=17981"
+    },
+    {
+      "name": "figure exists fig03_persistence_robustness.png",
+      "status": "PASS",
+      "detail": "size=81042"
+    },
+    {
+      "name": "figure exists fig04_neural_drift_fit.pdf",
+      "status": "PASS",
+      "detail": "size=41440"
+    },
+    {
+      "name": "figure exists fig04_neural_drift_fit.png",
+      "status": "PASS",
+      "detail": "size=90594"
+    },
+    {
+      "name": "figure exists fig05_rotor_counterexample.pdf",
+      "status": "PASS",
+      "detail": "size=18487"
+    },
+    {
+      "name": "figure exists fig05_rotor_counterexample.png",
+      "status": "PASS",
+      "detail": "size=122932"
+    },
+    {
+      "name": "figure exists fig06_policy_trajectories.pdf",
+      "status": "PASS",
+      "detail": "size=21532"
+    },
+    {
+      "name": "figure exists fig06_policy_trajectories.png",
+      "status": "PASS",
+      "detail": "size=254297"
+    },
+    {
+      "name": "figure exists fig07_rl_learning_curve.pdf",
+      "status": "PASS",
+      "detail": "size=14873"
+    },
+    {
+      "name": "figure exists fig07_rl_learning_curve.png",
+      "status": "PASS",
+      "detail": "size=100223"
+    },
+    {
+      "name": "figure exists fig08_toggle_network.pdf",
+      "status": "PASS",
+      "detail": "size=17248"
+    },
+    {
+      "name": "figure exists fig08_toggle_network.png",
+      "status": "PASS",
+      "detail": "size=113977"
+    },
+    {
+      "name": "figure exists fig09_cycle_network.pdf",
+      "status": "PASS",
+      "detail": "size=13341"
+    },
+    {
+      "name": "figure exists fig09_cycle_network.png",
+      "status": "PASS",
+      "detail": "size=86974"
+    },
+    {
+      "name": "figure exists fig10_pipeline_flow.pdf",
+      "status": "PASS",
+      "detail": "size=14047"
+    },
+    {
+      "name": "figure exists fig10_pipeline_flow.png",
+      "status": "PASS",
+      "detail": "size=89497"
+    },
+    {
+      "name": "figure exists fig11_falsification_flow.pdf",
+      "status": "PASS",
+      "detail": "size=12765"
+    },
+    {
+      "name": "figure exists fig11_falsification_flow.png",
+      "status": "PASS",
+      "detail": "size=97653"
+    },
+    {
+      "name": "figure exists fig12_schedule_sensitivity.pdf",
+      "status": "PASS",
+      "detail": "size=32121"
+    },
+    {
+      "name": "figure exists fig12_schedule_sensitivity.png",
+      "status": "PASS",
+      "detail": "size=113785"
+    }
+  ],
+  "figures": [
+    {
+      "number": 1,
+      "basename": "fig01_landscape",
+      "categories": "plot",
+      "vector_asset": "figures/fig01_landscape.pdf",
+      "preview_asset": "figures/fig01_landscape.png"
+    },
+    {
+      "number": 2,
+      "basename": "fig02_barrier_persistence",
+      "categories": "plot",
+      "vector_asset": "figures/fig02_barrier_persistence.pdf",
+      "preview_asset": "figures/fig02_barrier_persistence.png"
+    },
+    {
+      "number": 3,
+      "basename": "fig03_persistence_robustness",
+      "categories": "plot",
+      "vector_asset": "figures/fig03_persistence_robustness.pdf",
+      "preview_asset": "figures/fig03_persistence_robustness.png"
+    },
+    {
+      "number": 4,
+      "basename": "fig04_neural_drift_fit",
+      "categories": "plot",
+      "vector_asset": "figures/fig04_neural_drift_fit.pdf",
+      "preview_asset": "figures/fig04_neural_drift_fit.png"
+    },
+    {
+      "number": 5,
+      "basename": "fig05_rotor_counterexample",
+      "categories": "plot",
+      "vector_asset": "figures/fig05_rotor_counterexample.pdf",
+      "preview_asset": "figures/fig05_rotor_counterexample.png"
+    },
+    {
+      "number": 6,
+      "basename": "fig06_policy_trajectories",
+      "categories": "plot",
+      "vector_asset": "figures/fig06_policy_trajectories.pdf",
+      "preview_asset": "figures/fig06_policy_trajectories.png"
+    },
+    {
+      "number": 7,
+      "basename": "fig07_rl_learning_curve",
+      "categories": "plot",
+      "vector_asset": "figures/fig07_rl_learning_curve.pdf",
+      "preview_asset": "figures/fig07_rl_learning_curve.png"
+    },
+    {
+      "number": 8,
+      "basename": "fig08_toggle_network",
+      "categories": "graph",
+      "vector_asset": "figures/fig08_toggle_network.pdf",
+      "preview_asset": "figures/fig08_toggle_network.png"
+    },
+    {
+      "number": 9,
+      "basename": "fig09_cycle_network",
+      "categories": "graph",
+      "vector_asset": "figures/fig09_cycle_network.pdf",
+      "preview_asset": "figures/fig09_cycle_network.png"
+    },
+    {
+      "number": 10,
+      "basename": "fig10_pipeline_flow",
+      "categories": "flow_diagram",
+      "vector_asset": "figures/fig10_pipeline_flow.pdf",
+      "preview_asset": "figures/fig10_pipeline_flow.png"
+    },
+    {
+      "number": 11,
+      "basename": "fig11_falsification_flow",
+      "categories": "flow_diagram",
+      "vector_asset": "figures/fig11_falsification_flow.pdf",
+      "preview_asset": "figures/fig11_falsification_flow.png"
+    },
+    {
+      "number": 12,
+      "basename": "fig12_schedule_sensitivity",
+      "categories": "plot",
+      "vector_asset": "figures/fig12_schedule_sensitivity.pdf",
+      "preview_asset": "figures/fig12_schedule_sensitivity.png"
+    }
+  ],
+  "interpretation": "PASS means the stated synthetic checks executed; it is not experimental or biological validation."
+}
