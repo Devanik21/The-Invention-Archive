@@ -1,0 +1,32 @@
+{
+  "title": "The Memory--Energy Frontier in Noisy Recurrent Inference: A Spectral Rate--Distortion Framework for Neural and Neuromorphic Systems",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "description": "A reproducible synthetic benchmark coupling a scalar recurrent estimator's stationary mean-squared error, a declared dimensionless activity proxy, a learned gain surrogate, and hard feasibility projection. The paper explicitly does not claim measured neural or hardware energy savings. This file is prepared metadata only; no Zenodo deposition or DOI issuance is implied.",
+  "creators": [
+    {
+      "name": "Devanik Debnath",
+      "affiliation": "Electronics and Communication Engineering, National Institute of Technology Agartala, India"
+    }
+  ],
+  "keywords": [
+    "recurrent inference",
+    "Kalman filtering",
+    "energy-aware estimation",
+    "neuromorphic computing",
+    "scientific machine learning",
+    "synthetic benchmark"
+  ],
+  "license": "MIT",
+  "access_right": "open",
+  "version": "2026.10.24",
+  "publication_date": "2026-10-24",
+  "communities": [],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Devanik21/The-Invention-Archive",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
