@@ -80,10 +80,30 @@ jobs:
           if n==0:
               assert 'root=Path(__file__).resolve().parent' in fixed, 'generated verifier root path missing'
           p.write_text(fixed,encoding='utf-8')
-          report=root/'results'/'tex_toolchain_compatibility.md'
-          with report.open('a',encoding='utf-8') as f:
-              f.write('\nThe generated verifier also contained a path-attribute typo (.paren); the workflow corrects it to .parent before model verification.\n')
-          print('Applied and documented verifier path fix.')
+          if n==1:
+              report=root/'results'/'tex_toolchain_compatibility.md'
+              with report.open('a',encoding='utf-8') as f:
+                  f.write('\nThe generated verifier contained a root-path attribute typo; the release workflow corrected it to .parent before model verification.\n')
+              print('Applied and documented verifier path fix.')
+          else:
+              print('Generated verifier root path was already correct.')
+          # Give the final prospective-experiment flowchart label sufficient horizontal padding.
+          source=p.read_text(encoding='utf-8')
+          box_fixes=[
+              ('(2.9,4.7,4.2,.8,"1. Measure pathway reporters and total flux")','(2.4,4.7,5.2,.8,"1. Measure pathway reporters and total flux")'),
+              ('(2.9,3.4,4.2,.8,"2. Calibrate interaction + threshold model")','(2.4,3.4,5.2,.8,"2. Calibrate interaction + threshold model")'),
+              ('(2.9,2.1,4.2,.8,"3. Randomize schedules at matched flux")','(2.4,2.1,5.2,.8,"3. Randomize schedules at matched flux")'),
+              ('(2.9,.8,4.2,.8,"4. Compare survival / function; preregister failure rule")','(2.4,.8,5.2,.8,"4. Compare survival / function; preregister failure rule")')
+          ]
+          for before,after in box_fixes:
+              assert source.count(before)==1, f'expected one experiment-flow node to widen: {before}'
+              source=source.replace(before,after)
+          p.write_text(source,encoding='utf-8')
+          (root/'results'/'figure_layout_adjustments.md').write_text(
+              '# Figure layout adjustments\n\n'
+              'The prospective falsification-study flowchart widens its four centered boxes from 4.2 to 5.2 coordinate units while preserving their vertical positions and labels. This adds padding to the final node label; no modeled values or scientific claims change.\n',
+              encoding='utf-8')
+          print('Applied and documented the Figure 8 label-padding improvement.')
           PY
 
       - name: Verify model, build PDF, and render every page
