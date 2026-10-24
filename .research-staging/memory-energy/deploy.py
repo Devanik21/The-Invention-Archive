@@ -135,7 +135,9 @@ def validate_tree(root: Path):
         raise ReleaseError(f"figure inventory incomplete: pdf={len(pdfs)}, svg={len(svgs)}, png={len(pngs)}")
     if any(p.stat().st_size==0 for p in pdfs+svgs+pngs):
         raise ReleaseError("empty figure asset detected")
-    for py in [root/"verify_model.py",root/"deploy.py"]:
+    for py in sorted(root.rglob("*.py")):
+        if "__pycache__" in py.parts:
+            continue
         result=subprocess.run([sys.executable,"-m","py_compile",str(py)],cwd=root,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
         if result.returncode:
             raise ReleaseError(f"Python syntax failure in {py.name}: {result.stdout}")
