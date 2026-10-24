@@ -103,7 +103,7 @@ jobs:
           pagesdir=res/'pdf_pages'; pagesdir.mkdir(exist_ok=True); thumbs=[]
           page_text=[p.get_text() for p in doc]
           main_start=next(i+1 for i,t in enumerate(page_text) if '1 Research question and contribution' in t)
-          appendix_start=next(i+1 for i,t in enumerate(page_text) if re.search(r'\bA Derivation of the gradient action identity',t))
+          appendix_start=next(i+1 for i,t in enumerate(page_text) if i+1 > main_start and re.search(r'\bA Derivation of the gradient action identity',t))
           main_pages=appendix_start-main_start
           assert main_pages>=18, f'substantive main-text pages {main_pages} < 18'
           for i,p in enumerate(doc,1):
