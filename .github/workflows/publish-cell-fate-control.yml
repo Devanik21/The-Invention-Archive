@@ -140,6 +140,22 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Normalize generated text evidence before checksums, bundle creation, and git diff --check.
+          python - "$RELEASE_DIR" <<'PY'
+          import sys
+          from pathlib import Path
+          root=Path(sys.argv[1])
+          for p in root.rglob('*'):
+              if not p.is_file() or p.suffix.lower() not in {'.csv','.txt','.md','.json','.cff','.jsonld'} or '__pycache__' in p.parts:
+                  continue
+              try:
+                  text=p.read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  continue
+              text=text.replace('\r\n','\n').replace('\r','\n')
+              lines=[line.rstrip(' \t') for line in text.splitlines()]
+              p.write_text('\n'.join(lines).rstrip('\n')+'\n',encoding='utf-8',newline='\n')
+          PY
           rm -rf "$RELEASE_DIR/__pycache__" "$RELEASE_DIR/results/__pycache__"
           python - "$RELEASE_DIR" <<'PY'
           import hashlib,json,sys
