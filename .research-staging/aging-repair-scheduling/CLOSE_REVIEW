@@ -1,0 +1,8 @@
+reviewed_pdf_sha256=258580b1a2441129290477ac3dfac3ca52c36654a388db9d82f461d2e18af25e
+page_count=11
+pages_individually_reviewed=1,2,3,4,5,6,7,8,9,10,11
+contact_sheet_reviewed=true
+manual_review_notes=All 11 pages were reviewed. Pages 1-8 and 10-11 match previously inspected page renders byte-for-byte; page 9 was individually rechecked after widening the flowchart boxes. No critical or major visual defects, clipped paragraphs, missing figures, or unreadable equations were observed.
+minor_issues=References start at the bottom of page 10 with one entry and continue on page 11; no text is clipped, but moving the entire references section to page 11 would improve pagination.
+build_workflow_run_id=40075535304
+build_workflow_url=https://github.com/Devanik21/The-Invention-Archive/actions/runs/40075535304
