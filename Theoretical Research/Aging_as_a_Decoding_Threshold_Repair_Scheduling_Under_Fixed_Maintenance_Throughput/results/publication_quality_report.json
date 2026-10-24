@@ -12,10 +12,10 @@
   "biological_or_lifespan_validation": "NOT_PERFORMED",
   "trigger_commit_sha": "927c15fd05f99de5df82bee4a8fa53c99f7dd9f9",
   "visual_review_status": "PASS",
-  "visual_review_timestamp_utc": "2026-10-24T07:51:58.605752+00:00",
+  "visual_review_timestamp_utc": "2026-10-24T07:56:24.388177+00:00",
   "visual_review_record": "results/pdf_visual_review.json",
-  "visual_review_run_id": "40075801847",
-  "visual_review_run_url": "https://github.com/Devanik21/The-Invention-Archive/actions/runs/40075801847",
+  "visual_review_run_id": "40076083052",
+  "visual_review_run_url": "https://github.com/Devanik21/The-Invention-Archive/actions/runs/40076083052",
   "scientific_scope": "Synthetic-model conditional result only; no organismal lifespan-extension claim.",
   "release_status": "PASS",
   "remote_readback_commit_sha": "70dce9df411986eddaa5842bbc567d64b6a4a908"
