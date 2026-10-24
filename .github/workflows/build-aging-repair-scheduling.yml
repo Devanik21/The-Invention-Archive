@@ -42,6 +42,28 @@ jobs:
           xz -dc "$RUNNER_TEMP/builder.py.xz" > "$RUNNER_TEMP/builder.py"
           python -m py_compile "$RUNNER_TEMP/builder.py"
           python "$RUNNER_TEMP/builder.py" "$RELEASE_DIR"
+          # Normalize the font dependency to the TeX Live packages installed above.
+          python - "$RELEASE_DIR" <<'PY'
+          import sys
+          from pathlib import Path
+          root=Path(sys.argv[1]); p=root/'paper.tex'
+          source=p.read_text(encoding='utf-8')
+          old_font=r'\\usepackage{newtxtext,newtxmath}'
+          new_font=r'\\usepackage{mathptmx}'
+          old_math=r'\\usepackage{amsmath,mathtools}'
+          new_math=r'\\usepackage{amsmath,amssymb,mathtools}'
+          assert source.count(old_font)==1, 'unexpected manuscript font stanza'
+          assert source.count(old_math)==1, 'unexpected manuscript math stanza'
+          source=source.replace(old_font,new_font).replace(old_math,new_math)
+          p.write_text(source,encoding='utf-8')
+          (root/'results'/'tex_toolchain_compatibility.md').write_text(
+              '# TeX toolchain compatibility adjustment\\n\\n'
+              'The source generator initially selects newtxtext/newtxmath, which are not installed by the TeX Live package set on the GitHub runner. '
+              'The release workflow deterministically replaces that stanza with mathptmx and explicitly loads amssymb for mathbb and related AMS symbols. '
+              'Both changes are reflected in released paper.tex; the PDF is compiled from this exact patched source. No scientific content or numerical result is changed.\\n',
+              encoding='utf-8')
+          print('Applied documented TeX font dependency compatibility adjustment.')
+          PY
       - name: Verify model, build PDF, and render every page
         shell: bash
         run: |
