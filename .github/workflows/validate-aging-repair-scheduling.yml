@@ -1,0 +1,96 @@
+name: Validate published repair-scheduling release
+on:
+  workflow_run:
+    workflows: ["Build and publish repair-scheduling paper"]
+    types: [completed]
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      RELEASE_DIR: "Theoretical Research/Aging_as_a_Decoding_Threshold_Repair_Scheduling_Under_Fixed_Maintenance_Throughput"
+      SLUG: "Aging_as_a_Decoding_Threshold_Repair_Scheduling_Under_Fixed_Maintenance_Throughput"
+      UPSTREAM_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install validation dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "numpy==2.3.5" "matplotlib==3.10.8" "networkx==3.6.1" "PyMuPDF==1.26.7" "PyYAML==6.0.3" "Pillow==11.3.0"
+          sudo apt-get update
+          sudo apt-get install -y xz-utils latexmk texlive-latex-extra texlive-fonts-recommended poppler-utils
+      - name: Validate exact branch head, artifacts, model, source rebuild, and bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$UPSTREAM_CONCLUSION" = success || { echo "Publishing workflow concluded: $UPSTREAM_CONCLUSION" >&2; exit 1; }
+          test "$(git rev-parse HEAD)" = "$(git ls-remote origin refs/heads/main | awk '{print $1}')"
+          TESTED_SHA="$(git rev-parse HEAD)"
+          test -d "$RELEASE_DIR/figures" && test -d "$RELEASE_DIR/results"
+          python - "$RELEASE_DIR" "$SLUG" "$TESTED_SHA" <<'PY'
+          import sys,json,hashlib,re,zipfile
+          from pathlib import Path
+          import fitz,yaml
+          root=Path(sys.argv[1]); slug=sys.argv[2]; sha=sys.argv[3]
+          required={'paper.tex','paper.pdf','verify_model.py','README.md','CITATION.cff','paper.bib','.zenodo.json','schema_article.jsonld','deploy.py'}
+          actual={p.name for p in root.iterdir() if p.is_file()}
+          assert actual==required, {'missing':sorted(required-actual),'extra':sorted(actual-required)}
+          assert all((root/n).stat().st_size>0 for n in required)
+          assert (root/'paper.pdf').read_bytes().startswith(b'%PDF-')
+          assert len(fitz.open(root/'paper.pdf'))>=7
+          assert len(list((root/'figures').glob('figure*.pdf')))>=8 and len(list((root/'figures').glob('figure*.png')))>=8
+          tex=(root/'paper.tex').read_text(encoding='utf-8'); bib=(root/'paper.bib').read_text(encoding='utf-8')
+          assert len(re.findall(r'\\begin\{table\}',tex))>=5 and len(re.findall(r'\\begin\{figure\}',tex))>=8
+          keys=set(re.findall(r'@\w+\s*\{\s*([^,\s]+)',bib))
+          cites=set(k.strip() for b in re.findall(r'\\cite\w*\{([^}]+)\}',tex) for k in b.split(','))
+          assert cites<=keys, sorted(cites-keys)
+          yaml.safe_load((root/'CITATION.cff').read_text(encoding='utf-8'))
+          json.loads((root/'.zenodo.json').read_text(encoding='utf-8')); json.loads((root/'schema_article.jsonld').read_text(encoding='utf-8'))
+          report=json.loads((root/'results'/'verification_report.json').read_text(encoding='utf-8'))
+          assert report.get('status')=='PASS' and report.get('checks_failed')==0
+          vr=json.loads((root/'results'/'pdf_visual_review.json').read_text(encoding='utf-8'))
+          assert vr.get('paper_pdf_sha256')==hashlib.sha256((root/'paper.pdf').read_bytes()).hexdigest()
+          matrix=json.loads((root/'results'/'release_check_matrix.json').read_text(encoding='utf-8'))
+          assert matrix.get('pdf_sha256')==vr['paper_pdf_sha256']
+          bundle=Path('Theoretical Research')/(slug+'_complete_bundle.zip')
+          assert bundle.is_file() and bundle.stat().st_size>100000
+          with zipfile.ZipFile(bundle) as z:
+              assert z.testzip() is None
+              archived=slug+'/paper.pdf'
+              assert archived in z.namelist()
+              assert hashlib.sha256(z.read(archived)).hexdigest()==hashlib.sha256((root/'paper.pdf').read_bytes()).hexdigest()
+          print(json.dumps({'tested_main_sha':sha,'pdf_sha256':vr['paper_pdf_sha256'],'pages':len(fitz.open(root/'paper.pdf')),'root_files':len(required),'figure_pdfs':len(list((root/'figures').glob('figure*.pdf'))),'figure_pngs':len(list((root/'figures').glob('figure*.png'))),'bundle_bytes':bundle.stat().st_size,'bundle_pdf_hash_match':True},indent=2))
+          PY
+          TMP="$(mktemp -d)"
+          trap 'rm -rf "$TMP"' EXIT
+          cp -a "$RELEASE_DIR" "$TMP/release"
+          cd "$TMP/release"
+          python verify_model.py > "$TMP/model_verify.txt"
+          grep -q "PASS" "$TMP/model_verify.txt"
+          python -m py_compile verify_model.py deploy.py
+          python deploy.py --self-test > "$TMP/deploy_self_test.txt"
+          python deploy.py --validate-only > "$TMP/deploy_validate.txt"
+          latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error paper.tex > "$TMP/rebuild.log" 2>&1
+          test "$(pdfinfo paper.pdf | awk '/^Pages:/ {print $2}')" -ge 7
+          pdftotext paper.pdf "$TMP/rebuilt.txt"
+          pdftotext "$GITHUB_WORKSPACE/$RELEASE_DIR/paper.pdf" "$TMP/published.txt"
+          python - "$TMP/rebuilt.txt" "$TMP/published.txt" <<'PY'
+          import re,sys
+          norm=lambda p: re.sub(r'\s+',' ',open(p,encoding='utf-8',errors='replace').read()).strip()
+          a,b=map(norm,sys.argv[1:])
+          assert a==b, 'PDF text differs from clean rebuild of the committed LaTeX source'
+          print('PASS: clean source rebuild has the same extracted paper text as the published PDF')
+          PY
+          cd "$GITHUB_WORKSPACE"
+          test "$(git rev-parse HEAD)" = "$(git ls-remote origin refs/heads/main | awk '{print $1}')"
+          echo "Validated release tree on main SHA: $TESTED_SHA" >> "$GITHUB_STEP_SUMMARY"
+          echo "Model, metadata, root manifest, PDF page count, source rebuild text, and ZIP/PDF hash consistency passed." >> "$GITHUB_STEP_SUMMARY"
