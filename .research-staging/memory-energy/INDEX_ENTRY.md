@@ -1,0 +1,1 @@
+| 2026.10.24 | The Memory--Energy Frontier in Noisy Recurrent Inference | Synthetic recurrent-inference benchmark preprint | [Memory--Energy Frontier](Memory_Energy_Frontier_Spectral_Rate_Distortion_Bounds_for_Energy_Constrained_Recurrent_Inference/) |
