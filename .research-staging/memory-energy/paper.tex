@@ -163,6 +163,20 @@ P5 & Memory as a resource competing with correction & Intuition, not a biologica
 \bottomrule
 \end{tabularx}\end{table}
 
+\subsection{Mode-wise spectral extension}
+The scalar result extends to a restricted multivariate setting. Suppose the state transition is normal and diagonalizable as $A=U\,\mathrm{diag}(a_1,\ldots,a_m)U^\ast$, with $|a_i|<1$, and process/observation noise is independent in this modal basis. Each mode then obeys the scalar recurrence with parameters $(a_i,q_i,r_i)$ and gain $k_i$, yielding
+\begin{equation}
+P_i(k_i)=\frac{(1-k_i)^2q_i+k_i^2r_i}{1-a_i^2(1-k_i)^2}.
+\label{eq:mode-mse}
+\end{equation}
+For nonnegative task weights $\omega_i$, define aggregate distortion and proxy cost by
+\begin{equation}
+D(\mathbf{k})=\sum_{i=1}^{m}\omega_iP_i(k_i),\qquad
+C_{\mathrm{tot}}(\mathbf{k})=\sum_{i=1}^{m}\left[\alpha_i k_i^2+\beta_i a_i^2(1-k_i)^2\right].
+\label{eq:mode-objective}
+\end{equation}
+The shared-budget problem minimizes $D(\mathbf{k})$ subject to $C_{\mathrm{tot}}(\mathbf{k})\leq B$ and $k_i\in[0,1]$. If a separate budget $B_i$ is assigned to each mode, the problem separates into scalar subproblems; a shared budget couples the gains and requires joint constrained optimization. The released learning experiment remains scalar, so the mode-wise formulation is a derived extension rather than a numerically validated multivariate result. Figure~\ref{fig:modes} is a structural illustration, not empirical evidence of spectral behavior in a real network.
+
 \section{Learning protocol}
 Synthetic draws of $(a,q,r,\alpha,\beta,B)$ are generated with a fixed seed. For each draw, a dense grid over $k\in[0,1]$ is filtered by $C(k)\leq B$, and the feasible point with smallest $P(k)$ becomes the oracle label. A scikit-learn MLP with hidden layers $(48,32)$, ReLU, Adam, early stopping, and fixed random seed predicts a gain from model descriptors. The raw prediction is clipped to $[0,1]$ and projected to the nearest feasible grid point. A fixed-gain baseline receives the same projection. Relative regret is
 \begin{equation}
