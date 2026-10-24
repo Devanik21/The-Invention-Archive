@@ -19,6 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
       RELEASE_DIR: "Theoretical Research/Memory_Energy_Frontier_Spectral_Rate_Distortion_Bounds_for_Energy_Constrained_Recurrent_Inference"
       STAGING_DIR: ".research-staging/memory-energy"
     steps:
