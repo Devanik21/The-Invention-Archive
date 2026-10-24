@@ -87,10 +87,10 @@ jobs:
           cp "$RELEASE_DIR"/figures/*.pdf "$BUILD_DIR/figures/"
           cp "$RELEASE_DIR/results/generated_results.tex" "$BUILD_DIR/results/"
           cd "$BUILD_DIR"
-          pdflatex -interaction=nonstopmode -halt-on-error paper.tex > pdflatex-1.log
-          bibtex paper > bibtex.log
-          pdflatex -interaction=nonstopmode -halt-on-error paper.tex > pdflatex-2.log
-          pdflatex -interaction=nonstopmode -halt-on-error paper.tex > pdflatex-3.log
+          pdflatex -interaction=nonstopmode -halt-on-error paper.tex > pdflatex-1.log 2>&1 || { cp pdflatex-1.log "$GITHUB_WORKSPACE/$RELEASE_DIR/results/pdflatex-1-failed.log"; tail -n 100 pdflatex-1.log; exit 1; }
+          bibtex paper > bibtex.log 2>&1 || { cp bibtex.log "$GITHUB_WORKSPACE/$RELEASE_DIR/results/bibtex-failed.log"; tail -n 100 bibtex.log; exit 1; }
+          pdflatex -interaction=nonstopmode -halt-on-error paper.tex > pdflatex-2.log 2>&1 || { cp pdflatex-2.log "$GITHUB_WORKSPACE/$RELEASE_DIR/results/pdflatex-2-failed.log"; tail -n 100 pdflatex-2.log; exit 1; }
+          pdflatex -interaction=nonstopmode -halt-on-error paper.tex > pdflatex-3.log 2>&1 || { cp pdflatex-3.log "$GITHUB_WORKSPACE/$RELEASE_DIR/results/pdflatex-3-failed.log"; tail -n 100 pdflatex-3.log; exit 1; }
           if grep -E 'LaTeX Error:|Undefined control sequence|Citation .* undefined|Reference .* undefined|Missing character:' paper.log; then
             echo 'Fatal or unresolved LaTeX issue detected.' >&2
             exit 1
@@ -99,6 +99,9 @@ jobs:
           cp paper.pdf "$GITHUB_WORKSPACE/$RELEASE_DIR/paper.pdf"
           cp paper.log "$GITHUB_WORKSPACE/$RELEASE_DIR/results/latex_build_log.txt"
           cp bibtex.log "$GITHUB_WORKSPACE/$RELEASE_DIR/results/bibtex_build_log.txt"
+          cp pdflatex-1.log "$GITHUB_WORKSPACE/$RELEASE_DIR/results/pdflatex_first_pass.log"
+          cp pdflatex-2.log "$GITHUB_WORKSPACE/$RELEASE_DIR/results/pdflatex_second_pass.log"
+          cp pdflatex-3.log "$GITHUB_WORKSPACE/$RELEASE_DIR/results/pdflatex_final_pass.log"
       - name: Automated PDF preflight and page rendering
         shell: bash
         run: |
