@@ -1,0 +1,19 @@
+{
+  "audit_date": "2026-10-24",
+  "identity_variants": ["Devanik Debnath", "Devanik21"],
+  "profiles": [
+    {"service":"GitHub","url":"https://github.com/Devanik21","status":"profile found; biographical claims treated as self-reported"},
+    {"service":"Archive","url":"https://github.com/Devanik21/The-Invention-Archive","status":"repository inspected"},
+    {"service":"ORCID","url":"https://orcid.org/0009-0001-8310-6921","status":"page reachable; public search interface returned JavaScript-only shell"},
+    {"service":"LinkedIn","url":"https://www.linkedin.com/in/devanik","status":"profile URL found; no institutional relationship inferred"},
+    {"service":"Zenodo","url":"https://zenodo.org/","status":"service searched; specific self-reported DOI record not independently retrieved"},
+    {"service":"OpenAIRE","url":"https://explore.openaire.eu/","status":"no unambiguous exact-name record found in inspected results; search not exhaustive"},
+    {"service":"Google Scholar","url":"https://scholar.google.com/","status":"no unambiguous exact-name profile found in inspected results; search not exhaustive"},
+    {"service":"Kaggle","url":"https://www.kaggle.com/devanikdebnath","status":"self-linked profile noted; not treated as publication verification"},
+    {"service":"Kaggle","url":"https://www.kaggle.com/devanik","status":"self-linked profile noted; not treated as publication verification"}
+  ],
+  "formal_affiliation_used": "Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India",
+  "degree_award_claimed": false,
+  "doi_minted_for_this_release": false,
+  "peer_review_claimed": false
+}

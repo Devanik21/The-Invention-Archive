@@ -1,0 +1,24 @@
+{
+  "title": "Pulse-Resolved Identifiability: An Adaptive Design Principle for Separating Drift and Diffusion in Destructive Single-Cell Assays",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "publication_date": "2026-10-24",
+  "version": "1.0.0",
+  "creators": [
+    {
+      "name": "Devanik Debnath",
+      "affiliation": "Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India",
+      "orcid": "0009-0001-8310-6921"
+    }
+  ],
+  "description": "A reproducible theoretical and computational benchmark for separating relaxation, input gain, and diffusion intensity in a controlled Ornstein-Uhlenbeck model observed through destructive population snapshots. All numerical data are synthetic. No empirical biological dataset was analyzed. This JSON file is a metadata draft only; no Zenodo deposit or DOI minting is implied.",
+  "keywords": [
+    "single-cell perturbation",
+    "structural identifiability",
+    "stochastic differential equations",
+    "Fisher information",
+    "experimental design"
+  ],
+  "license": "mit",
+  "access_right": "open"
+}

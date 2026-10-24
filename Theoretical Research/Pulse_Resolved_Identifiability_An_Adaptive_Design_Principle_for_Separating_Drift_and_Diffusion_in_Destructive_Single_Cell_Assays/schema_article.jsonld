@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Pulse-Resolved Identifiability: An Adaptive Design Principle for Separating Drift and Diffusion in Destructive Single-Cell Assays",
+  "name": "Pulse-Resolved Identifiability: An Adaptive Design Principle for Separating Drift and Diffusion in Destructive Single-Cell Assays",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "sameAs": "https://orcid.org/0009-0001-8310-6921",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "National Institute of Technology Agartala"
+    }
+  },
+  "dateCreated": "2026-10-24",
+  "dateModified": "2026-10-24",
+  "creativeWorkStatus": "preprint",
+  "inLanguage": "en",
+  "description": "A reproducible mathematical benchmark for pulse-resolved identifiability in destructive single-cell assays. All numerical outputs are synthetic; no biological dataset was analyzed.",
+  "keywords": [
+    "single-cell perturbation",
+    "structural identifiability",
+    "stochastic differential equations",
+    "Fisher information",
+    "experimental design"
+  ],
+  "isPartOf": {
+    "@type": "CreativeWork",
+    "name": "The-Invention-Archive",
+    "url": "https://github.com/Devanik21/The-Invention-Archive"
+  },
+  "url": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Pulse_Resolved_Identifiability_An_Adaptive_Design_Principle_for_Separating_Drift_and_Diffusion_in_Destructive_Single_Cell_Assays"
+}

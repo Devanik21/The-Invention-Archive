@@ -1,0 +1,11 @@
+topic,importance,gap_evidence,conceptual_boldness,mechanistic_plausibility,mathematical_core,substantive_AI_role,human_benefit,first_validation,falsifiability,safety,total,decision
+"Pulse-resolved identifiability for destructive single-cell assays",5,5,4,5,5,4,5,5,5,5,48,"SELECTED: exact moment-level confounding result; executable synthetic test; clear route to real-data validation"
+"Latent dynamical causal model for single-cell perturbation prediction",5,4,4,4,5,5,5,4,5,5,46,"Strong candidate, but a very close 2026 preprint already proposes latent dynamical causal inference; narrowed to a different identifiability question"
+"Adaptive cryopreservation control under uncertain tissue transport",5,3,4,4,5,4,5,4,4,4,42,"Credible but overlaps the archive's CryoWeave proposal"
+"Information-geometric control of tissue repair with sheaf Laplacians",5,3,4,3,5,4,5,3,4,4,40,"Interesting but overlaps existing cohomological-rejuvenation work"
+"Adaptive BCI stimulation for nonstationary neural state spaces",4,3,4,4,5,4,4,4,4,5,41,"Promising; less directly connected to a newly identified high-impact gap in this cycle"
+"Causal observability of mitochondrial heteroplasmy transitions",5,3,4,3,5,4,5,3,4,4,40,"High importance but adjacent to an existing heteroplasmy phase-control release"
+"Safe active learning for senolytic combination scheduling",5,3,4,3,4,5,5,3,4,3,39,"Potentially useful but would require stronger real-data and safety evidence"
+"Lineage-aware transport for clone-specific cell fate",5,2,3,4,4,4,5,3,4,4,38,"Rejected as too close to the October 2026 CloneOT preprint"
+"Functorial epigenetic realignment via acoustic mechanotransduction",5,2,5,1,2,3,5,1,2,2,28,"Rejected: proposed acoustic/topological mechanism is not sufficiently operationalized or supported"
+"Quantum-coherence biomarkers of organismal aging",4,1,5,1,3,3,3,1,2,2,25,"Rejected: weak evidence-to-mechanism chain and no feasible decisive first validation"

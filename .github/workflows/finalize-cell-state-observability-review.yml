@@ -1,0 +1,132 @@
+name: Finalize Pulse-Resolved Identifiability visual review
+
+on:
+  push:
+    branches:
+      - research/cell-state-observability-staging
+    paths:
+      - 'Theoretical Research/Pulse_Resolved_Identifiability_An_Adaptive_Design_Principle_for_Separating_Drift_and_Diffusion_in_Destructive_Single_Cell_Assays/results/manual_visual_review_input.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cell-state-observability-review
+  cancel-in-progress: false
+
+jobs:
+  finalize-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      RELEASE_DIR: 'Theoretical Research/Pulse_Resolved_Identifiability_An_Adaptive_Design_Principle_for_Separating_Drift_and_Diffusion_in_Destructive_Single_Cell_Assays'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Finalize page-by-page review record and checksum manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -s "$RELEASE_DIR/results/manual_visual_review_input.json" ]; then
+            echo 'Expected cleanup-trigger event: manual review input is absent; no-op.'
+            exit 0
+          fi
+          python - "$RELEASE_DIR" <<'PY'
+          import hashlib,json,sys
+          from datetime import datetime,timezone
+          from pathlib import Path
+          root=Path(sys.argv[1])
+          input_path=root/'results/manual_visual_review_input.json'
+          data=json.loads(input_path.read_text(encoding='utf-8'))
+          pdf=root/'paper.pdf'
+          pdf_sha=hashlib.sha256(pdf.read_bytes()).hexdigest()
+          from pypdf import PdfReader
+          page_count=len(PdfReader(str(pdf)).pages)
+          assert data.get('pdf_sha256') == pdf_sha, 'review input PDF hash does not match current paper.pdf'
+          assert data.get('page_count') == page_count, 'review input page count does not match current PDF'
+          pages=data.get('pages_reviewed',[])
+          assert pages == list(range(1,page_count+1)), 'not every PDF page is recorded as reviewed'
+          issues=data.get('issues',[])
+          assert not any(issue.get('severity') in {'critical','major'} for issue in issues), 'critical or major visual issue blocks release'
+          assert data.get('status') == 'PASS', 'manual review input must explicitly declare PASS'
+          review={
+            'status':'PASS',
+            'final_pdf_sha256':pdf_sha,
+            'page_count':page_count,
+            'render_dpi':data.get('render_dpi',130),
+            'pages_rendered':list(range(1,page_count+1)),
+            'pages_reviewed':pages,
+            'review_method':'Page-by-page inspection of rendered PDF images by Xylia, combined with automated preflight; this is review evidence, not an infallible guarantee.',
+            'contact_sheet':'results/pdf_contact_sheet.png',
+            'issues':issues,
+            'inspected_sections':data.get('inspected_sections',[]),
+            'final_disposition':'No unresolved critical or major defects; any minor issue is listed explicitly.',
+            'inspection_timestamp_utc':datetime.now(timezone.utc).isoformat()
+          }
+          (root/'results/pdf_visual_review.json').write_text(json.dumps(review,indent=2)+'\n',encoding='utf-8')
+          report=(root/'results/publication_quality_report.md').read_text(encoding='utf-8')
+          report += f"""
+## Page-level visual review
+
+- Status: PASS
+- Final PDF SHA-256: {pdf_sha}
+- Pages inspected individually: {page_count}/{page_count}
+- Contact sheet: results/pdf_contact_sheet.png
+- Issue record: results/pdf_visual_review.json
+- Review method: page-by-page rendered-image inspection by Xylia plus automated checks.
+- Residual issues: {len(issues)} recorded; no critical or major issues accepted.
+- Main-branch remote verification: still pending at the time this staging review was finalized.
+"""
+          (root/'results/publication_quality_report.md').write_text(report,encoding='utf-8')
+          input_path.unlink()
+          report_path=root/'results/review_finalization_report.json'
+          report_path.write_text(json.dumps({
+            'status':'PASS',
+            'timestamp_utc':datetime.now(timezone.utc).isoformat(),
+            'pdf_sha256':pdf_sha,
+            'page_count':page_count,
+            'pages_reviewed':len(pages),
+            'workflow_run_id':int(__import__('os').environ.get('GITHUB_RUN_ID','0')),
+            'workflow_head_sha':__import__('os').environ.get('GITHUB_SHA',''),
+            'limitation':'Staging review only; main-branch verification and tag creation remain outstanding.'
+          },indent=2)+'\n',encoding='utf-8')
+          matrix_path=root/'results/release_check_matrix.json'
+          matrix=json.loads(matrix_path.read_text(encoding='utf-8'))
+          for row in matrix.get('checks',[]):
+              if row.get('name') == 'pdf_visual_review':
+                  row['status']='PASS'
+                  row['evidence']='results/pdf_visual_review.json; final PDF SHA-256 matched'
+              if row.get('name') == 'sha256_manifest':
+                  row['status']='PASS'
+                  row['evidence']='results/sha256_manifest.json regenerated after review'
+          matrix['release_status']='BLOCKED'
+          matrix['tag_eligible']=False
+          matrix['limitations']=[
+            'All numerical observations are synthetic.',
+            'Main-branch remote verification and semantic tag verification remain outstanding.'
+          ]
+          matrix_path.write_text(json.dumps(matrix,indent=2)+'\n',encoding='utf-8')
+          excluded={'results/sha256_manifest.json','results/release_check_matrix.json'}
+          files={}
+          for p in sorted(root.rglob('*')):
+              if p.is_file():
+                  rel=p.as_posix()
+                  if rel not in excluded:
+                      files[rel]=hashlib.sha256(p.read_bytes()).hexdigest()
+          manifest={'timestamp_utc':datetime.now(timezone.utc).isoformat(),'algorithm':'SHA-256','excluded':sorted(excluded),'files':files}
+          manifest_path=root/'results/sha256_manifest.json'
+          manifest_path.write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
+          matrix['artifact_manifest_sha256']=hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+          matrix_path.write_text(json.dumps(matrix,indent=2)+'\n',encoding='utf-8')
+          print('PASS: visual review, PDF hash, page coverage, and manifest finalized.')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RELEASE_DIR/results"
+          git diff --cached --check
+          git commit -m "stage(review): finalize visual review evidence"
+          git push origin "HEAD:$GITHUB_REF_NAME"

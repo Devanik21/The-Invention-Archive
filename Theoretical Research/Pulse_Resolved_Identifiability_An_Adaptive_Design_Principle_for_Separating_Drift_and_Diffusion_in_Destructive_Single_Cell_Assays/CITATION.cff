@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this theoretical and computational benchmark, please cite the archived release."
+title: "Pulse-Resolved Identifiability: An Adaptive Design Principle for Separating Drift and Diffusion in Destructive Single-Cell Assays"
+authors:
+  - family-names: "Debnath"
+    given-names: "Devanik"
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+    affiliation: "Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India"
+version: "1.0.0"
+date-released: "2026-10-24"
+url: "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Pulse_Resolved_Identifiability_An_Adaptive_Design_Principle_for_Separating_Drift_and_Diffusion_in_Destructive_Single_Cell_Assays"
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+abstract: >-
+  A reproducible mathematical benchmark for identifying relaxation, input gain,
+  and diffusion intensity from controlled pulse responses observed through
+  destructive single-cell snapshots. The results are synthetic and do not
+  constitute empirical biological validation.
+keywords:
+  - single-cell perturbation
+  - structural identifiability
+  - stochastic differential equations
+  - Fisher information
+  - optimal experimental design
+license: MIT

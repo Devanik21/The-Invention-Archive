@@ -1,0 +1,278 @@
+name: Stage and build Pulse-Resolved Identifiability
+
+on:
+  push:
+    branches:
+      - research/cell-state-observability-staging
+    paths:
+      - 'Theoretical Research/Pulse_Resolved_Identifiability_An_Adaptive_Design_Principle_for_Separating_Drift_and_Diffusion_in_Destructive_Single_Cell_Assays/paper.tex'
+      - 'Theoretical Research/Pulse_Resolved_Identifiability_An_Adaptive_Design_Principle_for_Separating_Drift_and_Diffusion_in_Destructive_Single_Cell_Assays/paper.bib'
+      - 'Theoretical Research/Pulse_Resolved_Identifiability_An_Adaptive_Design_Principle_for_Separating_Drift_and_Diffusion_in_Destructive_Single_Cell_Assays/verify_model.py'
+      - '.github/workflows/stage-cell-state-observability.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cell-state-observability-staging
+  cancel-in-progress: false
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      RELEASE_DIR: 'Theoretical Research/Pulse_Resolved_Identifiability_An_Adaptive_Design_Principle_for_Separating_Drift_and_Diffusion_in_Destructive_Single_Cell_Assays'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned Python dependencies
+        run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0 matplotlib==3.10.8 networkx==3.6.1 pypdf==5.9.0 PyYAML==6.0.3
+      - name: Install LaTeX and PDF utilities
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended poppler-utils
+      - name: Validate source and metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RELEASE_DIR"
+          python -m py_compile verify_model.py deploy.py
+          rm -rf __pycache__
+          python deploy.py --self-test | tee results/deploy_self_test_stdout.txt
+          python - <<'PY'
+          import json, re
+          from pathlib import Path
+          import yaml
+          root=Path('.')
+          cff=yaml.safe_load((root/'CITATION.cff').read_text(encoding='utf-8'))
+          assert cff.get('cff-version') == '1.2.0'
+          assert cff.get('title') and cff.get('authors')
+          json.loads((root/'.zenodo.json').read_text(encoding='utf-8'))
+          json.loads((root/'schema_article.jsonld').read_text(encoding='utf-8'))
+          tex=(root/'paper.tex').read_text(encoding='utf-8')
+          bib=(root/'paper.bib').read_text(encoding='utf-8')
+          keys=set(re.findall(r'@\w+\s*\{\s*([^,\s]+)',bib))
+          cited=set()
+          for group in re.findall(r'\\cite\w*\{([^}]+)\}',tex):
+              cited.update(k.strip() for k in group.split(','))
+          assert cited <= keys, f'missing bibliography keys: {sorted(cited-keys)}'
+          readme=(root/'README.md').read_text(encoding='utf-8')
+          assert readme.count('$$') % 2 == 0
+          assert r'\operatorname' not in readme
+          assert 'No DOI has been minted' in readme
+          print('PASS: CFF YAML, Zenodo JSON, JSON-LD, bibliography keys, README math and release-status wording')
+          PY
+      - name: Run mathematical and figure-generation verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RELEASE_DIR"
+          python verify_model.py 2>&1 | tee results/verification_stdout.txt
+          python -m py_compile verify_model.py deploy.py
+          rm -rf __pycache__
+      - name: Compile current manuscript and bibliography in a clean temporary directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUILD_DIR="$(mktemp -d)"
+          trap 'rm -rf "$BUILD_DIR"' EXIT
+          cp "$RELEASE_DIR/paper.tex" "$RELEASE_DIR/paper.bib" "$BUILD_DIR/"
+          mkdir -p "$BUILD_DIR/figures" "$BUILD_DIR/results"
+          cp "$RELEASE_DIR"/figures/*.pdf "$BUILD_DIR/figures/"
+          cp "$RELEASE_DIR/results/generated_results.tex" "$BUILD_DIR/results/"
+          cd "$BUILD_DIR"
+          pdflatex -interaction=nonstopmode -halt-on-error paper.tex > pdflatex-1.log
+          bibtex paper > bibtex.log
+          pdflatex -interaction=nonstopmode -halt-on-error paper.tex > pdflatex-2.log
+          pdflatex -interaction=nonstopmode -halt-on-error paper.tex > pdflatex-3.log
+          if grep -E 'LaTeX Error:|Undefined control sequence|Citation .* undefined|Reference .* undefined|Missing character:' paper.log; then
+            echo 'Fatal or unresolved LaTeX issue detected.' >&2
+            exit 1
+          fi
+          test -s paper.pdf
+          cp paper.pdf "$GITHUB_WORKSPACE/$RELEASE_DIR/paper.pdf"
+          cp paper.log "$GITHUB_WORKSPACE/$RELEASE_DIR/results/latex_build_log.txt"
+          cp bibtex.log "$GITHUB_WORKSPACE/$RELEASE_DIR/results/bibtex_build_log.txt"
+      - name: Automated PDF preflight and page rendering
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RELEASE_DIR"
+          pdfinfo paper.pdf > results/pdfinfo.txt
+          pdffonts paper.pdf > results/pdf_fonts.txt
+          pdftoppm -png -r 80 paper.pdf /tmp/cell-state-page >/dev/null 2>&1
+          python - <<'PY'
+          import hashlib, json, math, re, subprocess
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from PIL import Image, ImageOps, ImageDraw
+          from pypdf import PdfReader
+          root=Path('.')
+          pdf=root/'paper.pdf'
+          pdf_sha=hashlib.sha256(pdf.read_bytes()).hexdigest()
+          reader=PdfReader(str(pdf))
+          pages=len(reader.pages)
+          assert pages >= 7, f'PDF has only {pages} pages'
+          extracted='\n'.join(page.extract_text() or '' for page in reader.pages)
+          assert extracted.strip() and 'References' in extracted
+          assert 'Xylia' in extracted and 'Devanik Debnath' in extracted
+          assert not re.search(r'\[\?\]|\?\?+', extracted), 'unresolved citation/reference marker found in extracted text'
+          tex=(root/'paper.tex').read_text(encoding='utf-8')
+          generated=(root/'results/generated_results.tex').read_text(encoding='utf-8')
+          table_count=tex.count(r'\begin{table}') + generated.count(r'\begin{table}')
+          figure_count=tex.count(r'\begin{figure}')
+          pdf_figures=list((root/'figures').glob('*.pdf'))
+          svg_figures=list((root/'figures').glob('*.svg'))
+          assert table_count >= 5, f'only {table_count} tables'
+          assert figure_count >= 8 and len(pdf_figures) >= 8 and len(svg_figures) >= 8
+          font_lines=(root/'results/pdf_fonts.txt').read_text(encoding='utf-8',errors='replace').splitlines()
+          font_rows=[line.split() for line in font_lines[2:] if line.strip()]
+          assert font_rows and all(len(row) >= 6 and row[3].lower() == 'yes' for row in font_rows), 'one or more PDF fonts are not embedded'
+          rendered=sorted(Path('/tmp').glob('cell-state-page-*.png'))
+          assert len(rendered) == pages, f'rendered {len(rendered)} pages but PDF has {pages}'
+          thumbs=[]
+          for path in rendered:
+              im=Image.open(path).convert('RGB')
+              im.thumbnail((300,425))
+              canvas=Image.new('RGB',(320,455),'white')
+              canvas.paste(im,((320-im.width)//2,8))
+              ImageDraw.Draw(canvas).text((12,435),path.stem,fill='#172B3A')
+              thumbs.append(canvas)
+          cols=4
+          rows=math.ceil(len(thumbs)/cols)
+          sheet=Image.new('RGB',(cols*320,rows*455),'#E6ECEF')
+          for i,im in enumerate(thumbs):
+              sheet.paste(im,((i%cols)*320,(i//cols)*455))
+          sheet.save(root/'results/pdf_contact_sheet.png',optimize=True)
+          page_sizes=subprocess.run(['pdfinfo',str(pdf)],capture_output=True,text=True,check=True).stdout
+          preflight={
+            'timestamp_utc':datetime.now(timezone.utc).isoformat(),
+            'status':'PASS',
+            'pdf_sha256':pdf_sha,
+            'page_count':pages,
+            'table_environment_count':table_count,
+            'figure_environment_count':figure_count,
+            'vector_pdf_figures':len(pdf_figures),
+            'vector_svg_figures':len(svg_figures),
+            'font_embedding':'PASS',
+            'rendered_page_count':len(rendered),
+            'contact_sheet':'results/pdf_contact_sheet.png',
+            'page_geometry_report':'results/pdfinfo.txt',
+            'font_report':'results/pdf_fonts.txt',
+            'synthetic_data_only':True
+          }
+          (root/'results/pdf_preflight.json').write_text(json.dumps(preflight,indent=2)+'\n',encoding='utf-8')
+          review={
+            'status':'PENDING_MANUAL_VISUAL_INSPECTION',
+            'final_pdf_sha256':pdf_sha,
+            'page_count':pages,
+            'render_dpi':80,
+            'pages_rendered':list(range(1,pages+1)),
+            'pages_reviewed':[],
+            'issues':[],
+            'contact_sheet':'results/pdf_contact_sheet.png',
+            'automated_preflight':'PASS',
+            'note':'Automated rendering is complete. Page-by-page visual inspection is not yet recorded; release remains blocked.'
+          }
+          (root/'results/pdf_visual_review.json').write_text(json.dumps(review,indent=2)+'\n',encoding='utf-8')
+          report=f"""# Publication-quality report
+
+- Automated preflight: PASS
+- PDF SHA-256: {pdf_sha}
+- Page count: {pages}
+- Tables: {table_count}
+- Figure environments: {figure_count}
+- Vector PDF figures: {len(pdf_figures)}
+- Vector SVG figures: {len(svg_figures)}
+- Font embedding: PASS
+- Full-page rendering: PASS ({pages} pages at 80 DPI; contact sheet saved)
+- Manual page-by-page visual inspection: PENDING
+- Release disposition: BLOCKED pending visual inspection and main-branch remote verification.
+
+The PDF was compiled from the current paper.tex and paper.bib in a clean temporary build directory. All figures were regenerated by verify_model.py. Synthetic results are not empirical biological evidence.
+"""
+          (root/'results/publication_quality_report.md').write_text(report,encoding='utf-8')
+          matrix={
+            'schema_version':1,
+            'execution_timestamp_utc':datetime.now(timezone.utc).isoformat(),
+            'repository':'Devanik21/The-Invention-Archive',
+            'branch':'research/cell-state-observability-staging',
+            'release_status':'BLOCKED',
+            'tag_eligible':False,
+            'pdf_sha256':pdf_sha,
+            'page_count':pages,
+            'checks':[
+              {'name':'scientific_validity','status':'PASS','evidence':'Analytical derivations and scoped assumptions in paper.tex; results/claim_evidence_matrix.csv'},
+              {'name':'literature_and_citation_integrity','status':'PASS','evidence':'results/literature_audit.md and resolved BibTeX build'},
+              {'name':'python_syntax','status':'PASS','evidence':'py_compile in staging workflow'},
+              {'name':'mathematical_verification','status':'PASS','evidence':'results/verification_report.json and results/verification_stdout.txt'},
+              {'name':'metadata_validation','status':'PASS','evidence':'CITATION.cff, .zenodo.json, schema_article.jsonld parsed in workflow'},
+              {'name':'deployment_self_tests','status':'PASS','evidence':'results/deploy_self_test_stdout.txt'},
+              {'name':'pdf_compilation_and_preflight','status':'PASS','evidence':'results/pdf_preflight.json, results/latex_build_log.txt, results/pdf_fonts.txt'},
+              {'name':'pdf_visual_review','status':'PENDING','evidence':'results/pdf_visual_review.json; page-level inspection not yet recorded'},
+              {'name':'sha256_manifest','status':'PENDING','evidence':'results/sha256_manifest.json will be finalized after checks'},
+              {'name':'staging_build_workflow','status':'PENDING','run_id':int(__import__('os').environ.get('GITHUB_RUN_ID','0')),'head_sha':__import__('os').environ.get('GITHUB_SHA',''),'run_url':'https://github.com/Devanik21/The-Invention-Archive/actions/runs/'+__import__('os').environ.get('GITHUB_RUN_ID','0')},
+              {'name':'main_remote_verification','status':'NOT_RUN','reason':'Staging branch is not the publication branch; independent main-branch verification follows visual review.'},
+              {'name':'tag_creation','status':'NOT_RUN','reason':'Semantic tag is created only after main-branch remote verification.'}
+            ],
+            'limitations':['All numerical observations are synthetic.','The matrix is a staging snapshot; main-branch deployment and tag verification remain outstanding.']
+          }
+          (root/'results/release_check_matrix.json').write_text(json.dumps(matrix,indent=2)+'\n',encoding='utf-8')
+          (root/'results/sha256_manifest.json').write_text(json.dumps({'status':'PENDING_FINAL_HASHES','excluded':['results/sha256_manifest.json','results/release_check_matrix.json']},indent=2)+'\n',encoding='utf-8')
+          PY
+          python deploy.py --validate 2>&1 | tee results/deploy_validate_stdout.txt
+          python - <<'PY'
+          import hashlib,json
+          from datetime import datetime,timezone
+          from pathlib import Path
+          root=Path('.')
+          excluded={'results/sha256_manifest.json','results/release_check_matrix.json'}
+          files={}
+          for p in sorted(root.rglob('*')):
+              if p.is_file():
+                  rel=p.as_posix()
+                  if rel not in excluded:
+                      files[rel]=hashlib.sha256(p.read_bytes()).hexdigest()
+          manifest={'timestamp_utc':datetime.now(timezone.utc).isoformat(),'algorithm':'SHA-256','excluded':sorted(excluded),'files':files}
+          (root/'results/sha256_manifest.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
+          manifest_sha=hashlib.sha256((root/'results/sha256_manifest.json').read_bytes()).hexdigest()
+          matrix=json.loads((root/'results/release_check_matrix.json').read_text(encoding='utf-8'))
+          matrix['artifact_manifest_sha256']=manifest_sha
+          matrix['release_status']='BLOCKED'
+          (root/'results/release_check_matrix.json').write_text(json.dumps(matrix,indent=2)+'\n',encoding='utf-8')
+          # The manifest excludes the matrix to avoid a self-referential hash cycle.
+          print('PASS: SHA-256 manifest generated; matrix records its hash.')
+          PY
+      - name: Update parent research index without replacing existing entries
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          index=Path('Theoretical Research/Readme.md')
+          text=index.read_text(encoding='utf-8')
+          slug='Pulse_Resolved_Identifiability_An_Adaptive_Design_Principle_for_Separating_Drift_and_Diffusion_in_Destructive_Single_Cell_Assays'
+          if slug not in text:
+              row='| 2026.10.24 | Pulse-Resolved Identifiability | Identifiability and adaptive-design benchmark preprint | [Pulse-Resolved Identifiability]('+slug+'/) |'
+              lines=text.splitlines()
+              separator=next(i for i,line in enumerate(lines) if line.startswith('|---'))
+              lines.insert(separator+1,row)
+              index.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          print('PASS: parent index preserved and release entry added.')
+          PY
+      - name: Commit generated release outputs to the isolated staging branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RELEASE_DIR" "Theoretical Research/Readme.md"
+          git diff --cached --check
+          git commit -m "stage(cell-state-observability): build and verify release outputs"
+          git push origin "HEAD:$GITHUB_REF_NAME"
