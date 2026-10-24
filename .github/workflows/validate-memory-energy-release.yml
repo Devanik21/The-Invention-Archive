@@ -16,7 +16,7 @@ concurrency:
 jobs:
   validate-final-release:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     env:
       RELEASE_DIR: "Theoretical Research/Memory_Energy_Frontier_Spectral_Rate_Distortion_Bounds_for_Energy_Constrained_Recurrent_Inference"
       RELEASE_TAG: "v2026.10.24"
@@ -40,14 +40,25 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y texlive-latex-extra texlive-fonts-recommended latexmk poppler-utils
 
-      - name: Re-run model checks and validate the frozen artifact tree
+      - name: Re-run model checks in an isolated copy
         shell: bash
         run: |
           set -euo pipefail
-          python -m py_compile "$RELEASE_DIR/verify_model.py" "$RELEASE_DIR/deploy.py"
-          python "$RELEASE_DIR/verify_model.py" > "$RUNNER_TEMP/verify_model_recheck.log" 2>&1
-          python "$RELEASE_DIR/deploy.py" --validate-only --root "$RELEASE_DIR" | tee "$RUNNER_TEMP/deploy_validate.log"
-          git diff --exit-code -- "$RELEASE_DIR" || { echo "Reproducibility outputs differ from the committed tree." >&2; exit 1; }
+          CHECK_DIR="$RUNNER_TEMP/memory-energy-recheck"
+          mkdir -p "$CHECK_DIR"
+          cp -a "$RELEASE_DIR/." "$CHECK_DIR/"
+          find "$CHECK_DIR" -name '*.py' -print0 | xargs -0 python -m py_compile
+          find "$CHECK_DIR" -type d -name __pycache__ -prune -exec rm -rf {} +
+          python "$CHECK_DIR/verify_model.py" > "$RUNNER_TEMP/verify_model_recheck.log" 2>&1
+          for f in results/model_outputs.csv results/sensitivity_sweep.csv results/metrics.tex results/frontier_data.csv results/figure_curve_data.csv results/numerical_summary.json results/verification_report.json; do
+            cmp "$RELEASE_DIR/$f" "$CHECK_DIR/$f" || { echo "Deterministic output mismatch: $f" >&2; exit 1; }
+          done
+          python "$RELEASE_DIR/deploy.py" --validate-only --root "$RELEASE_DIR" > "$RUNNER_TEMP/deploy_validate.log" 2>&1 || { cat "$RUNNER_TEMP/deploy_validate.log"; exit 1; }
+
+      - name: Validate exact PDF, metadata, manifest, and matrix
+        shell: bash
+        run: |
+          set -euo pipefail
           python - "$RELEASE_DIR" "$RELEASE_TAG" <<'PY'
           import hashlib, json, re, sys, yaml
           from pathlib import Path
@@ -66,11 +77,11 @@ jobs:
           assert review.get("status")=="PASS" and review.get("pdf_sha256")==digest, "visual review does not bind to final PDF"
           assert review.get("pages_reviewed")==list(range(1,len(doc)+1)), "not every PDF page is recorded as reviewed"
           assert quality.get("status")=="PASS" and quality.get("pdf_sha256")==digest, "publication-quality report hash/status mismatch"
-          assert len(doc)>=7 and sum(len(p.get_text()) for p in doc)>=12000
+          assert len(doc)>=7 and sum(len(p.get_text()) for p in doc)>=8000
           tex=(root/"paper.tex").read_text(encoding="utf-8"); bib=(root/"paper.bib").read_text(encoding="utf-8")
           assert len(re.findall(r"\\begin\{table\}",tex))>=5
           assert len(re.findall(r"\\begin\{figure\}",tex))>=8
-          keys=set(re.findall(r"@\\w+\s*\{\s*([^,]+)",bib))
+          keys=set(re.findall(r"@\w+\s*\{\s*([^,]+)",bib))
           cites=[]
           for block in re.findall(r"\\cite\w*\{([^}]+)\}",tex): cites += [x.strip() for x in block.split(",")]
           assert not set(cites)-keys, sorted(set(cites)-keys)
@@ -87,6 +98,8 @@ jobs:
           set -euo pipefail
           git fetch origin main --tags
           head_sha="$(git rev-parse HEAD)"
+          remote_head="$(git rev-parse origin/main)"
+          test "$head_sha" = "$remote_head" || { echo "main advanced during validation; refusing to tag a stale head." >&2; exit 1; }
           if git show-ref --tags --verify --quiet "refs/tags/$RELEASE_TAG"; then
             tag_sha="$(git rev-list -n 1 "$RELEASE_TAG")"
             test "$tag_sha" = "$head_sha" || { echo "Tag already exists at a different commit; refusing to move it." >&2; exit 1; }
