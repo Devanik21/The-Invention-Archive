@@ -1,0 +1,65 @@
+name: Tag cell-fate-control preprint
+on:
+  push:
+    branches: [main]
+    paths: [".research-staging/cell-fate-control/TAG_READY"]
+permissions:
+  contents: write
+concurrency:
+  group: cell-fate-control-tag
+  cancel-in-progress: false
+jobs:
+  tag-release:
+    if: ${{ !startsWith(github.event.head_commit.message, 'tag-cleanup(cell-fate-control):') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Validate release target and create the semantic tag
+        shell: bash
+        env:
+          TAG_FILE: ".research-staging/cell-fate-control/TAG_READY"
+        run: |
+          set -euo pipefail
+          test -s "$TAG_FILE"
+          TAG="$(awk -F= '$1=="tag" {print $2}' "$TAG_FILE")"
+          TARGET="$(awk -F= '$1=="target" {print $2}' "$TAG_FILE")"
+          test "$TAG" = "v2026.10.24"
+          [[ "$TARGET" =~ ^[0-9a-f]{40}$ ]]
+          git fetch origin main --tags
+          git cat-file -e "$TARGET^{commit}"
+          git merge-base --is-ancestor "$TARGET" origin/main
+          EXISTING="$(git ls-remote --tags origin "refs/tags/$TAG" "refs/tags/$TAG^{}")"
+          if [ -n "$EXISTING" ]; then
+            PEELED="$(printf '%s\n' "$EXISTING" | awk '$2 ~ /\^\{\}$/ {print $1}')"
+            test -n "$PEELED" && test "$PEELED" = "$TARGET" || { echo "Tag collision: $TAG already exists but does not resolve to $TARGET" >&2; exit 1; }
+            echo "Tag already exists at intended target; no duplicate tag created."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a "$TAG" "$TARGET" -m "Cell-fate-control theory-plus-simulation preprint"
+            git push origin "refs/tags/$TAG"
+          fi
+          REMOTE_TAG="$(git ls-remote --tags origin "refs/tags/$TAG^{}" | awk 'NR==1 {print $1}')"
+          test "$REMOTE_TAG" = "$TARGET"
+          echo "Tag: $TAG" >> "$GITHUB_STEP_SUMMARY"
+          echo "Tag target: $TARGET" >> "$GITHUB_STEP_SUMMARY"
+      - name: Remove the one-time trigger marker non-destructively
+        shell: bash
+        env:
+          TAG_FILE: ".research-staging/cell-fate-control/TAG_READY"
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -- "$TAG_FILE"
+          git commit -m "tag-cleanup(cell-fate-control): remove temporary tag marker"
+          git fetch origin main
+          if ! git merge-base --is-ancestor origin/main HEAD; then git rebase origin/main; fi
+          git push origin HEAD:main
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$(git rev-parse HEAD)"
+          echo "Temporary tag marker removed; main read-back verified." >> "$GITHUB_STEP_SUMMARY"
