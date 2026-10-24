@@ -1,7 +1,7 @@
 name: Validate published repair-scheduling release
 on:
   workflow_run:
-    workflows: ["Build and publish repair-scheduling paper"]
+    workflows: ["Build and publish repair-scheduling paper", "Repair and close repair-scheduling release"]
     types: [completed]
     branches: [main]
 permissions:
