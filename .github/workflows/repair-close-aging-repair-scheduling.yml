@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   close:
-    if: \${{ github.event.head_commit.message == 'reviewclose(aging-repair-scheduling): approve exact PDF review' }}
+    if: ${{ github.event.head_commit.message == 'reviewclose(aging-repair-scheduling): approve exact PDF review' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -188,7 +188,7 @@ jobs:
           files={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest()
                  for p in sorted(root.rglob('*')) if p.is_file() and p!=manifest and '__pycache__' not in p.parts}
           manifest.write_text(json.dumps({'algorithm':'sha256','files':files},indent=2)+'\n',encoding='utf-8')
-          bundle=Path('Theoretical Research')/('${SLUG}_complete_bundle.zip')
+          bundle=Path('Theoretical Research')/(slug+'_complete_bundle.zip')
           tmp=bundle.with_suffix('.zip.tmp')
           with zipfile.ZipFile(tmp,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
               for p in sorted(root.rglob('*')):
