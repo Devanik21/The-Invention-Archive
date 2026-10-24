@@ -1,0 +1,202 @@
+name: Build and publish cell-fate-control preprint
+on:
+  push:
+    branches: [main]
+    paths: [".research-staging/cell-fate-control/READY"]
+permissions:
+  contents: write
+concurrency:
+  group: cell-fate-control-publication
+  cancel-in-progress: false
+jobs:
+  build-and-publish:
+    if: ${{ !startsWith(github.event.head_commit.message, 'publish(cell-fate-control):') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      STAGING_DIR: ".research-staging/cell-fate-control"
+      RELEASE_DIR: "Theoretical Research/Persistent_Landscapes_Hodge_Curl_and_Schrodinger_Bridge_Reinforcement_Learning_for_Optimal_Cell_Fate_Control"
+      SLUG: "Persistent_Landscapes_Hodge_Curl_and_Schrodinger_Bridge_Reinforcement_Learning_for_Optimal_Cell_Fate_Control"
+      INDEX: "Theoretical Research/Readme.md"
+      MPLBACKEND: "Agg"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned research and PDF dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "numpy==2.3.5" "scipy==1.17.0" "scikit-learn==1.8.0" "matplotlib==3.10.8" "networkx==3.6.1" "PyMuPDF==1.26.7" "PyYAML==6.0.3" "Pillow==11.3.0"
+          sudo apt-get update
+          sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended poppler-utils zip
+      - name: Restore and checksum the staged source bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$STAGING_DIR/READY"
+          cat "$STAGING_DIR"/source.b64.part* | tr -d '\r\n' | base64 --decode > "$RUNNER_TEMP/cell-fate-source.tar.gz"
+          expected="$(tr -d '\r\n' < "$STAGING_DIR/READY")"
+          printf '%s  %s\n' "$expected" "$RUNNER_TEMP/cell-fate-source.tar.gz" | sha256sum --check
+          tar -tzf "$RUNNER_TEMP/cell-fate-source.tar.gz" > "$RUNNER_TEMP/source-inventory.txt"
+          if grep -E '(^/|(^|/)\.\.(\/|$))' "$RUNNER_TEMP/source-inventory.txt"; then echo "Unsafe archive path" >&2; exit 1; fi
+          if git cat-file -e "HEAD:$RELEASE_DIR/paper.pdf" 2>/dev/null; then echo "Release collision: refusing to overwrite an existing paper" >&2; exit 1; fi
+          mkdir -p "$RELEASE_DIR"
+          tar -xzf "$RUNNER_TEMP/cell-fate-source.tar.gz" -C "$RELEASE_DIR"
+          test "$(find "$RELEASE_DIR" -maxdepth 1 -type f | wc -l)" -eq 8
+          test -s "$RELEASE_DIR/paper.tex"
+          test -s "$RELEASE_DIR/verify_model.py"
+          echo "Source archive SHA-256 verified: $expected"
+      - name: Run numerical checks and deployment self-tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPYCACHEPREFIX="$RUNNER_TEMP/pycache"
+          python -m py_compile "$RELEASE_DIR/verify_model.py" "$RELEASE_DIR/deploy.py"
+          (cd "$RELEASE_DIR" && python verify_model.py 2>&1 | tee results/verify_model_stdout.txt)
+          (cd "$RELEASE_DIR" && python deploy.py --self-test 2>&1 | tee results/deploy_self_test.log)
+      - name: Compile PDF from the checked source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RELEASE_DIR"
+          latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error paper.tex 2>&1 | tee results/latex_build_stdout.txt
+          test -s paper.pdf
+          pdfinfo paper.pdf | tee results/pdfinfo.txt
+          pdffonts paper.pdf | tee results/pdffonts_report.txt
+          pdftotext -layout paper.pdf results/paper_extracted.txt
+          pages="$(pdfinfo paper.pdf | awk '/^Pages:/ {print $2}')"
+          test "$pages" -ge 25
+          grep -q 'yes' results/pdffonts_report.txt || { echo "Font embedding check failed" >&2; exit 1; }
+          rm -f paper.aux paper.bbl paper.blg paper.fdb_latexmk paper.fls paper.log paper.out paper.toc paper.lof paper.lot paper.synctex.gz paper.run.xml paper.nav paper.snm paper.xdv
+          cd "$GITHUB_WORKSPACE"
+          (cd "$RELEASE_DIR" && python deploy.py --validate-only > results/deploy_validate_run.log)
+      - name: Run source, metadata, visual inventory, and every-page PDF preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - "$RELEASE_DIR" "$GITHUB_SHA" <<'PY'
+          import csv,datetime,hashlib,json,re,sys,math
+          from pathlib import Path
+          import fitz,yaml
+          from PIL import Image,ImageDraw
+          root=Path(sys.argv[1]); res=root/'results'; src=(root/'paper.tex').read_text(encoding='utf-8'); bib=(root/'paper.bib').read_text(encoding='utf-8')
+          bibkeys=set(re.findall(r'@\w+\s*\{\s*([^,\s]+)',bib))
+          cites={k.strip() for group in re.findall(r'\\cite\w*\{([^}]+)\}',src) for k in group.split(',')}
+          assert cites <= bibkeys, f'unresolved bibliography keys: {sorted(cites-bibkeys)}'
+          assert len(re.findall(r'\\begin\{table\}',src)) >= 5
+          assert len(re.findall(r'\\fig\{',src)) >= 12
+          assert r'\operatorname' not in (root/'README.md').read_text(encoding='utf-8')
+          yaml.safe_load((root/'CITATION.cff').read_text(encoding='utf-8'))
+          json.loads((root/'.zenodo.json').read_text(encoding='utf-8')); json.loads((root/'schema_article.jsonld').read_text(encoding='utf-8'))
+          inv=list(csv.DictReader((res/'figure_inventory.csv').open(encoding='utf-8',newline='')))
+          assert len(inv)>=12, f'figure inventory has {len(inv)} entries'
+          categories=[set(x['categories'].split(';')) for x in inv]
+          assert sum('plot' in c for c in categories)>=6
+          assert sum('graph' in c and 'flow_diagram' not in c for c in categories)>=2
+          assert sum('flow_diagram' in c for c in categories)>=2
+          doc=fitz.open(root/'paper.pdf'); assert len(doc)>=25
+          pagesdir=res/'pdf_pages'; pagesdir.mkdir(exist_ok=True); thumbs=[]
+          page_text=[p.get_text() for p in doc]
+          main_start=next(i+1 for i,t in enumerate(page_text) if '1 Research question and contribution' in t)
+          appendix_start=next(i+1 for i,t in enumerate(page_text) if re.search(r'\bA Derivation of the gradient action identity',t))
+          main_pages=appendix_start-main_start
+          assert main_pages>=18, f'substantive main-text pages {main_pages} < 18'
+          for i,p in enumerate(doc,1):
+              pix=p.get_pixmap(matrix=fitz.Matrix(120/72,120/72),alpha=False)
+              pix.save(pagesdir/f'page-{i:02d}.png')
+              im=Image.open(pagesdir/f'page-{i:02d}.png').convert('RGB'); im.thumbnail((170,220))
+              card=Image.new('RGB',(180,245),'white'); card.paste(im,((180-im.width)//2,18)); ImageDraw.Draw(card).text((5,3),f'Page {i}',fill='black'); thumbs.append(card)
+          sheet=Image.new('RGB',(900,math.ceil(len(thumbs)/5)*245),(230,230,230))
+          for i,im in enumerate(thumbs): sheet.paste(im,((i%5)*180,(i//5)*245))
+          sheet.save(res/'pdf_contact_sheet.jpg',quality=92)
+          digest=hashlib.sha256((root/'paper.pdf').read_bytes()).hexdigest()
+          now=datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat()
+          (res/'pdf_page_text_index.json').write_text(json.dumps({'pdf_sha256':digest,'page_count':len(doc),'pages':[{'page':i+1,'word_count':len(t.split()),'opening_text':' '.join(t.split())[:180]} for i,t in enumerate(page_text)]},indent=2,ensure_ascii=False)+'\n')
+          (res/'pdf_visual_review.json').write_text(json.dumps({'schema_version':'1.0','status':'PENDING_REMOTE_REVIEW','inspection_timestamp_utc':now,'paper_pdf_sha256':digest,'page_count':len(doc),'render_dpi':120,'all_pages_rendered':True,'pages_rendered':list(range(1,len(doc)+1)),'pages_individually_reviewed':[],'issues':[{'severity':'pending','issue':'Independent review of the exact CI-built PDF remains open.'}],'final_disposition':'BLOCKED pending independent page-by-page review of this exact PDF hash.'},indent=2,ensure_ascii=False)+'\n')
+          (res/'publication_quality_report.md').write_text('# Publication-quality report\n\n**Status: BLOCKED pending independent review of the exact CI-built PDF.**\n\n'
+            f'- PDF SHA-256: `{digest}`\n- Total pages: {len(doc)}\n- Substantive main-text pages: {main_pages}\n- All pages rendered at 120 dpi: yes.\n'
+            '- Metadata, citations, required visual inventory, numerical checks, and PDF page floors passed automated checks.\n'
+            '- Page-specific visual scores remain pending until the exact rendered pages are inspected.\n',encoding='utf-8')
+          vr=json.loads((res/'verification_report.json').read_text(encoding='utf-8'))
+          assert vr.get('status')=='PASS' and vr.get('checks_failed')==0,vr
+          matrix={'schema_version':'1.0','execution_timestamp_utc':now,'repository':'Devanik21/The-Invention-Archive','target_branch':'main','release_slug':root.name,'release_status':'BLOCKED','trigger_commit_sha':sys.argv[2],'release_artifact_commit_sha':None,'final_head_sha':None,'tag':None,'tag_target_sha':None,'pdf_sha256':digest,'pdf_pages':len(doc),'main_text_pages_physical':main_pages,'checks':[
+            {'name':'Synthetic numerical verification','status':'PASS','evidence':'results/verification_report.json'},
+            {'name':'Python syntax and deployment self-tests','status':'PASS','evidence':'results/deploy_self_test.log'},
+            {'name':'LaTeX build and page floors','status':'PASS','evidence':'results/latex_build_stdout.txt; results/pdfinfo.txt'},
+            {'name':'Bibliography and metadata preflight','status':'PASS','evidence':'paper.bib; metadata files; source preflight'},
+            {'name':'Rendered every page','status':'PASS','evidence':'results/pdf_pages/; results/pdf_contact_sheet.jpg'},
+            {'name':'Independent visual-quality review','status':'PENDING','evidence':'results/pdf_visual_review.json'},
+            {'name':'Remote read-back and Actions closure','status':'PENDING','evidence':'post-commit verification'}],
+            'blockers':['Independent page-by-page review of the exact published PDF','Final remote Actions run reconciliation']}
+          (res/'release_check_matrix.json').write_text(json.dumps(matrix,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+          print(f'PASS: pages={len(doc)}; main_text_pages={main_pages}; tables={len(re.findall(r"\\\\begin\\\\{table\\\\}",src))}; figures={len(inv)}; PDF_SHA256={digest}')
+          PY
+      - name: Build hash manifest and complete research bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$RELEASE_DIR/__pycache__" "$RELEASE_DIR/results/__pycache__"
+          python - "$RELEASE_DIR" <<'PY'
+          import hashlib,json,sys
+          from pathlib import Path
+          r=Path(sys.argv[1]); manifest={str(p.relative_to(r)).replace('\\','/'):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(r.rglob('*')) if p.is_file() and p.name!='sha256_manifest.json' and '__pycache__' not in p.parts}
+          (r/'results'/'sha256_manifest.json').write_text(json.dumps({'algorithm':'SHA-256','manifest_excludes_itself':True,'files':manifest},indent=2)+'\n',encoding='utf-8')
+          expected={'paper.tex','paper.pdf','verify_model.py','README.md','CITATION.cff','paper.bib','.zenodo.json','schema_article.jsonld','deploy.py'}
+          actual={p.name for p in r.iterdir() if p.is_file()}
+          assert actual==expected, f'root-level file mismatch: missing={expected-actual}, extra={actual-expected}'
+          print(f'PASS: exactly 9 root files; manifest covers {len(manifest)} files')
+          PY
+          BUNDLE="Theoretical Research/${SLUG}_complete_bundle.zip"
+          rm -f "$BUNDLE"
+          (cd "Theoretical Research" && zip -qr "${SLUG}_complete_bundle.zip" "$SLUG" -x '*/__pycache__/*' '*.pyc')
+      - name: Update index and publish non-destructively
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - "$INDEX" "$SLUG" <<'PY'
+          import sys
+          from pathlib import Path
+          p=Path(sys.argv[1]); slug=sys.argv[2]
+          row=f'| 2026.10.24 | Persistent Landscapes, Hodge Curl, and Schrödinger-Bridge Reinforcement Learning for Optimal Cell-Fate Control | Theory-plus-simulation preprint | [{slug}]({slug}/) |'
+          lines=p.read_text(encoding='utf-8').splitlines() if p.exists() else ['# Theoretical Research','','| Release | Title | Type | Path |','|---|---|---|---|']
+          hits=[i for i,x in enumerate(lines) if slug in x and x.lstrip().startswith('|')]
+          if len(hits)>1: raise SystemExit(f'duplicate index entries: {len(hits)}')
+          if hits: lines[hits[0]]=row
+          else: lines.extend(['',row])
+          p.write_text('\n'.join(lines).rstrip('\n')+'\n',encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -rf "$STAGING_DIR"
+          git add -A -- "$RELEASE_DIR" "$INDEX" "Theoretical Research/${SLUG}_complete_bundle.zip" "$STAGING_DIR"
+          git diff --cached --check
+          git commit -m "publish(cell-fate-control): archive theory-plus-simulation preprint"
+          git fetch origin main --tags
+          if ! git merge-base --is-ancestor origin/main HEAD; then git rebase origin/main; fi
+          git push origin HEAD:main
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$(git rev-parse HEAD)"
+          for f in paper.tex paper.pdf verify_model.py README.md CITATION.cff paper.bib .zenodo.json schema_article.jsonld deploy.py; do
+            local_hash="$(sha256sum "$RELEASE_DIR/$f" | awk '{print $1}')"
+            remote_hash="$(git show "origin/main:$RELEASE_DIR/$f" | sha256sum | awk '{print $1}')"
+            test "$local_hash" = "$remote_hash"
+          done
+          git show "origin/main:$INDEX" | grep -Fq "$SLUG"
+          echo "Artifact commit: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo "Final branch head: $(git rev-parse origin/main)" >> "$GITHUB_STEP_SUMMARY"
+          echo "PDF SHA-256: $(sha256sum "$RELEASE_DIR/paper.pdf" | awk '{print $1}')" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload PDF and full-page renders for independent QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: cell-fate-control-pdf-review
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            Theoretical Research/Persistent_Landscapes_Hodge_Curl_and_Schrodinger_Bridge_Reinforcement_Learning_for_Optimal_Cell_Fate_Control/paper.pdf
+            Theoretical Research/Persistent_Landscapes_Hodge_Curl_and_Schrodinger_Bridge_Reinforcement_Learning_for_Optimal_Cell_Fate_Control/results/pdf_contact_sheet.jpg
+            Theoretical Research/Persistent_Landscapes_Hodge_Curl_and_Schrodinger_Bridge_Reinforcement_Learning_for_Optimal_Cell_Fate_Control/results/pdf_pages/*.png
