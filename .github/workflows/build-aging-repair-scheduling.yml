@@ -52,6 +52,10 @@ jobs:
           mkdir -p "$RUNNER_TEMP/latex-bin"
           cd "$RELEASE_DIR"
           latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error paper.tex 2>&1 | tee "$RUNNER_TEMP/latexmk_stdout.txt"
+          cp "$RUNNER_TEMP/latexmk_stdout.txt" results/latex_build_stdout.txt
+          pdfinfo paper.pdf > results/pdfinfo.txt
+          pdffonts paper.pdf > results/pdffonts_report.txt
+          pdftotext paper.pdf results/paper_extracted.txt
           test -s paper.pdf
           test "$(pdfinfo paper.pdf | awk '/^Pages:/ {print $2}')" -ge 7
           python - "$RELEASE_DIR" "$RUNNER_TEMP/aging-pages" "$GITHUB_SHA" <<'PY'
@@ -77,9 +81,10 @@ jobs:
           sheet=Image.new('RGB',(825,math.ceil(len(cards)/3)*395),(225,225,225))
           for i,im in enumerate(cards): sheet.paste(im,((i%3)*275,(i//3)*395))
           sheet.save(root/'results'/'pdf_contact_sheet.png'); sheet.save(pages/'contact_sheet.png')
+          vr=json.loads((root/'results'/'verification_report.json').read_text(encoding='utf-8')); assert vr.get('status')=='PASS' and vr.get('checks_failed')==0, vr
           digest=hashlib.sha256((root/'paper.pdf').read_bytes()).hexdigest(); now=datetime.datetime.now(datetime.timezone.utc).isoformat()
           (root/'results'/'pdf_visual_review.json').write_text(json.dumps({'status':'PENDING','inspection_timestamp_utc':now,'paper_pdf_sha256':digest,'page_count':len(doc),'render_dpi':140,'all_pages_rendered':True,'pages_rendered':list(range(1,len(doc)+1)),'pages_individually_reviewed':[],'issues':[{'severity':'pending','issue':'Independent visual review of the exact CI-built PDF is not yet closed.'}],'final_disposition':'BLOCKED pending page-by-page review of this exact PDF hash.'},indent=2)+'\n')
-          (root/'results'/'publication_quality_report.json').write_text(json.dumps({'status':'BLOCKED_PENDING_VISUAL_REVIEW','paper_pdf_sha256':digest,'pages':len(doc),'table_environments':len(re.findall(r'\\begin\{table\}',source)),'figure_environments':len(re.findall(r'\\begin\{figure\}',source)),'model_verification':'PASS only if verification_report.json records zero failed checks','biological_or_lifespan_validation':'NOT_PERFORMED','trigger_commit_sha':sys.argv[3]},indent=2)+'\n')
+          (root/'results'/'publication_quality_report.json').write_text(json.dumps({'status':'BLOCKED_PENDING_VISUAL_REVIEW','paper_pdf_sha256':digest,'pages':len(doc),'table_environments':len(re.findall(r'\\begin\{table\}',source)),'figure_environments':len(re.findall(r'\\begin\{figure\}',source)), 'model_verification':{'status':vr['status'],'checks_passed':vr['checks_passed'],'checks_total':vr['checks_total']},'biological_or_lifespan_validation':'NOT_PERFORMED','trigger_commit_sha':sys.argv[3]},indent=2)+'\n')
           (root/'results'/'release_check_matrix.json').write_text(json.dumps({'release_status':'BLOCKED','repository':'Devanik21/The-Invention-Archive','target_branch':'main','trigger_commit_sha':sys.argv[3],'pdf_sha256':digest,'pdf_pages':len(doc),'checks':[{'name':'Model verification','status':'PASS','evidence':'results/verify_model_stdout.txt'},{'name':'LaTeX compilation and page count','status':'PASS','evidence':'GitHub Actions build log and paper.pdf'},{'name':'Metadata and bibliography preflight','status':'PASS','evidence':'CITATION.cff; paper.bib; JSON metadata'},{'name':'Full-page visual review','status':'PENDING','evidence':'results/pdf_visual_review.json; uploaded page-render artifact'},{'name':'Remote read-back and final-SHA CI closure','status':'PENDING','evidence':'post-commit reconciliation'}],'blockers':['Independent inspection of exact PDF','Final-SHA remote check reconciliation']},indent=2)+'\n')
           PY
           python deploy.py --validate-only > results/deploy_validate_run.log
