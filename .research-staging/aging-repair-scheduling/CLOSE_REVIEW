@@ -6,3 +6,4 @@ manual_review_notes=All 11 pages were reviewed. Pages 1-8 and 10-11 match previo
 minor_issues=References start at the bottom of page 10 with one entry and continue on page 11; no text is clipped, but moving the entire references section to page 11 would improve pagination.
 build_workflow_run_id=40075535304
 build_workflow_url=https://github.com/Devanik21/The-Invention-Archive/actions/runs/40075535304
+review_retry=include pdf_sha256 alias in release matrix for exact-SHA validator
