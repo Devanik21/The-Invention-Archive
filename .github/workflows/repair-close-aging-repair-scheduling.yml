@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   close:
-    if: ${{ github.event.head_commit.message == 'reviewclose(aging-repair-scheduling): approve exact PDF review' }}
+    if: "${{ github.event.head_commit.message == 'reviewclose(aging-repair-scheduling): approve exact PDF review' }}"
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
