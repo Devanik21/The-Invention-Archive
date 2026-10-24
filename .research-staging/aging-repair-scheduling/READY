@@ -3,3 +3,4 @@ builder_payload_sha256=e4b9fe2b74bc1429b30a79fc4c1b3620842bc282203dbcc22db2f2e84
 release_slug=Aging_as_a_Decoding_Threshold_Repair_Scheduling_Under_Fixed_Maintenance_Throughput
 scope=synthetic model only; no organismal or experimental lifespan extension demonstrated
 rerun_reason=repair generated verifier path typo, correct bundle naming, rebuild paper/ZIP, validate remote readback
+rerun_reason=target executable root-path typo only after first retry found three textual occurrences
