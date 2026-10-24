@@ -1,0 +1,37 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "The Memory--Energy Frontier in Noisy Recurrent Inference: A Spectral Rate--Distortion Framework for Neural and Neuromorphic Systems",
+  "name": "The Memory--Energy Frontier in Noisy Recurrent Inference: A Spectral Rate--Distortion Framework for Neural and Neuromorphic Systems",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "affiliation": {
+      "@type": "CollegeOrUniversity",
+      "name": "National Institute of Technology Agartala",
+      "department": "Electronics and Communication Engineering",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "IN"
+      }
+    }
+  },
+  "datePublished": "2026-10-24",
+  "inLanguage": "en",
+  "keywords": [
+    "recurrent inference",
+    "Kalman filtering",
+    "energy-aware estimation",
+    "neuromorphic computing",
+    "scientific machine learning"
+  ],
+  "description": "A synthetic mathematical benchmark for recurrent state-estimation error, a dimensionless activity proxy, learned gain approximation, and budget-feasibility projection. No empirical neural or hardware energy result is claimed.",
+  "url": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Memory_Energy_Frontier_Spectral_Rate_Distortion_Bounds_for_Energy_Constrained_Recurrent_Inference",
+  "isPartOf": {
+    "@type": "Repository",
+    "name": "The Invention Archive",
+    "url": "https://github.com/Devanik21/The-Invention-Archive"
+  },
+  "genre": "Research preprint",
+  "license": "https://opensource.org/license/mit"
+}
