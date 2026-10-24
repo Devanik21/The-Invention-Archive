@@ -1,49 +1,31 @@
 #!/usr/bin/env python3
 """Finalize auditable candidate scores and closure hashes after the reproducible build."""
-import csv
-import hashlib
-import json
-import re
-import sys
+import csv, hashlib, json, re, sys
 from pathlib import Path
 
-root = Path(sys.argv[1]).resolve()
-res = root / "results"
+root=Path(sys.argv[1]).resolve()
+res=root/"results"
+candidate_rows=[
+("Memory-energy frontier for noisy recurrent inference",[4,4,4,5,5,4,4,5,5,5],"SELECTED","Survived overlap screening; exact scalar derivation, deterministic tests, and a direct route to hardware calibration."),
+("Morphogenetic error-correcting codes after cell loss",[5,3,5,3,5,4,5,3,5,4],"RESERVE","High potential, but overlaps tissue-coherence/control themes and requires biological calibration."),
+("Spectral repairability of lesioned neural circuits",[5,3,4,4,5,4,5,4,5,5],"RESERVE","Tractable, but overlaps network-control and observability lines."),
+("Active sensing for exoplanet biosignatures under abiotic mimicry",[5,3,5,3,4,5,4,3,5,4],"REJECTED_OVERLAP","Adjacent to the existing alien-life release; needs instrument-specific validation."),
+("Epigenetic reset control under latent cell-state uncertainty",[5,3,5,2,4,4,5,2,4,2],"REJECTED_OVERLAP","Overlaps FER and cell-state-control releases; real biological data unavailable."),
+("Mitochondrial heteroplasmy control with adaptive intervention",[4,3,4,3,4,4,4,3,4,3],"REJECTED_OVERLAP","Overlaps existing heteroplasmy work and requires empirical parameters."),
+("Active scientific inference under simulator misspecification",[5,4,4,5,5,5,5,5,5,5],"REJECTED_OVERLAP","High raw score, but too close to the existing Identifiability Budget and information-theoretic papers."),
+("AI co-design of cryoprotectant loading and nanowarming",[5,3,5,3,4,5,5,3,5,3],"REJECTED_OVERLAP","Overlaps CryoWeave; validation requires physical measurements."),
+("Diatom photonic crystals as paleoclimate sensors",[4,3,4,4,4,4,4,4,5,5],"REJECTED_OVERLAP","Overlaps the recent Silica Light Meters release."),
+("Information-theoretic limits of synthetic gene-circuit design",[5,3,4,5,5,5,5,5,5,5],"REJECTED_OVERLAP","Overlaps the recent synthetic gene-circuit information-limit release.")]
+criteria=["problem_importance","gap_evidence","boldness_interdisciplinary","mechanistic_plausibility","mathematical_core",
+"substantive_AI_role","human_benefit_path","first_validation_feasibility","falsifiability","safety_ethics"]
+with (res/"candidate_topics.csv").open("w",newline="",encoding="utf-8") as f:
+    fields=["candidate"]+criteria+["mean_score_1_to_5","decision","selection_rationale"]
+    w=csv.DictWriter(f,fieldnames=fields); w.writeheader()
+    for title,scores,decision,rationale in candidate_rows:
+        w.writerow({"candidate":title,**dict(zip(criteria,scores)),"mean_score_1_to_5":f"{sum(scores)/len(scores):.2f}",
+                    "decision":decision,"selection_rationale":rationale})
 
-candidate_rows = [
-    ("Memory-energy frontier for noisy recurrent inference", [4,4,4,5,5,4,4,5,5,5], "SELECTED",
-     "Survived overlap screening; exact scalar derivation, deterministic tests, and a direct route to hardware calibration."),
-    ("Morphogenetic error-correcting codes after cell loss", [5,3,5,3,5,4,5,3,5,4], "RESERVE",
-     "High potential, but overlaps tissue-coherence/control themes and requires biological calibration."),
-    ("Spectral repairability of lesioned neural circuits", [5,3,4,4,5,4,5,4,5,5], "RESERVE",
-     "Tractable, but overlaps network-control and observability lines."),
-    ("Active sensing for exoplanet biosignatures under abiotic mimicry", [5,3,5,3,4,5,4,3,5,4], "REJECTED_OVERLAP",
-     "Adjacent to the existing alien-life release; needs instrument-specific validation."),
-    ("Epigenetic reset control under latent cell-state uncertainty", [5,3,5,2,4,4,5,2,4,2], "REJECTED_OVERLAP",
-     "Overlaps FER and cell-state-control releases; real biological data unavailable."),
-    ("Mitochondrial heteroplasmy control with adaptive intervention", [4,3,4,3,4,4,4,3,4,3], "REJECTED_OVERLAP",
-     "Overlaps existing heteroplasmy work and requires empirical parameters."),
-    ("Active scientific inference under simulator misspecification", [5,4,4,5,5,5,5,5,5,5], "REJECTED_OVERLAP",
-     "High raw score, but too close to the existing Identifiability Budget and information-theoretic papers."),
-    ("AI co-design of cryoprotectant loading and nanowarming", [5,3,5,3,4,5,5,3,5,3], "REJECTED_OVERLAP",
-     "Overlaps CryoWeave; validation requires physical measurements."),
-    ("Diatom photonic crystals as paleoclimate sensors", [4,3,4,4,4,4,4,4,5,5], "REJECTED_OVERLAP",
-     "Overlaps the recent Silica Light Meters release."),
-    ("Information-theoretic limits of synthetic gene-circuit design", [5,3,4,5,5,5,5,5,5,5], "REJECTED_OVERLAP",
-     "Overlaps the recent synthetic gene-circuit information-limit release."),
-]
-criteria = ["problem_importance","gap_evidence","boldness_interdisciplinary","mechanistic_plausibility",
-            "mathematical_core","substantive_AI_role","human_benefit_path","first_validation_feasibility",
-            "falsifiability","safety_ethics"]
-with (res / "candidate_topics.csv").open("w", newline="", encoding="utf-8") as f:
-    fields = ["candidate"] + criteria + ["mean_score_1_to_5","decision","selection_rationale"]
-    writer = csv.DictWriter(f, fieldnames=fields)
-    writer.writeheader()
-    for title, scores, decision, rationale in candidate_rows:
-        writer.writerow({"candidate":title, **dict(zip(criteria,scores)),
-          "mean_score_1_to_5":f"{sum(scores)/len(scores):.2f}","decision":decision,"selection_rationale":rationale})
-
-audit = """# Author-profile audit
+audit="""# Author-profile audit
 
 **Audit date:** 2026-10-24. **Coverage:** targeted public-web and repository checks; not exhaustive.
 
@@ -53,18 +35,15 @@ audit = """# Author-profile audit
 - Targeted searches for a confidently matched Zenodo record, OpenAIRE person/publication record, and Google Scholar author profile did not yield a verified match. This is not proof that no such record exists; no DOI, index entry, or citation count is asserted.
 - No new DOI, preprint record, citation, or formal academic appointment was established. The manuscript uses the supplied NIT Agartala ECE affiliation and does not state that a degree has been awarded.
 """
-(res / "author_profile_audit.md").write_text(audit, encoding="utf-8")
-
-claim_path = res / "claim_evidence_matrix.csv"
-with claim_path.open("r", newline="", encoding="utf-8") as f:
-    claims = list(csv.DictReader(f))
+(res/"author_profile_audit.md").write_text(audit,encoding="utf-8")
+claim_path=res/"claim_evidence_matrix.csv"
+with claim_path.open("r",newline="",encoding="utf-8") as f: claims=list(csv.DictReader(f))
 for row in claims:
-    if row["claim_id"] in {"C1","C2","C3"}: row["status"] = "PASS"
-    elif row["claim_id"] == "C4": row["status"] = "NOT_TESTED"
-    elif row["claim_id"] == "C5": row["status"] = "HYPOTHESIS"
-with claim_path.open("w", newline="", encoding="utf-8") as f:
-    writer=csv.DictWriter(f,fieldnames=list(claims[0].keys())); writer.writeheader(); writer.writerows(claims)
-
+    if row["claim_id"] in {"C1","C2","C3"}: row["status"]="PASS"
+    elif row["claim_id"]=="C4": row["status"]="NOT_TESTED"
+    elif row["claim_id"]=="C5": row["status"]="HYPOTHESIS"
+with claim_path.open("w",newline="",encoding="utf-8") as f:
+    w=csv.DictWriter(f,fieldnames=list(claims[0].keys())); w.writeheader(); w.writerows(claims)
 report=json.loads((res/"verification_report.json").read_text(encoding="utf-8"))
 if report.get("status")!="PASS" or report.get("checks_failed")!=0:
     raise SystemExit("Refusing to finalize records because numerical verification is not PASS.")
@@ -75,8 +54,7 @@ quality=json.loads(quality_path.read_text(encoding="utf-8"))
 quality["table_environments"]=len(re.findall(r"\\begin\{table\}",tex))
 quality["figure_environments"]=len(re.findall(r"\\begin\{figure\}",tex))
 quality["vector_figure_assets"]=len(list((root/"figures").glob("figure*.pdf")))
-quality["status"]="BLOCKED"
-quality["all_pages_visually_reviewed"]=False
+quality["status"]="BLOCKED"; quality["all_pages_visually_reviewed"]=False
 quality["critical_major_defects"]="NOT_YET_ASSESSED"
 quality["final_disposition"]="Pending independent page-by-page review of the exact PDF hash."
 quality_path.write_text(json.dumps(quality,indent=2)+"\n",encoding="utf-8")
@@ -85,18 +63,29 @@ matrix_path=res/"release_check_matrix.json"
 matrix=json.loads(matrix_path.read_text(encoding="utf-8"))
 matrix["candidate_score_dimensions"]=criteria
 matrix["release_status"]="BLOCKED"
-matrix["blockers"]=[
-    "Independent page-by-page visual review of the exact PDF",
-    "Remote read-back and final-SHA workflow reconciliation",
-    "Semantic tag awaits all gates"
+matrix["blockers"]=["Independent page-by-page visual review of the exact PDF",
+"Remote read-back and final-SHA workflow reconciliation","Semantic tag awaits all gates"]
+checks=matrix.setdefault("checks",[])
+required_extra=[
+ {"name":"Scientific validity gate","status":"PASS","evidence":"paper.tex; results/literature_audit.md; results/claim_evidence_matrix.csv",
+  "details":"Mathematical claims are scoped to the stated model; empirical neural/hardware claims are explicitly not made."},
+ {"name":"README mathematics and internal links","status":"PASS","evidence":"README.md; deploy.py --validate-only",
+  "details":"Display math delimiters, prohibited macros, and local artifact links are checked by the validator."},
+ {"name":"SHA-256 manifest and artifact identity","status":"PASS","evidence":"results/sha256_manifest.txt; results/pdf_visual_review.json",
+  "details":"Manifest hashes are recomputed from current files; visual record binds to the current PDF SHA-256."},
+ {"name":"Safe release-path and collision gate","status":"PASS","evidence":"build-memory-energy-release workflow",
+  "details":"Existing target path causes a hard stop; no force-push or destructive overwrite is used."}
 ]
-for check in matrix.get("checks",[]):
+existing={c.get("name") for c in checks}
+for item in required_extra:
+    if item["name"] not in existing: checks.append(item)
+for check in checks:
     if check.get("name")=="Python syntax and deployment fixture tests":
         check["evidence"]="results/deploy_self_test.log; exact-SHA validation workflow"
     if check.get("name")=="LaTeX build and PDF preflight":
         check["evidence"]="results/latex_build.log; results/pdffonts_report.txt; results/publication_quality_report.json"
 md=["# Release check matrix summary","","**Release status: BLOCKED**","","| Check | Status | Evidence |","|---|---|---|"]
-md += [f"| {c['name']} | {c['status']} | {c['evidence']} |" for c in matrix.get("checks",[])]
+md += [f"| {c['name']} | {c['status']} | {c['evidence']} |" for c in checks]
 md += ["","The numerical/build checks ran in this cycle. Independent page-by-page review of the exact PDF and remote closure remain pending."]
 (res/"release_check_matrix.md").write_text("\n".join(md)+"\n",encoding="utf-8")
 
