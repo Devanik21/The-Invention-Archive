@@ -16,5 +16,7 @@
   "visual_review_record": "results/pdf_visual_review.json",
   "visual_review_run_id": "40075801847",
   "visual_review_run_url": "https://github.com/Devanik21/The-Invention-Archive/actions/runs/40075801847",
-  "scientific_scope": "Synthetic-model conditional result only; no organismal lifespan-extension claim."
+  "scientific_scope": "Synthetic-model conditional result only; no organismal lifespan-extension claim.",
+  "release_status": "PASS",
+  "remote_readback_commit_sha": "70dce9df411986eddaa5842bbc567d64b6a4a908"
 }
