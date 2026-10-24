@@ -56,6 +56,8 @@ jobs:
           model=json.loads((root/'results'/'verification_report.json').read_text(encoding='utf-8'))
           assert model.get('status')=='PASS' and model.get('checks_failed')==0, 'model verification is not PASS'
           now=datetime.datetime.now(datetime.timezone.utc).isoformat()
+          minor_note=fields.get('minor_issues','').strip()
+          recorded_issues=[{'severity':'minor','issue':minor_note}] if minor_note else []
           visual={
             'status':'PASS',
             'inspection_timestamp_utc':now,
@@ -71,8 +73,8 @@ jobs:
             'reviewed_build_workflow_run_id':fields.get('build_workflow_run_id','recorded in CLOSE_REVIEW marker'),
             'reviewed_build_workflow_url':fields.get('build_workflow_url',''),
             'manual_review_notes':fields['manual_review_notes'],
-            'issues':[],
-            'final_disposition':'PASS: every page of the exact PDF identified by paper_pdf_sha256 was reviewed; no critical or major visual defects remain.'
+            'issues':recorded_issues,
+            'final_disposition':'PASS: every page of the exact PDF identified by paper_pdf_sha256 was reviewed; no critical or major visual defects remain. Minor observations are recorded separately when present.'
           }
           (root/'results'/'pdf_visual_review.json').write_text(json.dumps(visual,indent=2)+'\n',encoding='utf-8')
           quality=json.loads((root/'results'/'publication_quality_report.json').read_text(encoding='utf-8'))
