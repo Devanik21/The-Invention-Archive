@@ -139,9 +139,31 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Make generated text deterministic and compatible with git diff --check.
+          python - "$RELEASE_DIR" <<'PY'
+          import sys
+          from pathlib import Path
+          root=Path(sys.argv[1])
+          for p in root.rglob("*.csv"):
+              if "__pycache__" in p.parts:
+                  continue
+              text=p.read_text(encoding="utf-8").replace("\r\n","\n").replace("\r","\n")
+              lines=[line.rstrip(" \\t") for line in text.splitlines()]
+              p.write_text("\n".join(lines).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
+          for p in (root/"results").glob("*.txt"):
+              text=p.read_text(encoding="utf-8",errors="replace").replace("\r\n","\n").replace("\r","\n")
+              lines=[line.rstrip(" \\t") for line in text.splitlines()]
+              p.write_text("\n".join(lines).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
+          p=root/"verify_model.py"
+          text=p.read_text(encoding="utf-8").replace("\r\n","\n").replace("\r","\n")
+          p.write_text("\n".join(line.rstrip(" \\t") for line in text.splitlines()).rstrip("\n")+"\n",encoding="utf-8",newline="\n")
+          PY
           INDEX="Theoretical Research/Readme.md"
           BUNDLE="Theoretical Research/${SLUG}_complete_bundle.zip"
-          grep -Fq "$SLUG" "$INDEX" && { echo "Index collision; refusing duplicate entry." >&2; exit 1; } || true
+          if grep -Fq "$SLUG" "$INDEX"; then
+            echo "Index collision; refusing duplicate entry." >&2
+            exit 1
+          fi
           ROW="| 2026.10.24 | Aging as a Decoding Threshold: Repair Scheduling Under Fixed Maintenance Throughput | Synthetic-model methods preprint | [$SLUG]($SLUG/) |"
           printf '\n%s\n' "$ROW" >> "$INDEX"
           (cd "Theoretical Research" && zip -qr "${SLUG}_complete_bundle.zip" "$SLUG" -x '*/__pycache__/*' '*.pyc')
