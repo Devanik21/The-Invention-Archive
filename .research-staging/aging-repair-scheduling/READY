@@ -5,3 +5,4 @@ scope=synthetic model only; no organismal or experimental lifespan extension dem
 rerun_reason=repair generated verifier path typo, correct bundle naming, rebuild paper/ZIP, validate remote readback
 rerun_reason=target executable root-path typo only after first retry found three textual occurrences
 rerun_reason=use regex word-boundary repair so .parent cannot be accidentally changed to .parentt
+rerun_reason=make verifier root-path normalization idempotent when builder already emits correct .parent
