@@ -4,3 +4,4 @@ release_slug=Aging_as_a_Decoding_Threshold_Repair_Scheduling_Under_Fixed_Mainten
 scope=synthetic model only; no organismal or experimental lifespan extension demonstrated
 rerun_reason=repair generated verifier path typo, correct bundle naming, rebuild paper/ZIP, validate remote readback
 rerun_reason=target executable root-path typo only after first retry found three textual occurrences
+rerun_reason=use regex word-boundary repair so .parent cannot be accidentally changed to .parentt
