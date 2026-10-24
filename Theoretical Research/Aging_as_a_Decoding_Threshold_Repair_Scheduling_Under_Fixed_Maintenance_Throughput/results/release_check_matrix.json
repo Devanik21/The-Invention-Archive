@@ -1,5 +1,5 @@
 {
-  "release_status": "BLOCKED_PENDING_REMOTE_READBACK",
+  "release_status": "PASS",
   "repository": "Devanik21/The-Invention-Archive",
   "target_branch": "main",
   "close_workflow_run_id": "40076083052",
@@ -35,11 +35,12 @@
     },
     {
       "name": "ZIP/PDF consistency and remote read-back",
-      "status": "PENDING",
-      "evidence": "This closure workflow will build the final bundle, commit, and independently read back the resulting tree."
+      "status": "PASS",
+      "evidence": "GitHub Actions close workflow verified origin/main core-file hashes, manifest, bundle hash, and PDF payload after commit 2fbc078fd2b99795a32055c2e56cd073e17bc241."
     }
   ],
-  "blockers": [
-    "Final bundle creation and remote read-back have not yet completed."
-  ]
+  "blockers": [],
+  "release_artifact_commit_sha": "2fbc078fd2b99795a32055c2e56cd073e17bc241",
+  "remote_readback_timestamp_utc": "2026-10-24T07:56:27.742079+00:00",
+  "final_head_sha_note": "The subsequent commit contains this closed matrix and refreshed manifest/ZIP; the separate workflow_run validator checks that exact final main SHA."
 }
