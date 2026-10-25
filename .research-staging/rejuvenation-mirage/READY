@@ -1,0 +1,5 @@
+READY
+Title: The Rejuvenation Mirage: Identifiability Limits of Epigenetic-Clock Reset and an Active-Design Rule for Functional Repair
+Release date: 2026-10-25
+Source set: paper.tex, paper.bib, verify_model.py, README.md, CITATION.cff, .zenodo.json, schema_article.jsonld, deploy.py
+Build mode: compile from current source; fail closed on scientific, numerical, metadata, page-count, figure-count, or preflight errors.
