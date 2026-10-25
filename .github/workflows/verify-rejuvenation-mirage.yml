@@ -103,7 +103,6 @@ jobs:
           else
             python "$RELEASE_DIR/deploy.py" --validate-only
           fi
-          git fetch origin "refs/tags/$TARGET_TAG:refs/tags/$TARGET_TAG"
           TAG_SHA="$(git rev-parse "refs/tags/$TARGET_TAG^{commit}")"
           EXPECTED_TAG_SHA="$INPUT_TAG_TARGET_SHA"
           if [ -z "$EXPECTED_TAG_SHA" ]; then
