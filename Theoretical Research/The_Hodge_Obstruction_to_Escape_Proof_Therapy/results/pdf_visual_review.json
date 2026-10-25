@@ -1,6 +1,6 @@
 {
-  "status": "RENDERED_PENDING_MANUAL_REVIEW",
-  "inspection_timestamp_utc": "2026-10-25T14:37:49.060977+00:00",
+  "status": "PASS",
+  "inspection_timestamp_utc": "2026-10-25T14:41:20.030Z",
   "paper_pdf_sha256": "bf51030f66382f8edc48cf5dc02b99f9f54dca67a9006c7b3f40c49d31d1d056",
   "page_count": 26,
   "render_dpi": 120,
@@ -33,11 +33,57 @@
     25,
     26
   ],
-  "pages_individually_reviewed": [],
-  "contact_sheet_reviewed": false,
-  "reviewer": "pending manual remote review",
-  "review_method": "Automated render only; no manual visual pass is inferred.",
-  "issues": [],
+  "pages_individually_reviewed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26
+  ],
+  "contact_sheet_reviewed": true,
+  "reviewer": "Xylia-assisted visual review",
+  "review_method": "The remote PDF at the recorded SHA-256 was rendered at 120 dpi. The contact sheet and each of all 26 pages were individually inspected at full resolution.",
+  "issues": [
+    {
+      "page": 3,
+      "severity": "minor",
+      "issue": "Contents continuation page has substantial lower whitespace.",
+      "disposition": "Accepted; the continuation is readable and does not interrupt main-text flow."
+    },
+    {
+      "page": 25,
+      "severity": "minor",
+      "issue": "Supplementary methodological-notes appendix occupies only the upper part of the page.",
+      "disposition": "Accepted; content is complete and the whitespace is preferable to shrinking or padding the text."
+    },
+    {
+      "page": 5,
+      "severity": "minor",
+      "issue": "Table 1 has several naturally wrapped entries.",
+      "disposition": "Accepted; all cells remain legible at normal PDF zoom, with no clipping or collision."
+    }
+  ],
   "critical_or_major_defects": [],
-  "final_disposition": "BLOCKED until every rendered page is inspected and the final PDF hash is reviewed."
+  "final_disposition": "PASS — all 26 remote-rendered pages and the contact sheet were reviewed; no critical or major layout defects were found."
 }

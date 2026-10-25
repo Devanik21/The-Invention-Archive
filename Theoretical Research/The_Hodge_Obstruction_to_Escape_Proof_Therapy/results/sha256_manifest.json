@@ -2,8 +2,6 @@
   ".zenodo.json": "7e41b398e415d84c55d58556ec98e489654d5b50f80b3b6d529be0be479b5b54",
   "CITATION.cff": "13f24d3594c9d3b96ab33f5201f863a09af76156781b840cc515bb8aa9f9f1f0",
   "README.md": "0b34f5197f52543f6a8eae7c83b611e46fdca4ef3e76277731e5e74fac49a9f4",
-  "__pycache__/deploy.cpython-312.pyc": "00a16e2907cd813f886f46abe10e77977802ccc03442a8006f92b22b1e1ecbcd",
-  "__pycache__/verify_model.cpython-312.pyc": "06fbefda073ccd46d5fb71cf7f1dd46ad21262d01a15ff62dc96126efa0eff02",
   "deploy.py": "42cec7e014f9e59a14e78a03aad8ce4c8371d233f08c325cdcce64883b9e79a2",
   "figures/fig01_framework.pdf": "7a783ca20ea20b3e8fadf29452953eb7e6db2e2e5c08d9f677861f8cc9925c3b",
   "figures/fig01_framework.png": "29089dc307119237f61eef1072121e2b93cd29beb909212a3f1f5840a7ed0e60",
