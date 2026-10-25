@@ -5,3 +5,5 @@ Source set: paper.tex, paper.bib, verify_model.py, README.md, CITATION.cff, .zen
 Build mode: compile from current source; fail closed on scientific, numerical, metadata, page-count, figure-count, or preflight errors.
 
 Revision: font-package correction after observed CI failure; rebuild current source.
+
+Revision: removed unused unavailable LaTeX package after observed CI failure.
