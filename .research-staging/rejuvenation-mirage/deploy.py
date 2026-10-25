@@ -276,7 +276,13 @@ def build(root):
     fonts=run(["pdffonts","paper.pdf"],root)
     (root/"results/pdffonts_report.txt").write_text(fonts,encoding="utf-8")
     font_lines=[line for line in fonts.splitlines()[2:] if line.strip()]
-    if not font_lines or any(len(line.split())<6 or line.split()[3].lower()!="yes" for line in font_lines):
+    embedded=[]
+    for line in font_lines:
+        match=re.search(r"\\s+(yes|no)\\s+(yes|no)\\s+(yes|no)\\s+\\d+\\s+\\d+\\s*$",line)
+        if match is None:
+            raise RuntimeError("Could not parse pdffonts embedding flags: "+line)
+        embedded.append(match.group(1).lower()=="yes")
+    if not font_lines or not all(embedded):
         raise RuntimeError("PDF font embedding preflight failed or returned no fonts")
     extracted=metrics.pop("text")
     (root/"results/pdf_text_extract.txt").write_text(extracted,encoding="utf-8")
