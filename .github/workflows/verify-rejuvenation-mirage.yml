@@ -85,7 +85,10 @@ jobs:
           test -d "$RELEASE_DIR/figures"
           test -d "$RELEASE_DIR/results"
           test -s "Theoretical Research/Readme.md"
-          python -m py_compile "$RELEASE_DIR/verify_model.py" "$RELEASE_DIR/deploy.py"
+          TMP_SYNTAX="$(mktemp -d)"
+          cp "$RELEASE_DIR/verify_model.py" "$RELEASE_DIR/deploy.py" "$TMP_SYNTAX/"
+          (cd "$TMP_SYNTAX" && python -m py_compile verify_model.py deploy.py)
+          rm -rf "$TMP_SYNTAX"
           python "$RELEASE_DIR/deploy.py" --self-test
           if [ "$ALLOW_PENDING" = "true" ]; then
             python "$RELEASE_DIR/deploy.py" --validate-only --allow-pending-visual
