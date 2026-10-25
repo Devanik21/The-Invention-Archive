@@ -220,7 +220,10 @@ def self_test(root):
 
 def build(root):
     (root/"results").mkdir(exist_ok=True); (root/"figures").mkdir(exist_ok=True)
-    run([sys.executable,"-m","py_compile","verify_model.py","deploy.py"],root,root/"results/python_compile_stdout.txt")
+    with tempfile.TemporaryDirectory(prefix="python-syntax-check-") as syntax_tmp:
+        shutil.copy2(root/"verify_model.py",Path(syntax_tmp)/"verify_model.py")
+        shutil.copy2(root/"deploy.py",Path(syntax_tmp)/"deploy.py")
+        run([sys.executable,"-m","py_compile","verify_model.py","deploy.py"],syntax_tmp,root/"results/python_compile_stdout.txt")
     out=run([sys.executable,"verify_model.py"],root)
     (root/"results/verify_model_stdout.txt").write_text(out,encoding="utf-8")
     md=metadata_errors(root,check_links=False)
