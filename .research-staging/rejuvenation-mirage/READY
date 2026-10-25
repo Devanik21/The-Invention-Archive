@@ -13,3 +13,5 @@ Revision: expanded the manuscript with substantive sections on practical identif
 Revision: corrected the PDF font-embedding preflight to parse pdffonts fixed-width output rather than split-token positions; also clarified condition-number notation. Retry from current source.
 
 Revision: corrected the regex escape itself after the observed font-line parse failure; rerun all checks from this exact source.
+
+Revision: normalized generated CSV line endings to LF after git diff --check detected CRLF carriage returns as trailing whitespace; rerun full build.
