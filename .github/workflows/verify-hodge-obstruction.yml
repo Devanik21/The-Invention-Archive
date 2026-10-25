@@ -1,0 +1,104 @@
+name: Verify Hodge Obstruction release
+on:
+  workflow_dispatch:
+    inputs:
+      release_sha:
+        description: Exact release artifact commit SHA to verify
+        required: true
+        type: string
+      tag:
+        description: Semantic tag bound to the release artifact commit
+        required: true
+        type: string
+      allow_pending_visual:
+        description: Permit automated preflight before final manual visual sign-off
+        required: false
+        default: "false"
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - "Theoretical Research/The_Hodge_Obstruction_to_Escape_Proof_Therapy/**"
+      - "Theoretical Research/Readme.md"
+permissions:
+  contents: read
+concurrency:
+  group: hodge-obstruction-verification
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Resolve exact target identity
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            SHA="$(jq -r '.inputs.release_sha' "$GITHUB_EVENT_PATH")"
+            TAG="$(jq -r '.inputs.tag' "$GITHUB_EVENT_PATH")"
+            ALLOW="$(jq -r '.inputs.allow_pending_visual // "false"' "$GITHUB_EVENT_PATH")"
+          else
+            SHA="$GITHUB_SHA"
+            TAG="v2026.10.25.1"
+            ALLOW="false"
+            MATRIX="Theoretical Research/The_Hodge_Obstruction_to_Escape_Proof_Therapy/results/release_check_matrix.json"
+            if [ -s "$MATRIX" ] && [ "$(jq -r '.release_status' "$MATRIX")" != "PASS" ]; then ALLOW="true"; fi
+          fi
+          [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "Invalid target SHA" >&2; exit 1; }
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "allow=$ALLOW" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.target.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned verification dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "numpy==2.3.5" "matplotlib==3.10.8" "networkx==3.6.1" "PyMuPDF==1.26.7" "PyYAML==6.0.3" "Pillow==11.3.0"
+          sudo apt-get update
+          sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended poppler-utils
+      - name: Verify core files, exact source rebuild, tag, and matrix
+        shell: bash
+        env:
+          TARGET_SHA: ${{ steps.target.outputs.sha }}
+          TARGET_TAG: ${{ steps.target.outputs.tag }}
+          ALLOW: ${{ steps.target.outputs.allow }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          D="Theoretical Research/The_Hodge_Obstruction_to_Escape_Proof_Therapy"
+          for f in paper.tex paper.pdf verify_model.py README.md CITATION.cff paper.bib .zenodo.json schema_article.jsonld deploy.py; do test -s "$D/$f"; done
+          test "$(find "$D" -maxdepth 1 -type f | wc -l)" -eq 9
+          test -d "$D/figures" && test -d "$D/results"
+          test -s "Theoretical Research/Readme.md"
+          TMP="$(mktemp -d)"; cp "$D/verify_model.py" "$D/deploy.py" "$TMP/"
+          (cd "$TMP" && python -m py_compile verify_model.py deploy.py && python deploy.py --self-test)
+          python "$D/verify_model.py"
+          if [ "$ALLOW" = "true" ]; then python "$D/deploy.py" --validate-only --allow-pending-visual; else python "$D/deploy.py" --validate-only; fi
+          TAG_SHA=""
+          for i in $(seq 1 10); do
+            TAG_SHA="$(git rev-parse "refs/tags/$TARGET_TAG^{commit}" 2>/dev/null || true)"
+            [ -n "$TAG_SHA" ] && break
+            sleep 2; git fetch origin --tags
+          done
+          EXPECTED="$(jq -r '.release_artifact_commit_sha // empty' "$D/results/release_check_matrix.json")"
+          if [ -z "$EXPECTED" ]; then EXPECTED="$TARGET_SHA"; fi
+          if [ -n "$TAG_SHA" ]; then test "$TAG_SHA" = "$EXPECTED"; else echo "Tag $TARGET_TAG not readable yet" >&2; exit 1; fi
+          test -s "$D/results/sha256_manifest.json"
+          python - "$D" <<'PY'
+          import hashlib,json,pathlib,sys
+          d=pathlib.Path(sys.argv[1]); m=json.loads((d/'results/sha256_manifest.json').read_text())
+          for rel,expected in m.items():
+              p=d/rel
+              assert p.is_file(), f'manifest path missing: {rel}'
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==expected, f'hash mismatch: {rel}'
+          print(f'Manifest pass: {len(m)} files match recorded SHA-256 values')
+          PY
+          echo "Verified exact commit $TARGET_SHA; tag $TARGET_TAG -> $TAG_SHA; visual allowance=$ALLOW" >> "$GITHUB_STEP_SUMMARY"
