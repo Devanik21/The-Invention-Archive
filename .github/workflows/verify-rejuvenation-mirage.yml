@@ -39,15 +39,18 @@ jobs:
             SHA="$(jq -r '.inputs.release_sha' "$GITHUB_EVENT_PATH")"
             TAG="$(jq -r '.inputs.tag' "$GITHUB_EVENT_PATH")"
             ALLOW_PENDING="$(jq -r '.inputs.allow_pending_visual // "false"' "$GITHUB_EVENT_PATH")"
+            TAG_TARGET_SHA="$SHA"
           else
             SHA="$GITHUB_SHA"
             TAG="v2026.10.25"
             ALLOW_PENDING="false"
+            TAG_TARGET_SHA=""
           fi
           [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "Invalid target SHA" >&2; exit 1; }
           echo "sha=$SHA" >> "$GITHUB_OUTPUT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "allow_pending=$ALLOW_PENDING" >> "$GITHUB_OUTPUT"
+          echo "tag_target_sha=$TAG_TARGET_SHA" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v4
         with:
           ref: ${{ steps.target.outputs.sha }}
@@ -68,6 +71,7 @@ jobs:
           TARGET_SHA: ${{ steps.target.outputs.sha }}
           TARGET_TAG: ${{ steps.target.outputs.tag }}
           ALLOW_PENDING: ${{ steps.target.outputs.allow_pending }}
+          INPUT_TAG_TARGET_SHA: ${{ steps.target.outputs.tag_target_sha }}
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
@@ -101,7 +105,12 @@ jobs:
           fi
           git fetch origin "refs/tags/$TARGET_TAG:refs/tags/$TARGET_TAG"
           TAG_SHA="$(git rev-parse "refs/tags/$TARGET_TAG^{commit}")"
-          test "$TAG_SHA" = "$TARGET_SHA"
+          EXPECTED_TAG_SHA="$INPUT_TAG_TARGET_SHA"
+          if [ -z "$EXPECTED_TAG_SHA" ]; then
+            EXPECTED_TAG_SHA="$(jq -r '.release_artifact_commit_sha // empty' "$RELEASE_DIR/results/release_check_matrix.json")"
+            if [ -z "$EXPECTED_TAG_SHA" ]; then EXPECTED_TAG_SHA="$TARGET_SHA"; fi
+          fi
+          test "$TAG_SHA" = "$EXPECTED_TAG_SHA"
           if [ -n "$(git status --porcelain)" ]; then
             echo "Validation mutated the checked-out release tree." >&2
             exit 1
