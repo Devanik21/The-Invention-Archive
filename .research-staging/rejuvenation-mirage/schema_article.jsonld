@@ -1,0 +1,30 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "name": "The Rejuvenation Mirage: Identifiability Limits of Epigenetic-Clock Reset and an Active-Design Rule for Functional Repair",
+  "headline": "The Rejuvenation Mirage",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "identifier": "https://orcid.org/0009-0001-8310-6921",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "National Institute of Technology Agartala, Department of Electronics and Communication Engineering, India"
+    }
+  },
+  "datePublished": "2026-10-25",
+  "version": "1.0.0",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "url": "https://github.com/Devanik21/The-Invention-Archive",
+  "description": "Theoretical and synthetic-computational analysis of identifiability limits when epigenetic-clock changes may include direct marker effects. Includes a reproducible synthetic benchmark and constrained information-gain design planner; no empirical rejuvenation or lifespan-extension claim is made.",
+  "keywords": [
+    "epigenetic clocks",
+    "causal identifiability",
+    "active experimental design",
+    "aging biomarkers",
+    "synthetic benchmark"
+  ],
+  "creativeWorkStatus": "Preprint",
+  "license": "https://opensource.org/license/mit"
+}
