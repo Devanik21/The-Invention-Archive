@@ -77,7 +77,7 @@ The verification script has no network or credential requirement. It regenerates
 - [Release check matrix](results/release_check_matrix.json)
 - [SHA-256 manifest](results/sha256_manifest.json)
 
-The twelve numbered figures are available as vector PDFs and SVG files in the figures directory. They include eight quantitative plots, two graph-structured views, and two flow diagrams. Every data-bearing figure is generated from code, with source values archived in results/.
+The twelve numbered figures are available as vector PDFs and SVG files in the [figures directory](figures/). Start with the [framework flow](figures/fig01_framework.pdf), [causal graph](figures/fig02_causal_dag.pdf), [identifiability spectrum](figures/fig04_identifiability_spectrum.pdf), and [validation pipeline](figures/fig12_validation_pipeline.pdf). They include eight quantitative plots, two graph-structured views, and two flow diagrams. Every data-bearing figure is generated from code, with source values archived in results/.
 
 ## Selected literature
 
