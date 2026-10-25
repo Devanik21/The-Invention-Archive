@@ -353,12 +353,13 @@ def records(summary,active,candidates,bc,br,inv,rmse,coverage,genotype,design_da
     (RES/"author_profile_audit.md").write_text(
       "# Author-profile audit — 2026-10-25\n\n"
       "## Public records reviewed\n"
-      "- GitHub profile Devanik21 identifies Devanik Debnath, NIT Agartala, ECE '26, and links ORCID 0009-0001-8310-6921, LinkedIn, and two Kaggle profiles.\n"
-      "- LinkedIn profile linkedin.com/in/devanik describes a final-year ECE undergraduate and lists a Samsung Fellowship and an ISRO Space Hackathon award. These are profile-reported, not independently audited certificates.\n"
-      "- The ORCID identifier is linked from the author's GitHub profile; this search pass did not establish a complete public works list attributable to it.\n\n"
+      "- GitHub profile: https://github.com/Devanik21. The public profile identifies Devanik Debnath, NIT Agartala, ECE '26, and links ORCID https://orcid.org/0009-0001-8310-6921, LinkedIn https://www.linkedin.com/in/devanik, and Kaggle profiles https://www.kaggle.com/devanikdebnath and https://www.kaggle.com/devanik.\n"
+      "- The GitHub biography self-reports Samsung Fellow @IISc and an ISRO hackathon win. These distinctions were not independently confirmed against official fellowship or hackathon records in this pass; no employment, supervision, or endorsement relationship is inferred.\n"
+      "- ORCID identifier https://orcid.org/0009-0001-8310-6921 is linked from the author's GitHub profile; this search pass did not establish a complete public works list attributable to it.\n"
+      "- LinkedIn URL was included in the audit, but its full profile content was not independently verified in this run.\n\n"
       "## Unresolved in this pass\n"
-      "- Zenodo: no unambiguous author record was independently verified by the targeted query.\n"
-      "- OpenAIRE and Google Scholar: no unambiguous matching author record was confirmed. No citation counts, publication totals, or index status are claimed.\n"
+      "- Zenodo: no unambiguous author record was independently verified by the targeted query. Search endpoint: https://zenodo.org/search?q=Devanik%20Debnath.\n"
+      "- OpenAIRE and Google Scholar: no unambiguous matching author record was confirmed. Search endpoints: https://explore.openaire.eu/search/person?orcid=0009-0001-8310-6921 and https://scholar.google.com/scholar?q=%22Devanik+Debnath%22. No citation counts, publication totals, or index status are claimed.\n"
       "- This is a focused snapshot, not an exhaustive identity search. Name-only matches are not treated as proof.\n\n"
       "Only the supplied name, institution, department, ECE '26 designation, and ORCID URL are used in the manuscript. No completed degree or external endorsement is claimed.\n",encoding="utf-8")
     (RES/"public_data_status.md").write_text(
