@@ -7,3 +7,5 @@ Build mode: compile from current source; fail closed on scientific, numerical, m
 Revision: font-package correction after observed CI failure; rebuild current source.
 
 Revision: removed unused unavailable LaTeX package after observed CI failure.
+
+Revision: expanded the manuscript with substantive sections on practical identifiability, partial identification, repeated measures, sequential design, sample-size logic, and falsification; retry the full build and all release gates.
