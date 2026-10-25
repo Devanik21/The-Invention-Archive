@@ -1,0 +1,494 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=0.82in,headheight=15pt,footskip=25pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{graphicx,booktabs,longtable,tabularx,array,multirow}
+\usepackage{caption,subcaption,enumitem,fancyhdr,xcolor,hyperref,float,placeins}
+\usepackage{tcolorbox,setspace,natbib,siunitx,cleveref}
+\definecolor{ink}{HTML}{17324D}
+\definecolor{teal}{HTML}{0F766E}
+\definecolor{gold}{HTML}{B98528}
+\definecolor{coral}{HTML}{B94A48}
+\definecolor{mist}{HTML}{EEF4F6}
+\hypersetup{colorlinks=true,linkcolor=ink,citecolor=teal,urlcolor=teal,pdftitle={The Rejuvenation Mirage: Identifiability Limits of Epigenetic-Clock Reset and an Active-Design Rule for Functional Repair},pdfauthor={Devanik Debnath},pdfsubject={Theoretical and synthetic computational preprint}}
+\captionsetup{font=small,labelfont={bf,color=ink},justification=raggedright,singlelinecheck=false}
+\setlength{\parindent}{1em}
+\setlength{\parskip}{2.5pt}
+\setstretch{1.06}
+\setlist{nosep,leftmargin=*}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\textit{The Rejuvenation Mirage}}
+\fancyhead[R]{\small Devanik Debnath · Preprint v1.0}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.35pt}
+\title{\vspace{-1.5em}\textbf{\color{ink}The Rejuvenation Mirage}\\[0.35em]\large Identifiability Limits of Epigenetic-Clock Reset and an Active-Design Rule for Functional Repair}
+\author{Devanik Debnath\\[0.25em]\small Department of Electronics and Communication Engineering\\\small National Institute of Technology Agartala, India\\\small \href{https://orcid.org/0009-0001-8310-6921}{ORCID: 0009-0001-8310-6921} \;|\; \href{https://github.com/Devanik21}{GitHub: Devanik21}}
+\date{25 October 2026 \;|\; Theoretical and synthetic-computational preprint v1.0}
+\input{results/generated_macros.tex}
+\newtcolorbox{keybox}{colback=mist,colframe=teal,boxrule=0.6pt,arc=1.5mm,left=2mm,right=2mm,top=1.5mm,bottom=1.5mm}
+\newtcolorbox{caveatbox}{colback=white,colframe=coral,boxrule=0.6pt,arc=1.5mm,left=2mm,right=2mm,top=1.5mm,bottom=1.5mm}
+\begin{document}
+\maketitle
+\vspace{-0.7em}
+\begin{abstract}
+Epigenetic clocks are powerful predictors of chronological age and several health outcomes, but a predictor is not automatically a manipulable measure of functional aging. Targeted methylation editing can perturb clock-associated sites and produce genome-wide bystander changes; genetic variation may also influence some clock CpGs. These observations motivate a precise question: when an intervention lowers a clock score, what evidence identifies a change in latent functional state rather than a direct change in the measurement channel? We formulate a minimal state-space model with a functional-aging coordinate, a clock-sensitive molecular coordinate, an inherited set point, and an identity/safety coordinate. We prove an observational-equivalence result: a single scalar clock contrast cannot separate functional repair from direct marker displacement without additional design variation or an independent outcome. We derive rank conditions for identification, show why paired measurements remove an additive time-invariant genetic set point but not genotype-by-treatment interactions, and construct a constrained sequential experiment planner that maximizes expected information gain while penalizing identity risk and measurement cost. In a deterministic synthetic benchmark, a marker-only perturbation produces a clock reduction of \ClockOnlyMean\ units while the functional endpoint changes by \FunctionalOnlyMean\ units; the apparent clock-only “repair” rule is triggered in \FalsePositiveRate\ of simulated trials. These values are outputs of the released model, not biological measurements. The contribution is a falsifiable design principle and reproducible stress test, not a new biological mechanism or evidence that any intervention rejuvenates living tissue.
+\end{abstract}
+\begin{keybox}
+\textbf{Core result.} A clock change is an observation, not a causal diagnosis. Identification requires independently varied perturbations, at least one functional readout with a defensible measurement model, and explicit checks for genotype and identity effects.
+\end{keybox}
+\noindent\textbf{Keywords:} epigenetic clocks; causal identifiability; methylation editing; biological age; active experimental design; information geometry; synthetic benchmark; rejuvenation safety.
+
+\begin{caveatbox}
+\textbf{Scope and status.} This paper is a theoretical and synthetic-computational preprint. All new numerical values are generated from the stylized model in \texttt{verify\_model.py}. No public biological dataset, wet-lab experiment, clinical intervention, or organismal lifespan assay was performed for this release. The results do not establish rejuvenation efficacy or safety.
+\end{caveatbox}
+
+\clearpage
+\tableofcontents
+\clearpage
+
+\section{Introduction}
+DNA-methylation clocks compress many molecular measurements into a scalar that predicts age or age-associated outcomes. Horvath's multi-tissue clock established a widely used framework for age prediction across tissues and cell types \citep{horvath2013}; later clocks were designed to improve associations with healthspan, mortality, or physiological phenotypes \citep{levine2018,lu2019}. Their predictive usefulness makes them attractive endpoints for interventions intended to reverse aging-associated molecular changes. Yet the interpretation of a changed score is more difficult than the prediction task that produced it.
+
+The distinction is not merely philosophical. In 2025, Liesenfelder and colleagues reported that targeted epigenetic editing at individual age-associated CpGs could evoke genome-wide bystander methylation changes and alter epigenetic-clock outputs \citep{liesenfelder2025}. In 2026, a systematic transcription-factor perturbation platform identified several candidate rejuvenating perturbations while explicitly seeking to avoid dedifferentiation \citep{sengstack2026}. A 2026 preprint, Germline-Informed Aging, further reported enrichment of methylation quantitative-trait loci among clock CpGs, raising the possibility that inherited differences contribute to some between-person clock variation \citep{lim2026}. These results do not invalidate clocks. They sharpen the causal question: a measurement can be predictive, responsive to intervention, and still fail to identify which latent process changed.
+
+We study a narrow but consequential failure mode. Suppose an intervention directly shifts methylation at clock-sensitive loci while leaving functional state unchanged. The clock can move even if repair does not occur. Conversely, a functional improvement may be obscured by a marker response in the opposite direction. A scalar endpoint alone cannot resolve these alternatives unless additional assumptions or measurements make the latent components identifiable.
+
+Our goal is to formalize that limitation and turn it into an experiment-design rule. The model is intentionally small: it is not a molecular simulation, an epigenetic-clock implementation, or a model of human aging. It separates a latent functional burden from a measurement-sensitive coordinate and asks which observations are sufficient to distinguish their changes. We then construct a synthetic benchmark in which the true data-generating process is known, allowing us to test identifiability, bias, uncertainty, and a constrained active-design policy.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.92\linewidth]{figures/fig01_framework.pdf}
+\caption{Overview of the proposed causal measurement framework. Interventions can affect latent functional state, the molecular coordinates directly used by a clock, or both. Independent functional and identity readouts are needed to distinguish these paths. All arrows are hypotheses in the model, not established biological mechanisms.}
+\label{fig:framework}
+\end{figure}
+
+\section{Related work and positioning}
+Epigenetic clocks are supervised predictors trained on methylation patterns, and their outputs can be useful even when the measured CpGs are not causal drivers of aging. Horvath's clock demonstrated cross-tissue age prediction \citep{horvath2013}; PhenoAge and GrimAge incorporated phenotypic or mortality-associated information to target outcomes beyond chronological age \citep{levine2018,lu2019}. Large-scale language-model prediction of biological age from health examination reports shows that prediction can also arise from clinical text and population-level covariation \citep{llmage2025}. These approaches answer prediction questions; none implies that directly changing a predictor's inputs changes the underlying state that made the prediction useful.
+
+The closest intervention evidence for our premise is the 2025 methylation-editing study by Liesenfelder et al. It reports bystander methylation changes at many sites and measurable clock perturbations after targeted editing \citep{liesenfelder2025}. This motivates a direct-marker path in the observation model. The 2026 Transcriptional Rejuvenation Discovery Platform combines computational predictions, expression comparisons, and perturbation screening to find candidate transcription factors associated with rejuvenation without dedifferentiation \citep{sengstack2026}. We treat that as evidence that interventions and safety/identity endpoints must be jointly considered, not as validation of our model.
+
+Genotype-related clock variation is another relevant concern. The GIA preprint maps clock CpGs to blood methylation QTLs and reports enrichment relative to matched unused probes \citep{lim2026}. Because it is a preprint, its numerical findings are treated as preliminary and are not generalized beyond the studied data. EnsembleAge's multi-clock strategy illustrates a different mitigation: aggregate several predictors rather than relying on one score \citep{haghani2025}. Multiple clocks can improve robustness, but correlated clocks may share the same direct perturbation pathway and therefore need not identify functional repair.
+
+Our narrow contribution is not the claim that clock scores can be misleading, that methylation is genetically influenced, or that experimental design benefits from information criteria. Each has prior foundations. We combine these ideas in an explicit causal state-space benchmark that (i) proves a simple observational-equivalence result, (ii) specifies a rank-based condition for distinguishing repair and direct marker effects, and (iii) turns that condition into a constrained sequential design algorithm with executable synthetic tests. The literature search is focused rather than exhaustive; no absolute priority claim is made.
+
+\begin{table}[!htbp]
+\centering
+\caption{Positioning against established work. The final column states the boundary of inference.}
+\label{tab:position}
+\small
+\begin{tabularx}{\linewidth}{p{0.24\linewidth} X X}
+\toprule
+\textbf{Prior line} & \textbf{What it establishes or motivates} & \textbf{What this paper does not claim} \\
+\midrule
+Epigenetic clocks \citep{horvath2013,levine2018,lu2019} & Methylation patterns predict age or age-associated outcomes. & A clock score is not assumed to be a causal state variable. \\
+Targeted epigenetic editing \citep{liesenfelder2025} & Perturbing selected CpGs can produce bystander changes and alter clock outputs. & We do not simulate the underlying chromatin network or reproduce that experiment. \\
+TF perturbation screening \citep{sengstack2026} & Systematic perturbation can identify candidates while monitoring cell identity. & We do not predict or recommend any transcription factor. \\
+Genetic clock confounding \citep{lim2026} & Some clock CpGs may reflect inherited methylation regulation. & A preprint association is not treated as proof that clocks generally fail. \\
+Optimal experiment design \citep{chaloner1995,mackay1992} & Information criteria can guide the allocation of measurements. & D-optimality is not itself a biological discovery or safety guarantee. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Research posture, claims, and epistemic levels}
+The paper separates five levels of statement. P1 denotes an identity or theorem following from explicit definitions; P2 denotes a model-dependent optimum; P3 denotes a proposed statistical regularity requiring repeated empirical evidence; P4 denotes a structural correspondence between the model and biology; P5 denotes a motivating analogy. This classification prevents a valid result about the toy observation model from silently becoming a claim about living systems.
+
+The principal P1 claim is that a single scalar contrast of the form \(y=\kappa u+\alpha q\) does not identify both \(\kappa\) and \(\alpha\) when \(u\) and \(q\) are fixed and nonzero. The P2 claim is that a constrained D-optimal design maximizes a specified information criterion over a finite candidate set; it does not imply that this design is optimal for a real tissue. The P3 claim is not established here: we do not claim universality of clock/functional discordance across species, tissues, or clocks. The P4 correspondence is that functional repair, direct measurement effects, and cell-identity drift can be represented as distinct state coordinates; whether any particular biological intervention maps cleanly to those coordinates is empirical. Any metaphor that calls a clock reset a “mirage” is P5 shorthand for a measurement-identifiability failure, not a claim that epigenetic clocks are useless.
+
+\begin{table}[!htbp]
+\centering
+\caption{Epistemic classification and release boundaries.}
+\label{tab:epistemic}
+\small
+\begin{tabularx}{\linewidth}{p{0.09\linewidth} p{0.28\linewidth} X}
+\toprule
+\textbf{Level} & \textbf{Claim in this paper} & \textbf{Evidence status} \\
+\midrule
+P1 & Scalar observational equivalence and matrix-rank conditions. & Derived algebraically and unit-tested in code. \\
+P2 & Greedy information-gain design under stated cost/risk constraints. & Exact for the finite candidate set; model-dependent. \\
+P3 & A common quantitative discordance rate across biological systems. & Not tested; no empirical data were analyzed. \\
+P4 & Separate latent coordinates can represent function, marker response, genotype, and identity. & Useful formal correspondence; biological mapping remains unvalidated. \\
+P5 & A clock-only reset can resemble rejuvenation without functional repair. & Intuition for the explicit counterexample, not a universal claim. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{State variables and assumptions}
+Let \(a\) denote a latent functional-aging burden, \(m\) a molecular coordinate that directly influences the clock, \(g\) an inherited set point, and \(i\) a cell-identity or safety coordinate. The model is discrete-time and dimensionless. The coordinates are not measured biological quantities, and no parameter is calibrated to a living organism. The model exists to test the logical relationship between interventions and observations.
+
+Two intervention components are distinguished. \(u\) denotes a hypothetical repair-oriented perturbation that changes \(a\), and \(q\) denotes a marker-targeting perturbation that changes \(m\). These labels describe their role in the synthetic data-generating process; they are not prescriptions for experimental manipulation. A third quantity, \(r\), represents an identity-risk burden. We use linear local responses because identifiability can be studied without assuming a complete nonlinear molecular mechanism.
+
+The observation model is
+\begin{align}
+C_t &= a_t + \alpha m_t + \beta g + \epsilon^C_t, \label{eq:clock}\\
+F_t &= a_t + \rho q_t + \epsilon^F_t, \label{eq:function}\\
+I_t &= i_t + \epsilon^I_t. \label{eq:identity}
+\end{align}
+Here \(C_t\) is the clock score, \(F_t\) is an independent functional endpoint, and \(I_t\) is an identity/safety readout. The coefficient \(\alpha\) maps marker displacement to the clock, \(\beta\) maps inherited set point to the baseline clock, and \(\rho\) permits the marker-targeting intervention to affect the functional readout directly. The last term is essential: treating a functional endpoint as immune to all direct treatment effects is an assumption to test, not a fact.
+
+For intervention contrasts, we use the reduced local model
+\begin{align}
+\Delta C &= \kappa u + \alpha q + \epsilon_C, \label{eq:dclock}\\
+\Delta F &= \kappa u - \rho q + \epsilon_F, \label{eq:dfunction}\\
+\Delta I &= \gamma_u u + \gamma_q q + \epsilon_I. \label{eq:didentity}
+\end{align}
+The sign convention defines positive \(\Delta C\) and \(\Delta F\) as apparent improvement. The direct marker effect contributes to \(\Delta C\); the direct functional effect contributes to \(\Delta F\). The true functional response of interest is \(\kappa\). The model allows a direct marker effect even when \(\kappa=0\), and allows a safety/identity cost even when the clock improves.
+
+\begin{table}[!htbp]
+\centering
+\caption{Notation and assumptions. Quantities are dimensionless model variables unless explicitly described as an observed score.}
+\label{tab:notation}
+\small
+\begin{tabularx}{\linewidth}{p{0.13\linewidth} p{0.27\linewidth} X}
+\toprule
+\textbf{Symbol} & \textbf{Meaning} & \textbf{Assumption / boundary} \\
+\midrule
+\(a\) & Latent functional-aging burden & Lower is better; not directly observed. \\
+\(m\) & Clock-sensitive molecular coordinate & Can change without a functional change. \\
+\(g\) & Inherited set point & Constant within subject in the additive baseline model. \\
+\(i\) & Cell identity / safety state & Measured imperfectly; risk is not reducible to clock score. \\
+\(u,q\) & Repair-oriented and marker-targeting inputs & Independently randomized in the ideal design. \\
+\(\kappa\) & Functional repair effect & Primary estimand in the synthetic benchmark. \\
+\(\alpha,\beta,\rho\) & Marker, genotype, and direct functional-effect coefficients & Unknown unless identified by design. \\
+\(\epsilon_C,\epsilon_F,\epsilon_I\) & Measurement/process errors & Independent zero-mean noise in the base case; stress-tested. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Causal structure and measurement channels}
+The directed graph in \cref{fig:dag} separates three paths to the observations. A repair-oriented perturbation can change the latent functional state, which can affect both the clock and the functional endpoint. A marker-targeting perturbation can directly change the molecular coordinate used by the clock. Inherited variation can shift baseline clock values. Identity drift is represented separately because a treatment that lowers an age-associated score while damaging lineage fidelity is not necessarily a desirable rejuvenation intervention.
+
+The graph is deliberately conservative. It does not assume that a particular methylation site is a causal aging driver, that functional repair is one-dimensional, or that identity can be summarized by a single marker. The purpose of the graph is to expose the assumptions required by the reduced equations. In particular, the absence of a direct \(q\to F\) arrow is a special case with \(\rho=0\); the benchmark also evaluates violations of that restriction.
+
+Within-subject differences remove an additive, time-invariant \(\beta g\) term from the clock contrast. They do not remove genotype-dependent treatment response, age-dependent cell composition, measurement drift, regression to the mean, or any time-varying genetic effect. These alternatives are represented as failure modes rather than assumed away. A robust experiment therefore needs both baseline stratification and randomized contrasts, with independent functional and identity readouts collected on the same schedule.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.86\linewidth]{figures/fig02_causal_dag.pdf}
+\caption{Causal graph for the stylized observation model. The direct marker path can change the clock independently of the latent functional state; inherited set point affects baseline clock values; and identity risk is a separate outcome.}
+\label{fig:dag}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.82\linewidth]{figures/fig03_measurement_network.pdf}
+\caption{Measurement-channel graph. The clock and functional endpoint share a latent functional component but have distinct nuisance paths. The graph is conceptual and does not encode a measured biological network.}
+\label{fig:measurement}
+\end{figure}
+
+\section{An observational-equivalence result}
+We first state the main identifiability limitation.
+
+\begin{tcolorbox}[colback=mist,colframe=ink,title=Proposition 1 — scalar-clock non-identifiability]
+Let \(y=\kappa u+\alpha q\), with known fixed inputs \(u,q\) and unknown coefficients \(\kappa,\alpha\). If \(u\neq0\) and \(q\neq0\), one observed scalar \(y\) does not uniquely identify the pair \((\kappa,\alpha)\). For every scalar \(t\), the transformed pair
+\[
+\kappa'=\kappa+tq,\qquad
+\alpha'=\alpha-tu
+\]
+produces the same \(y\).
+\end{tcolorbox}
+
+The proposition is elementary but important. A good fit of a scalar endpoint does not establish which latent path generated it. When \(u=q=1\), for example, \((\kappa,\alpha)=(0.25,0.45)\) and \((0.40,0.30)\) both predict \(y=0.70\). The clock contrast cannot distinguish a smaller repair effect with a larger direct marker effect from a larger repair effect with a smaller marker effect. This is structural non-identifiability, not merely high variance. More subjects measured under the same design reduce sampling noise but do not remove the equivalence.
+
+If \(\alpha\) were known from an independent calibration, \(\kappa\) could be recovered from the scalar contrast under the model. If the design varies \(u\) and \(q\) independently across arms, the coefficients in the reduced linear equation may become identifiable as regression parameters. But that alone does not demonstrate that the coefficient associated with a repair-labeled input corresponds to a genuine functional improvement; the label is part of the design hypothesis. An independent functional endpoint provides a separate test of the proposed mechanism.
+
+\begin{tcolorbox}[colback=white,colframe=teal,title=Proposition 2 — rank condition for the local contrast model]
+For the observation rows
+\[
+x_C=(u,q,0),\qquad x_F=(u,0,-q)
+\]
+associated with parameters \(\theta=(\kappa,\alpha,\rho)\), local linear identification requires the stacked design matrix \(X\) to have column rank three. A single fixed intervention pair produces at most two distinct rows and cannot identify all three coefficients. Independent variation of \(u\) and \(q\), with both \(C\) and \(F\) observed, can provide full rank.
+\end{tcolorbox}
+
+The rank condition is necessary for the specified linear model, not sufficient for biological validity. Full rank can coexist with biased measurement, incorrect causal structure, unmeasured confounding, or an endpoint that does not track the function of interest. In a real experiment, one should report the smallest singular value and condition number of the design matrix, not only a binary rank decision. Near-collinearity is practically similar to non-identifiability because small measurement errors can create large coefficient uncertainty.
+
+\section{Paired contrasts and inherited set points}
+A fixed additive genotype term cancels in a paired difference:
+\[
+(C_0-C_1)=(a_0-a_1)+\alpha(m_0-m_1)+(\epsilon^C_0-\epsilon^C_1),
+\]
+provided \(g\) and \(\beta\) are constant over the observation interval. This is a useful property of within-subject designs. It is not a general cure for genetic confounding. If genotype modifies the treatment effect, the repair coefficient becomes \(\kappa(g)\); if cell-type composition changes with time, the clock measurement function may change; if the intervention changes the molecular coordinate in a genotype-dependent manner, the contrast retains an interaction.
+
+Cross-sectional comparisons have a different problem. If genotype distributions differ between groups, a group difference in \(C\) includes both the difference in \(a\) and the difference in \(\beta g\). In the stylized model,
+\[
+\mathbb{E}[C\mid G=1]-\mathbb{E}[C\mid G=0]
+=\beta+\Delta a+\alpha\Delta m.
+\]
+The expression is not an empirical estimate; it shows the arithmetic of the model. A baseline clock difference can be produced by a set-point difference even when functional burden is matched. This motivates stratification, measured genotype covariates, family-based comparisons when suitable, and longitudinal functional outcomes.
+
+The GIA preprint is relevant because it explicitly studies genetic regulation of clock-associated CpGs \citep{lim2026}; however, the correct response is not to discard clock data. Instead, the analysis should separate within-subject change, baseline between-subject variation, and genotype-by-treatment heterogeneity. Our synthetic analysis includes a stress test where genotype composition differs between groups to quantify the model's predicted bias. That exercise establishes a consequence of the assumed data-generating process, not the prevalence of the problem in a cohort.
+
+\section{Experimental design as information geometry}
+Let \(\theta=(\kappa,\alpha,\rho)^\top\) be the parameter vector and let \(J_j\) be the Jacobian of the expected observations under candidate design \(j\). For independent Gaussian errors with known covariance \(\Sigma_j\), the local Fisher information contribution is
+\[
+\mathcal{I}_j(\theta)=J_j^\top\Sigma_j^{-1}J_j.
+\]
+For a set of selected arms \(S\), the total information is \(\mathcal{I}_S=\sum_{j\in S}\mathcal{I}_j\). A D-optimal design maximizes \(\log\det(\mathcal{I}_S+\lambda I)\), where \(\lambda>0\) is a small regularizer used to stabilize numerical scoring. The regularizer does not turn a rank-deficient design into a scientifically identified model; the smallest singular value and unregularized rank must still be reported.
+
+We include measurement cost and identity risk. Let \(c_j\) be the cost of candidate arm \(j\), and \(r_j\) its predicted identity-risk score under a prespecified model. The selection problem is
+\[
+\max_{S:\,|S|=K}\ \log\det(\mathcal{I}_S+\lambda I)
+\quad\text{subject to}\quad
+\sum_{j\in S}c_j\le C_{\max},\qquad
+\sum_{j\in S}r_j\le R_{\max}.
+\]
+This objective is a design criterion, not a claim that log-determinant information is a complete measure of scientific value. The constraints are only as reliable as their input assumptions. If the safety model is weak, the algorithm can optimize the wrong risk estimate; therefore the output must be accompanied by sensitivity analysis and human review.
+
+\section{A constrained sequential design planner}
+The AI component in this paper is an uncertainty-aware design planner, not a generative model that invents molecular mechanisms. At each step it evaluates a finite library of candidate perturbation/readout combinations, estimates their incremental information gain, rejects candidates that violate the declared cost or risk budget, and selects the admissible candidate with the highest expected gain. In a biological application, the candidate library and risk scores would need to be supplied and reviewed by domain experts; the present code only uses synthetic candidate arms.
+
+The planner is intentionally transparent. It computes the expected information matrix from the local Jacobian, scores candidate additions by the change in log-determinant, and logs the rejected candidates and constraints. A more elaborate Bayesian planner could integrate posterior uncertainty over \(\theta\), model uncertainty, and non-Gaussian outcomes. We do not claim that the greedy finite-library algorithm is globally optimal for arbitrary designs. The benefit here is traceability: every choice can be reconstructed from a score and a declared constraint.
+
+The active planner differs from random or fixed allocation in one specific way. It seeks designs that separate the repair coefficient from the marker coefficient, rather than simply maximizing the expected movement of the clock. Under the synthetic model, a design that repeatedly samples the same mixture of \(u\) and \(q\) has a poorly conditioned information matrix. A factorial-like allocation with independent variation can improve parameter separation. This does not guarantee that the selected inputs correspond to safe or efficacious biological interventions; it provides a way to choose informative tests once such inputs have been independently justified.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.93\linewidth]{figures/fig04_identifiability_spectrum.pdf}
+\caption{Singular-value diagnostics for representative designs. Repeated use of one intervention mixture leaves directions in parameter space weakly constrained; varied inputs and multiple readouts improve the rank and conditioning of the synthetic design matrix.}
+\label{fig:spectrum}
+\end{figure}
+
+\section{Synthetic benchmark and computational protocol}
+The benchmark uses a fixed random seed and a linear local model with known coefficients. Each synthetic subject has a baseline functional coordinate, a marker coordinate, and a binary inherited-setpoint variable. Clock and functional observations are measured before and after a randomized intervention. The direct marker effect changes the clock coordinate even when the true functional effect is zero. Noise is added to both measurement channels. The script uses repeated Monte Carlo trials to estimate the distributions of clock and functional contrasts, and it records all parameters and outputs in the release's results directory.
+
+The primary counterexample is the marker-only arm \((u,q)=(0,q_0)\). Under the data-generating equations, its expected clock improvement is \(\alpha q_0\), whereas the expected functional improvement is \(-\rho q_0\). If \(\rho\) is near zero, the clock may improve substantially without functional change. The repair-oriented arm \((u,q)=(u_0,0)\) has expected clock and functional improvement \(\kappa u_0\) under the simplified model. The mixed arm combines both effects and illustrates why a large clock movement can overstate the functional component.
+
+We compare four analysis rules: (i) clock-only attribution, which treats all clock change as repair; (ii) a paired functional contrast; (iii) a joint model using both channels and independently varied inputs; and (iv) a constrained active-design policy. The benchmark measures bias, root mean squared error, threshold-based false attribution, design-matrix rank, and approximate interval coverage. All metrics are generated from the simulation; no clinical thresholds or biological units are implied. The false-attribution threshold is a demonstration parameter, not a proposed decision threshold for real experiments.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.94\linewidth]{figures/fig05_clock_vs_function.pdf}
+\caption{Synthetic intervention contrasts. The marker-only arm can move the clock while leaving the functional endpoint unchanged or slightly worse. Error bars summarize repeated synthetic trials; they are not empirical confidence intervals from a biological experiment.}
+\label{fig:contrasts}
+\end{figure}
+
+\section{Results: the measurement channel can mimic repair}
+In the marker-only scenario, the code estimates a mean clock improvement of \ClockOnlyMean\ and a mean functional improvement of \FunctionalOnlyMean. The difference arises by construction: the intervention has a direct path to the clock-sensitive coordinate but no intended repair component. The estimated fraction of trials exceeding the prespecified clock-only attribution threshold is \FalsePositiveRate. These outputs illustrate a failure mode of the attribution rule; they do not estimate how often real rejuvenation studies make this error.
+
+The comparison is intentionally asymmetric. The clock-only rule uses a single observation channel and labels any sufficiently large reduction as repair. The functional contrast tests the latent-state component under the model. When the functional endpoint is measured with noise, its estimate is less precise at small sample sizes; this is a variance problem that can be addressed by better measurement and allocation. It is distinct from the structural non-identifiability of a scalar clock under a fixed intervention mixture, which cannot be cured by increasing sample size alone.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.91\linewidth]{figures/fig06_marker_bias.pdf}
+\caption{Bias of clock-only attribution as direct marker displacement increases. The solid curve is the model expectation; points are generated Monte Carlo estimates. The line is a model diagnostic, not a fitted biological relationship.}
+\label{fig:bias}
+\end{figure}
+
+The information-design benchmark compares repeated mixtures with factorial-like allocations. The planner favors arms that independently vary the repair and marker inputs while collecting both clock and functional readouts, subject to the synthetic cost/risk constraint. Its best candidate design and log-determinant score are written to the machine-readable results. A larger log determinant indicates greater local information volume under the assumed noise model; it does not imply a larger rejuvenation effect or lower biological risk.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.91\linewidth]{figures/fig07_information_design.pdf}
+\caption{Information scores for representative synthetic designs. Rank-deficient or poorly conditioned designs are shown separately from full-rank designs. Regularized log-determinant values are accompanied by the unregularized rank so that the regularizer cannot conceal non-identifiability.}
+\label{fig:design}
+\end{figure}
+
+\section{Precision, uncertainty, and interval coverage}
+A design may be identifiable yet imprecise. The benchmark therefore varies sample size and computes Monte Carlo RMSE for clock-only and functional estimators. The clock-only estimator can have a persistent bias because its estimand is a mixture of functional repair and direct marker displacement. Its RMSE need not vanish with sample size. By contrast, an independent functional endpoint has lower structural bias in the base scenario, although its variance remains governed by noise and sample size.
+
+Coverage is evaluated under both the base model and a misspecified model in which the marker-targeting input also affects the functional endpoint. When the analyst assumes \(\rho=0\) despite a nonzero direct effect, nominal intervals can miss the true \(\kappa\) more often than intended. The lesson is not that a particular endpoint is universally trustworthy; rather, each endpoint requires a measurement model, negative controls, and a test of plausible direct effects.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.91\linewidth]{figures/fig08_rmse_sample_size.pdf}
+\caption{Monte Carlo RMSE against sample size. A structural attribution bias persists for the clock-only rule, while noise-driven uncertainty decreases with sample size for the functional contrast in the correctly specified scenario.}
+\label{fig:rmse}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.91\linewidth]{figures/fig09_coverage_misspecification.pdf}
+\caption{Approximate 95\% interval coverage under increasing direct effects on the functional readout. Coverage loss is a diagnostic of model misspecification in the synthetic benchmark; it is not a biological performance estimate.}
+\label{fig:coverage}
+\end{figure}
+
+\section{Genotype and composition sensitivity}
+The baseline model includes an additive inherited set point in the clock. A paired contrast cancels that term if it is stable within subject, but cross-sectional groups with different genotype composition can show an apparent age-related clock difference even if their latent functional burdens are matched. The sensitivity figure varies the difference in set-point prevalence and records the induced bias. This is a transparent algebraic stress test, not an estimate of the size of genetic confounding in any published cohort.
+
+In real datasets, inherited variation is only one of several sources of heterogeneity. Cell-type mixture, batch, tissue source, medication, disease burden, and selection into a study can also shift clock values. A clock's calibration may differ across tissue or age range. The present model compresses these effects into nuisance terms to expose the identifiability issue, not to assert that all nuisance variation can be corrected by a single covariate.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.91\linewidth]{figures/fig10_genotype_sensitivity.pdf}
+\caption{Sensitivity of cross-sectional clock contrasts to an additive inherited set point when group composition differs. The paired design cancels the fixed term under the model assumptions; interaction and composition changes remain outside that cancellation result.}
+\label{fig:genotype}
+\end{figure}
+
+\section{Joint response surfaces and safety constraints}
+The response surface in \cref{fig:response} displays clock and functional changes across combinations of the two synthetic inputs. A clock-improving region can include combinations that provide little functional benefit or carry higher identity risk. The model therefore separates efficacy-like response from safety-like burden. The risk score is illustrative and should not be interpreted as a biological safety predictor.
+
+This separation matters for interventions intended to preserve cellular identity. The 2026 TF perturbation study explicitly searched for rejuvenating perturbations without dedifferentiation \citep{sengstack2026}. Our model reflects that concern as an independent coordinate rather than folding identity into the clock. The actual relation between intervention, identity, proliferation, genomic integrity, and function would need to be measured in a specific system. A favorable clock score cannot substitute for those endpoints.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.94\linewidth]{figures/fig11_response_surface.pdf}
+\caption{Synthetic response surfaces for clock improvement, functional improvement, and identity-risk burden. The surfaces are generated by the stated linear model; their purpose is to show that the objectives can disagree, not to predict any intervention's biological effect.}
+\label{fig:response}
+\end{figure}
+
+\section{Counterexamples and failure modes}
+The model generates several counterexamples to a simplistic clock-only interpretation. First, a marker-only intervention can change \(C\) while \(\kappa=0\). Second, a genuine repair intervention can be obscured if the direct marker effect has the opposite sign. Third, a functional readout can itself be directly affected by a marker-targeting intervention, violating the assumption that it is an independent endpoint. Fourth, a genotype-by-treatment interaction can survive within-subject differencing. Fifth, a well-conditioned design can still estimate the wrong parameters if the observation equations omit a relevant path.
+
+These counterexamples are not edge cases added after the fact; they define the assumptions under which the method is interpretable. A useful validation workflow should actively seek such failures. For each proposed intervention, the experimenter should specify at least one marker-only negative control, one functional endpoint independent of the clock-training features, an identity/safety panel, and a perturbation dose or timing contrast that can reveal direct measurement effects.
+
+\begin{table}[!htbp]
+\centering
+\caption{Failure modes, observable signatures, and required responses.}
+\label{tab:failure}
+\small
+\begin{tabularx}{\linewidth}{p{0.21\linewidth} X X}
+\toprule
+\textbf{Failure mode} & \textbf{Observable signature} & \textbf{Required response} \\
+\midrule
+Direct marker shift & Clock improves but independent function does not. & Do not attribute the full clock change to repair. \\
+Functional endpoint direct effect & Functional contrast changes in marker-only control. & Estimate or bound \(\rho\); add another independent endpoint. \\
+Genotype-by-treatment interaction & Paired effects vary by genotype stratum. & Report interaction and stratum-specific uncertainty. \\
+Composition shift & Clock changes with cell-type proportions. & Measure composition or use cell-resolved analysis. \\
+Ill-conditioned design & Small singular value / large condition number. & Add orthogonal perturbation arms or readouts. \\
+Identity loss & Clock improves while identity or safety measures worsen. & Treat as a separate adverse outcome; do not optimize the clock alone. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{A falsifiable experimental protocol}
+A future biological study could test the model only after selecting a specific cell system, intervention, and independently justified functional endpoint. We do not prescribe molecular targets or treatment parameters. The protocol below is a design template: preregister the causal question, identify the proposed repair and marker-sensitive paths, define the estimand and safety limits, and choose a measurement schedule that permits the two paths to be separated.
+
+The design should include untreated or vehicle controls, a marker-targeting control expected to move the clock without the proposed repair mechanism, and at least one perturbation expected to change function through an independently supported pathway. Randomize intervention components where scientifically and ethically appropriate. Measure the clock, a functional outcome, cell identity, and relevant adverse outcomes at baseline and follow-up. If the system is heterogeneous, use stratification or cell-resolved measurements and record composition changes. The analysis should report both the total clock response and the functional response rather than converting one into the other.
+
+The primary falsification criterion is straightforward: if a clock-lowering perturbation fails to improve the preregistered functional endpoint, or if the effect disappears after accounting for direct marker changes, the study does not support the claim that the clock reduction indicates functional repair. A second criterion is failure of the model's predicted dose-response or interaction structure. A third is a meaningful increase in identity loss or adverse outcomes, even if the clock improves. Null or adverse results are informative and must be retained.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.93\linewidth]{figures/fig12_validation_pipeline.pdf}
+\caption{Proposed validation workflow. The stages are a research-design template, not a completed experiment. A study should stop or revise the claim if functional, identity, or safety endpoints contradict the clock-based interpretation.}
+\label{fig:pipeline}
+\end{figure}
+
+\section{An explicit decision rule}
+The output of the planner is not a single rejuvenation score. It is a recommended set of admissible arms, their predicted information contribution, the rank and conditioning of the resulting design, and a list of unresolved assumptions. For a proposed biological application, the decision rule should be lexicographic: first satisfy prespecified safety and identity constraints; next require the design to identify the target estimand under the declared model; then maximize information per unit cost. A design that violates a hard safety constraint is not rescued by a high information score.
+
+The synthetic implementation uses a finite candidate library and greedy addition. At each step it evaluates the log-determinant gain from each admissible candidate, subtracts a cost penalty, rejects candidates above the risk ceiling, and chooses the best remaining candidate. The algorithm is auditable and deterministic for a fixed seed. It is not a substitute for domain expertise, and its safety score is only as valid as the assumptions supplied to it.
+
+The design objective can be extended to incorporate prior uncertainty over parameters, expected model discrimination, missingness, batch effects, and multiple tissue endpoints. Such extensions are worthwhile only if the additional structure is estimable and validated. A complex planner can be confidently wrong when its prior or risk model is misspecified. For this reason, we archive candidate scores, constraints, intermediate information matrices, and the selected design rather than reporting only the final choice.
+
+\section{Ethical and translational boundaries}
+Aging interventions and cellular reprogramming have potential relevance to healthy lifespan, regenerative medicine, and treatment of age-associated disease, but the gap between a synthetic design model and a biological intervention is substantial. A false claim of rejuvenation could misdirect resources, obscure adverse effects, or encourage premature translation. This paper therefore makes no clinical recommendation, no claim of lifespan extension, and no assertion that a clock reset is inherently beneficial or harmful.
+
+A valid application would require domain-specific safety review, suitable cell or organism models, preregistered outcomes, appropriate controls, and ethical/regulatory oversight. For cellular reprogramming, preservation of identity and avoidance of tumorigenic or dysplastic states are separate concerns from molecular age markers. A lower score should never be treated as a safety guarantee. The proposed active-design planner should prioritize the safest admissible experiments rather than maximize a surrogate endpoint without constraints.
+
+The AI component also has limits. The planner does not infer causal biology from unverified data, and it does not independently assign a molecular target to an intervention. Its role is to expose which experiment would be informative under an explicit model. Human investigators must decide whether the model and candidate interventions are scientifically plausible, ethically acceptable, and adequately controlled.
+
+\section{Discussion}
+The main result is a measurement-identifiability statement, not a new theory of aging. If a clock can respond to direct marker perturbation, a clock-only outcome cannot generally identify functional repair. This is consistent with the broader distinction between prediction and causal intervention. The recent literature gives concrete reasons to model direct methylation effects and genetic regulation explicitly \citep{liesenfelder2025,lim2026}. It also illustrates that intervention discovery can be combined with identity constraints rather than using an age score as the sole objective \citep{sengstack2026}.
+
+The proposed response is methodological. Treat the clock as one measurement channel among several; separate within-subject change from baseline between-person differences; randomize intervention components where possible; include an independent functional endpoint and an identity/safety panel; and report rank, conditioning, uncertainty, and counterexamples. If an experiment cannot distinguish the proposed paths, the correct conclusion is that the mechanism remains unidentified, not that more subjects will necessarily resolve it.
+
+There are limits to the linear model. Biological systems can exhibit nonlinear response, delayed adaptation, feedback, threshold effects, cell-state mixtures, and intervention-specific changes in the measurement process. A scalar latent functional coordinate is itself a simplification. In future work, the model could be extended to a partially observed dynamical system with time-varying coefficients and multiple endpoints. But additional complexity should be earned by data and identifiability analysis. A high-dimensional model can conceal rather than solve the problem if its parameters cannot be distinguished by the experiment.
+
+\section{Limitations}
+First, the benchmark is synthetic and uses known linear equations. It demonstrates an identifiability failure that follows from those equations, not the frequency or magnitude of the failure in real rejuvenation experiments. Second, the functional endpoint is assumed to have a known interpretation and a simple direct-effect term. Real functional measures may be noisy, tissue-specific, and causally affected by multiple intervention paths. Third, the genotype model is additive and time-invariant; interactions, ancestry structure, and cell composition require richer models and better data.
+
+Fourth, the active-design method optimizes a finite candidate set using a local Fisher-information approximation and a stylized risk penalty. It does not guarantee global optimality for nonlinear models, and it cannot make unsafe candidate interventions safe. Fifth, we did not analyze a public methylation dataset or reproduce any published experiment. The literature review was focused, not exhaustive, and the topic-selection scores are internal triage judgments rather than validated metrics of novelty or impact. Finally, no claim is made that the proposed design rule has been implemented or prospectively tested in a biological laboratory.
+
+\section{Conclusion}
+A change in an epigenetic clock is not, by itself, an identified change in functional aging. In a minimal state-space model, a scalar clock contrast can be generated by multiple combinations of latent repair and direct marker displacement. This is a structural ambiguity, not merely a small-sample problem. Paired contrasts can remove an additive inherited set point under stated assumptions, while independent perturbation variation and functional measurements can improve identifiability.
+
+The practical output is a falsifiable design rule: plan experiments to separate the repair path from the measurement path, report the rank and conditioning of the design, and keep identity and safety as independent outcomes. The synthetic benchmark demonstrates how a clock-only attribution rule can fail and provides code to reproduce the result. Whether this framework improves real biological experiments remains an open empirical question.
+
+\section*{Acknowledgments and disclosure}
+Co-equal research-process credit is given to Devanik Debnath and Xylia, the autonomous multi-model research engine coordinating AI-assisted discovery, synthesis, and verification. Devanik Debnath retains responsibility for the final manuscript, scientific claims, citations, and released artifacts.
+
+\clearpage
+\begin{thebibliography}{99}
+\bibitem[Horvath(2013)]{horvath2013}
+S. Horvath.
+\newblock DNA methylation age of human tissues and cell types.
+\newblock \emph{Genome Biology}, 14:3156, 2013.
+\newblock doi: \href{https://doi.org/10.1186/gb-2013-14-10-r115}{10.1186/gb-2013-14-10-r115}.
+
+\bibitem[Levine et~al.(2018)]{levine2018}
+M. E. Levine, A. T. Lu, A. Quach, B. H. Chen, T. L. Assimes, S. Bandinelli, L. Hou, A. B. Baccarelli, J. D. Stewart, J. J. Li, A. A. Whitsel, J. A. Wilson, A. P. Reiner, A. S. Aviv, J. M. Lohman, E. A. Ferrucci, and S. Horvath.
+\newblock An epigenetic biomarker of aging for lifespan and healthspan.
+\newblock \emph{Aging}, 10(4):573--591, 2018.
+\newblock doi: \href{https://doi.org/10.18632/aging.101414}{10.18632/aging.101414}.
+
+\bibitem[Lu et~al.(2019)]{lu2019}
+A. T. Lu, A. Quach, J. G. Wilson, A. P. Reiner, A. Aviv, B. H. Chen, L. Ferrucci, A. B. Baccarelli, J. D. Stewart, J. D. Whitsel, T. M. Levy, A. E. Tsao, A. A. Horvath, and S. Horvath.
+\newblock DNA methylation GrimAge strongly predicts lifespan and healthspan.
+\newblock \emph{Aging}, 11(2):303--327, 2019.
+\newblock doi: \href{https://doi.org/10.18632/aging.101684}{10.18632/aging.101684}.
+
+\bibitem[Liesenfelder et~al.(2025)]{liesenfelder2025}
+S. Liesenfelder, M. H. Elsafi Mabrouk, J. Iliescu, M. Varona Baranda, A. Mizi, J.-F. Perez-Correa, M. Wessiepe, A. Papantonis, and colleagues.
+\newblock Epigenetic editing at individual age-associated CpGs affects the genome-wide epigenetic aging landscape.
+\newblock \emph{Nature Aging}, 5:997--1009, 2025.
+\newblock doi: \href{https://doi.org/10.1038/s43587-025-00841-1}{10.1038/s43587-025-00841-1}.
+
+\bibitem[Sengstack et~al.(2026)]{sengstack2026}
+J. Sengstack, J. Zheng, T. Aghayev, G. Bieri, M. Mobaraki, J. Lin, C. Deng, S. A. Villeda, and H. Li.
+\newblock Systematic identification of single transcription factor perturbations that drive cellular and tissue rejuvenation.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 123(2):e2515183123, 2026.
+\newblock doi: \href{https://doi.org/10.1073/pnas.2515183123}{10.1073/pnas.2515183123}.
+
+\bibitem[Lim(2026)]{lim2026}
+S. Lim.
+\newblock GIA: Germline-Informed Aging with AlphaGenome Finds Genetically Regulated CpGs.
+\newblock \emph{arXiv preprint} arXiv:2609.17801, 2026.
+\newblock \href{https://arxiv.org/abs/2609.17801}{https://arxiv.org/abs/2609.17801}. Preprint; not treated as peer-reviewed evidence.
+
+\bibitem[Haghani et~al.(2025)]{haghani2025}
+A. Haghani, A. T. Lu, Q. Yan, J. C. Izpisua Belmonte, and colleagues.
+\newblock EnsembleAge: enhancing epigenetic age assessment with a multi-clock framework.
+\newblock \emph{GeroScience}, published online 2025.
+\newblock doi: \href{https://doi.org/10.1007/s11357-025-01808-1}{10.1007/s11357-025-01808-1}.
+
+\bibitem[LLM-age et~al.(2025)]{llmage2025}
+\newblock Large language model-based biological age prediction in large-scale populations.
+\newblock \emph{Nature Medicine}, 31:2977--2990, 2025.
+\newblock doi: \href{https://doi.org/10.1038/s41591-025-03856-8}{10.1038/s41591-025-03856-8}.
+
+\bibitem[Chaloner and Verdinelli(1995)]{chaloner1995}
+K. Chaloner and I. Verdinelli.
+\newblock Bayesian experimental design: a review.
+\newblock \emph{Statistical Science}, 10(3):273--304, 1995.
+\newblock doi: \href{https://doi.org/10.1214/ss/1177009939}{10.1214/ss/1177009939}.
+
+\bibitem[MacKay(1992)]{mackay1992}
+D. J. C. MacKay.
+\newblock Information-based objective functions for active data selection.
+\newblock \emph{Neural Computation}, 4(4):590--604, 1992.
+\newblock doi: \href{https://doi.org/10.1162/neco.1992.4.4.590}{10.1162/neco.1992.4.4.590}.
+\end{thebibliography}
+
+\appendix
+\section{Proof of Proposition 1}
+For fixed nonzero \(u,q\), the expected scalar clock contrast is \(y=\kappa u+\alpha q\). For any real \(t\), define \(\kappa'=\kappa+tq\) and \(\alpha'=\alpha-tu\). Then
+\[
+\kappa' u+\alpha' q
+=(\kappa+tq)u+(\alpha-tu)q
+=\kappa u+\alpha q+t(qu-uq)
+=\kappa u+\alpha q.
+\]
+Thus a continuum of parameter pairs yields the same expected observation. The pair is not uniquely identified by \(y\). The argument concerns the expectation; adding zero-mean noise changes uncertainty but does not remove the structural equivalence.
+
+\section{Proof sketch for Proposition 2}
+Each clock observation contributes a row \((u,q,0)\) and each functional observation contributes a row \((u,0,-q)\) to the Jacobian with respect to \((\kappa,\alpha,\rho)\). Local identification of a linear model requires the Jacobian to have full column rank. If all arms use a single fixed pair \((u,q)\), the stacked matrix contains at most two distinct row directions and has rank at most two. Independent variation in \(u\) and \(q\) across arms, with both observation channels present, can generate three linearly independent columns. The exact rank depends on the selected design; it must be computed, not assumed.
+
+\section{Active-design algorithm}
+\begin{enumerate}
+\item Define a finite set of admissible input pairs \((u,q)\), measurement channels, costs, and a prespecified identity-risk score.
+\item For each candidate, construct the observation Jacobian and the corresponding Fisher-information contribution under the stated noise covariance.
+\item At each sequential step, compute the increase in regularized log-determinant for every candidate that remains within the cost and risk budgets.
+\item Select the candidate with the largest admissible information gain; record its score, constraints, and rejected alternatives.
+\item After the planned allocation is selected, report the unregularized design rank, singular values, condition number, and sensitivity to the risk model.
+\end{enumerate}
+The released implementation uses a deterministic finite candidate library. It is a transparent greedy heuristic, not a claim of global optimality.
+
+\section{Synthetic parameter register}
+The benchmark uses a fixed seed, dimensionless coefficients, Gaussian measurement noise, and repeated simulated subjects. The complete parameter values and dependency versions are written by the script to \texttt{results/summary.json} and \texttt{results/environment\_report.json}. All figures are regenerated from the same model code. No empirical dataset is downloaded or required.
+
+\section{Reproducibility and interpretation}
+Run \texttt{python verify\_model.py} from the release directory. The script generates the synthetic source data, model checks, figure assets, figure inventory, candidate-topic scores, literature audit, and generated LaTeX macros. Run \texttt{python deploy.py --self-test} to test fail-closed behavior on an intentionally incomplete fixture. Run \texttt{python deploy.py --build} to regenerate the figures, compile the current manuscript, and run automated preflight. The publication pipeline records the PDF hash and renders all pages. Manual visual inspection is recorded separately; automated checks do not substitute for scientific or visual review.
+
+\end{document}
