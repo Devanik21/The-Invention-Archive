@@ -23,7 +23,7 @@ plt.rcParams.update({"font.family":"DejaVu Sans","font.size":9,"axes.titlesize":
 def write_csv(path, rows):
     if not rows: path.write_text("",encoding="utf-8"); return
     with path.open("w",newline="",encoding="utf-8") as f:
-        w=csv.DictWriter(f,fieldnames=list(rows[0].keys()),lineterminator="\\n"); w.writeheader(); w.writerows(rows)
+        w=csv.DictWriter(f,fieldnames=list(rows[0].keys()),lineterminator="\n"); w.writeheader(); w.writerows(rows)
 
 def sim(n,u,q,rng,rho=None):
     rho=P["rho"] if rho is None else rho
