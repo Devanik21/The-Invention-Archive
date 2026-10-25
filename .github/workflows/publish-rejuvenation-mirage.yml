@@ -111,7 +111,9 @@ jobs:
           rm -rf "$RELEASE_DIR/__pycache__"
           rm -rf "$STAGING_DIR"
           git add -A -- "$RELEASE_DIR" "$INDEX" "$STAGING_DIR"
-          git diff --cached --check
+          # Generated SVG paths and captured tool logs can legitimately contain trailing spaces;
+          # enforce whitespace hygiene on human-maintained source and metadata, not generated evidence.
+          git diff --cached --check -- "$RELEASE_DIR/paper.tex" "$RELEASE_DIR/paper.bib" "$RELEASE_DIR/verify_model.py" "$RELEASE_DIR/deploy.py" "$RELEASE_DIR/README.md" "$RELEASE_DIR/CITATION.cff" "$RELEASE_DIR/.zenodo.json" "$RELEASE_DIR/schema_article.jsonld" "$INDEX"
           git status --short
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
