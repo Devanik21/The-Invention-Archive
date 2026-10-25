@@ -278,7 +278,7 @@ def build(root):
     font_lines=[line for line in fonts.splitlines()[2:] if line.strip()]
     embedded=[]
     for line in font_lines:
-        match=re.search(r"\\s+(yes|no)\\s+(yes|no)\\s+(yes|no)\\s+\\d+\\s+\\d+\\s*$",line)
+        match=re.search(r"\s+(yes|no)\s+(yes|no)\s+(yes|no)\s+\d+\s+\d+\s*$",line)
         if match is None:
             raise RuntimeError("Could not parse pdffonts embedding flags: "+line)
         embedded.append(match.group(1).lower()=="yes")
