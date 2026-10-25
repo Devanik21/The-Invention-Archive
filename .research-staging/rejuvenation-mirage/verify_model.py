@@ -416,6 +416,22 @@ def main():
       "best_design_logdet":best["logdet_regularized"],"best_design_rank":best["rank"]},
       "interpretation":"Synthetic model outputs only; not biological measurements or evidence of intervention efficacy."}
     (RES/"summary.json").write_text(json.dumps(summary,indent=2)+"\n",encoding="utf-8")
+    readme_path=ROOT/"README.md"
+    if readme_path.exists():
+        readme=readme_path.read_text(encoding="utf-8")
+        start="<!-- GENERATED_RESULTS_START -->"; end="<!-- GENERATED_RESULTS_END -->"
+        if start in readme and end in readme:
+            block=(start+"\n| Metric | Current synthetic result |\n|---|---:|\n"
+              f"| Marker-only mean clock improvement | {mc:.3f} |\n"
+              f"| Marker-only mean functional improvement | {mf:.3f} |\n"
+              f"| Clock-only threshold-attribution rate | {fpr:.3f} |\n"
+              f"| Best design rank | {best['rank']} / 5 |\n"
+              f"| Best regularized log-det score | {best['logdet_regularized']:.3f} |\n"
+              f"| Random seed | {SEED} |\n"
+              +"\nAll values above are synthetic and generated during this build.\n"+end)
+            left=readme.index(start); right=readme.index(end,left)+len(end)
+            readme=readme[:left]+block+readme[right:]
+            readme_path.write_text(readme,encoding="utf-8")
     (RES/"generated_macros.tex").write_text(
       f"\\newcommand{{\\ClockOnlyMean}}{{{mc:.3f}}}\n\\newcommand{{\\FunctionalOnlyMean}}{{{mf:.3f}}}\n"
       f"\\newcommand{{\\FalsePositiveRate}}{{{fpr:.3f}}}\n\\newcommand{{\\BestDesignLogDet}}{{{best['logdet_regularized']:.3f}}}\n"
