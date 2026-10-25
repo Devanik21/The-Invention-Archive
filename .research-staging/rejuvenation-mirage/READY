@@ -19,3 +19,5 @@ Revision: normalized generated CSV line endings to LF after git diff --check det
 Revision: corrected the CSV writer to emit real LF newlines (not literal backslash-n); previous build verified 26 pages and 21 substantive main-text pages but correctly blocked malformed CSV inventory.
 
 Revision: scoped git diff whitespace checks to maintained source/metadata; generated SVG and captured diagnostic outputs are validated by dedicated checks rather than rejected for harmless trailing spaces.
+
+Revision: replaced intentional Markdown hard-break trailing spaces with explicit <br> elements so source whitespace checks remain meaningful.
