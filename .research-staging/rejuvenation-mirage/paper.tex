@@ -94,7 +94,7 @@ Optimal experiment design \citep{chaloner1995,mackay1992} & Information criteria
 \section{Research posture, claims, and epistemic levels}
 The paper separates five levels of statement. P1 denotes an identity or theorem following from explicit definitions; P2 denotes a model-dependent optimum; P3 denotes a proposed statistical regularity requiring repeated empirical evidence; P4 denotes a structural correspondence between the model and biology; P5 denotes a motivating analogy. This classification, summarized in Table~\ref{tab:epistemic}, prevents a valid result about the toy observation model from silently becoming a claim about living systems.
 
-The principal P1 claim is that a single scalar contrast of the form \(y=\kappa u+\alpha q\) does not identify both \(\kappa\) and \(\alpha\) when \(u\) and \(q\) are fixed and nonzero. The P2 claim is that a constrained D-optimal design maximizes a specified information criterion over a finite candidate set; it does not imply that this design is optimal for a real tissue. The P3 claim is not established here: we do not claim universality of clock/functional discordance across species, tissues, or clocks. The P4 correspondence is that functional repair, direct measurement effects, and cell-identity drift can be represented as distinct state coordinates; whether any particular biological intervention maps cleanly to those coordinates is empirical. Any metaphor that calls a clock reset a “mirage” is P5 shorthand for a measurement-identifiability failure, not a claim that epigenetic clocks are useless.
+The candidate-screen summary is in Table~\ref{tab:candidate-screen}; the full ten-candidate scoring matrix is preserved in the results. The principal P1 claim is that a single scalar contrast of the form \(y=\kappa u+\alpha q\) does not identify both \(\kappa\) and \(\alpha\) when \(u\) and \(q\) are fixed and nonzero. The P2 claim is that a constrained D-optimal design maximizes a specified information criterion over a finite candidate set; it does not imply that this design is optimal for a real tissue. The P3 claim is not established here: we do not claim universality of clock/functional discordance across species, tissues, or clocks. The P4 correspondence is that functional repair, direct measurement effects, and cell-identity drift can be represented as distinct state coordinates; whether any particular biological intervention maps cleanly to those coordinates is empirical. Any metaphor that calls a clock reset a “mirage” is P5 shorthand for a measurement-identifiability failure, not a claim that epigenetic clocks are useless.
 
 \begin{table}[!htbp]
 \centering
@@ -110,6 +110,27 @@ P2 & Greedy information-gain design under stated cost/risk constraints. & Exact 
 P3 & A common quantitative discordance rate across biological systems. & Not tested; no empirical data were analyzed. \\
 P4 & Separate latent coordinates can represent function, marker response, genotype, and identity. & Useful formal correspondence; biological mapping remains unvalidated. \\
 P5 & A clock-only reset can resemble rejuvenation without functional repair. & Intuition for the explicit counterexample, not a universal claim. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+The topic-selection pass compared ten candidate directions before drafting. The scores are subjective internal triage ratings on ten criteria, not measurements of novelty or impact. The complete matrix and the rejected-candidate rationales are archived in the results directory.
+
+\begin{table}[!htbp]
+\centering
+\caption{Selected candidates from the internal topic screen. Scores are subjective means across ten stated criteria, not evidence of scientific priority.}
+\label{tab:candidate-screen}
+\small
+\begin{tabularx}{\linewidth}{p{0.37\linewidth} p{0.12\linewidth} X}
+\toprule
+\textbf{Candidate direction} & \textbf{Mean score} & \textbf{Selection rationale / reason not selected} \\
+\midrule
+Clock reset versus functional repair & 4.8 & Selected: a precise algebraic result, direct connection to current intervention evidence, and a reproducible falsification test. \\
+Safe TF sequencing for partial reprogramming & 4.6 & Strong, but substantially overlaps the existing cell-fate-control release. \\
+Genotype-conditioned clock calibration & 4.5 & Well grounded and testable, but narrower and closer to a calibration/audit study. \\
+Information-bottleneck gene circuits & 4.3 & Feasible mathematical core, but overlaps a recent archive direction. \\
+AI detection of alien self-repair dynamics & 4.2 & Ambitious and testable, but overlaps an existing astrobiology benchmark. \\
 \bottomrule
 \end{tabularx}
 \end{table}
