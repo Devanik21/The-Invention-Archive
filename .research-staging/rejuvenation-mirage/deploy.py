@@ -54,6 +54,10 @@ def metadata_errors(root):
     missing=sorted(cites-bibkeys)
     if missing: errors.append("Missing BibTeX keys: "+", ".join(missing))
     if not re.search(r"\\bibliography\{paper\}",tex): errors.append("paper.tex does not consume paper.bib")
+    for target in re.findall(r"\]\(([^)]+)\)",readme):
+        if target.startswith(("http://","https://","#","mailto:")): continue
+        local=(root/target.split("#",1)[0])
+        if not local.exists(): errors.append(f"Broken local README link: {target}")
     readme=(root/"README.md").read_text(encoding="utf-8")
     if readme.count("$$")%2: errors.append("Unbalanced README display-math delimiters")
     if r"\operatorname" in readme: errors.append("Prohibited operatorname macro in README")
@@ -243,7 +247,11 @@ def build(root):
         shutil.copy2(built,root/"paper.pdf")
     pdf=root/"paper.pdf"; pdfhash=sha256(pdf); metrics=pdf_metrics(pdf,root/"paper.tex"); counts=figure_counts(root)
     (root/"results/pdfinfo.txt").write_text(run(["pdfinfo","paper.pdf"],root),encoding="utf-8")
-    (root/"results/pdffonts_report.txt").write_text(run(["pdffonts","paper.pdf"],root),encoding="utf-8")
+    fonts=run(["pdffonts","paper.pdf"],root)
+    (root/"results/pdffonts_report.txt").write_text(fonts,encoding="utf-8")
+    font_lines=[line for line in fonts.splitlines()[2:] if line.strip()]
+    if not font_lines or any(len(line.split())<6 or line.split()[3].lower()!="yes" for line in font_lines):
+        raise RuntimeError("PDF font embedding preflight failed or returned no fonts")
     extracted=metrics.pop("text")
     (root/"results/pdf_text_extract.txt").write_text(extracted,encoding="utf-8")
     visual=write_visual_artifacts(root,pdf,metrics)
