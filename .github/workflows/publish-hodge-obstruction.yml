@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build-and-publish:
-    if: hashFiles('.research-staging/hodge-obstruction/READY') != ''
+    if: github.event.head_commit.message != 'publish(hodge-obstruction): release verified safety-game preprint'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
