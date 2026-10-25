@@ -11,3 +11,5 @@ Revision: removed unused unavailable LaTeX package after observed CI failure.
 Revision: expanded the manuscript with substantive sections on practical identifiability, partial identification, repeated measures, sequential design, sample-size logic, and falsification; retry the full build and all release gates.
 
 Revision: corrected the PDF font-embedding preflight to parse pdffonts fixed-width output rather than split-token positions; also clarified condition-number notation. Retry from current source.
+
+Revision: corrected the regex escape itself after the observed font-line parse failure; rerun all checks from this exact source.
