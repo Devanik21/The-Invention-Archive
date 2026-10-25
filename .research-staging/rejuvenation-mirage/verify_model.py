@@ -212,8 +212,8 @@ def figures(rng,marker,repair,mixed):
     for n in [20,40,80,160,320]:
         t=reps(n,1,P["marker_dose_key"],250,rng)
         naive=t[:,0]; corr=t[:,1]+P["rho"]*P["marker_dose_key"]; truth=P["kappa"]
-        rmse.append({"n":n,"rmse_clock_only":float(np.sqrt(np.mean((naive-truth)**2)),
-                    "rmse_function_adjusted":float(np.sqrt(np.mean((corr-truth)**2)),
+        rmse.append({"n":n,"rmse_clock_only":float(np.sqrt(np.mean((naive-truth)**2))),
+                    "rmse_function_adjusted":float(np.sqrt(np.mean((corr-truth)**2))),
                     "bias_clock_only":float(np.mean(naive-truth)),"bias_function_adjusted":float(np.mean(corr-truth))})
     fig,ax=plt.subplots(figsize=(7.8,4.2)); ns=[r["n"] for r in rmse]
     ax.plot(ns,[r["rmse_clock_only"] for r in rmse],"o-",color=C["coral"],label="Clock-only attribution")
