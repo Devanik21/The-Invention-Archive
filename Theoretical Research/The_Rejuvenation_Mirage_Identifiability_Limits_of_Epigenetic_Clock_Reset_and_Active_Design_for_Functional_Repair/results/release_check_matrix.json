@@ -1,0 +1,63 @@
+{
+  "schema_version": "1.0",
+  "execution_timestamp_utc": "2026-10-25T02:23:41.254927+00:00",
+  "repository": "Devanik21/The-Invention-Archive",
+  "target_branch": "main",
+  "release_slug": "The_Rejuvenation_Mirage_Identifiability_Limits_of_Epigenetic_Clock_Reset_and_Active_Design_for_Functional_Repair",
+  "release_status": "BLOCKED",
+  "pdf_sha256": "41b6d597f4a94a007674742199dd8b7a6c4a07f0cbe408db77c3ecd705f28e44",
+  "pdf_pages": 26,
+  "main_text_pages": 21,
+  "figure_inventory": {
+    "total": 12,
+    "plot": 8,
+    "graph": 2,
+    "flow": 2
+  },
+  "checks": [
+    {
+      "name": "Scientific/model checks",
+      "status": "PASS",
+      "evidence": "results/verification_report.json"
+    },
+    {
+      "name": "Python syntax",
+      "status": "PASS",
+      "evidence": "results/python_compile_stdout.txt"
+    },
+    {
+      "name": "LaTeX build from current source",
+      "status": "PASS",
+      "evidence": "results/latex_build_stdout.txt"
+    },
+    {
+      "name": "PDF total/main-text page floors",
+      "status": "PASS",
+      "evidence": "results/pdfinfo.txt and results/pdf_text_extract.txt"
+    },
+    {
+      "name": "Figure/table inventory",
+      "status": "PASS",
+      "evidence": "results/figure_inventory.csv"
+    },
+    {
+      "name": "Metadata and bibliography preflight",
+      "status": "PASS",
+      "evidence": "CITATION.cff, paper.bib, .zenodo.json, schema_article.jsonld"
+    },
+    {
+      "name": "PDF visual inspection/publication-quality gate",
+      "status": "BLOCKED",
+      "evidence": "results/pdf_visual_review.json; manual inspection pending"
+    },
+    {
+      "name": "Remote read-back and required CI on exact final SHA",
+      "status": "PENDING",
+      "evidence": "to be recorded after GitHub publication"
+    }
+  ],
+  "blockers": [
+    "Manual page-by-page visual inspection and final visual scorecard pending."
+  ],
+  "matrix_self_reference_note": "This matrix and the visual-review/quality reports are mutable closure records excluded from the SHA-256 manifest to avoid a self-referential hash loop. The final report must name the exact final head and verifier run."
+}

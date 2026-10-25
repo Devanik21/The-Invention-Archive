@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "status": "PASS",
+  "execution_timestamp_utc": "2026-10-25T02:23:36.836065+00:00",
+  "command": "python verify_model.py",
+  "seed": 20261025,
+  "checks": [
+    {
+      "name": "observational_equivalence",
+      "status": "PASS",
+      "detail": "two parameter pairs both give 0.700000"
+    },
+    {
+      "name": "rank_failure_detected",
+      "status": "PASS",
+      "detail": "repeated mixture is rank deficient"
+    },
+    {
+      "name": "full_rank_design",
+      "status": "PASS",
+      "detail": "varied multi-view design has full rank"
+    },
+    {
+      "name": "clock_expectation",
+      "status": "PASS",
+      "detail": "Monte Carlo 0.29988; analytic 0.30000"
+    },
+    {
+      "name": "function_expectation",
+      "status": "PASS",
+      "detail": "Monte Carlo -0.00872; analytic -0.00800"
+    },
+    {
+      "name": "marker_only_counterexample",
+      "status": "PASS",
+      "detail": "clock 0.29988; function -0.00872"
+    },
+    {
+      "name": "active_design_cost",
+      "status": "PASS",
+      "detail": "cost 2.250 <= 2.400"
+    },
+    {
+      "name": "active_design_risk",
+      "status": "PASS",
+      "detail": "risk 0.650 <= 1.100"
+    },
+    {
+      "name": "active_design_identifiability",
+      "status": "PASS",
+      "detail": "rank 5 of 5"
+    },
+    {
+      "name": "nonempty_simulations",
+      "status": "PASS",
+      "detail": "all key scenarios have replicates"
+    }
+  ],
+  "failed_checks": [],
+  "scope": "Mathematical and synthetic computational checks only; no empirical biological validation."
+}

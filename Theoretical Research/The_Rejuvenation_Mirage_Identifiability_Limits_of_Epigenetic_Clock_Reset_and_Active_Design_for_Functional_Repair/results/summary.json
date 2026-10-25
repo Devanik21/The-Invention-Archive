@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "execution_timestamp_utc": "2026-10-25T02:23:36.833330+00:00",
+  "seed": 20261025,
+  "parameters": {
+    "kappa": 0.25,
+    "alpha": 0.75,
+    "rho": 0.02,
+    "beta": 0.4,
+    "sigma_clock": 0.18,
+    "sigma_function": 0.22,
+    "sigma_state": 0.03,
+    "baseline_a_sd": 0.3,
+    "baseline_m_sd": 0.35,
+    "marker_dose_key": 0.4,
+    "clock_only_threshold": 0.2,
+    "n_key": 200,
+    "replicates_key": 400
+  },
+  "synthetic_only": true,
+  "key_results": {
+    "marker_only_clock_improvement_mean": 0.2998768892902759,
+    "marker_only_function_improvement_mean": -0.008715877029270413,
+    "clock_only_threshold": 0.2,
+    "clock_only_attribution_rate": 1.0,
+    "expected_marker_only_clock_improvement": 0.30000000000000004,
+    "expected_marker_only_function_improvement": -0.008,
+    "active_design_arms": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.5,
+        0.5
+      ],
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.25,
+        0.0
+      ]
+    ],
+    "active_design_cost": 2.25,
+    "active_design_risk": 0.65,
+    "best_design_by_logdet": "Factorial",
+    "best_design_logdet": 18.27484489637274,
+    "best_design_rank": 5
+  },
+  "interpretation": "Synthetic model outputs only; not biological measurements or evidence of intervention efficacy."
+}

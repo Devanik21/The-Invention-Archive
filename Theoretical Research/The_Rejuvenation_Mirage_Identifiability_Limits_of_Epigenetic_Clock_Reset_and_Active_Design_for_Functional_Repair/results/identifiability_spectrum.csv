@@ -1,0 +1,11 @@
+design,singular_index,singular_value,rank
+Repeated mixture,1,2.6457513110645907,2
+Repeated mixture,2,2.2360679774997894,2
+Repeated mixture,3,1.8415723470590772e-16,2
+Repeated mixture,4,1.1559745053413586e-16,2
+Repeated mixture,5,7.657038191714126e-17,2
+Varied + two channels,1,2.4375253460106827,5
+Varied + two channels,2,2.1586691674530547,5
+Varied + two channels,3,1.2097311267134294,5
+Varied + two channels,4,0.7682105346111423,5
+Varied + two channels,5,0.5873847024022315,5

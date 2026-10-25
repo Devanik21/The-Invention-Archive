@@ -1,0 +1,11 @@
+source,type,supports,limitation,verified_on
+Horvath 2013; DOI 10.1186/gb-2013-14-10-r115,primary research,Methylation patterns predict age across tissues,Prediction does not establish causal response.,2026-10-25
+Levine et al. 2018; DOI 10.18632/aging.101414,primary research,Epigenetic biomarker associated with lifespan/healthspan,Association is not direct proof of rejuvenation.,2026-10-25
+Lu et al. 2019; DOI 10.18632/aging.101684,primary research,GrimAge predicts lifespan/healthspan-associated outcomes,Manipulating the score is not shown to change lifespan.,2026-10-25
+Liesenfelder et al. 2025; DOI 10.1038/s43587-025-00841-1,primary research,Targeted CpG editing can produce bystander changes and perturb clocks,Context-specific evidence; not a universal effect size.,2026-10-25
+Sengstack et al. 2026; DOI 10.1073/pnas.2515183123,primary research,TF perturbation screen sought rejuvenation without dedifferentiation,Does not validate this synthetic model.,2026-10-25
+Lim 2026; arXiv:2609.17801,preprint,Preliminary analysis of germline-regulated clock CpGs,Preprint; treated as preliminary.,2026-10-25
+Li et al. 2025; DOI 10.1038/s41591-025-03856-8,primary research,LLM-based biological age prediction at population scale,Predictive utility does not imply causal identifiability.,2026-10-25
+Haghani et al. 2025; DOI 10.1007/s11357-025-01808-1,primary research,Multi-clock ensemble strategy,Correlated clocks may share direct marker sensitivity.,2026-10-25
+Chaloner & Verdinelli 1995; DOI 10.1214/ss/1177009939,methods review,Bayesian experimental-design principles,Risk model remains application-specific.,2026-10-25
+MacKay 1992; DOI 10.1162/neco.1992.4.4.590,methods paper,Information-based active data selection,Not a biological validation study.,2026-10-25

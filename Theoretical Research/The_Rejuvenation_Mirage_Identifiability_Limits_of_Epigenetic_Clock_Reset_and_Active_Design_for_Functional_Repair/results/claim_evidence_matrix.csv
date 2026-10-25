@@ -1,0 +1,8 @@
+claim_id,claim,epistemic_level,evidence,limitation
+C1,Fixed scalar contrast cannot identify kappa and alpha separately at fixed nonzero inputs,P1,Appendix A algebra; executable assertion,Only the stated reduced linear model.
+C2,"Full local identification requires rank 3 for kappa, alpha, rho",P1,Rank test in verify_model.py,Full rank does not validate causal structure.
+C3,Marker-only input can lower synthetic clock while function is unchanged or slightly worse,P2,Deterministic synthetic simulation and archived CSV,No empirical biological parameters.
+C4,Finite-set information-gain planner can select a full-rank design,P2,Candidate design matrix and rank output,Not globally optimal for arbitrary nonlinear designs.
+C5,Discordance is common across biological systems,P3,Not tested,No prevalence claim is made.
+C6,Latent coordinates map to distinct biological pathways,P4,Conceptual mapping motivated by literature,Requires system-specific validation.
+C7,Clock-only reset can resemble repair without functional change,P5/P2,Explicit synthetic counterexample,Not a universal claim about clocks.

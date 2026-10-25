@@ -1,0 +1,11 @@
+candidate,importance,gap_evidence,boldness,plausibility,math_core,AI_role,human_benefit,validation_feasibility,falsifiability,safety,mean_score,selection_rationale
+Rejuvenation Mirage: clock reset versus functional repair,5,5,4,5,5,4,5,5,5,5,4.8,"Selected: precise identifiability result, recent intervention evidence, falsifiable synthetic test."
+Safe TF sequencing for partial reprogramming,5,4,5,4,5,5,5,4,5,4,4.6,Strong but overlaps the existing cell-fate-control release.
+Genotype-conditioned epigenetic-clock calibration,4,5,3,5,5,4,4,5,5,5,4.5,Well grounded but narrower and close to an audit-style paper.
+Information-bottleneck design of synthetic gene circuits,4,3,3,5,5,4,4,5,5,5,4.3,Feasible but overlaps a recent archive release.
+AI detection of alien self-repair dynamics,4,3,5,4,4,5,4,4,5,4,4.2,Interesting but overlaps an existing archive topic.
+Mitochondrial heteroplasmy phase control,4,4,4,4,4,4,5,4,4,4,4.1,Plausible but overlaps an existing archive topic.
+Causal AI target prioritization across aging diseases,5,3,3,4,4,4,5,4,4,4,4.0,Important but crowded and close to existing multi-omic work.
+Topological drift in chromatin organization,4,3,5,3,4,4,5,3,4,4,3.9,Conceptually rich; direct empirical mapping remains unclear.
+Acoustic mechanotransduction for cell fate control,4,2,5,2,4,3,4,2,3,2,3.1,High spectacle but insufficiently grounded for a strong mechanism claim.
+Quantum coherence as a driver of epigenetic aging,3,1,5,1,3,2,2,1,2,2,2.2,Rejected: no justified quantum mechanism.

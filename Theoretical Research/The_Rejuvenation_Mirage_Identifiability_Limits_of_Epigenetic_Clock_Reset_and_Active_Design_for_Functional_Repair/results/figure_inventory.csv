@@ -1,0 +1,13 @@
+figure_id,kind,filename,purpose,source
+Figure 1,flow,fig01_framework.pdf,Orientation flow from inputs to latent states and independent readouts,verify_model.py and archived results CSV
+Figure 2,graph,fig02_causal_dag.pdf,"Causal graph separates direct marker, function, genotype, and identity paths",verify_model.py and archived results CSV
+Figure 3,graph,fig03_measurement_network.pdf,Bipartite graph maps latent coordinates to observation channels,verify_model.py and archived results CSV
+Figure 4,plot,fig04_identifiability_spectrum.pdf,Singular values diagnose structural and practical identifiability,verify_model.py and archived results CSV
+Figure 5,plot,fig05_clock_vs_function.pdf,Compares synthetic clock and functional changes across intervention classes,verify_model.py and archived results CSV
+Figure 6,plot,fig06_marker_bias.pdf,Monte Carlo clock-only bias versus direct marker-targeting dose,verify_model.py and archived results CSV
+Figure 7,plot,fig07_information_design.pdf,Information scores and unregularized ranks for candidate designs,verify_model.py and archived results CSV
+Figure 8,plot,fig08_rmse_sample_size.pdf,RMSE scaling separates sampling variance from structural bias,verify_model.py and archived results CSV
+Figure 9,plot,fig09_coverage_misspecification.pdf,Coverage stress test for a misspecified functional-endpoint model,verify_model.py and archived results CSV
+Figure 10,plot,fig10_genotype_sensitivity.pdf,Sensitivity of cross-sectional clock contrasts to inherited set-point imbalance,verify_model.py and archived results CSV
+Figure 11,plot,fig11_response_surface.pdf,Response surfaces expose clock/function/risk trade-offs,verify_model.py and archived results CSV
+Figure 12,flow,fig12_validation_pipeline.pdf,Proposed validation pipeline with explicit stop/redesign branch,verify_model.py and archived results CSV

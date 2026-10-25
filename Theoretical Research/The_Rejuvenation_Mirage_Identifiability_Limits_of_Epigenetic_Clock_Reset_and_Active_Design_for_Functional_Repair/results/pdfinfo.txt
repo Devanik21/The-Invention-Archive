@@ -1,0 +1,22 @@
+Title:           The Rejuvenation Mirage: Identifiability Limits of Epigenetic-Clock Reset and an Active-Design Rule for Functional Repair
+Subject:         Theoretical and synthetic computational preprint
+Keywords:        
+Author:          Devanik Debnath
+Creator:         LaTeX with hyperref
+Producer:        pdfTeX-1.40.25
+CreationDate:    Sun Oct 25 02:23:38 2026 UTC
+ModDate:         Sun Oct 25 02:23:38 2026 UTC
+Custom Metadata: yes
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           26
+Encrypted:       no
+Page size:       595.276 x 841.89 pts (A4)
+Page rot:        0
+File size:       654754 bytes
+Optimized:       no
+PDF version:     1.5

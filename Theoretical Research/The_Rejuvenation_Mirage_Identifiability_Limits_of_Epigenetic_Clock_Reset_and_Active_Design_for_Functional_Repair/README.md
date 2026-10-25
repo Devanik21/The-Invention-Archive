@@ -29,7 +29,16 @@ The paper proves a scalar observational-equivalence result, derives a rank condi
 ## Current reproducible benchmark
 
 <!-- GENERATED_RESULTS_START -->
-The current-run numbers will be populated from the deterministic simulation during the release build.
+| Metric | Current synthetic result |
+|---|---:|
+| Marker-only mean clock improvement | 0.300 |
+| Marker-only mean functional improvement | -0.009 |
+| Clock-only threshold-attribution rate | 1.000 |
+| Best design rank | 5 / 5 |
+| Best regularized log-det score | 18.275 |
+| Random seed | 20261025 |
+
+All values above are synthetic and generated during this build.
 <!-- GENERATED_RESULTS_END -->
 
 The numbers are synthetic model outputs, not biological observations. The exact seed, parameters, simulation summary, numerical checks, and data feeding the figures are archived under results/.
