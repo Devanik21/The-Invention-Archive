@@ -100,7 +100,7 @@ def flow(ax,boxes,arrows,title):
     for key,(x,y,w,h,label,col) in boxes.items():
         ax.add_patch(FancyBboxPatch((x,y),w,h,boxstyle="round,pad=.12,rounding_size=.12",
                      linewidth=1.1,edgecolor=col,facecolor="white"))
-        ax.text(x+w/2,y+h/2,label,ha="center",va="center",fontsize=8,color=C["ink"])
+        ax.text(x+w/2,y+h/2,label,ha="center",va="center",fontsize=9,color=C["ink"])
         centers[key]=(x+w/2,y+h/2)
     for s,d,label,col in arrows:
         x1,y1=centers[s]; x2,y2=centers[d]
@@ -261,7 +261,7 @@ def figures(rng,marker,repair,mixed):
               "functional_improvement":function.tolist(),"identity_risk_score":rr.tolist()}
     write_csv(RES/"response_surface_grid.csv",[{"u":float(U[i,j]),"q":float(Q[i,j]),"clock_improvement":float(clock[i,j]),
       "functional_improvement":float(function[i,j]),"identity_risk_score":float(rr[i,j])} for i in range(U.shape[0]) for j in range(U.shape[1])])
-    fig,axs=plt.subplots(1,3,figsize=(10,3.5))
+    fig,axs=plt.subplots(1,3,figsize=(8.4,3.5))
     for ax,data,title,cmap in [(axs[0],clock,"Clock response","YlGnBu"),(axs[1],function,"Functional response","GnBu"),(axs[2],rr,"Identity-risk score","OrRd")]:
         im=ax.imshow(data,origin="lower",extent=[0,1,0,1],aspect="auto",cmap=cmap)
         ax.set_xlabel("Repair input u"); ax.set_ylabel("Marker input q"); ax.set_title(title,fontsize=9); fig.colorbar(im,ax=ax,fraction=.046,pad=.04)
