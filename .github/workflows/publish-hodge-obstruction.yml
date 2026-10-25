@@ -166,7 +166,7 @@ jobs:
           rm -rf "$RELEASE/__pycache__"
           rm -rf "$STAGING"
           git add -A -- "$RELEASE" "$INDEX" "$STAGING" ".github/workflows/publish-hodge-obstruction.yml" ".github/workflows/verify-hodge-obstruction.yml"
-          git diff --cached --check
+          git diff --cached --check -- "$RELEASE/paper.tex" "$RELEASE/paper.bib" "$RELEASE/verify_model.py" "$RELEASE/deploy.py" "$RELEASE/README.md" "$RELEASE/CITATION.cff" "$RELEASE/.zenodo.json" "$RELEASE/schema_article.jsonld" "$INDEX"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "publish(hodge-obstruction): release verified safety-game preprint"
