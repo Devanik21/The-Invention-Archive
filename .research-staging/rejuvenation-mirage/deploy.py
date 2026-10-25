@@ -33,7 +33,7 @@ def run(cmd,cwd,log_path=None):
         raise RuntimeError(f"Command failed ({p.returncode}): {' '.join(map(str,cmd))}\n{p.stdout[-6000:]}")
     return p.stdout
 
-def metadata_errors(root):
+def metadata_errors(root,check_links=True):
     errors=[]
     try:
         cff=yaml.safe_load((root/"CITATION.cff").read_text(encoding="utf-8"))
@@ -55,10 +55,11 @@ def metadata_errors(root):
     if missing: errors.append("Missing BibTeX keys: "+", ".join(missing))
     if not re.search(r"\\bibliography\{paper\}",tex): errors.append("paper.tex does not consume paper.bib")
     readme=(root/"README.md").read_text(encoding="utf-8")
-    for target in re.findall(r"\]\(([^)]+)\)",readme):
-        if target.startswith(("http://","https://","#","mailto:")): continue
-        local=(root/target.split("#",1)[0])
-        if not local.exists(): errors.append(f"Broken local README link: {target}")
+    if check_links:
+        for target in re.findall(r"\]\(([^)]+)\)",readme):
+            if target.startswith(("http://","https://","#","mailto:")): continue
+            local=(root/target.split("#",1)[0])
+            if not local.exists(): errors.append(f"Broken local README link: {target}")
     if readme.count("$$")%2: errors.append("Unbalanced README display-math delimiters")
     if r"\operatorname" in readme: errors.append("Prohibited operatorname macro in README")
     if re.search(r"@@[A-Z_]+@@",readme): errors.append("Unreplaced generated-result marker in README")
@@ -222,7 +223,7 @@ def build(root):
     run([sys.executable,"-m","py_compile","verify_model.py","deploy.py"],root,root/"results/python_compile_stdout.txt")
     out=run([sys.executable,"verify_model.py"],root)
     (root/"results/verify_model_stdout.txt").write_text(out,encoding="utf-8")
-    md=metadata_errors(root)
+    md=metadata_errors(root,check_links=False)
     if md: raise RuntimeError("Metadata/source preflight failed: "+"; ".join(md))
     with tempfile.TemporaryDirectory(prefix="rejuvenation-mirage-build-") as tmp:
         tmp=Path(tmp)
@@ -269,6 +270,8 @@ def build(root):
     ]
     write_matrix(root,checks,metrics,counts,pdfhash)
     make_manifest(root)
+    final_md=metadata_errors(root,check_links=True)
+    if final_md: raise RuntimeError('Final metadata/README validation failed: '+'; '.join(final_md))
     print(json.dumps({"build":"PASS","pdf_sha256":pdfhash,"pdf_pages":metrics["pages"],
       "main_text_pages":metrics["main_text_pages"],"figures":counts,"visual_status":visual["status"],
       "release_status":"BLOCKED pending manual visual review"},indent=2))
