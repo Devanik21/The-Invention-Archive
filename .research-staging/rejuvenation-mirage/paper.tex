@@ -385,6 +385,145 @@ Identity is preserved & Measure cell identity and adverse outcomes separately fr
 \end{tabularx}
 \end{table}
 
+
+\section{Practical identifiability: conditioning beyond rank}
+Structural identifiability asks whether distinct parameter values can generate exactly the same distribution of observations under an idealized design. Practical identifiability asks a harder finite-sample question: even when the parameters are unique in principle, are the available measurements precise enough to distinguish them? These questions should not be collapsed into a single pass/fail label. A design matrix can have full column rank and still be nearly singular, so that small errors in a clock, functional assay, or intervention dose lead to large changes in the fitted coefficients.
+
+For a locally linear model, write the stacked observations as
+\[
+\mathbf y = X\boldsymbol\theta+\boldsymbol\varepsilon,\qquad
+\boldsymbol\varepsilon\sim\mathcal N(\mathbf 0,\Sigma),
+\]
+where \(\boldsymbol\theta=(\kappa,\alpha,\rho)^\top\), and the rows of \(X\) encode which intervention and measurement channel produced each observation. Under the stated Gaussian model, the Fisher information is
+\[
+\mathcal I(\boldsymbol\theta)=X^\top\Sigma^{-1}X.
+\]
+If \(\mathcal I\) is nonsingular, the generalized least-squares covariance is \(\mathcal I^{-1}\). Under regularity conditions, the Cramér--Rao inequality gives a lower bound on the covariance of unbiased estimators. This bound is model-conditional: it says nothing about bias introduced by an omitted causal path, a miscalibrated assay, or a functional endpoint that is not a valid proxy for the intended biological outcome.
+
+The singular values of a suitably scaled design matrix provide a compact diagnostic. Let \(D\) be a diagonal matrix that rescales columns to comparable, prespecified units, and consider \(\widetilde X=XD^{-1}\). If \(\sigma_{\min}(\widetilde X)\) is close to zero, there is a direction in parameter space along which predictions change very little. The condition number \(\kappa_X=\sigma_{\max}(\widetilde X)/\sigma_{\min}(\widetilde X)\) then becomes large. It is important to scale before comparing condition numbers: a change of units can alter a raw condition number without changing the underlying scientific design. We therefore report rank, scaled singular values, and the column scaling convention together.
+
+This distinction explains why simply increasing the number of participants is not a universal remedy. Repeating the same intervention contrast can reduce the variance of the measured mean approximately as \(1/n\), but it does not create a new independent direction in the design matrix. If the structural rank is deficient, arbitrarily many repetitions of the same rows leave a null space. If the design is full-rank but ill-conditioned, additional observations may help, although a new arm or independent readout can be more efficient than repeating an uninformative arm. The relevant question is not only how many observations are collected, but which causal directions those observations can separate.
+
+A useful design report should therefore include at least four quantities: the numerical rank under a stated tolerance; the smallest singular value after prespecified scaling; a condition number or equivalent conditioning diagnostic; and the uncertainty interval for the target estimand under the fitted error model. The tolerance must be recorded because floating-point rank is not a biological property. A rank decision made with a convenient tolerance should never be presented as evidence that the underlying causal mechanism is identified.
+
+\begin{table}[!htbp]
+\centering
+\caption{Interpretation of common identifiability regimes. These are mathematical design diagnostics, not empirical classifications of any biological system.}
+\label{tab:identifiability-regimes}
+\small
+\begin{tabularx}{\linewidth}{p{0.22\linewidth} p{0.19\linewidth} X X}
+\toprule
+\textbf{Regime} & \textbf{Diagnostic} & \textbf{What follows} & \textbf{Appropriate response}\\
+\midrule
+Structural failure & Rank deficient & At least one parameter direction is observationally equivalent under the specified model. & Add an independent perturbation or readout; do not rely on sample size alone.\\
+Practical failure & Full rank, very small scaled singular value & Unique parameters may have unstable estimates and wide intervals. & Improve orthogonality, calibrate measurement error, or add observations in the weak direction.\\
+Conditional adequacy & Full rank and acceptable conditioning & The declared linear parameters may be estimable under the assumed noise model. & Test model fit, residual structure, and alternative causal graphs.\\
+Model failure & Residuals or controls contradict assumptions & Algebraic identification does not identify the intended biological mechanism. & Revise the causal model, report partial identification, or withhold the mechanistic claim.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The table is deliberately conservative. A well-conditioned design can still answer the wrong question, while a poorly conditioned design may remain useful for a coarser estimand. Before collecting data, investigators should specify which combination of parameters matters for the decision. If the target is a contrast such as \(\kappa-\rho\), it may be estimable even when every individual coefficient is not. Conversely, estimating a clock response precisely does not make a functional response identifiable. The estimand, not the convenience of the software output, should determine the design diagnostic.
+
+\section{Partial identification when direct effects cannot be calibrated}
+In practice, the direct effect of a marker-targeting intervention may not be known precisely. Treating an uncertain direct effect as exactly zero produces a point estimate that can look decisive while depending entirely on an untested assumption. Partial identification offers a transparent alternative: state a defensible bound on the nuisance effect and derive the range of target values compatible with the observation.
+
+For the functional channel, suppose the observed contrast is
+\[
+d_F=\kappa u-\rho q,
+\]
+where \(u>0\) is the repair-labelled input, \(q\geq 0\) is a marker-sensitive input, and \(\rho\) is the direct effect of the latter on the functional readout. If prior calibration or a conservative sensitivity analysis supports only \(\rho\in[-R,R]\), then
+\[
+\kappa=\frac{d_F+\rho q}{u}
+\quad\Longrightarrow\quad
+\kappa\in\left[\frac{d_F-Rq}{u},\frac{d_F+Rq}{u}\right].
+\]
+The interval width is \(2Rq/u\). It widens linearly with the allowed direct effect and with marker-targeting dose, and it becomes unstable as \(u\) approaches zero. This is not a confidence interval: it is an identification region conditional on the stated bound. Sampling uncertainty must be layered on top of it rather than confused with it.
+
+The same logic applies to the clock channel. If
+\[
+d_C=\kappa u+\alpha q
+\]
+and the direct clock effect is constrained only by \(\alpha\in[-A,A]\), then
+\[
+\kappa\in\left[\frac{d_C-Aq}{u},\frac{d_C+Aq}{u}\right].
+\]
+When independent functional and clock channels are available, their admissible regions can be intersected only if both equations share the same target parameter and the stated assumptions are jointly defensible. An empty intersection is informative: it indicates incompatibility among the observations, nuisance bounds, and model assumptions. It must not be repaired by silently widening bounds after seeing the result.
+
+\begin{tcolorbox}[colback=mist,colframe=ink,title=Proposition 3 — bounded direct-effect sensitivity]
+Let \(u>0\), \(q\geq0\), and \(d_F=\kappa u-\rho q\). If \(\rho\in[-R,R]\) for a fixed \(R\geq0\), the set of values of \(\kappa\) compatible with the exact contrast is the interval \([(d_F-Rq)/u,(d_F+Rq)/u]\). Its width is \(2Rq/u\). If no finite bound on \(\rho\) is available and \(q>0\), the contrast alone does not provide a finite identification interval for \(\kappa\).
+\end{tcolorbox}
+The result follows directly by solving the contrast for \(\kappa\) and taking the image of the closed interval \([-R,R]\) under the affine map \(\rho\mapsto(d_F+\rho q)/u\). It is an algebraic statement, not a claim that any particular biological direct effect lies within a chosen bound.
+
+The practical value of the bound is that it makes assumptions visible. A sensitivity analysis can vary \(R\), plot the resulting identification region, and report the threshold at which the sign of \(\kappa\) becomes indeterminate. If a proposed benefit is positive only when \(|\rho|\) is assumed to be tiny, the conclusion is fragile. If the sign remains positive across a scientifically defensible range, the evidence is more robust to that specific uncertainty—but remains conditional on the linear model, the endpoint definitions, and the absence of other omitted paths.
+
+Bounds should be chosen before examining the target outcome where possible. They may be informed by independent calibration, negative controls, assay validation, prior studies, or explicit expert elicitation. If no credible bound can be defended, the correct result may be a wide or unbounded identification region. That is a substantive finding about what the current design can establish, not a failure of analysis.
+
+\section{Repeated measures, batch effects, and latent composition}
+Paired measurements are attractive because they remove stable subject-specific baselines. Yet a within-subject difference is not automatically causal. Time-varying confounding, regression to the mean, batch shifts, differential cell survival, and changes in cell-type composition can still alter the observed contrast. The distinction matters especially when the outcome is a molecular score constructed from features that may themselves respond directly to the intervention.
+
+A simple hierarchical extension is
+\[
+Y_{ijt}=\mu+\beta_u u_{it}+\beta_q q_{it}+b_i+c_j+\delta_t+\epsilon_{ijt},
+\]
+where \(b_i\) is a subject-level random intercept, \(c_j\) is a batch effect, and \(\delta_t\) represents a time-specific influence shared across samples. This expression is a bookkeeping model, not a universal biological law. If each intervention is confounded with a unique batch, the corresponding effects cannot be separated by fitting a more elaborate mixed model alone. The design must contain overlap: multiple arms represented within batches, randomized processing order where feasible, and technical controls that reveal assay drift.
+
+Cell composition creates a second layer of ambiguity. Let the measured bulk clock be a weighted aggregate of cell-state-specific values, \(C_{\mathrm{bulk}}=\sum_k \pi_k C_k\), where \(\pi_k\) is the proportion of state \(k\). A change in \(C_{\mathrm{bulk}}\) can arise from within-state molecular change, a shift in the \(\pi_k\), or both. These possibilities have different interpretations. A treatment that selectively removes a high-clock subpopulation may lower the bulk score without resetting the clock in surviving cells. Conversely, a beneficial within-cell change can be obscured by a shift in composition. Bulk measurements alone do not generally distinguish these paths.
+
+The decomposition is not solved by adding a composition covariate after the fact if the intervention itself changes composition and composition lies on a causal pathway of interest. Adjusting for a post-intervention variable can change the estimand or introduce collider bias under some causal structures. Investigators should specify whether they seek a total intervention effect, a within-cell effect, a composition-standardized contrast, or a decomposition into both components. These are different questions and may require different measurements or assumptions.
+
+A robust protocol should therefore combine paired baselines with randomized intervention assignment, balanced batches, explicit composition measurements, and independent functional outcomes. When single-cell assays are appropriate and feasible, cell-resolved data can help distinguish within-state changes from shifts in population proportions; however, single-cell data introduce their own sampling, dropout, dissociation, and annotation uncertainties. More granular data are not automatically more informative if the measurement process is poorly calibrated or the relevant cell states are not identifiable.
+
+Negative controls are especially valuable when they target a plausible measurement path without being expected to repair the function of interest. A marker-sensitive control tests whether the clock can move in the absence of the proposed repair pathway. A sham or vehicle control estimates temporal drift and handling effects. An orthogonal functional assay tests whether the response generalizes beyond the original measurement channel. The controls must be chosen for the actual system; the names of the arms do not guarantee that their causal effects match the intended assumptions.
+
+\section{Sequential design under model uncertainty}
+The finite-candidate planner in this release is intended to make experimental choices auditable. Its objective can be written abstractly as
+\[
+J(A)=\log\det\!\left(\mathcal I_0+\sum_{a\in A}X_a^\top\Sigma_a^{-1}X_a\right)
+-\lambda\,\mathrm{Cost}(A)-\mu\,\mathrm{Risk}(A),
+\]
+where \(A\) is a set of candidate arms, \(\mathcal I_0\) is prior information, and the final two terms encode resource use and prespecified safety constraints. The log-determinant rewards designs that improve information across multiple parameter directions rather than concentrating all information on one coefficient. It is one defensible criterion, not a universally optimal objective.
+
+In a Bayesian formulation, an alternative is expected information gain,
+\[
+\operatorname{EIG}(a)=
+\mathbb E_{y_a\mid D,a}\!\left[
+D_{\mathrm{KL}}\{p(\theta\mid D,y_a,a)\,\|\,p(\theta\mid D)\}
+\right],
+\]
+where \(D\) is the current evidence and \(a\) is a proposed next arm. This criterion asks how much the next observation is expected to change the parameter distribution. It can be useful when uncertainty is non-Gaussian or model-averaged, but it is sensitive to the prior, likelihood, candidate set, and computational approximation. A high expected information gain under a misspecified prior can direct attention toward the wrong scientific distinction.
+
+For a safety-constrained problem, the optimization should be lexicographic. First reject arms that violate hard identity, viability, or ethical constraints. Then require that the proposed design identifies the stated estimand under the declared model. Only then optimize information per unit resource. A penalty term is not always an adequate substitute for a hard constraint: if a risk score is poorly calibrated, a large information reward can overwhelm the penalty. The implementation in this paper is a synthetic design exercise and does not contain a validated biological risk model.
+
+Sequential choice also creates selection effects. If the next arm is chosen using interim outcomes, the selection rule is part of the data-generating process and should be recorded. Repeatedly inspecting a noisy endpoint and stopping when the clock moves in the desired direction can inflate false-positive evidence. A valid adaptive protocol should prespecify the candidate library, update rule, stopping criterion, and final inferential procedure. Where conventional frequentist guarantees are desired, the analysis must account for adaptive sampling; where Bayesian inference is used, the prior and likelihood must be reported and calibration checked.
+
+Greedy design is computationally convenient, but it need not achieve the globally best set when candidates interact or when constraints are non-submodular. The release therefore treats the selected arm set as a proposal with a traceable score, not as a proof of global optimality. A future implementation could compare greedy selection with exhaustive search on small candidate sets, mixed-integer optimization, or posterior-simulation methods. Such comparisons would test the planner itself rather than assuming that a plausible-looking output is optimal.
+
+\section{Sample-size logic and preregistered estimands}
+Sample size should be tied to the estimand and the weakest design direction, not to the desire for a narrow interval around a convenient clock score. In a correctly specified linear model with independent homoscedastic errors, information grows approximately linearly with replicated observations, so standard errors often decline on the order of \(n^{-1/2}\). This familiar scaling does not resolve structural non-identifiability, and it can be misleading when errors are correlated, measurement variance depends on the state, or the design is selected adaptively.
+
+A useful planning exercise begins with a pilot-informed range for measurement variance and direct-effect sensitivity. For each candidate sample size, simulate the full planned design, including missingness, batch allocation, baseline correlation, and any sequential decision rule. Record bias, root-mean-square error, interval coverage, false attribution of clock-only movement to repair, and the probability that a safety or identity constraint is triggered. The target should be a decision-relevant operating characteristic—for example, the probability that the identification region excludes a prespecified null range—rather than a single nominal power number disconnected from model uncertainty.
+
+The synthetic simulations in this paper are not a biological power calculation. Their parameters are chosen to expose a mathematical failure mode and to verify the software path. They do not estimate the variance of a real methylation assay, the prevalence of cell-state transitions, or the distribution of intervention effects in humans or model organisms. Any real sample-size recommendation would require pilot data, a specific assay, a declared population, and a defensible model for missingness and heterogeneity.
+
+Preregistration should name the primary clock, independent functional endpoint, identity and safety outcomes, contrast of interest, nuisance-effect bounds, exclusions, missing-data handling, and stopping rule. It should also state which outcomes are confirmatory and which are exploratory. If multiple clocks or functional endpoints are measured, multiplicity and endpoint selection must be addressed. Selecting the clock that improves most after observing the data is not equivalent to testing a prespecified biological hypothesis.
+
+The report should preserve negative results and discordant outcomes. If the clock improves but function does not, the result is not a failed rejuvenation experiment that can be rescued by re-labeling the clock; it is evidence against the specific claim that the observed clock movement establishes functional repair. If function improves while the clock does not, the clock may be insensitive to that mechanism. If both improve but identity or safety worsens, the intervention cannot be described as an unqualified success. These branches should be written into the analysis plan before data collection.
+
+\section{Stress tests and the boundary of interpretation}
+A mathematical model is most useful when it identifies where it can fail. The linear contrast model assumes that the effects of \(u\) and \(q\) are additive over the tested range. Saturation, thresholds, dose interactions, delayed effects, and state-dependent sensitivity can violate that assumption. A nonlinear model may be appropriate, but adding nonlinear terms can also consume the independent variation required to identify them. The correct response is not to fit the most flexible model automatically; it is to ask whether the design contains enough information to distinguish the extra mechanism.
+
+A first stress test is an interaction model, \(d_C=\kappa u+\alpha q+\gamma uq+\epsilon_C\). If all observations use the same ratio of \(u\) to \(q\), the interaction may be nearly collinear with the main effects. A second stress test allows the direct marker effect to vary across subjects or batches, \(\alpha_i=\alpha+\eta_i\). A third introduces delayed response, replacing \(u_t\) by a distributed-lag term \(\sum_{\ell=0}^{L}h_\ell u_{t-\ell}\). Each extension changes the design requirements. The parameters cannot be declared identifiable merely because an optimizer returns finite estimates.
+
+Measurement error in the intervention itself is another important threat. If the nominal dose differs from the delivered exposure, regression coefficients can be attenuated or distorted. When dose measurement error is correlated with batch or subject state, the bias may be more complicated than simple attenuation. Calibration samples, randomized assignment, and independent exposure measures may be needed. A model that treats the intervention input as known should explicitly state that assumption.
+
+The causal graph can also be wrong. The proposed repair-labelled input may affect the clock through a direct molecular path; the marker-targeting input may affect function; both inputs may change cell composition; and an unmeasured stress response may affect all readouts. No rank condition eliminates these alternatives. They require negative controls, independent readouts, intervention-specific knowledge, or a sensitivity analysis that bounds the unmeasured paths. If no credible bound or control exists, the mechanism should remain unresolved.
+
+These stress tests motivate a tiered interpretation. A result can establish a mathematical identity in the synthetic model; demonstrate that the software recovers a known synthetic parameter under stated assumptions; show robustness to a declared range of nuisance effects; or support a causal biological claim in a properly designed experiment. These are four different evidentiary levels. The current release reaches only the first three within a synthetic setting, and it does not claim the fourth.
+
+The most decisive falsification is not a small change in one metric. It is a pattern that contradicts the central measurement claim: a clock-only perturbation produces the expected clock response but no corresponding independent functional response; the inferred repair coefficient changes sign under modest, independently plausible direct-effect bounds; or the proposed model fails to predict held-out functional outcomes. Each outcome would require the mechanism claim to be narrowed, revised, or withheld. A preregistered negative result can be more informative than an apparently large clock reset whose causal interpretation is not identified.
+
+
 \section{Counterexamples and failure modes}
 The model generates several counterexamples to a simplistic clock-only interpretation. First, a marker-only intervention can change \(C\) while \(\kappa=0\). Second, a genuine repair intervention can be obscured if the direct marker effect has the opposite sign. Third, a functional readout can itself be directly affected by a marker-targeting intervention, violating the assumption that it is an independent endpoint. Fourth, a genotype-by-treatment interaction can survive within-subject differencing. Fifth, a well-conditioned design can still estimate the wrong parameters if the observation equations omit a relevant path.
 
