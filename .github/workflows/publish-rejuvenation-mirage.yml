@@ -106,7 +106,7 @@ jobs:
           p.write_text(text)
           PY
           rm -rf "$STAGING_DIR"
-          git add "$RELEASE_DIR" "$INDEX" "$STAGING_DIR" 2>/dev/null || git add -A "$RELEASE_DIR" "$INDEX"
+          git add -A -- "$RELEASE_DIR" "$INDEX" "$STAGING_DIR"
           git diff --cached --check
           git status --short
           git config user.name "github-actions[bot]"
@@ -129,7 +129,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          payload="$(jq -n --arg sha "$RELEASE_SHA" --arg tag "$RELEASE_TAG" '{ref:"main",inputs:{release_sha:$sha,tag:$tag}}')"
+          payload="$(jq -n --arg sha "$RELEASE_SHA" --arg tag "$RELEASE_TAG" '{ref:"main",inputs:{release_sha:$sha,tag:$tag,allow_pending_visual:"true"}}')"
           curl --fail-with-body --silent --show-error \
             -X POST \
             -H "Accept: application/vnd.github+json" \
