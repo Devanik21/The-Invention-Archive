@@ -54,11 +54,11 @@ def metadata_errors(root):
     missing=sorted(cites-bibkeys)
     if missing: errors.append("Missing BibTeX keys: "+", ".join(missing))
     if not re.search(r"\\bibliography\{paper\}",tex): errors.append("paper.tex does not consume paper.bib")
+    readme=(root/"README.md").read_text(encoding="utf-8")
     for target in re.findall(r"\]\(([^)]+)\)",readme):
         if target.startswith(("http://","https://","#","mailto:")): continue
         local=(root/target.split("#",1)[0])
         if not local.exists(): errors.append(f"Broken local README link: {target}")
-    readme=(root/"README.md").read_text(encoding="utf-8")
     if readme.count("$$")%2: errors.append("Unbalanced README display-math delimiters")
     if r"\operatorname" in readme: errors.append("Prohibited operatorname macro in README")
     if re.search(r"@@[A-Z_]+@@",readme): errors.append("Unreplaced generated-result marker in README")
