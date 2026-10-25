@@ -191,6 +191,24 @@ def validate_release(root,allow_pending_visual=False):
                 vr=json.loads((root/"results/pdf_visual_review.json").read_text(encoding="utf-8"))
                 if vr.get("paper_pdf_sha256")!=sha256(root/"paper.pdf"): errors.append("Visual-review record PDF hash does not match paper.pdf")
                 if vr.get("status")!="PASS" and not allow_pending_visual: errors.append("Manual visual-review gate is not PASS")
+                if not allow_pending_visual:
+                    if len(vr.get("pages_individually_reviewed",[])) != vr.get("page_count"):
+                        errors.append("Visual-review record does not list every page as individually reviewed")
+                    if vr.get("critical_or_major_defects"):
+                        errors.append("Visual-review record contains unresolved critical/major defects")
+                    quality=root/"results/publication_quality_report.md"
+                    if not quality.exists(): errors.append("Missing publication-quality scorecard")
+                    else:
+                        qtext=quality.read_text(encoding="utf-8")
+                        scores=[int(x) for x in re.findall(r"\|[^|]+\|\s*([1-5])\s*\|",qtext)]
+                        if len(scores)<8 or min(scores)<4: errors.append("Publication-quality scorecard does not contain eight scores of at least 4/5")
+                    matrix=root/"results/release_check_matrix.json"
+                    if not matrix.exists(): errors.append("Missing release check matrix")
+                    else:
+                        mdata=json.loads(matrix.read_text(encoding="utf-8"))
+                        if mdata.get("release_status")!="PASS": errors.append("Release check matrix is not PASS")
+                        unresolved=[c for c in mdata.get("checks",[]) if c.get("status") not in ("PASS","NOT_APPLICABLE")]
+                        if unresolved: errors.append("Release matrix contains unresolved checks: "+", ".join(c.get("name","unknown") for c in unresolved))
         except Exception as e: errors.append(f"PDF preflight error: {e}")
     else: errors.append("PDF/source missing; build is blocked")
     manifest=root/"results/sha256_manifest.json"
