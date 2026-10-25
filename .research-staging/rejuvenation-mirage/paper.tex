@@ -71,7 +71,7 @@ The closest intervention evidence for our premise is the 2025 methylation-editin
 
 Genotype-related clock variation is another relevant concern. The GIA preprint maps clock CpGs to blood methylation QTLs and reports enrichment relative to matched unused probes \citep{lim2026}. Because it is a preprint, its numerical findings are treated as preliminary and are not generalized beyond the studied data. EnsembleAge's multi-clock strategy illustrates a different mitigation: aggregate several predictors rather than relying on one score \citep{haghani2025}. Multiple clocks can improve robustness, but correlated clocks may share the same direct perturbation pathway and therefore need not identify functional repair.
 
-Our narrow contribution is not the claim that clock scores can be misleading, that methylation is genetically influenced, or that experimental design benefits from information criteria. Each has prior foundations. We combine these ideas in an explicit causal state-space benchmark that (i) proves a simple observational-equivalence result, (ii) specifies a rank-based condition for distinguishing repair and direct marker effects, and (iii) turns that condition into a constrained sequential design algorithm with executable synthetic tests. The literature search is focused rather than exhaustive; no absolute priority claim is made.
+Table~\\ref{tab:position} summarizes the closest lines of prior work and the inference boundary retained here. Our narrow contribution is not the claim that clock scores can be misleading, that methylation is genetically influenced, or that experimental design benefits from information criteria. Each has prior foundations. We combine these ideas in an explicit causal state-space benchmark that (i) proves a simple observational-equivalence result, (ii) specifies a rank-based condition for distinguishing repair and direct marker effects, and (iii) turns that condition into a constrained sequential design algorithm with executable synthetic tests. The literature search is focused rather than exhaustive; no absolute priority claim is made.
 
 \begin{table}[!htbp]
 \centering
@@ -92,7 +92,7 @@ Optimal experiment design \citep{chaloner1995,mackay1992} & Information criteria
 \end{table}
 
 \section{Research posture, claims, and epistemic levels}
-The paper separates five levels of statement. P1 denotes an identity or theorem following from explicit definitions; P2 denotes a model-dependent optimum; P3 denotes a proposed statistical regularity requiring repeated empirical evidence; P4 denotes a structural correspondence between the model and biology; P5 denotes a motivating analogy. This classification prevents a valid result about the toy observation model from silently becoming a claim about living systems.
+The paper separates five levels of statement. P1 denotes an identity or theorem following from explicit definitions; P2 denotes a model-dependent optimum; P3 denotes a proposed statistical regularity requiring repeated empirical evidence; P4 denotes a structural correspondence between the model and biology; P5 denotes a motivating analogy. This classification, summarized in Table~\\ref{tab:epistemic}, prevents a valid result about the toy observation model from silently becoming a claim about living systems.
 
 The principal P1 claim is that a single scalar contrast of the form \(y=\kappa u+\alpha q\) does not identify both \(\kappa\) and \(\alpha\) when \(u\) and \(q\) are fixed and nonzero. The P2 claim is that a constrained D-optimal design maximizes a specified information criterion over a finite candidate set; it does not imply that this design is optimal for a real tissue. The P3 claim is not established here: we do not claim universality of clock/functional discordance across species, tissues, or clocks. The P4 correspondence is that functional repair, direct measurement effects, and cell-identity drift can be represented as distinct state coordinates; whether any particular biological intervention maps cleanly to those coordinates is empirical. Any metaphor that calls a clock reset a “mirage” is P5 shorthand for a measurement-identifiability failure, not a claim that epigenetic clocks are useless.
 
@@ -125,7 +125,7 @@ C_t &= a_t + \alpha m_t + \beta g + \epsilon^C_t, \label{eq:clock}\\
 F_t &= a_t + \rho q_t + \epsilon^F_t, \label{eq:function}\\
 I_t &= i_t + \epsilon^I_t. \label{eq:identity}
 \end{align}
-Here \(C_t\) is the clock score, \(F_t\) is an independent functional endpoint, and \(I_t\) is an identity/safety readout. The coefficient \(\alpha\) maps marker displacement to the clock, \(\beta\) maps inherited set point to the baseline clock, and \(\rho\) permits the marker-targeting intervention to affect the functional readout directly. The last term is essential: treating a functional endpoint as immune to all direct treatment effects is an assumption to test, not a fact.
+Here \(C_t\) is the clock score, \(F_t\) is an independent functional endpoint, and \(I_t\) is an identity/safety readout. The coefficient \(\alpha\) maps marker displacement to the clock, \(\beta\) maps inherited set point to the baseline clock, and \(\rho\) permits the marker-targeting intervention to affect the functional readout directly. The notation and assumptions are collected in Table~\\ref{tab:notation}. The last term is essential: treating a functional endpoint as immune to all direct treatment effects is an assumption to test, not a fact.
 
 For intervention contrasts, we use the reduced local model
 \begin{align}
@@ -224,7 +224,7 @@ Let \(\theta=(\kappa,\alpha,\rho)^\top\) be the parameter vector and let \(J_j\)
 \[
 \mathcal{I}_j(\theta)=J_j^\top\Sigma_j^{-1}J_j.
 \]
-For a set of selected arms \(S\), the total information is \(\mathcal{I}_S=\sum_{j\in S}\mathcal{I}_j\). A D-optimal design maximizes \(\log\det(\mathcal{I}_S+\lambda I)\), where \(\lambda>0\) is a small regularizer used to stabilize numerical scoring. The regularizer does not turn a rank-deficient design into a scientifically identified model; the smallest singular value and unregularized rank must still be reported.
+For a set of selected arms \(S\), the total information is \(\mathcal{I}_S=\sum_{j\in S}\mathcal{I}_j\). A D-optimal design maximizes \(\log\det(\mathcal{I}_S+\lambda I)\), where \(\lambda>0\) is a small regularizer used to stabilize numerical scoring. The regularizer does not turn a rank-deficient design into a scientifically identified model; the smallest singular value and unregularized rank must still be reported. Table~\\ref{tab:design-archetypes} contrasts representative design families and their limits.
 
 We include measurement cost and identity risk. Let \(c_j\) be the cost of candidate arm \(j\), and \(r_j\) its predicted identity-risk score under a prespecified model. The selection problem is
 \[
@@ -367,7 +367,7 @@ Identity is preserved & Measure cell identity and adverse outcomes separately fr
 \section{Counterexamples and failure modes}
 The model generates several counterexamples to a simplistic clock-only interpretation. First, a marker-only intervention can change \(C\) while \(\kappa=0\). Second, a genuine repair intervention can be obscured if the direct marker effect has the opposite sign. Third, a functional readout can itself be directly affected by a marker-targeting intervention, violating the assumption that it is an independent endpoint. Fourth, a genotype-by-treatment interaction can survive within-subject differencing. Fifth, a well-conditioned design can still estimate the wrong parameters if the observation equations omit a relevant path.
 
-These counterexamples are not edge cases added after the fact; they define the assumptions under which the method is interpretable. A useful validation workflow should actively seek such failures. For each proposed intervention, the experimenter should specify at least one marker-only negative control, one functional endpoint independent of the clock-training features, an identity/safety panel, and a perturbation dose or timing contrast that can reveal direct measurement effects.
+These counterexamples are not edge cases added after the fact; they define the assumptions under which the method is interpretable. Table~\\ref{tab:falsification} converts the central claims into preregisterable tests, while Table~\\ref{tab:failure} summarizes failure signatures and required responses. A useful validation workflow should actively seek such failures. For each proposed intervention, the experimenter should specify at least one marker-only negative control, one functional endpoint independent of the clock-training features, an identity/safety panel, and a perturbation dose or timing contrast that can reveal direct measurement effects.
 
 \begin{table}[!htbp]
 \centering
