@@ -159,10 +159,12 @@ def figures(rng,marker,repair,mixed):
     save(fig,"fig03_measurement_network"); add("fig03_measurement_network","graph","Bipartite graph maps latent coordinates to observation channels")
 
     repeat=[(.5,.5)]*4; varied=[(0,0),(1,0),(0,1),(.5,.5)]
-    fig,ax=plt.subplots(figsize=(7.8,4.2))
+    fig,ax=plt.subplots(figsize=(7.8,4.2)); spectrum_rows=[]
     for name,arms in [("Repeated mixture",repeat),("Varied + two channels",varied)]:
-        x=rows_for(arms); s=np.linalg.svd(x,compute_uv=False); s=np.pad(s,(0,max(0,5-len(s))))[:5]
-        ax.plot(np.arange(1,6),s,"o-",label=f"{name} (rank {np.linalg.matrix_rank(x)})",lw=1.8,ms=5)
+        x=rows_for(arms); sv=np.linalg.svd(x,compute_uv=False); sv=np.pad(sv,(0,max(0,5-len(sv))))[:5]
+        for idx,value in enumerate(sv,1): spectrum_rows.append({"design":name,"singular_index":idx,"singular_value":float(value),"rank":int(np.linalg.matrix_rank(x))})
+        ax.plot(np.arange(1,6),sv,"o-",label=f"{name} (rank {np.linalg.matrix_rank(x)})",lw=1.8,ms=5)
+    write_csv(RES/"identifiability_spectrum.csv",spectrum_rows)
     ax.set_yscale("symlog",linthresh=1e-5); ax.set_xlabel("Singular-value index"); ax.set_ylabel("Singular value")
     ax.set_title("Design-matrix spectrum exposes weakly identified directions",color=C["ink"],weight="bold")
     ax.legend(frameon=False); ax.grid(alpha=.2); save(fig,"fig04_identifiability_spectrum")
@@ -182,6 +184,7 @@ def figures(rng,marker,repair,mixed):
     qvals=np.linspace(0,.8,9); bias=[]
     for qv in qvals:
         r=reps(200,0,float(qv),250,rng); bias.append((qv,r[:,0].mean(),r[:,0].std(ddof=1),P["alpha"]*qv))
+    write_csv(RES/"marker_bias_curve.csv",[{"q":float(a),"monte_carlo_mean":float(b),"replicate_sd":float(c),"analytic_expectation":float(d)} for a,b,c,d in bias])
     fig,ax=plt.subplots(figsize=(7.8,4.2)); qx=np.array([r[0] for r in bias])
     ax.plot(qx,[r[3] for r in bias],color=C["ink"],lw=2,label="Analytical expectation")
     ax.errorbar(qx,[r[1] for r in bias],yerr=[r[2]/np.sqrt(250) for r in bias],fmt="o",capsize=3,color=C["gold"],label="Monte Carlo mean ± SE")
@@ -256,6 +259,8 @@ def figures(rng,marker,repair,mixed):
     clock=P["kappa"]*U+P["alpha"]*Q; function=P["kappa"]*U-P["rho"]*Q; rr=.2*U+.6*Q
     response={"u":us.tolist(),"q":qs.tolist(),"clock_improvement":clock.tolist(),
               "functional_improvement":function.tolist(),"identity_risk_score":rr.tolist()}
+    write_csv(RES/"response_surface_grid.csv",[{"u":float(U[i,j]),"q":float(Q[i,j]),"clock_improvement":float(clock[i,j]),
+      "functional_improvement":float(function[i,j]),"identity_risk_score":float(rr[i,j])} for i in range(U.shape[0]) for j in range(U.shape[1])])
     fig,axs=plt.subplots(1,3,figsize=(10,3.5))
     for ax,data,title,cmap in [(axs[0],clock,"Clock response","YlGnBu"),(axs[1],function,"Functional response","GnBu"),(axs[2],rr,"Identity-risk score","OrRd")]:
         im=ax.imshow(data,origin="lower",extent=[0,1,0,1],aspect="auto",cmap=cmap)
