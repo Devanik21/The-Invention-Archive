@@ -63,8 +63,11 @@ jobs:
           mkdir -p "$RELEASE_DIR/figures" "$RELEASE_DIR/results"
           cp "$STAGING_DIR/paper.tex" "$STAGING_DIR/paper.bib" "$STAGING_DIR/verify_model.py" "$STAGING_DIR/README.md" "$STAGING_DIR/CITATION.cff" "$STAGING_DIR/.zenodo.json" "$STAGING_DIR/schema_article.jsonld" "$STAGING_DIR/deploy.py" "$RELEASE_DIR/"
           cp "$RUNNER_TEMP/staged_source_manifest.json" "$RELEASE_DIR/results/staged_source_manifest.json"
+          TMP_SYNTAX="$(mktemp -d)"
+          cp "$RELEASE_DIR/verify_model.py" "$RELEASE_DIR/deploy.py" "$TMP_SYNTAX/"
+          (cd "$TMP_SYNTAX" && python -m py_compile verify_model.py deploy.py)
+          rm -rf "$TMP_SYNTAX"
           cd "$RELEASE_DIR"
-          python -m py_compile verify_model.py deploy.py
           python deploy.py --self-test
       - name: Run model, compile current LaTeX, and perform automated preflight
         shell: bash
@@ -105,6 +108,7 @@ jobs:
               text=text.rstrip()+"\n\n"+row+"\n"
           p.write_text(text)
           PY
+          rm -rf "$RELEASE_DIR/__pycache__"
           rm -rf "$STAGING_DIR"
           git add -A -- "$RELEASE_DIR" "$INDEX" "$STAGING_DIR"
           git diff --cached --check
