@@ -78,6 +78,16 @@ jobs:
           test "$(find "$D" -maxdepth 1 -type f | wc -l)" -eq 9
           test -d "$D/figures" && test -d "$D/results"
           test -s "Theoretical Research/Readme.md"
+          test -s "$D/results/sha256_manifest.json"
+          python - "$D" <<'PY'
+          import hashlib,json,pathlib,sys
+          d=pathlib.Path(sys.argv[1]); m=json.loads((d/'results/sha256_manifest.json').read_text())
+          for rel,expected in m.items():
+              p=d/rel
+              assert p.is_file(), f'manifest path missing: {rel}'
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==expected, f'hash mismatch: {rel}'
+          print(f'Manifest pass: {len(m)} files match recorded SHA-256 values')
+          PY
           TMP="$(mktemp -d)"; cp "$D/verify_model.py" "$D/deploy.py" "$TMP/"
           (cd "$TMP" && python -m py_compile verify_model.py deploy.py && python deploy.py --self-test)
           python "$D/verify_model.py"
@@ -91,14 +101,4 @@ jobs:
           EXPECTED="$(jq -r '.release_artifact_commit_sha // empty' "$D/results/release_check_matrix.json")"
           if [ -z "$EXPECTED" ]; then EXPECTED="$TARGET_SHA"; fi
           if [ -n "$TAG_SHA" ]; then test "$TAG_SHA" = "$EXPECTED"; else echo "Tag $TARGET_TAG not readable yet" >&2; exit 1; fi
-          test -s "$D/results/sha256_manifest.json"
-          python - "$D" <<'PY'
-          import hashlib,json,pathlib,sys
-          d=pathlib.Path(sys.argv[1]); m=json.loads((d/'results/sha256_manifest.json').read_text())
-          for rel,expected in m.items():
-              p=d/rel
-              assert p.is_file(), f'manifest path missing: {rel}'
-              assert hashlib.sha256(p.read_bytes()).hexdigest()==expected, f'hash mismatch: {rel}'
-          print(f'Manifest pass: {len(m)} files match recorded SHA-256 values')
-          PY
           echo "Verified exact commit $TARGET_SHA; tag $TARGET_TAG -> $TAG_SHA; visual allowance=$ALLOW" >> "$GITHUB_STEP_SUMMARY"
