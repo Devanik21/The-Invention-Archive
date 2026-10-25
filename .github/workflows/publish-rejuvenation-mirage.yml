@@ -1,0 +1,140 @@
+name: Publish rejuvenation-mirage preprint
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".research-staging/rejuvenation-mirage/READY"
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: rejuvenation-mirage-publication
+  cancel-in-progress: false
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      STAGING_DIR: ".research-staging/rejuvenation-mirage"
+      RELEASE_DIR: "Theoretical Research/The_Rejuvenation_Mirage_Identifiability_Limits_of_Epigenetic_Clock_Reset_and_Active_Design_for_Functional_Repair"
+      INDEX: "Theoretical Research/Readme.md"
+      MPLBACKEND: "Agg"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned research and PDF toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "numpy==2.3.5" "matplotlib==3.10.8" "networkx==3.6.1" "PyMuPDF==1.26.7" "PyYAML==6.0.3" "Pillow==11.3.0"
+          sudo apt-get update
+          sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended poppler-utils
+      - name: Validate staged source and refuse collisions
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$STAGING_DIR/READY"
+          for f in paper.tex paper.bib verify_model.py README.md CITATION.cff .zenodo.json schema_article.jsonld deploy.py; do
+            test -s "$STAGING_DIR/$f" || { echo "Missing staged source: $f" >&2; exit 1; }
+          done
+          if git cat-file -e "HEAD:$RELEASE_DIR/paper.pdf" 2>/dev/null; then
+            echo "Release collision: refusing to overwrite an existing paper." >&2
+            exit 1
+          fi
+          test -s "$INDEX"
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root=Path(os.environ["STAGING_DIR"])
+          files=sorted(p for p in root.iterdir() if p.is_file() and p.name!="READY")
+          manifest={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
+          Path(os.environ["RUNNER_TEMP"],"staged_source_manifest.json").write_text(json.dumps(manifest,indent=2)+"\n")
+          print(json.dumps({"staged_files":len(files),"sha256":manifest},indent=2))
+          PY
+      - name: Restore release source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RELEASE_DIR/figures" "$RELEASE_DIR/results"
+          cp "$STAGING_DIR/paper.tex" "$STAGING_DIR/paper.bib" "$STAGING_DIR/verify_model.py" "$STAGING_DIR/README.md" "$STAGING_DIR/CITATION.cff" "$STAGING_DIR/.zenodo.json" "$STAGING_DIR/schema_article.jsonld" "$STAGING_DIR/deploy.py" "$RELEASE_DIR/"
+          cp "$RUNNER_TEMP/staged_source_manifest.json" "$RELEASE_DIR/results/staged_source_manifest.json"
+          cd "$RELEASE_DIR"
+          python -m py_compile verify_model.py deploy.py
+          python deploy.py --self-test
+      - name: Run model, compile current LaTeX, and perform automated preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RELEASE_DIR"
+          python deploy.py --build
+          python deploy.py --validate-only --allow-pending-visual
+          test -s paper.pdf
+          test "$(find . -maxdepth 1 -type f | wc -l)" -eq 9
+          test -d figures
+          test -d results
+          python - <<'PY'
+          from pathlib import Path
+          root=Path(".")
+          lines=(root/"results/figure_inventory.csv").read_text().splitlines()[1:]
+          rows=[line.split(",") for line in lines if line.strip()]
+          kinds=[r[1] for r in rows if len(r)>1]
+          assert len(rows)>=12, f"only {len(rows)} figure records"
+          assert sum(k=="plot" for k in kinds)>=6
+          assert sum(k=="graph" for k in kinds)>=2
+          assert sum(k=="flow" for k in kinds)>=2
+          assert len(list((root/"figures").glob("fig*.pdf")))>=12
+          print("Visual inventory preflight: PASS")
+          PY
+      - name: Update index and prepare non-destructive release commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("Theoretical Research/Readme.md")
+          text=p.read_text()
+          title="The Rejuvenation Mirage: Identifiability Limits of Epigenetic-Clock Reset and an Active-Design Rule for Functional Repair"
+          slug="The_Rejuvenation_Mirage_Identifiability_Limits_of_Epigenetic_Clock_Reset_and_Active_Design_for_Functional_Repair"
+          row=f"| 2026.10.25 | {title} | Identifiability theory + synthetic active-design benchmark | [{slug}]({slug}/) |"
+          if slug not in text:
+              text=text.rstrip()+"\n\n"+row+"\n"
+          p.write_text(text)
+          PY
+          rm -rf "$STAGING_DIR"
+          git add "$RELEASE_DIR" "$INDEX" "$STAGING_DIR" 2>/dev/null || git add -A "$RELEASE_DIR" "$INDEX"
+          git diff --cached --check
+          git status --short
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "publish(rejuvenation-mirage): release preprint"
+          RELEASE_SHA="$(git rev-parse HEAD)"
+          git push origin main
+          TAG="v2026.10.25"
+          if git ls-remote --tags origin "refs/tags/$TAG" | grep -q .; then
+            echo "Tag $TAG already exists; refusing to move or overwrite it." >&2
+            exit 1
+          fi
+          git tag -a "$TAG" "$RELEASE_SHA" -m "The Rejuvenation Mirage preprint v1.0.0"
+          git push origin "$TAG"
+          echo "RELEASE_SHA=$RELEASE_SHA" >> "$GITHUB_ENV"
+          echo "RELEASE_TAG=$TAG" >> "$GITHUB_ENV"
+      - name: Dispatch independent verification against the release commit
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          payload="$(jq -n --arg sha "$RELEASE_SHA" --arg tag "$RELEASE_TAG" '{ref:"main",inputs:{release_sha:$sha,tag:$tag}}')"
+          curl --fail-with-body --silent --show-error \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/verify-rejuvenation-mirage.yml/dispatches" \
+            -d "$payload"
+          echo "Dispatched independent verification for $RELEASE_SHA ($RELEASE_TAG)."
