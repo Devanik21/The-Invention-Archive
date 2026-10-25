@@ -15,3 +15,5 @@ Revision: corrected the PDF font-embedding preflight to parse pdffonts fixed-wid
 Revision: corrected the regex escape itself after the observed font-line parse failure; rerun all checks from this exact source.
 
 Revision: normalized generated CSV line endings to LF after git diff --check detected CRLF carriage returns as trailing whitespace; rerun full build.
+
+Revision: corrected the CSV writer to emit real LF newlines (not literal backslash-n); previous build verified 26 pages and 21 substantive main-text pages but correctly blocked malformed CSV inventory.
