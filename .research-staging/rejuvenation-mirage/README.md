@@ -2,8 +2,8 @@
 
 **Identifiability limits of epigenetic-clock reset and an active-design rule for functional repair**
 
-**Author:** Devanik Debnath · National Institute of Technology Agartala, India · ECE '26  
-**Status:** Theoretical + synthetic-computational preprint, v1.0 · 25 October 2026  
+**Author:** Devanik Debnath · National Institute of Technology Agartala, India · ECE '26<br>
+**Status:** Theoretical + synthetic-computational preprint, v1.0 · 25 October 2026<br>
 **ORCID:** https://orcid.org/0009-0001-8310-6921
 
 > **Scope boundary:** This release contains an explicit mathematical model and a deterministic synthetic benchmark. No biological dataset, wet-lab experiment, clinical intervention, or organismal lifespan assay was performed. The paper does not establish that any intervention rejuvenates cells or extends lifespan.
