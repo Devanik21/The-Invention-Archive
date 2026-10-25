@@ -39,11 +39,15 @@ def metadata_errors(root,check_links=True):
         cff=yaml.safe_load((root/"CITATION.cff").read_text(encoding="utf-8"))
         if not isinstance(cff,dict) or cff.get("cff-version")!="1.2.0" or not cff.get("title") or not cff.get("authors"):
             errors.append("CITATION.cff schema fields missing")
+        expected_title="The Rejuvenation Mirage: Identifiability Limits of Epigenetic-Clock Reset and an Active-Design Rule for Functional Repair"
+        if isinstance(cff,dict) and cff.get("title")!=expected_title: errors.append("CITATION.cff title does not match manuscript")
     except Exception as e: errors.append(f"CITATION.cff parse error: {e}")
     for name in [".zenodo.json","schema_article.jsonld"]:
         try:
             obj=json.loads((root/name).read_text(encoding="utf-8"))
             if not isinstance(obj,dict): errors.append(f"{name} is not a JSON object")
+            if isinstance(obj,dict) and obj.get("title",obj.get("name"))!="The Rejuvenation Mirage: Identifiability Limits of Epigenetic-Clock Reset and an Active-Design Rule for Functional Repair":
+                errors.append(f"{name} title does not match manuscript")
         except Exception as e: errors.append(f"{name} parse error: {e}")
     tex=(root/"paper.tex").read_text(encoding="utf-8")
     bib=(root/"paper.bib").read_text(encoding="utf-8")
