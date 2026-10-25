@@ -1,0 +1,25 @@
+{
+  "title": "The Hodge Obstruction to Escape-Proof Therapy: A Discrete-Hodge No-Go Result and Safety-Game Benchmark",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "description": "A theoretical and synthetic-computational preprint examining a proposed Hodge-curl obstruction for antimicrobial safety games. It establishes the definitional no-go that edge effects defined as differences of a static scalar fitness potential are exact gradients, then provides a reproducible finite-state robust viability-game benchmark. Simulations are synthetic and do not demonstrate biological efficacy, escape-proof therapy, or clinical safety. No DOI is assigned by this metadata file.",
+  "creators": [
+    {
+      "name": "Debnath, Devanik",
+      "affiliation": "National Institute of Technology Agartala, India",
+      "orcid": "0009-0001-8310-6921"
+    }
+  ],
+  "keywords": [
+    "antimicrobial resistance",
+    "fitness landscapes",
+    "discrete Hodge decomposition",
+    "robust safety games",
+    "viability theory",
+    "synthetic benchmark",
+    "reinforcement learning"
+  ],
+  "license": "CC-BY-4.0",
+  "language": "eng",
+  "access_right": "open"
+}

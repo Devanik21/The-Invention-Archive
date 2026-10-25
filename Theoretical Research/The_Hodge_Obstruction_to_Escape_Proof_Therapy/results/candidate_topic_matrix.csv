@@ -1,0 +1,11 @@
+candidate,importance,gap_evidence,conceptual_depth,plausibility,math_core,AI_role,human_benefit,first_validation,falsifiability,ethics,synthesis
+Hodge consistency plus robust safety game,5,4,5,5,5,4,5,5,5,5,Selected: direct test of a falsifiable structural conjecture plus exact toy-game validation
+RL for partially observed antibiotic cycling,5,3,4,4,4,5,5,4,5,5,Prior work already strong; use as baseline rather than sole novelty claim
+Neural completion of unmeasured fitness landscapes,4,3,4,4,4,5,4,4,5,4,Future extension; requires held-out empirical data and calibrated uncertainty
+Large-deviation bounds for rare resistance escape,5,3,4,4,5,3,5,4,5,5,Valuable extension but would require a calibrated stochastic model
+Topological persistence of resistance accessibility,4,3,5,3,4,3,4,4,4,5,Potentially useful but topology alone does not provide a control guarantee
+Polyhedral epistasis subdivision versus safety kernels,4,3,4,4,5,3,4,4,5,5,Useful comparison direction included conceptually, not a full benchmark
+Robust control under sequencing uncertainty,5,4,4,4,5,4,5,5,5,5,Included via exact finite model and safety-game formulation
+History-dependent fitness and hysteresis,5,3,4,4,4,4,5,3,5,4,Important empirical hypothesis; no history-conditioned data in current release
+Phage therapy coevolution game,4,3,5,3,4,4,4,3,4,4,Too broad for a clean first verification with available data
+Host-microbiome collateral interactions,5,2,5,3,4,4,5,2,4,3,Promising but causal complexity and safety burden high

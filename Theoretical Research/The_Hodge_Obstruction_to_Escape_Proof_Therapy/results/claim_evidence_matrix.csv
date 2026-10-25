@@ -1,0 +1,11 @@
+claim,epistemic_class,current_status,evidence_or_derivation,scope_and_limit
+Edge effects defined as f(v)-f(u) have zero circulation on closed cycles,P1,PASS,Telescoping sum in paper Proposition 5.1 and verify_model.py,Requires one common static scalar potential and consistent oriented edges
+Cubical boundary of boundary is zero,P1,PASS,Matrix check ||B2 B0||_F=0,Depends on the orientation/boundary matrices built in the released model
+A complete n-cube has trivial first cohomology,P1,PASS,Standard contractibility of the cubical complex and exact-gradient construction,Does not apply to arbitrary incomplete data complexes without qualification
+A static-potential curl provides a lower bound on number of drugs,P4,REJECTED,Proposition 6.1 and definition-level contradiction,No such lower bound follows from this formulation
+Robust viability kernel is greatest fixed point for finite transition relation,P1/P2,PASS,Finite-state predecessor iteration theorem and executable check,Guarantee is conditional on the declared successor set and safe/failure sets
+Toy instance has a four-state robust kernel,P model-dependent,PASS,summary.json and verification_report.json,Only the generated 16-state model; not empirical resistance biology
+Nonzero observed cycle residual indicates history dependence,P4,NOT_ESTABLISHED,Discussion lists assay noise/context mismatch/omitted variables and falsification tests,Residual alone cannot identify a mechanism
+RL produces a generally safe real pathogen schedule,P5/unsupported,NOT_CLAIMED,No biological data or real controller evaluation used,Current Q-learning result is a synthetic baseline only
+Hodge residual improves predictions over standard landscape features,P4,UNTESTED,Proposed held-out comparison in the staged validation plan,Requires measured independent landscapes and calibrated uncertainty
+Escape-proof therapy exists in real systems,unsupported,NOT_CLAIMED,No empirical validation or clinical protocol,Finite toy-model safety cannot be promoted to biological guarantee

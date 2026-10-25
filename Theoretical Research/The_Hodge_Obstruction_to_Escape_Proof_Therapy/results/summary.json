@@ -1,0 +1,49 @@
+{
+  "seed": 20261025,
+  "landscape": "synthetic 4-locus hypercube, 16 genotypes, 3 scalar fitness potentials",
+  "fitness_threshold": 0.0,
+  "synthetic_failure_states": [
+    7,
+    9,
+    11,
+    13,
+    14,
+    15
+  ],
+  "exact_edge_square_curl_max_by_drug": [
+    1.1102230246251565e-16,
+    1.1102230246251565e-16,
+    5.551115123125783e-17
+  ],
+  "noisy_edge_rms_square_curl_by_drug": [
+    0.13349507572377026,
+    0.20149942722191616,
+    0.19070312223236754
+  ],
+  "robust_viability_kernel_states": [
+    0,
+    2,
+    4,
+    6
+  ],
+  "robust_viability_kernel_size": 4,
+  "viability_iteration_sizes": [
+    10,
+    6,
+    4,
+    4
+  ],
+  "start_state": 0,
+  "start_state_in_viability_kernel": true,
+  "horizon_12_probability_of_failure": {
+    "dynamic_programming": 0.0,
+    "one_step_greedy_monte_carlo_5000": 0.9926,
+    "round_robin_monte_carlo_5000": 0.9964,
+    "tabular_q_learning_monte_carlo_5000": 0.0
+  },
+  "q_learning_training_episodes": 9000,
+  "stochastic_transition_beta": 5.0,
+  "empirical_data_used": false,
+  "clinical_interpretation": false,
+  "interpretation": "All numerical values are synthetic proof-of-concept outputs; no bacterial, patient, or experimental data were used."
+}

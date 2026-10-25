@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite the versioned GitHub release."
+title: "The Hodge Obstruction to Escape-Proof Therapy: A Discrete-Hodge No-Go Result and Safety-Game Benchmark"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    affiliation: "Department of Electronics and Communication Engineering, National Institute of Technology Agartala, India"
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+version: 1.0.0
+date-released: 2026-10-25
+url: "https://github.com/Devanik21/The-Invention-Archive"
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+license: CC-BY-4.0
+type: software

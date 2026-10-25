@@ -1,0 +1,24 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "The Hodge Obstruction to Escape-Proof Therapy: A Discrete-Hodge No-Go Result and Safety-Game Benchmark",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "identifier": "https://orcid.org/0009-0001-8310-6921",
+    "affiliation": {
+      "@type": "CollegeOrUniversity",
+      "name": "National Institute of Technology Agartala",
+      "address": "Agartala, Tripura, India"
+    }
+  },
+  "datePublished": "2026-10-25",
+  "version": "1.0.0",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://github.com/Devanik21/The-Invention-Archive",
+  "genre": "Theoretical and synthetic-computational preprint",
+  "description": "A discrete-Hodge no-go result and a synthetic finite-state robust safety-game benchmark for studying antimicrobial resistance scheduling. No empirical or clinical efficacy is claimed.",
+  "keywords": ["antimicrobial resistance", "discrete Hodge decomposition", "safety game", "robust viability", "synthetic benchmark"]
+}

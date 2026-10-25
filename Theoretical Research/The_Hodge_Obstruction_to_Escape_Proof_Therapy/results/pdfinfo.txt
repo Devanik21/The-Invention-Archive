@@ -1,0 +1,22 @@
+Title:           The Hodge Obstruction to Escape-Proof Therapy
+Subject:         
+Keywords:        
+Author:          Devanik Debnath
+Creator:         LaTeX with hyperref
+Producer:        pdfTeX-1.40.25
+CreationDate:    Sun Oct 25 14:37:47 2026 UTC
+ModDate:         Sun Oct 25 14:37:47 2026 UTC
+Custom Metadata: yes
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           26
+Encrypted:       no
+Page size:       595.276 x 841.89 pts (A4)
+Page rot:        0
+File size:       552865 bytes
+Optimized:       no
+PDF version:     1.5

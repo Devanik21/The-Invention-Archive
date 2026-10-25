@@ -1,0 +1,16 @@
+{
+  "pages": 26,
+  "main_text_pages": 20,
+  "pdf_sha256": "bf51030f66382f8edc48cf5dc02b99f9f54dca67a9006c7b3f40c49d31d1d056",
+  "table_source_count": 5,
+  "caption_count": 17,
+  "figure_count": 12,
+  "figure_category_counts": {
+    "graph": 2,
+    "plot": 8,
+    "flow": 2
+  },
+  "visual_review": "BLOCKED",
+  "verification_assertions": 12
+}
+Publication-quality status remains BLOCKED until visual review record matches this PDF hash.

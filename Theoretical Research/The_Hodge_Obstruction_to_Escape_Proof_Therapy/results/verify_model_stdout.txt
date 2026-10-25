@@ -1,0 +1,21 @@
+The Hodge Obstruction to Escape-Proof Therapy — verification summary
+Seed: 20261025
+Failure-set states: [7, 9, 11, 13, 14, 15]
+Robust viability kernel size: 4/16
+H=12 DP hit risk from state 0000: 0.000000
+H=12 greedy hit-rate estimate (5000 runs): 0.992600
+H=12 round-robin hit-rate estimate (5000 runs): 0.996400
+H=12 Q-learning hit-rate estimate (5000 runs): 0.000000
+[PASS] all drug fields are exact gradients: max square circulation=1.110e-16
+[PASS] discrete boundary-of-boundary consistency: ||B2 B0||_F=0.000e+00
+[PASS] Hodge orthogonal projections reconstruct edge flow: gradient + coexact + harmonic reconstructs each edge flow
+[PASS] Hodge projected components are orthogonal: exact and coexact components inner products below tolerance
+[PASS] each stochastic kernel normalizes: transition-row normalization max error below tolerance
+[PASS] failure set nonempty and not all states: 6 of 16 states designated failure by synthetic threshold
+[PASS] viability kernel is safe: 4 states remain in the robust kernel
+[PASS] kernel is closed under its witness actions: each kernel state has an action whose possible successors remain in kernel
+[PASS] risk DP is bounded and monotone: finite-horizon hitting probabilities lie in [0,1] and do not decrease with horizon
+[PASS] finite-horizon DP boundary condition: failure states have risk probability 1 at every horizon
+[PASS] figure inventory floor: 12 figures; 8 plots, 2 graphs, 2 flows
+[PASS] data files exist: figure-generating data are archived
+

@@ -1,0 +1,20 @@
+{
+  "audit_date": "2026-10-25",
+  "scope": "Targeted literature search; not exhaustive",
+  "queries": [
+    "antibiotic collateral sensitivity fitness landscapes drug sequencing sequential therapy resistance Nichol",
+    "Maltas Wood 2019 collateral sensitivity optimal strategies antibiotic resistance",
+    "Iram/Ardell Kryazhimskiy population genetics collateral resistance sensitivity eLife 2021",
+    "Reinforcement learning informs optimal treatment strategies limit antibiotic resistance PNAS 2024 TEM beta-lactamase",
+    "Steering Evolution with Sequential Therapy to Prevent the Emergence of Bacterial Antibiotic Resistance 2015",
+    "Statistical ranking and combinatorial Hodge theory Jiang Lim Yao Ye 2011",
+    "Hodge theory-based biomolecular data analysis Scientific Reports 2022",
+    "Mira adaptive landscapes resistance genes change antibiotic concentrations 2015"
+  ],
+  "coverage_notes": [
+    "Primary papers in antimicrobial sequence design, collateral sensitivity/population genetics, RL, and combinatorial Hodge theory were targeted.",
+    "No dataset was acquired or downloaded in this cycle.",
+    "The cited literature supports adjacent methods and context; it does not validate the new toy model or prove priority for the synthesis.",
+    "Patent search and exhaustive citation chaining were not performed; this is not an exhaustive novelty audit."
+  ]
+}

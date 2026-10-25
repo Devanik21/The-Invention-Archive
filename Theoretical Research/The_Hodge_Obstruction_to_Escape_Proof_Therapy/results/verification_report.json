@@ -1,0 +1,77 @@
+{
+  "created_utc": "2026-10-25T14:37:44.618292+00:00",
+  "seed": 20261025,
+  "python": "3.12.15",
+  "numpy": "2.3.5",
+  "matplotlib": "3.10.8",
+  "networkx": "3.6.1",
+  "checks": [
+    {
+      "name": "all drug fields are exact gradients",
+      "status": "PASS",
+      "detail": "max square circulation=1.110e-16"
+    },
+    {
+      "name": "discrete boundary-of-boundary consistency",
+      "status": "PASS",
+      "detail": "||B2 B0||_F=0.000e+00"
+    },
+    {
+      "name": "Hodge orthogonal projections reconstruct edge flow",
+      "status": "PASS",
+      "detail": "gradient + coexact + harmonic reconstructs each edge flow"
+    },
+    {
+      "name": "Hodge projected components are orthogonal",
+      "status": "PASS",
+      "detail": "exact and coexact components inner products below tolerance"
+    },
+    {
+      "name": "each stochastic kernel normalizes",
+      "status": "PASS",
+      "detail": "transition-row normalization max error below tolerance"
+    },
+    {
+      "name": "failure set nonempty and not all states",
+      "status": "PASS",
+      "detail": "6 of 16 states designated failure by synthetic threshold"
+    },
+    {
+      "name": "viability kernel is safe",
+      "status": "PASS",
+      "detail": "4 states remain in the robust kernel"
+    },
+    {
+      "name": "kernel is closed under its witness actions",
+      "status": "PASS",
+      "detail": "each kernel state has an action whose possible successors remain in kernel"
+    },
+    {
+      "name": "risk DP is bounded and monotone",
+      "status": "PASS",
+      "detail": "finite-horizon hitting probabilities lie in [0,1] and do not decrease with horizon"
+    },
+    {
+      "name": "finite-horizon DP boundary condition",
+      "status": "PASS",
+      "detail": "failure states have risk probability 1 at every horizon"
+    },
+    {
+      "name": "figure inventory floor",
+      "status": "PASS",
+      "detail": "12 figures; 8 plots, 2 graphs, 2 flows"
+    },
+    {
+      "name": "data files exist",
+      "status": "PASS",
+      "detail": "figure-generating data are archived"
+    }
+  ],
+  "all_passed": true,
+  "limitations": [
+    "synthetic fitness potentials only",
+    "no pathogen-specific or clinical recommendation",
+    "Hodge diagnostic is not asserted to determine therapy safety",
+    "Q-learning policy is a heuristic and carries no robust guarantee"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "timestamp_utc": "2026-10-25T14:37:48.858676+00:00",
+  "python": "3.12.15 (main, Oct  1 2026, 02:35:59) [GCC 13.3.0]",
+  "pdf_pages": 26,
+  "main_text_pages": 20,
+  "numpy": "2.3.5",
+  "matplotlib": "3.10.8",
+  "networkx": "3.6.1",
+  "PyMuPDF": "1.26.7",
+  "PyYAML": "6.0.3",
+  "Pillow": "11.3.0"
+}
