@@ -1,0 +1,108 @@
+name: Verify rejuvenation-mirage release
+on:
+  workflow_dispatch:
+    inputs:
+      release_sha:
+        description: Exact release commit SHA to verify
+        required: true
+        type: string
+      tag:
+        description: Semantic release tag
+        required: true
+        type: string
+      allow_pending_visual:
+        description: Permit automated validation before manual page review
+        required: false
+        default: "false"
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - "Theoretical Research/The_Rejuvenation_Mirage_Identifiability_Limits_of_Epigenetic_Clock_Reset_and_Active_Design_for_Functional_Repair/**"
+      - "Theoretical Research/Readme.md"
+permissions:
+  contents: read
+concurrency:
+  group: rejuvenation-mirage-verification
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Resolve exact commit and tag
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            SHA="$(jq -r '.inputs.release_sha' "$GITHUB_EVENT_PATH")"
+            TAG="$(jq -r '.inputs.tag' "$GITHUB_EVENT_PATH")"
+            ALLOW_PENDING="$(jq -r '.inputs.allow_pending_visual // "false"' "$GITHUB_EVENT_PATH")"
+          else
+            SHA="$GITHUB_SHA"
+            TAG="v2026.10.25"
+            ALLOW_PENDING="false"
+          fi
+          [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] || { echo "Invalid target SHA" >&2; exit 1; }
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "allow_pending=$ALLOW_PENDING" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.target.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned verification dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "numpy==2.3.5" "matplotlib==3.10.8" "networkx==3.6.1" "PyMuPDF==1.26.7" "PyYAML==6.0.3" "Pillow==11.3.0"
+          sudo apt-get update
+          sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended poppler-utils
+      - name: Verify exact remote release tree
+        shell: bash
+        env:
+          TARGET_SHA: ${{ steps.target.outputs.sha }}
+          TARGET_TAG: ${{ steps.target.outputs.tag }}
+          ALLOW_PENDING: ${{ steps.target.outputs.allow_pending }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          RELEASE_DIR="Theoretical Research/The_Rejuvenation_Mirage_Identifiability_Limits_of_Epigenetic_Clock_Reset_and_Active_Design_for_Functional_Repair"
+          test -s "$RELEASE_DIR/paper.pdf"
+          test -s "$RELEASE_DIR/paper.tex"
+          test -s "$RELEASE_DIR/verify_model.py"
+          test -s "$RELEASE_DIR/README.md"
+          test -s "$RELEASE_DIR/CITATION.cff"
+          test -s "$RELEASE_DIR/paper.bib"
+          test -s "$RELEASE_DIR/.zenodo.json"
+          test -s "$RELEASE_DIR/schema_article.jsonld"
+          test -s "$RELEASE_DIR/deploy.py"
+          test "$(find "$RELEASE_DIR" -maxdepth 1 -type f | wc -l)" -eq 9
+          test -d "$RELEASE_DIR/figures"
+          test -d "$RELEASE_DIR/results"
+          test -s "Theoretical Research/Readme.md"
+          python -m py_compile "$RELEASE_DIR/verify_model.py" "$RELEASE_DIR/deploy.py"
+          python "$RELEASE_DIR/deploy.py" --self-test
+          if [ "$ALLOW_PENDING" = "true" ]; then
+            python "$RELEASE_DIR/deploy.py" --validate-only --allow-pending-visual
+          else
+            python "$RELEASE_DIR/deploy.py" --validate-only
+          fi
+          git fetch origin "refs/tags/$TARGET_TAG:refs/tags/$TARGET_TAG"
+          TAG_SHA="$(git rev-parse "refs/tags/$TARGET_TAG^{commit}")"
+          test "$TAG_SHA" = "$TARGET_SHA"
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Validation mutated the checked-out release tree." >&2
+            exit 1
+          fi
+          {
+            echo "## Rejuvenation Mirage release verification"
+            echo "- Exact target SHA: \`$TARGET_SHA\`"
+            echo "- Tag: \`$TARGET_TAG\` -> \`$TAG_SHA\`"
+            echo "- Manual visual gate allowed pending: \`$ALLOW_PENDING\`"
+            echo "- Root core-file manifest, metadata, source, PDF, figures, results, and deployment self-tests: PASS"
+          } >> "$GITHUB_STEP_SUMMARY"
