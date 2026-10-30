@@ -65,7 +65,7 @@ jobs:
           for name in ("README.md", "results/build_output.txt"):
               p = Path(name)
               lines = p.read_text(encoding="utf-8").splitlines()
-              p.write_text("\\n".join(line.rstrip() for line in lines).rstrip() + "\\n", encoding="utf-8")
+              p.write_text("\n".join(line.rstrip() for line in lines).rstrip() + "\n", encoding="utf-8")
           PY
       - name: Render PDF contact sheet and validate complete release
         shell: bash
