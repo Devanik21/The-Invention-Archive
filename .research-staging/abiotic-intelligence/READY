@@ -7,3 +7,5 @@ trigger=workflow-guard-fixed
 retry=manifest-race-fixed
 
 retry=crlf-normalization-corrected
+
+retry=strip-whitespace-and-diagnostics
