@@ -60,6 +60,13 @@ jobs:
           python deploy.py --build > results/build_output.txt 2>&1
           test -s paper.pdf
           python -c 'from pathlib import Path; p=Path("results/synthetic_origin_demo.csv"); p.write_bytes(p.read_bytes().replace(b"\r\n", b"\n"))'
+          python - <<'PY'
+          from pathlib import Path
+          for name in ("README.md", "results/build_output.txt"):
+              p = Path(name)
+              lines = p.read_text(encoding="utf-8").splitlines()
+              p.write_text("\\n".join(line.rstrip() for line in lines).rstrip() + "\\n", encoding="utf-8")
+          PY
       - name: Render PDF contact sheet and validate complete release
         shell: bash
         run: |
@@ -89,6 +96,7 @@ jobs:
           python deploy.py --validate-only
           pdfinfo paper.pdf > results/pdfinfo.txt
           pdffonts paper.pdf > results/pdffonts.txt
+          sed -i 's/[[:space:]]*$//' results/pdfinfo.txt
           python - <<'PY'
           import hashlib,json,pathlib
           d=pathlib.Path(".")
