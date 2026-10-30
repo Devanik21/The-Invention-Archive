@@ -41,7 +41,7 @@ jobs:
           test -s "$STAGING/READY"
           test -s "$STAGING/payload.tar.gz.b64"
           mkdir -p "$RUNNER_TEMP/abiotic-source"
-          cat "$STAGING/payload.tar.gz.b64" "$STAGING/payload-01.b64" "$STAGING/payload-02.b64" "$STAGING/payload-03a.b64" "$STAGING/payload-03b.b64" "$STAGING/payload-04.b64" > "$RUNNER_TEMP/abiotic-source/payload.b64"
+          cat "$STAGING/payload.tar.gz.b64" "$STAGING/payload-01.b64" "$STAGING/payload-02a.b64" "$STAGING/payload-02b.b64" "$STAGING/payload-03a.b64" "$STAGING/payload-03b.b64" "$STAGING/payload-04.b64" > "$RUNNER_TEMP/abiotic-source/payload.b64"
           test "$(wc -c < "$RUNNER_TEMP/abiotic-source/payload.b64")" -eq 39572
           base64 --decode "$RUNNER_TEMP/abiotic-source/payload.b64" > "$RUNNER_TEMP/abiotic-source/payload.tar.gz"
           tar -xzf "$RUNNER_TEMP/abiotic-source/payload.tar.gz" -C "$RUNNER_TEMP/abiotic-source"
