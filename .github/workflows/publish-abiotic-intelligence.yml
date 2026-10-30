@@ -85,7 +85,7 @@ jobs:
           sheet.save("results/pdf_contact_sheet.jpg",quality=92)
           print(f"Rendered contact sheet for {len(doc)} PDF pages")
           PY
-          python deploy.py --validate-only > results/validation_output.txt
+          python deploy.py --validate-only
           pdfinfo paper.pdf > results/pdfinfo.txt
           pdffonts paper.pdf > results/pdffonts.txt
           python - <<'PY'
