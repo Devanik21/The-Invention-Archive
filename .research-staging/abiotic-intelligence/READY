@@ -5,3 +5,5 @@ shards=payload.tar.gz.b64,payload-01.b64,payload-02a.b64,payload-02b.b64,payload
 trigger=workflow-guard-fixed
 
 retry=manifest-race-fixed
+
+retry=crlf-normalization-corrected
