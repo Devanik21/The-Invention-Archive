@@ -3,3 +3,5 @@ archive_sha256=292c583e5e0c2b3465de4fd1bc0c8749b08c3623cafe1af8132c37de5d44f00e
 encoding=base64-shards
 shards=payload.tar.gz.b64,payload-01.b64,payload-02a.b64,payload-02b.b64,payload-03a.b64,payload-03b.b64,payload-04.b64
 trigger=workflow-guard-fixed
+
+retry=manifest-race-fixed
