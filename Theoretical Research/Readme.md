@@ -24,3 +24,5 @@ Research preprints are stored in isolated release directories. Each release incl
 | 2026.10.25 | The Rejuvenation Mirage: Identifiability Limits of Epigenetic-Clock Reset and an Active-Design Rule for Functional Repair | Identifiability theory + synthetic active-design benchmark | [The_Rejuvenation_Mirage_Identifiability_Limits_of_Epigenetic_Clock_Reset_and_Active_Design_for_Functional_Repair](The_Rejuvenation_Mirage_Identifiability_Limits_of_Epigenetic_Clock_Reset_and_Active_Design_for_Functional_Repair/) |
 
 | 2026.10.25 | The Hodge Obstruction to Escape-Proof Therapy: A Discrete-Hodge No-Go Result and Safety-Game Benchmark | Discrete-Hodge no-go result + synthetic robust safety-game benchmark | [The_Hodge_Obstruction_to_Escape_Proof_Therapy](The_Hodge_Obstruction_to_Escape_Proof_Therapy/) |
+
+| 2026.10.30 | Beyond the Biological Bottleneck: Could Intelligence Emerge Directly from Nature? | Abiotic-computation framework + Bayesian origin-identifiability demonstration | [Beyond_the_Biological_Bottleneck_Could_Intelligence_Emerge_Directly_from_Nature](Beyond_the_Biological_Bottleneck_Could_Intelligence_Emerge_Directly_from_Nature/) |

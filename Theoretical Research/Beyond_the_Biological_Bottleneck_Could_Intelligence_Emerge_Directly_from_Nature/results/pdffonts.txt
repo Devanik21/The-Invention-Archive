@@ -1,0 +1,27 @@
+name                                 type              encoding         emb sub uni object ID
+------------------------------------ ----------------- ---------------- --- --- --- ---------
+QOARTJ+LMRoman12-Bold                Type 1            Custom           yes yes yes    129  0
+GUJLMV+LMRoman12-Regular             Type 1            Custom           yes yes yes    130  0
+NZUDRE+LMRoman10-Regular             Type 1            Custom           yes yes yes    131  0
+QMBPSY+LMRoman10-Bold                Type 1            Custom           yes yes yes    132  0
+TMIGLP+LMMathSymbols10-Regular       Type 1            Custom           yes yes yes    134  0
+SUVDYM+LMMathItalic10-Regular        Type 1            Custom           yes yes yes    135  0
+YHZOBF+LMRoman10-Italic              Type 1            Custom           yes yes yes    141  0
+NZUDRE+LMRoman10-Regular             Type 1            Custom           yes yes yes    142  0
+EVICAO+DejaVuSans-Bold               Type 3            Custom           yes yes no     154  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     155  0
+OEMQYW+LMMathItalic8-Regular         Type 1            Custom           yes yes yes    238  0
+BNVGNV+LMRoman8-Regular              Type 1            Custom           yes yes yes    239  0
+NZUDRE+LMRoman10-Regular             Type 1            Custom           yes yes yes    240  0
+ZZUSXK+LMSans10-Regular              Type 1            Custom           yes yes yes    244  0
+ANTVSN+LMMathSymbols8-Regular        Type 1            Custom           yes yes yes    246  0
+RAZVEJ+MSBM10                        Type 1            Builtin          yes yes yes    248  0
+EVICAO+DejaVuSans-Bold               Type 3            Custom           yes yes no     283  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     284  0
+AIYHRR+LMMathExtension10-Regular     Type 1            Custom           yes yes yes    360  0
+TMHVPV+MSAM10                        Type 1            Builtin          yes yes yes    372  0
+EVICAO+DejaVuSans-Bold               Type 3            Custom           yes yes no     382  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     383  0
+EVICAO+DejaVuSans-Bold               Type 3            Custom           yes yes no     466  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     467  0
+TGOTWC+LMMono10-Regular              Type 1            Custom           yes yes yes    574  0

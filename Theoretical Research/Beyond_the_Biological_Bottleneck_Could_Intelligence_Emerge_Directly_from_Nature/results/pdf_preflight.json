@@ -1,0 +1,7 @@
+{
+  "status": "AUTOMATED_PREFLIGHT_PASS_MANUAL_REVIEW_PENDING",
+  "pages": 15,
+  "characters": 46918,
+  "pdf_sha256": "24418df4cccd0e5927fa1019d669f3d443d92dd5195c113dc29bf5ce0a9b40ea",
+  "manual_visual_review": "Automated render checks only; complete page-by-page human sign-off remains pending."
+}

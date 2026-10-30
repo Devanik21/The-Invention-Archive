@@ -1,0 +1,22 @@
+Title:           Beyond the Biological Bottleneck: Can Intelligence Emerge Directly from Nature?
+Subject:         Abiotic intelligence, natural computation, astrobiology and SETI
+Keywords:
+Author:          Devanik Debnath
+Creator:         LaTeX with hyperref
+Producer:        pdfTeX-1.40.25
+CreationDate:    Fri Oct 30 15:04:18 2026 UTC
+ModDate:         Fri Oct 30 15:04:18 2026 UTC
+Custom Metadata: yes
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           15
+Encrypted:       no
+Page size:       612 x 792 pts (letter)
+Page rot:        0
+File size:       387428 bytes
+Optimized:       no
+PDF version:     1.5

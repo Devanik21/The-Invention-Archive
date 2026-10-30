@@ -1,0 +1,14 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Beyond the Biological Bottleneck: Could Intelligence Emerge Directly from Nature?",
+  "alternativeHeadline": "A Framework for Natural Computation, Abiotic Agency, and Distinguishing Emergence from Construction",
+  "author": {"@type": "Person", "name": "Devanik Debnath", "url": "https://github.com/Devanik21"},
+  "datePublished": "2026-10-30",
+  "inLanguage": "en",
+  "keywords": ["astrobiology", "abiotic computation", "physical reservoir computing", "agency", "planetary intelligence", "SETI", "Bayesian identifiability"],
+  "abstract": "This theoretical preprint asks whether biological evolution is a necessary intermediate in intelligence's emergence. It distinguishes capability from causal origin and proves a conditional non-identifiability result for functional observations when direct-emergence and constructed-origin hypotheses induce equal likelihoods.",
+  "isAccessibleForFree": true,
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "isPartOf": {"@type": "CreativeWorkSeries", "name": "The Invention Archive — Theoretical Research"}
+}

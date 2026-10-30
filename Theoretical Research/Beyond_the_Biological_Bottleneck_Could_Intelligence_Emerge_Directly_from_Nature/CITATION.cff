@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "Please cite this research preprint as follows."
+title: "Beyond the Biological Bottleneck: Could Intelligence Emerge Directly from Nature?"
+subtitle: "A Framework for Natural Computation, Abiotic Agency, and Distinguishing Emergence from Construction"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    affiliation: Independent Research
+    website: https://github.com/Devanik21
+date-released: "2026-10-30"
+notes: "AI assistance is disclosed in the manuscript; the named human author is responsible for the final work."
+type: article
+license: CC-BY-4.0
+repository-code: https://github.com/Devanik21/The-Invention-Archive
+abstract: >-
+  This preprint examines whether biological evolution is a necessary intermediate
+  in the emergence of intelligence. It separates physical computation, adaptive
+  capability, minimal agency, and functional intelligence from causal origin,
+  and formalizes a non-identifiability result: when functional observation
+  likelihoods coincide under direct abiotic emergence and constructed-origin
+  hypotheses, functional behaviour alone cannot distinguish those histories.
+keywords:
+  - astrobiology
+  - abiotic computation
+  - physical reservoir computing
+  - agency
+  - planetary intelligence
+  - technosignatures
+  - information thermodynamics
+  - Bayesian identifiability
