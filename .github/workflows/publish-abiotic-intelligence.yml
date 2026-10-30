@@ -59,7 +59,7 @@ jobs:
           python deploy.py --self-test
           python deploy.py --build > results/build_output.txt 2>&1
           test -s paper.pdf
-          python -c 'from pathlib import Path; p=Path("results/synthetic_origin_demo.csv"); p.write_bytes(p.read_bytes().replace(b"\\r\\n", b"\\n"))'
+          python -c 'from pathlib import Path; p=Path("results/synthetic_origin_demo.csv"); p.write_bytes(p.read_bytes().replace(b"\r\n", b"\n"))'
       - name: Render PDF contact sheet and validate complete release
         shell: bash
         run: |
