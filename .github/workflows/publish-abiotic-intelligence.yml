@@ -1,0 +1,127 @@
+name: Publish Beyond the Biological Bottleneck
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".research-staging/abiotic-intelligence/READY"
+permissions:
+  contents: write
+concurrency:
+  group: abiotic-intelligence-publication
+  cancel-in-progress: false
+jobs:
+  build-and-publish:
+    if: ${{ !startsWith(github.event.head_commit.message, 'publish(abiotic-intelligence):') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      STAGING: ".research-staging/abiotic-intelligence"
+      RELEASE: "Theoretical Research/Beyond_the_Biological_Bottleneck_Could_Intelligence_Emerge_Directly_from_Nature"
+      INDEX: "Theoretical Research/Readme.md"
+      MPLBACKEND: "Agg"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned research and PDF toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check "numpy==2.3.5" "matplotlib==3.10.8" "PyMuPDF==1.26.7" "PyYAML==6.0.3" "Pillow==11.3.0"
+          sudo apt-get update
+          sudo apt-get install -y latexmk texlive-latex-extra texlive-fonts-recommended poppler-utils
+      - name: Decode and validate manuscript source bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$STAGING/READY"
+          test -s "$STAGING/payload.tar.gz.b64"
+          mkdir -p "$RUNNER_TEMP/abiotic-source"
+          base64 --decode "$STAGING/payload.tar.gz.b64" > "$RUNNER_TEMP/abiotic-source/payload.tar.gz"
+          tar -xzf "$RUNNER_TEMP/abiotic-source/payload.tar.gz" -C "$RUNNER_TEMP/abiotic-source"
+          for f in paper.tex paper.bib verify_model.py README.md CITATION.cff .zenodo.json schema_article.jsonld deploy.py literature_review.md; do
+            test -s "$RUNNER_TEMP/abiotic-source/$f" || { echo "Missing source: $f" >&2; exit 1; }
+          done
+          test -s "$INDEX"
+          test ! -e "$RELEASE" || { echo "Release directory already exists; refusing overwrite." >&2; exit 1; }
+      - name: Restore source and run model/PDF build
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RELEASE/figures" "$RELEASE/results"
+          cp "$RUNNER_TEMP/abiotic-source/"{paper.tex,paper.bib,verify_model.py,README.md,CITATION.cff,.zenodo.json,schema_article.jsonld,deploy.py,literature_review.md} "$RELEASE/"
+          cd "$RELEASE"
+          python deploy.py --self-test
+          python deploy.py --build > results/build_output.txt 2>&1
+          test -s paper.pdf
+      - name: Render PDF contact sheet and validate complete release
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RELEASE"
+          python - <<'PY'
+          import fitz
+          from PIL import Image, ImageDraw
+          from pathlib import Path
+          doc=fitz.open("paper.pdf")
+          thumbs=[]
+          for n,page in enumerate(doc,1):
+              pix=page.get_pixmap(matrix=fitz.Matrix(0.65,0.65),alpha=False)
+              import io
+              im=Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGB")
+              im.thumbnail((190,250))
+              tile=Image.new("RGB",(205,275),"white")
+              tile.paste(im,((205-im.width)//2,4))
+              ImageDraw.Draw(tile).text((7,257),f"Page {n:02d}",fill="black")
+              thumbs.append(tile)
+          cols=4; rows=(len(thumbs)+cols-1)//cols
+          sheet=Image.new("RGB",(cols*205,rows*275),(232,235,240))
+          for i,im in enumerate(thumbs): sheet.paste(im,((i%cols)*205,(i//cols)*275))
+          sheet.save("results/pdf_contact_sheet.jpg",quality=92)
+          print(f"Rendered contact sheet for {len(doc)} PDF pages")
+          PY
+          python deploy.py --validate-only > results/validation_output.txt
+          pdfinfo paper.pdf > results/pdfinfo.txt
+          pdffonts paper.pdf > results/pdffonts.txt
+          python - <<'PY'
+          import hashlib,json,pathlib
+          d=pathlib.Path(".")
+          m=json.loads((d/"results/sha256_manifest.json").read_text())
+          for rel,sha in m.items():
+              p=d/rel
+              assert p.is_file(), f"manifest file missing: {rel}"
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==sha, f"hash mismatch: {rel}"
+          assert len(list((d/"figures").glob("*.pdf")))>=4
+          assert len(list((d/"figures").glob("*.png")))>=4
+          assert (d/"paper.pdf").stat().st_size>50000
+          assert len(list(d.glob("*")))>=12
+          print(f"PASS: {len(m)} manifest entries; PDF and figures present")
+          PY
+          rm -rf __pycache__
+      - name: Update research index and commit the release
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("Theoretical Research/Readme.md")
+          s=p.read_text(encoding="utf-8")
+          slug="Beyond_the_Biological_Bottleneck_Could_Intelligence_Emerge_Directly_from_Nature"
+          title="Beyond the Biological Bottleneck: Could Intelligence Emerge Directly from Nature?"
+          row=f"| 2026.10.30 | {title} | Abiotic-computation framework + Bayesian origin-identifiability demonstration | [{slug}]({slug}/) |"
+          if slug not in s:
+              p.write_text(s.rstrip()+"\n\n"+row+"\n",encoding="utf-8")
+          PY
+          rm -rf "$STAGING"
+          git add -A -- "$RELEASE" "$INDEX" "$STAGING"
+          git diff --cached --check -- "$RELEASE" "$INDEX"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "publish(abiotic-intelligence): release theoretical preprint"
+          git push origin main
+          echo "Published release folder: $RELEASE"
+          echo "Source commit: $GITHUB_SHA"
