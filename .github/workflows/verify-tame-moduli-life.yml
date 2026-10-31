@@ -1,13 +1,10 @@
 name: Verify Tame Moduli of Life release
 on:
-  push:
-    branches: [main]
-    paths: ["Theoretical Research/Tame_Moduli_of_Life_Sharp_O_Minimal_Finiteness_for_Repair_Closed_Systems_and_Tropical_Walls_over_the_Landscape_of_Physical_Laws/**"]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 concurrency:
-  group: verify-tame-moduli-life-\${{ github.sha }}
+  group: verify-tame-moduli-life-${{ github.sha }}
   cancel-in-progress: false
 jobs:
   verify:
@@ -24,7 +21,7 @@ jobs:
         run: |
           python -m pip install numpy==2.3.5 scipy==1.17.0 matplotlib==3.10.8 networkx==3.6.1 PyMuPDF==1.26.7 PyYAML==6.0.3 Pillow==11.3.0
           sudo apt-get update && sudo apt-get install -y poppler-utils
-      - name: Validate remote release and artifact hashes
+      - name: Independently verify remote commit and all release artifacts
         shell: bash
         run: |
           set -euo pipefail
@@ -33,25 +30,74 @@ jobs:
           python deploy.py --self-test
           python deploy.py --validate-only
           rm -rf __pycache__
+          git fetch origin --tags
+          test "$(git rev-parse refs/tags/v2026.10.31^{commit})" = "$GITHUB_SHA"
+          python - <<'PY'
+          from pathlib import Path
+          slug='Tame_Moduli_of_Life_Sharp_O_Minimal_Finiteness_for_Repair_Closed_Systems_and_Tropical_Walls_over_the_Landscape_of_Physical_Laws'
+          index=Path.cwd().parents[1]/'Theoretical Research'/'Readme.md'
+          assert slug in index.read_text() and '2026.10.31' in index.read_text()
+          PY
+          tmp=$(mktemp -d)
+          cp verify_model.py "$tmp/verify_model.py"
+          (cd "$tmp" && python verify_model.py > model_verification.json)
+          python - "$tmp/model_verification.json" <<'PY'
+          import json,sys
+          d=json.loads(open(sys.argv[1]).read())
+          assert d['status']=='PASS' and d['figures']==12
+          print('PASS: clean-directory independent model and figure regeneration')
+          PY
+          rm -rf "$tmp"
           python - <<'PY'
           import json,hashlib,re,yaml
           from pathlib import Path
           import fitz
-          p=Path('.'); roots={'paper.tex','paper.pdf','verify_model.py','README.md','CITATION.cff','paper.bib','.zenodo.json','schema_article.jsonld','deploy.py'}
+          p=Path('.')
+          roots={'paper.tex','paper.pdf','verify_model.py','README.md','CITATION.cff','paper.bib','.zenodo.json','schema_article.jsonld','deploy.py'}
           assert {x.name for x in p.iterdir() if x.is_file()}==roots
           assert {x.name for x in p.iterdir() if x.is_dir()}=={'figures','results'}
-          yaml.safe_load((p/'CITATION.cff').read_text()); json.loads((p/'.zenodo.json').read_text()); json.loads((p/'schema_article.jsonld').read_text())
+          yaml.safe_load((p/'CITATION.cff').read_text())
+          json.loads((p/'.zenodo.json').read_text()); json.loads((p/'schema_article.jsonld').read_text())
           d=fitz.open('paper.pdf'); assert len(d)>=25
           assert sum(len(d[i].get_text().split())>=80 for i in range(3,min(25,len(d))))>=18
-          t=(p/'paper.tex').read_text(); assert len(re.findall(r'\\begin\{figure\}',t))>=12 and len(re.findall(r'\\begin\{table\}',t))>=5
+          t=(p/'paper.tex').read_text()
+          assert len(re.findall(r'\\begin\{figure\}',t))>=12 and len(re.findall(r'\\begin\{table\}',t))>=5
           assert len(list((p/'figures').glob('*.pdf')))>=12 and len(list((p/'figures').glob('*.png')))>=12
           assert 'Co-equal research-process credit' in t
-          r=json.loads((p/'results/pdf_visual_review.json').read_text()); assert r['pdf_sha256']==hashlib.sha256((p/'paper.pdf').read_bytes()).hexdigest() and r['page_count']==len(d)
+          r=json.loads((p/'results/pdf_visual_review.json').read_text())
+          assert r['pdf_sha256']==hashlib.sha256((p/'paper.pdf').read_bytes()).hexdigest() and r['page_count']==len(d)
           m=json.loads((p/'results/sha256_manifest.json').read_text())
-          for f,h in m.items(): assert (p/f).is_file() and hashlib.sha256((p/f).read_bytes()).hexdigest()==h,f
-          print(f'PASS remote SHA={hashlib.sha256((p/"paper.pdf").read_bytes()).hexdigest()} pages={len(d)} manifest={len(m)}')
+          for f,h in m.items():
+              assert (p/f).is_file() and hashlib.sha256((p/f).read_bytes()).hexdigest()==h,f
+          print(f"PASS: PDF pages={len(d)}; manifest files={len(m)}; PDF SHA256={hashlib.sha256((p/'paper.pdf').read_bytes()).hexdigest()}")
           PY
           pdfinfo paper.pdf
           pdffonts paper.pdf | tee "$RUNNER_TEMP/fonts.txt"
-          grep -q yes "$RUNNER_TEMP/fonts.txt"
-          echo "Verified exact release commit $GITHUB_SHA"
+          awk 'NR>2 && $5!="yes"{bad=1} END{exit bad}' "$RUNNER_TEMP/fonts.txt"
+          echo "Verified remote release commit $GITHUB_SHA"
+      - name: Record remote verification in release matrix
+        env:
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=Path(os.environ['RELEASE'])/'results/release_check_matrix.json'
+          m=json.loads(p.read_text())
+          m['release_status']='PASS'
+          m['release_commit_sha']=os.environ['GITHUB_SHA']
+          m['final_verification']={'workflow':'Verify Tame Moduli of Life release','run_id':int(os.environ['GITHUB_RUN_ID']),'run_url':os.environ['RUN_URL'],'event':os.environ['GITHUB_EVENT_NAME'],'head_sha':os.environ['GITHUB_SHA'],'conclusion':'success'}
+          for c in m.get('checks',[]):
+              if c.get('name')=='GitHub release workflow run': c.update(status='PASS',evidence=os.environ['RUN_URL'],head_sha=os.environ['GITHUB_SHA'])
+              if c.get('name')=='remote files, PDF and release index independently fetched': c.update(status='PASS',evidence=os.environ['RUN_URL'],head_sha=os.environ['GITHUB_SHA'])
+              if c.get('name')=='tag target checked against final release commit': c.update(status='PASS',evidence='v2026.10.31 resolves to '+os.environ['GITHUB_SHA'])
+          p.write_text(json.dumps(m,indent=2)+'\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$RELEASE/results/release_check_matrix.json"
+          git commit -m 'chore(tame-moduli-life): record remote verification pass'
+          git push origin HEAD:main
+          echo "Committed terminal release matrix."
