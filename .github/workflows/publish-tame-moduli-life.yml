@@ -62,6 +62,7 @@ jobs:
         run: |
           set -euo pipefail
           cd "$RELEASE"
+          rm -rf __pycache__
           python - <<'PY'
           from pathlib import Path
           import fitz,hashlib,json,io
