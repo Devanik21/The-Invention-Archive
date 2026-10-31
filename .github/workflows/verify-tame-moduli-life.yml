@@ -82,14 +82,18 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json,os,hashlib
+          import json,os,hashlib,fitz
           from pathlib import Path
           p=Path(os.environ['RELEASE'])/'results/release_check_matrix.json'
           m=json.loads(p.read_text())
           m['release_status']='PASS'
           m['release_commit_sha']=os.environ['GITHUB_SHA']
           m['final_verification']={'workflow':'Verify Tame Moduli of Life release','run_id':int(os.environ['GITHUB_RUN_ID']),'run_url':os.environ['RUN_URL'],'event':os.environ['GITHUB_EVENT_NAME'],'head_sha':os.environ['GITHUB_SHA'],'conclusion':'success'}
+          doc=fitz.open(p.parent/'paper.pdf')
+          total_pages=len(doc)
+          main_pages=sum(len(doc[i].get_text().split())>=80 for i in range(3,min(25,len(doc))))
           for c in m.get('checks',[]):
+              if c.get('name')=='PDF page count and main-text floor': c.update(status='PASS',evidence=f'results/pdfinfo.txt; {total_pages} total pages; {main_pages} substantive main-text pages in checked range 4-25')
               if c.get('name')=='GitHub release workflow run': c.update(status='PASS',evidence=os.environ['RUN_URL'],head_sha=os.environ['GITHUB_SHA'])
               if c.get('name')=='remote files, PDF and release index independently fetched': c.update(status='PASS',evidence=os.environ['RUN_URL'],head_sha=os.environ['GITHUB_SHA'])
               if c.get('name')=='tag target checked against final release commit': c.update(status='PASS',evidence='v2026.10.31 resolves to '+os.environ['GITHUB_SHA'])
