@@ -95,7 +95,7 @@ jobs:
           for c in m.get('checks',[]):
               name=c.get('name')
               if name=='PDF page count and main-text floor': c.update(status='PASS',evidence=f'results/pdfinfo.txt; {total_pages} total pages; {main_pages} substantive main-text pages in checked range 4-25')
-              if name=='GitHub release workflow run': c.update(status='PASS',evidence=os.environ['RUN_URL'],head_sha=os.environ['GITHUB_SHA'])
+              if name=='GitHub release workflow run on published commit': c.update(status='PASS',evidence=os.environ['RUN_URL'],head_sha=os.environ['GITHUB_SHA'])
               if name=='remote files, PDF and release index independently fetched': c.update(status='PASS',evidence=os.environ['RUN_URL'],head_sha=os.environ['GITHUB_SHA'])
               if name=='tag target checked against final release commit': c.update(status='PASS',evidence='v2026.10.31 resolves to '+os.environ['GITHUB_SHA'])
               if name=='author-profile audit': c.update(status='PASS_WITH_SCOPE_LIMITS',evidence='results/author_profile_audit.md; unverified linked profiles are explicitly identified')
