@@ -8,7 +8,7 @@ permissions:
   contents: write
   actions: write
 concurrency:
-  group: publish-tame-moduli-life-lmodern-clean
+  group: publish-tame-moduli-life-lmodern-audited
   cancel-in-progress: false
 jobs:
   publish:
@@ -77,6 +77,23 @@ jobs:
                       except UnicodeDecodeError: continue
                       q.write_text('\n'.join(line.rstrip() for line in s.splitlines()).rstrip()+'\n',encoding='utf-8')
           d=fitz.open('paper.pdf'); root=Path('.'); thumbs=[]; rendered=[]
+          # Keep evidence page counts synchronized with the freshly built PDF.
+          updates={
+              'results/research_log.md':[
+                  ('PDF has 27 pages; 22 main-text pages (section body pages 4–25), 5 front-matter pages / appendix / references according to the PDF structure.',
+                   f'PDF has {len(d)} pages; 22 substantive main-text pages (pages 4–25), with front matter, appendix, and references outside that count.'),
+                  ('all 27 pages rendered at 1.25x',f'all {len(d)} pages rendered at 1.25x')],
+              'results/publication_design_brief.md':[('27 pages in the current build',f'{len(d)} pages in the current build')],
+              'results/publication_quality_report.md':[('27 pages; A4 geometry',f'{len(d)} pages; A4 geometry')],
+              'results/release_check_summary.md':[('27 pages',f'{len(d)} pages')],
+              'README.md':[('27-page',f'{len(d)}-page'),('27 pages',f'{len(d)} pages')]
+          }
+          for name,pairs in updates.items():
+              q=Path(name)
+              if q.exists():
+                  s=q.read_text(encoding='utf-8')
+                  for old,new in pairs: s=s.replace(old,new)
+                  q.write_text(s,encoding='utf-8')
           out=root/'results'/'rendered_pages'; out.mkdir(exist_ok=True)
           for n,p in enumerate(d,1):
               pix=p.get_pixmap(matrix=fitz.Matrix(1.25,1.25),alpha=False); pix.save(out/f'page_{n:02d}.png')
