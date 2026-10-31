@@ -1,0 +1,11 @@
+candidate_id,title,importance,gap_evidence,novelty_depth,mathematical_core,AI_role,falsifiability,first_validation,score,decision
+1,"Tame Moduli of Life: Sharp O-Minimal Finiteness for Repair-Closed Systems and Tropical Walls",5,4,4,5,3,5,4,4.4,"Author-selected direction; strongest balanced synthesis under a conditional scope"
+2,"Universal finiteness of all life across all universes",5,1,2,3,1,1,1,2.0,"Rejected: universal claim is not supported by o-minimality"
+3,"O-minimal cell decomposition for finite reaction-network parameter families",4,4,4,5,2,5,5,4.2,"Close, defensible narrower formulation"
+4,"Tropical walls for biochemical repair equilibria",4,3,3,4,3,4,4,3.7,"Existing tropical biochemistry makes standalone novelty weaker"
+5,"Autocatalytic core classification across all chemistries",4,2,2,4,1,3,3,2.9,"Overclaims beyond known finite-topology classifications"
+6,"O-minimal invariants for repair-control dynamics",4,4,3,4,4,5,4,4.0,"Strong adjacent direction but close to existing o-minimal invariant literature"
+7,"Definability of thermodynamic viability regions",4,3,3,4,1,3,2,3.1,"Too broad without a sharply delimited physical class"
+8,"AI compiler for formal life-admissibility predicates",4,3,4,4,5,5,4,4.1,"AI role is useful as an auditable support method, not central theorem"
+9,"Format-degree scaling laws for biochemical model complexity",3,3,4,5,2,4,3,3.7,"Interesting quantitative subproblem but no chosen sharp structure or concrete bound"
+10,"Finite atlas of all possible physical law spaces",5,1,2,4,2,1,1,2.4,"Rejected: unbounded scope and no defensible universal parameter space"

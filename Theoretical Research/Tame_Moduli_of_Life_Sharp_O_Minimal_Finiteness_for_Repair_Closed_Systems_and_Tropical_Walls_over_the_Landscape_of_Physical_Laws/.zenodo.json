@@ -1,0 +1,33 @@
+{
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "title": "Tame Moduli of Life: Sharp O-Minimal Finiteness for Repair-Closed Systems and Tropical Walls over the Landscape of Physical Laws",
+  "creators": [
+    {
+      "name": "Devanik Debnath",
+      "orcid": "0009-0001-8310-6921"
+    }
+  ],
+  "description": "A theoretical preprint proposing a conditional finiteness framework for finite-dimensional families of repair-closed systems. It encodes a model-relative admissibility predicate in an o-minimal structure, explains format-degree bounds under sharp o-minimality, and overlays tropical candidate walls. A synthetic semialgebraic example and reproducible numerical checks are provided. This is not an empirical demonstration or a universal classification of life.",
+  "publication_date": "2026-10-31",
+  "version": "1.0.0",
+  "license": "MIT",
+  "access_right": "open",
+  "keywords": [
+    "o-minimality",
+    "sharp o-minimality",
+    "tame geometry",
+    "repair-closed systems",
+    "autocatalytic networks",
+    "tropical geometry",
+    "mathematical biology",
+    "theoretical physics"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Devanik21/The-Invention-Archive",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

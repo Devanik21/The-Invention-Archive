@@ -1,0 +1,36 @@
+name                                 type              encoding         emb sub uni object ID
+------------------------------------ ----------------- ---------------- --- --- --- ---------
+QMWZAR+LMRomanCaps10-Regular         Type 1            Custom           yes yes yes    151  0
+GYOUWH+LMRoman10-Regular             Type 1            Custom           yes yes yes    152  0
+GYOUWH+LMRoman10-Regular             Type 1            Custom           yes yes yes    153  0
+FGYUOT+LMRoman12-Bold                Type 1            Custom           yes yes yes    154  0
+XKDVJX+LMRoman12-Italic              Type 1            Custom           yes yes yes    155  0
+KAMJVR+LMRoman12-Regular             Type 1            Custom           yes yes yes    156  0
+DWPQHA+LMRoman10-Bold                Type 1            Custom           yes yes yes    157  0
+HGEFIT+LMMono10-Regular              Type 1            Custom           yes yes yes    158  0
+QMWZAR+LMRomanCaps10-Regular         Type 1            Custom           yes yes yes    189  0
+GNHOUD+MSBM10                        Type 1            Builtin          yes yes yes    208  0
+EJWDJB+LMMathItalic8-Regular         Type 1            Custom           yes yes yes    209  0
+UGCBZQ+LMMathSymbols10-Regular       Type 1            Custom           yes yes yes    210  0
+XJJEGL+LMMathItalic10-Regular        Type 1            Custom           yes yes yes    211  0
+GYOUWH+LMRoman10-Regular             Type 1            Custom           yes yes yes    212  0
+NXKHFO+LMRoman10-Italic              Type 1            Custom           yes yes yes    213  0
+NEXHTZ+LMMathSymbols8-Regular        Type 1            Custom           yes yes yes    262  0
+XBTYII+LMRoman8-Regular              Type 1            Custom           yes yes yes    263  0
+SNBKFU+LMMathExtension10-Regular     Type 1            Custom           yes yes yes    265  0
+DFODNW+LMMathSymbols6-Regular        Type 1            Custom           yes yes yes    279  0
+TWYHPI+LMRoman7-Regular              Type 1            Custom           yes yes yes    286  0
+MIVCBS+LMMathItalic7-Regular         Type 1            Custom           yes yes yes    287  0
+GAWAYN+LMMathSymbols7-Regular        Type 1            Custom           yes yes yes    288  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     296  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     337  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     385  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     443  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     485  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     538  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     566  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     605  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     637  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     679  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     723  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     767  0

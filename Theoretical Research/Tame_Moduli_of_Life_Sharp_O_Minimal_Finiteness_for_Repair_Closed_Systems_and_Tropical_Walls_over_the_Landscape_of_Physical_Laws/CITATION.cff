@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as a theoretical research preprint."
+title: "Tame Moduli of Life: Sharp O-Minimal Finiteness for Repair-Closed Systems and Tropical Walls over the Landscape of Physical Laws"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+version: "1.0.0"
+date-released: "2026-10-31"
+license: MIT
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+abstract: >-
+  A conditional finiteness framework for finite-dimensional families of
+  repair-closed systems. The paper encodes a model-relative life-admissibility
+  predicate in a fixed o-minimal structure, derives finite connected-component
+  conclusions and sharp format-degree bounds under additional hypotheses,
+  and compares the resulting tame partition with tropical candidate walls.
+  A synthetic semialgebraic example is supplied; no empirical or universal
+  biological claim is made.
+keywords:
+  - o-minimality
+  - sharp o-minimality
+  - format-degree complexity
+  - repair-closed systems
+  - autocatalytic networks
+  - tropical geometry
+  - mathematical biology
+  - theoretical physics

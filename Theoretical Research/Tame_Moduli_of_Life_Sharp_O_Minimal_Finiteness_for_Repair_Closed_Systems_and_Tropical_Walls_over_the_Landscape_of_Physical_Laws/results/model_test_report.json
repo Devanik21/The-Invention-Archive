@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "assertions": {
+    "feasible_witness_satisfies_budget_and_repair": true,
+    "stoichiometric_positive_flux": true,
+    "repair_map_contracts_damage_for_all_tested_lambdas": true,
+    "tropical_binomial_log_wall_residual_below_1e-12": true,
+    "degree_component_demo_matches_exact_expected_count": true,
+    "grid_connected_components_detected": 1,
+    "all_12_scientific_figure_assets_generated": true
+  },
+  "environment": {
+    "python": "3.12.15",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "matplotlib": "3.10.8",
+    "networkx": "3.6.1"
+  },
+  "limitations": [
+    "synthetic model only",
+    "grid component count is numerical illustration, not theorem",
+    "no empirical biology or physical-law inference"
+  ]
+}

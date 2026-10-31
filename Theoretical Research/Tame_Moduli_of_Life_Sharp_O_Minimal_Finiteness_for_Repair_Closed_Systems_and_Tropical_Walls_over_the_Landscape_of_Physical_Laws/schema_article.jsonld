@@ -1,0 +1,34 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Tame Moduli of Life: Sharp O-Minimal Finiteness for Repair-Closed Systems and Tropical Walls over the Landscape of Physical Laws",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "identifier": "https://orcid.org/0009-0001-8310-6921",
+    "affiliation": {
+      "@type": "CollegeOrUniversity",
+      "name": "National Institute of Technology Agartala"
+    }
+  },
+  "datePublished": "2026-10-31",
+  "version": "1.0.0",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "license": "https://opensource.org/license/mit",
+  "keywords": [
+    "o-minimality",
+    "sharp o-minimality",
+    "format-degree complexity",
+    "repair-closed systems",
+    "autocatalytic networks",
+    "tropical geometry"
+  ],
+  "description": "A conditional finiteness framework for finite-dimensional families of repair-closed systems, with a synthetic semialgebraic example and tropical candidate walls. The work does not claim a universal classification of life or empirical validation.",
+  "url": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Tame_Moduli_of_Life_Sharp_O_Minimal_Finiteness_for_Repair_Closed_Systems_and_Tropical_Walls_over_the_Landscape_of_Physical_Laws",
+  "encoding": {
+    "@type": "MediaObject",
+    "encodingFormat": "application/pdf",
+    "contentUrl": "https://github.com/Devanik21/The-Invention-Archive"
+  }
+}

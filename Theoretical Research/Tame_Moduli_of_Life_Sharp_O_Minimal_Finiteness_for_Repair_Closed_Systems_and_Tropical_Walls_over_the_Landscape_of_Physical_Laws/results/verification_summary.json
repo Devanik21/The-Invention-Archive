@@ -1,0 +1,116 @@
+{
+  "model": "synthetic finite-dimensional semialgebraic toy family",
+  "seed": 20261031,
+  "grid_n": 801,
+  "epsilon": 0.05,
+  "damage_threshold_c": 0.04,
+  "connected_components_8_connected": 1,
+  "grid_area_estimate": 0.3322835156250001,
+  "boundary_intersections_with_a_plus_b_eq_1": [
+    0.041742430504416006,
+    0.9582575694955839
+  ],
+  "feasible_witness": [
+    0.25,
+    0.25
+  ],
+  "stoichiometric_matrix": [
+    [
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0
+    ]
+  ],
+  "positive_flux": [
+    1.0,
+    1.0
+  ],
+  "net_production": [
+    1.0,
+    1.0
+  ],
+  "repair_contraction_identity_tested": true,
+  "tropical_binomial_log_residual_max": 4.440892098500626e-16,
+  "complexity_demo": [
+    [
+      2,
+      2,
+      2
+    ],
+    [
+      4,
+      3,
+      3
+    ],
+    [
+      6,
+      4,
+      4
+    ],
+    [
+      8,
+      5,
+      5
+    ],
+    [
+      10,
+      6,
+      6
+    ],
+    [
+      12,
+      7,
+      7
+    ],
+    [
+      14,
+      8,
+      8
+    ],
+    [
+      16,
+      9,
+      9
+    ],
+    [
+      18,
+      10,
+      10
+    ],
+    [
+      20,
+      11,
+      11
+    ]
+  ],
+  "grid_convergence": [
+    [
+      101,
+      4156,
+      1,
+      0.33663600000000005
+    ],
+    [
+      201,
+      16509,
+      1,
+      0.33430725000000006
+    ],
+    [
+      401,
+      65762,
+      1,
+      0.33292012500000007
+    ],
+    [
+      801,
+      262545,
+      1,
+      0.3322835156250001
+    ]
+  ],
+  "interpretation": "Toy mathematical checks only; no empirical or universal biological inference."
+}

@@ -1,0 +1,1 @@
+PASS: manifest, metadata, BibTeX keys, Python syntax, PDF 29 pages, main text 22 pages, 12 figures, 5 tables

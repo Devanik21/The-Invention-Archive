@@ -1,0 +1,10 @@
+claim_id,claim,epistemic_level,evidence,limit
+C1,"Definable subsets of an o-minimal structure have finitely many connected components",P1,van den Dries 1998 and o-minimal theory,Only if the set is definable in the selected structure
+C2,"Sharp o-minimality can track complexity by format and degree",P1,Binyamini-Novikov-Zack arXiv:2209.10972,Specific sharp format bounds require structure-specific derivation
+C3,"Studied string/flux-vacuum families admit tame-geometric finiteness analysis",P4,Grimm-Monnee 2024 DOI 10.1007/JHEP08(2024)039,Applies to stated physical families not arbitrary universes
+C4,"Minimal autocatalytic cores fall into five classes in the studied framework",P1/P4,Blokhuis-Lacoste-Nghe 2020 and Nandan et al 2026,Not universal classification of all chemistry or life
+C5,"Tropical equilibrations are used in biochemical network analysis",P4,Desoeuvres et al 2022; 2024; Cobley 2026,Existing methods; no novelty claimed for tropical biochemistry
+C6,"A repair-closed admissible set can be defined for a finite model class",P1,Explicit first-order predicate and worked construction,Model-class-dependent definition; empirical life not established
+C7,"The finite-museum theorem bounds connected components, not every point or all possible life",P1,Conditional o-minimal component theorem,Does not establish universal finiteness over unrestricted law-space
+C8,"Tropical walls partition a chosen finite-support approximation",P1/P4,Log-sum asymptotics and toy binomial identity,Approximation depends on support and asymptotic regime
+C9,"AI can help compile and adversarially audit symbolic predicates",P4,Proposed pipeline architecture,Not an AI-discovered theorem or validated scientific instrument

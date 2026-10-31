@@ -1,0 +1,12 @@
+Python 3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]
+numpy 2.3.5
+scipy 1.17.0
+matplotlib 3.10.8
+networkx 3.6.1
+PyMuPDF 1.26.7
+PyYAML 6.0.3
+
+Toolchain
+pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian)
+This is 8-bit Big BibTeX version 0.99d-x4.02 (TeX Live 2025/dev)
+Dependencies: numpy==2.3.5, scipy==1.17.0, matplotlib==3.10.8, networkx==3.6.1, PyMuPDF==1.26.7, PyYAML==6.0.3, Pillow==11.3.0

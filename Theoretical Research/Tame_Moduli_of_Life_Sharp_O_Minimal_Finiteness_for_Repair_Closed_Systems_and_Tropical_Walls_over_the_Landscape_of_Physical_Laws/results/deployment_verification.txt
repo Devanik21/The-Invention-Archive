@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "components": 1,
+  "area_estimate": 0.3322835156250001,
+  "figures": 12,
+  "tropical_residual": 4.440892098500626e-16
+}
