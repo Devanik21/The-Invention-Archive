@@ -82,7 +82,7 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json,os
+          import json,os,hashlib
           from pathlib import Path
           p=Path(os.environ['RELEASE'])/'results/release_check_matrix.json'
           m=json.loads(p.read_text())
@@ -94,6 +94,10 @@ jobs:
               if c.get('name')=='remote files, PDF and release index independently fetched': c.update(status='PASS',evidence=os.environ['RUN_URL'],head_sha=os.environ['GITHUB_SHA'])
               if c.get('name')=='tag target checked against final release commit': c.update(status='PASS',evidence='v2026.10.31 resolves to '+os.environ['GITHUB_SHA'])
           p.write_text(json.dumps(m,indent=2)+'\n')
+          manifest_path=p.parent/'sha256_manifest.json'
+          manifest=json.loads(manifest_path.read_text())
+          manifest['results/release_check_matrix.json']=hashlib.sha256(p.read_bytes()).hexdigest()
+          manifest_path.write_text(json.dumps(manifest,indent=2)+'\n')
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
