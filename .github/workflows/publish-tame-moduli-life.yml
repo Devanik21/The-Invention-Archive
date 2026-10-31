@@ -18,6 +18,7 @@ jobs:
       STAGING: .research-staging/tame-moduli-life
       RELEASE: Theoretical Research/Tame_Moduli_of_Life_Sharp_O_Minimal_Finiteness_for_Repair_Closed_Systems_and_Tropical_Walls_over_the_Landscape_of_Physical_Laws
       MPLBACKEND: Agg
+      PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
         with: {ref: main, fetch-depth: 0}
@@ -49,7 +50,11 @@ jobs:
           cd "$RELEASE"
           python -m py_compile verify_model.py deploy.py
           python deploy.py --self-test
-          python deploy.py --build > results/build_output.txt 2>&1
+          if ! python deploy.py --build > results/build_output.txt 2>&1; then
+            echo "ERROR: source verification or fresh LaTeX build failed; full tail follows"
+            tail -n 180 results/build_output.txt
+            exit 1
+          fi
           python deploy.py --validate-only > results/pre_publish_validation.txt 2>&1
           pdfinfo paper.pdf > results/pdfinfo.txt
           pdffonts paper.pdf > results/pdffonts.txt
@@ -91,6 +96,16 @@ jobs:
           PY
           rm -rf __pycache__
           python deploy.py --validate-only
+          rm -rf __pycache__
+      - name: Preserve failed build diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tame-moduli-build-diagnostics
+          path: |
+            ${{ env.RELEASE }}/results/build_output.txt
+            ${{ env.RELEASE }}/results/pre_publish_validation.txt
+          if-no-files-found: ignore
       - name: Update index and publish immutable release
         shell: bash
         run: |
@@ -117,7 +132,7 @@ jobs:
           echo "Published commit $sha and tag v2026.10.31"
       - name: Dispatch independent verification against published main
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
@@ -129,4 +144,4 @@ jobs:
             if [ "$status" = completed ]; then echo "$run"; test "$conclusion" = success; break; fi
             sleep 10
           done
-          test "\${status:-}" = completed && test "\${conclusion:-}" = success
+          test "${status:-}" = completed && test "${conclusion:-}" = success
