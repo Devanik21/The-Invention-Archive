@@ -48,7 +48,7 @@
   "results/pdfinfo.txt": "af72f663132ea16e37995493561e9145556e1a4fc46273a8e7ab8465f70c5ec3",
   "results/publication_design_brief.md": "edc0ef9fbaecf1ddbc1014f5018386b71c21591e0e51792088c85a17b99f7ec5",
   "results/publication_quality_report.md": "0e900658a27a3a4a89d803b496fdea0ee82475e7ad58000b2d3dbb5ca2e17985",
-  "results/release_check_summary.md": "43a43723b06e1eeb91ab76db40e9654e5d8bb3b74f1dab53cd08c651b63ed337",
+  "results/release_check_summary.md": "7e6f4d307793a56869da825bc6e70e780abfd1964065982d9a8181e8691c1ccf",
   "results/rendered_pages/page_01.png": "422099975b24fcb34a389895faa77fa469c1827b3229fe3eeaac9a4100e32f1c",
   "results/rendered_pages/page_02.png": "e8a33f69b916ef74c69f75b9c10c1ae3e1c3a439ea5d32cf8bd57ae26c3e37ec",
   "results/rendered_pages/page_03.png": "9f74e3f715c66a5a6f7e8b37a99f8023fb899ba909baa80e6b9edd2a5bf48845",
@@ -85,5 +85,6 @@
   "results/tropical_wall_points.csv": "edbb7919c8db552b07a8c01f04d3c429ed38192c97a8b1bc1e5dcdf41704fd62",
   "results/verification_summary.json": "a522a1a6d0ce365a6e926dad17f10fe629319ea2308ff2d031a83449dfa0d8e8",
   "schema_article.jsonld": "0864aba8c49bf3843e216932f58dc1c559ed441da1e363c59ff2200699ab751b",
-  "verify_model.py": "b961fa037aa34b4f047e7348f498489c9188eab0b7d3764241705cf7bf5f293d"
+  "verify_model.py": "b961fa037aa34b4f047e7348f498489c9188eab0b7d3764241705cf7bf5f293d",
+  "results/release_check_matrix.json": "3cd90b71ca9ca418ec9f6182d44372c1cdbcb9767a668fd46b1dcbbf28d4784a"
 }

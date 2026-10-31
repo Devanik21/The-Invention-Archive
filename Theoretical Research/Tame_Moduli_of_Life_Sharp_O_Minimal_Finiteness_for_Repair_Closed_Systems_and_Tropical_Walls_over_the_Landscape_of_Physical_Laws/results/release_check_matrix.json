@@ -3,7 +3,7 @@
   "repository": "Devanik21/The-Invention-Archive",
   "branch": "main",
   "tested_artifact_tree_sha256": "25ccbfee0ddd13cdbef0ab95a37258d85eaebfb096a0016e7f37a815d9918d25",
-  "release_commit_sha": null,
+  "release_commit_sha": "6b82158b2c7edaca169c6028c2350c8704eab4e6",
   "checks": [
     {
       "name": "scientific validity and literature boundary",
@@ -12,8 +12,8 @@
     },
     {
       "name": "author-profile audit",
-      "status": "PENDING",
-      "evidence": "results/author_profile_audit.md (unverified linked profiles clearly labelled)"
+      "status": "PASS_WITH_SCOPE_LIMITS",
+      "evidence": "results/author_profile_audit.md; unverified linked profiles clearly labelled"
     },
     {
       "name": "numerical verifier and figure generation",
@@ -42,8 +42,8 @@
     },
     {
       "name": "full-page visual inspection",
-      "status": "PENDING",
-      "evidence": "results/pdf_visual_review.json; every page rendered and contact-sheet reviewed; not independent human proofreading"
+      "status": "PASS_WITH_HUMAN_PROOFREADING_CAVEAT",
+      "evidence": "results/pdf_visual_review.json; all 29 pages rendered and contact sheets reviewed; independent human print proofreading remains outstanding"
     },
     {
       "name": "metadata, citation and bibliography validation",
@@ -57,20 +57,98 @@
     },
     {
       "name": "GitHub release workflow run on published commit",
-      "status": "PENDING",
-      "evidence": "Awaiting remote publication workflow"
+      "status": "PASS",
+      "evidence": "Publication commit/tag step succeeded in run 41183134240; initial verifier parser false-negative reconciled; corrected independent verifier passed: https://github.com/Devanik21/The-Invention-Archive/actions/runs/41183579332",
+      "head_sha": "6b82158b2c7edaca169c6028c2350c8704eab4e6"
     },
     {
       "name": "remote files, PDF and release index independently fetched",
-      "status": "PENDING",
-      "evidence": "Awaiting post-publish GitHub tree verification"
+      "status": "PASS",
+      "evidence": "remote tree, PDF, index, page renders and SHA256 manifest checked in https://github.com/Devanik21/The-Invention-Archive/actions/runs/41183579332",
+      "head_sha": "6b82158b2c7edaca169c6028c2350c8704eab4e6"
     },
     {
       "name": "tag target checked against final release commit",
-      "status": "PENDING",
-      "evidence": "Awaiting final remote commit SHA"
+      "status": "PASS",
+      "evidence": "v2026.10.31 resolves exactly to 6b82158b2c7edaca169c6028c2350c8704eab4e6"
     }
   ],
   "pdf_sha256": "28ffe3d4b8f9075133ebd5a8cbca9034754dc3a3f88c1c19309a7fd63b6cecc6",
-  "release_status": "PENDING_REMOTE_VERIFICATION"
+  "release_status": "PASS",
+  "final_verification": {
+    "workflow": "Verify Tame Moduli of Life release",
+    "run_id": 41183579332,
+    "run_url": "https://github.com/Devanik21/The-Invention-Archive/actions/runs/41183579332",
+    "event": "push",
+    "verification_workflow_head_sha": "6762302f9a84ec8eadf9729a7e812a43ff039058",
+    "verified_release_sha": "6b82158b2c7edaca169c6028c2350c8704eab4e6",
+    "result": "all independent checks passed; terminal matrix and summary committed by this run"
+  },
+  "workflow_run_reconciliation": [
+    {
+      "workflow": "Publish Tame Moduli of Life",
+      "run_id": 41180776266,
+      "event": "push",
+      "head_sha": "9ad66c10a35fc1fc79988d322081a4ba7d831ff4",
+      "conclusion": "failure",
+      "disposition": "missing New TX font package; later build uses the installed LModern font family"
+    },
+    {
+      "workflow": "Publish Tame Moduli of Life",
+      "run_id": 41181014852,
+      "event": "push",
+      "head_sha": "22548dd178803aee6f10ab90c708bd037ec3981f",
+      "conclusion": "failure",
+      "disposition": "same New TX font dependency; resolved by LModern source build"
+    },
+    {
+      "workflow": "Publish Tame Moduli of Life",
+      "run_id": 41182331779,
+      "event": "push",
+      "head_sha": "6daba38f49fd789b841cf8ab7899fd5c691f1aa6",
+      "conclusion": "failure",
+      "disposition": "validator ran before the generated checksum manifest; workflow order corrected"
+    },
+    {
+      "workflow": "Publish Tame Moduli of Life",
+      "run_id": 41182536138,
+      "event": "push",
+      "head_sha": "4c919b5ac13ce95b70f9c4ba099e888ea6830719",
+      "conclusion": "failure",
+      "disposition": "temporary __pycache__ directory violated exact root-directory manifest; cache removed before manifest gate"
+    },
+    {
+      "workflow": "Publish Tame Moduli of Life",
+      "run_id": 41182746651,
+      "event": "push",
+      "head_sha": "d9974ddc126fc7cb9dfdd9128b48e082caab3b34",
+      "conclusion": "failure",
+      "disposition": "generated CSV and Python text files contained trailing whitespace; deterministic text normalization added before hashing and commit"
+    },
+    {
+      "workflow": "Publish Tame Moduli of Life",
+      "run_id": 41182983007,
+      "event": "push",
+      "head_sha": "52d3241b96d8e6e53051a6a876e161268f08a6db",
+      "conclusion": "failure",
+      "disposition": "main advanced during build and rejected the non-fast-forward push; subsequent run checked out the current main head and published successfully"
+    },
+    {
+      "workflow": "Publish Tame Moduli of Life",
+      "run_id": 41183134240,
+      "event": "push",
+      "head_sha": "4fc9cab0cd0059cde1c1398ffcc584199e912fb9",
+      "conclusion": "failure",
+      "publish_commit_and_tag_step": "success",
+      "disposition": "publication succeeded; final step failed because the first independent verifier misparsed pdffonts fields"
+    },
+    {
+      "workflow": "Verify Tame Moduli of Life release",
+      "run_id": 41183266703,
+      "event": "workflow_dispatch",
+      "head_sha": "6b82158b2c7edaca169c6028c2350c8704eab4e6",
+      "conclusion": "failure",
+      "disposition": "false-negative font-embedding parser treated multiword pdffonts columns as fixed positions; corrected flag-triple parser is used in this successful run"
+    }
+  ]
 }
