@@ -55,7 +55,6 @@ jobs:
             tail -n 180 results/build_output.txt
             exit 1
           fi
-          python deploy.py --validate-only > results/pre_publish_validation.txt 2>&1
           pdfinfo paper.pdf > results/pdfinfo.txt
           pdffonts paper.pdf > results/pdffonts.txt
       - name: Render all PDF pages and finalize evidence
@@ -86,7 +85,7 @@ jobs:
           Path('results/release_check_matrix.json').write_text(json.dumps(m,indent=2)+'\n')
           manifest={}
           for p in sorted(Path('.').rglob('*')):
-              if p.is_file() and p.as_posix()!='results/sha256_manifest.json' and '__pycache__' not in p.parts: manifest[p.as_posix()]=hashlib.sha256(p.read_bytes()).hexdigest()
+              if p.is_file() and p.as_posix() not in ('results/sha256_manifest.json','results/release_check_matrix.json') and '__pycache__' not in p.parts: manifest[p.as_posix()]=hashlib.sha256(p.read_bytes()).hexdigest()
           Path('results/sha256_manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
           assert len(d)>=25 and len(list(Path('figures').glob('*.pdf')))>=12 and len(list(Path('figures').glob('*.png')))>=12
           required={'paper.tex','paper.pdf','verify_model.py','README.md','CITATION.cff','paper.bib','.zenodo.json','schema_article.jsonld','deploy.py'}
@@ -95,7 +94,7 @@ jobs:
           print(f'PASS: {len(d)} PDF pages; {len(manifest)} manifest entries; SHA256={sha}')
           PY
           rm -rf __pycache__
-          python deploy.py --validate-only
+          python deploy.py --validate-only > results/pre_publish_validation.txt 2>&1
           rm -rf __pycache__
       - name: Preserve failed build diagnostics
         if: failure()
