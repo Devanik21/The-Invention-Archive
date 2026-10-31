@@ -73,7 +73,7 @@ jobs:
           PY
           pdfinfo paper.pdf
           pdffonts paper.pdf | tee "$RUNNER_TEMP/fonts.txt"
-          awk 'NR>2 && $5!="yes"{bad=1} END{exit bad}' "$RUNNER_TEMP/fonts.txt"
+          awk 'NR>2 && $4!="yes"{bad=1} END{exit bad}' "$RUNNER_TEMP/fonts.txt"
           echo "Verified remote release commit $GITHUB_SHA"
       - name: Record remote verification in release matrix
         env:
