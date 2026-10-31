@@ -8,7 +8,7 @@ permissions:
   contents: write
   actions: write
 concurrency:
-  group: publish-tame-moduli-life-lmodern-fast
+  group: publish-tame-moduli-life-lmodern-clean
   cancel-in-progress: false
 jobs:
   publish:
@@ -68,6 +68,14 @@ jobs:
           from pathlib import Path
           import fitz,hashlib,json,io
           from PIL import Image,ImageDraw
+          # Normalize trailing whitespace in text artifacts before hashing and git diff checks.
+          suffixes={'.py','.csv','.json','.txt','.md','.tex','.bib','.cff','.yml','.yaml','.jsonld'}
+          for base in (Path('.'),):
+              for q in base.rglob('*'):
+                  if q.is_file() and q.suffix.lower() in suffixes:
+                      try: s=q.read_text(encoding='utf-8')
+                      except UnicodeDecodeError: continue
+                      q.write_text('\n'.join(line.rstrip() for line in s.splitlines()).rstrip()+'\n',encoding='utf-8')
           d=fitz.open('paper.pdf'); root=Path('.'); thumbs=[]; rendered=[]
           out=root/'results'/'rendered_pages'; out.mkdir(exist_ok=True)
           for n,p in enumerate(d,1):
