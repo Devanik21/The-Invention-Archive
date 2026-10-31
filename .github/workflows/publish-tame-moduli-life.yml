@@ -28,7 +28,7 @@ jobs:
         run: |
           python -m pip install numpy==2.3.5 scipy==1.17.0 matplotlib==3.10.8 networkx==3.6.1 PyMuPDF==1.26.7 PyYAML==6.0.3 Pillow==11.3.0
           sudo apt-get update
-          sudo apt-get install -y texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-science texlive-bibtex-extra poppler-utils
+          sudo apt-get install -y texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra texlive-science texlive-bibtex-extra poppler-utils
       - name: Restore staged source bundle
         shell: bash
         run: |
