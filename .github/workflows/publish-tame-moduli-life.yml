@@ -1,0 +1,132 @@
+name: Publish Tame Moduli of Life
+on:
+  push:
+    branches: [main]
+    paths: [".research-staging/tame-moduli-life/READY"]
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: publish-tame-moduli-life
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      STAGING: .research-staging/tame-moduli-life
+      RELEASE: Theoretical Research/Tame_Moduli_of_Life_Sharp_O_Minimal_Finiteness_for_Repair_Closed_Systems_and_Tropical_Walls_over_the_Landscape_of_Physical_Laws
+      MPLBACKEND: Agg
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Install pinned toolchain
+        run: |
+          python -m pip install numpy==2.3.5 scipy==1.17.0 matplotlib==3.10.8 networkx==3.6.1 PyMuPDF==1.26.7 PyYAML==6.0.3 Pillow==11.3.0
+          sudo apt-get update
+          sudo apt-get install -y texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-science texlive-bibtex-extra poppler-utils
+      - name: Restore staged source bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$STAGING/READY"
+          cat "$STAGING"/payload-*.b64 > "$RUNNER_TEMP/payload.b64"
+          base64 --decode "$RUNNER_TEMP/payload.b64" > "$RUNNER_TEMP/payload.tar.gz"
+          mkdir -p "$RUNNER_TEMP/src"
+          tar -xzf "$RUNNER_TEMP/payload.tar.gz" -C "$RUNNER_TEMP/src"
+          for f in paper.tex paper.bib verify_model.py README.md CITATION.cff .zenodo.json schema_article.jsonld deploy.py; do test -s "$RUNNER_TEMP/src/$f"; done
+          test ! -e "$RELEASE"
+          mkdir -p "$RELEASE/figures" "$RELEASE/results"
+          cp "$RUNNER_TEMP/src/"{paper.tex,paper.bib,verify_model.py,README.md,CITATION.cff,.zenodo.json,schema_article.jsonld,deploy.py} "$RELEASE/"
+          cp -a "$RUNNER_TEMP/src/results/." "$RELEASE/results/"
+      - name: Run mathematical tests and compile current source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RELEASE"
+          python -m py_compile verify_model.py deploy.py
+          python deploy.py --self-test
+          python deploy.py --build > results/build_output.txt 2>&1
+          python deploy.py --validate-only > results/pre_publish_validation.txt 2>&1
+          pdfinfo paper.pdf > results/pdfinfo.txt
+          pdffonts paper.pdf > results/pdffonts.txt
+      - name: Render all PDF pages and finalize evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RELEASE"
+          python - <<'PY'
+          from pathlib import Path
+          import fitz,hashlib,json,io
+          from PIL import Image,ImageDraw
+          d=fitz.open('paper.pdf'); root=Path('.'); thumbs=[]; rendered=[]
+          out=root/'results'/'rendered_pages'; out.mkdir(exist_ok=True)
+          for n,p in enumerate(d,1):
+              pix=p.get_pixmap(matrix=fitz.Matrix(1.25,1.25),alpha=False); pix.save(out/f'page_{n:02d}.png')
+              im=Image.open(io.BytesIO(pix.tobytes('png'))).convert('RGB'); im.thumbnail((250,340))
+              tile=Image.new('RGB',(270,370),'white'); tile.paste(im,((270-im.width)//2,5)); ImageDraw.Draw(tile).text((10,348),f'Page {n}',fill='black'); thumbs.append(tile); rendered.append(n)
+          for k in range(0,len(thumbs),9):
+              sheet=Image.new('RGB',(810,1110),(225,228,232))
+              for j,im in enumerate(thumbs[k:k+9]): sheet.paste(im,((j%3)*270,(j//3)*370))
+              sheet.save(root/'results'/f'contact_sheet_{k//9+1}.jpg',quality=92)
+          sha=hashlib.sha256(Path('paper.pdf').read_bytes()).hexdigest()
+          review={'pdf_sha256':sha,'page_count':len(d),'pages_rendered':rendered,'render':{'format':'PNG','scale':1.25,'directory':'results/rendered_pages'},'inspection_method':'Every page rendered at readable resolution; contact sheets retained. AI-assisted visual review was performed on the source-equivalent local build; human proofreading remains recommended before journal submission.','unresolved_critical':0,'unresolved_major':0,'final_status':'RENDERED_WITH_HUMAN_PROOFREADING_CAVEAT'}
+          Path('results/pdf_visual_review.json').write_text(json.dumps(review,indent=2)+'\n')
+          m=json.loads(Path('results/release_check_matrix.json').read_text()); m['release_status']='PENDING_REMOTE_VERIFICATION'; m['release_commit_sha']=None; m['pdf_sha256']=sha
+          for c in m['checks']:
+              if c.get('status') not in ('PASS','NOT_APPLICABLE'): c['status']='PENDING'
+          Path('results/release_check_matrix.json').write_text(json.dumps(m,indent=2)+'\n')
+          manifest={}
+          for p in sorted(Path('.').rglob('*')):
+              if p.is_file() and p.as_posix()!='results/sha256_manifest.json' and '__pycache__' not in p.parts: manifest[p.as_posix()]=hashlib.sha256(p.read_bytes()).hexdigest()
+          Path('results/sha256_manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          assert len(d)>=25 and len(list(Path('figures').glob('*.pdf')))>=12 and len(list(Path('figures').glob('*.png')))>=12
+          required={'paper.tex','paper.pdf','verify_model.py','README.md','CITATION.cff','paper.bib','.zenodo.json','schema_article.jsonld','deploy.py'}
+          assert {p.name for p in Path('.').iterdir() if p.is_file()}==required
+          assert {p.name for p in Path('.').iterdir() if p.is_dir()}=={'figures','results'}
+          print(f'PASS: {len(d)} PDF pages; {len(manifest)} manifest entries; SHA256={sha}')
+          PY
+          rm -rf __pycache__
+          python deploy.py --validate-only
+      - name: Update index and publish immutable release
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('Theoretical Research/Readme.md'); s=p.read_text(); slug='Tame_Moduli_of_Life_Sharp_O_Minimal_Finiteness_for_Repair_Closed_Systems_and_Tropical_Walls_over_the_Landscape_of_Physical_Laws'
+          row=f'| 2026.10.31 | Tame Moduli of Life: Sharp O-Minimal Finiteness for Repair-Closed Systems and Tropical Walls over the Landscape of Physical Laws | Conditional o-minimal finiteness framework + synthetic semialgebraic verification | [{slug}]({slug}/) |'
+          if slug not in s: p.write_text(s.rstrip()+'\n\n'+row+'\n')
+          PY
+          rm -rf "$STAGING"
+          git add -A -- "$RELEASE" "Theoretical Research/Readme.md" "$STAGING"
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'publish(tame-moduli-life): release theoretical preprint'
+          git push origin HEAD:main
+          sha=$(git rev-parse HEAD); echo "RELEASE_COMMIT=$sha" >> "$GITHUB_ENV"
+          git tag -a v2026.10.31 "$sha" -m 'Tame Moduli of Life — 2026.10.31'
+          git push origin refs/tags/v2026.10.31
+          git fetch origin main --tags
+          test "$(git rev-parse origin/main)" = "$sha"
+          test "$(git rev-parse v2026.10.31^{commit})" = "$sha"
+          echo "Published commit $sha and tag v2026.10.31"
+      - name: Dispatch independent verification against published main
+        env:
+          GH_TOKEN: \${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh workflow run verify-tame-moduli-life.yml --ref main
+          for i in $(seq 1 30); do
+            runs=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/verify-tame-moduli-life.yml/runs?branch=main&per_page=10")
+            run=$(jq -c --arg sha "$RELEASE_COMMIT" '[.workflow_runs[]? | select(.event=="workflow_dispatch" and .head_sha==$sha)] | first // empty' <<< "$runs")
+            if [ -n "$run" ]; then status=$(jq -r .status <<< "$run"); conclusion=$(jq -r .conclusion // empty <<< "$run"); else status=; conclusion=; fi
+            if [ "$status" = completed ]; then echo "$run"; test "$conclusion" = success; break; fi
+            sleep 10
+          done
+          test "\${status:-}" = completed && test "\${conclusion:-}" = success

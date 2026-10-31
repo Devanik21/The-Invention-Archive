@@ -1,0 +1,57 @@
+name: Verify Tame Moduli of Life release
+on:
+  push:
+    branches: [main]
+    paths: ["Theoretical Research/Tame_Moduli_of_Life_Sharp_O_Minimal_Finiteness_for_Repair_Closed_Systems_and_Tropical_Walls_over_the_Landscape_of_Physical_Laws/**"]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: verify-tame-moduli-life-\${{ github.sha }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RELEASE: Theoretical Research/Tame_Moduli_of_Life_Sharp_O_Minimal_Finiteness_for_Repair_Closed_Systems_and_Tropical_Walls_over_the_Landscape_of_Physical_Laws
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: main, fetch-depth: 1}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Install pinned verification dependencies
+        run: |
+          python -m pip install numpy==2.3.5 scipy==1.17.0 matplotlib==3.10.8 networkx==3.6.1 PyMuPDF==1.26.7 PyYAML==6.0.3 Pillow==11.3.0
+          sudo apt-get update && sudo apt-get install -y poppler-utils
+      - name: Validate remote release and artifact hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RELEASE"
+          python -m py_compile verify_model.py deploy.py
+          python deploy.py --self-test
+          python deploy.py --validate-only
+          rm -rf __pycache__
+          python - <<'PY'
+          import json,hashlib,re,yaml
+          from pathlib import Path
+          import fitz
+          p=Path('.'); roots={'paper.tex','paper.pdf','verify_model.py','README.md','CITATION.cff','paper.bib','.zenodo.json','schema_article.jsonld','deploy.py'}
+          assert {x.name for x in p.iterdir() if x.is_file()}==roots
+          assert {x.name for x in p.iterdir() if x.is_dir()}=={'figures','results'}
+          yaml.safe_load((p/'CITATION.cff').read_text()); json.loads((p/'.zenodo.json').read_text()); json.loads((p/'schema_article.jsonld').read_text())
+          d=fitz.open('paper.pdf'); assert len(d)>=25
+          assert sum(len(d[i].get_text().split())>=80 for i in range(3,min(25,len(d))))>=18
+          t=(p/'paper.tex').read_text(); assert len(re.findall(r'\\begin\{figure\}',t))>=12 and len(re.findall(r'\\begin\{table\}',t))>=5
+          assert len(list((p/'figures').glob('*.pdf')))>=12 and len(list((p/'figures').glob('*.png')))>=12
+          assert 'Co-equal research-process credit' in t
+          r=json.loads((p/'results/pdf_visual_review.json').read_text()); assert r['pdf_sha256']==hashlib.sha256((p/'paper.pdf').read_bytes()).hexdigest() and r['page_count']==len(d)
+          m=json.loads((p/'results/sha256_manifest.json').read_text())
+          for f,h in m.items(): assert (p/f).is_file() and hashlib.sha256((p/f).read_bytes()).hexdigest()==h,f
+          print(f'PASS remote SHA={hashlib.sha256((p/"paper.pdf").read_bytes()).hexdigest()} pages={len(d)} manifest={len(m)}')
+          PY
+          pdfinfo paper.pdf
+          pdffonts paper.pdf | tee "$RUNNER_TEMP/fonts.txt"
+          grep -q yes "$RUNNER_TEMP/fonts.txt"
+          echo "Verified exact release commit $GITHUB_SHA"
