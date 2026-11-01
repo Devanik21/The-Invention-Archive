@@ -1,0 +1,17 @@
+{
+  "build": "fresh temporary-directory pdfTeX build",
+  "pdf_sha256": "953d218abaff78b22999fe7445e83a0d233b99c760f44f58c666f1d73a938293",
+  "paper_tex_sha256": "a58f8d762754bdd27b102b8772aaf1aa50e861e698ad941749b37eba00c758b8",
+  "paper_bib_sha256": "4cd2a9168144ae5290c3d4ea84d52fd68c7339b82fc83413824d1de32ef8a09d",
+  "verification_exit_code": 0,
+  "pdf": {
+    "pages": 26,
+    "main_text_pages": 21,
+    "main_start_pdf_page": 4,
+    "main_end_pdf_page": 24,
+    "figures": 12,
+    "tables": 6,
+    "pdf_sha256": "953d218abaff78b22999fe7445e83a0d233b99c760f44f58c666f1d73a938293"
+  },
+  "bibliography": "manually typeset; BibTeX unavailable; keys cross-checked"
+}

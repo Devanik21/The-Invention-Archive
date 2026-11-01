@@ -1,0 +1,13 @@
+claim_id,claim,level,evidence,assumptions,validation_or_falsifier,status
+C01,VC epsilon-net gives O(d/epsilon log(1/epsilon)) sufficient hitting set,P1,Haussler-Welzl 1987,Finite VC dimension and every target range epsilon-heavy,Establish d and lower mass on declared target domain,Established theorem; application conditional
+C02,Uniformly definable o-minimal range family has finite VC dimension,P1,Johnson-Laskowski 2010 and o-minimal foundations,One fixed formula and finite parameter tuple,Write full formula and certify definability,Structural route; numeric d unresolved
+C03,Pfaffian formulas can yield quantitative VC bounds,P1,Karpinski-Macintyre 1997; Montana-Pardo 2009,Explicit chain length degree dimensions and operations,Derive audited format certificate,No numeric HIV/toxin bound in this release
+C04,2D antigenic map implies VC dimension 3,P5,No general theorem; explicitly not claimed,Would require candidate-plane points and disk threshold sets,Check real threshold geometries,Rejected as invalid general inference
+C05,Published epsilon-t-net gives multiple coverage for finite uniform hypergraphs,P1,Alon et al. 2022,Finite hypergraph, dual shatter growth, sufficiently large n,Check theorem conditions,Existing result; not novelty claim
+C06,Weighted small-atom sequential k-cover has size <= k*s,P1,Proof in Section 9,Uniform residual epsilon/2 net bound and atom eta <= epsilon/(2*k*s),Check residual mass per round,New derivation in this manuscript under strong stated assumptions
+C07,Robust ranges shrink with nested perturbation neighborhoods,P1,Set inclusion from definition,Nested E_rho and fixed response model,Measure robust-range mass vs rho,Definition-level implication
+C08,Synthetic Hill threshold equals Euclidean disk at 50%,P1,Algebra in Appendix A,Specified log-IC50 distance model,Run exact threshold equivalence test,Validated in toy model only
+C09,Synthetic greedy 1-cover=3 and 2-cover=6,P1,verify_model.py output,Seed 20261101, 4000 candidates, 72 targets, epsilon=.2,Run released code,Finite greedy solution; not optimality
+C10,CATNAP can support future HIV empirical analysis,P4,Yoon et al. 2015 and LANL source page,Assay metadata harmonizable,Download versioned dataset and preregister exclusions,Dataset identified, not analyzed
+C11,AI assay acquisition may reduce assays per coverage certificate,P2/P4,Proposed acquisition function,Calibrated posterior and prospective comparison,Test against random/standard design,Proposal only
+C12,Framework proves universal vaccine/clinical antivenom protection,P5,No evidence; explicitly disclaimed,Would require host induction, efficacy, PK, safety and clinical data,Rejected and not claimed

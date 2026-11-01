@@ -1,0 +1,19 @@
+<PARSED TEXT FOR SHEET: 1 / 1 TABS
+TAB NAME: literature_audit.csv>
+index,key,source,year,identifier,role,status,limitation
+0,HausslerWelzl1987,Haussler and Welzl epsilon-nets and simplex range queries,1987,10.1007/BF02187876,Classical epsilon-net theorem,Metadata checked,Theory applies conditionally to measured range spaces
+1,AlonEtAl2022,Alon Jartoux Keller Smorodinsky Yuditsky epsilon-t-net problem,2022,10.1007/s00454-022-00376-x,Existing finite-uniform multi-coverage theorem,Publisher metadata checked,Finite hypergraph and dual-shatter/pool-size assumptions retained
+2,Chekuri2009,Chekuri Clarkson Har-Peled set multi-cover,2009,10.1145/1542362.1542421,Bounded-VC finite multi-cover algorithmic background,Proceedings metadata checked,Algorithmic results distinct from existence theorem
+3,JohnsonLaskowski2010,Johnson and Laskowski o-minimal definable families,2010,10.1007/s00454-009-9201-3,Qualitative complexity route,Metadata checked,Does not provide biological numeric d
+4,KarpinskiMacintyre1997,Pfaffian/sigmoidal network VC bounds,1997,10.1006/jcss.1997.1477,Quantitative VC precedent,Metadata checked,Bounds depend on exact computation architecture
+5,MontanaPardo2009,Transcendental-program VC dimension,2009,10.1007/s10472-009-9148-3,Pfaffian/analytic VC format bounds,Metadata checked,No actual antibody formula certificate produced
+6,Wilkie1996,Model completeness for restricted Pfaffian and exponential expansions,1996,JAMS 9(4):1051-1094,O-minimal foundations,Publisher metadata checked,Structural theorem only
+7,vdDMM1994,Restricted analytic fields with exponentiation,1994,Annals 140(1):183-205,Real analytic/exponential foundations,Metadata checked,Structural theorem only
+8,JulgBarouch2021,HIV bnAb prevention and therapy review,2021,10.1016/j.smim.2021.101475,BnAb breadth/combination context,PubMed PMID 33858765,Review not evidence for current epsilon-net model
+9,Thavarajah2024,HIV bnAb use in treatment/prevention,2024,10.3390/v16060911,BnAb combinations and resistance context,PubMed PMID 38932203,Review context only
+10,HaynesYehBaden2026,Human induction of HIV bnAb lineages review,2026,10.1097/COH.0000000000001070,Separates vaccine lineage induction from passive cocktail selection,PubMed PMID 42740473,Review not a vaccine efficacy result or mathematical bound
+11,Menzies2025,Recombinant antivenoms review,2025,10.1080/17460441.2025.2495943,Antivenom monoclonal mixtures motivation,PubMed PMID 40302313,Does not provide universal antibody count
+12,Sitaras2020,Antigenic cartography overview,2020,10.1007/978-1-0716-0346-8_5,Low-dimensional antigenic map context,Springer chapter metadata,Map dimension not antibody-range VC dimension
+13,Yoon2015,CATNAP neutralization panel database tool,2015,10.1093/nar/gkv404,Future HIV empirical data resource,PubMed/source checked,CATNAP data were identified but not downloaded/analyzed
+14,MathSciNet,AMS Mathematical Reviews search,2026,https://mathscinet.ams.org/mathscinet,Novelty check,Interface incomplete,JS results not verifiable in this execution
+15,zbMATH,zbMATH Open,2026,https://zbmath.org,Novelty check,Access blocked,No search result set verified
