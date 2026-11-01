@@ -1,0 +1,19 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Epsilon-Nets of Antigenic Space: Conditional Bounds for Broad-Spectrum Antibody Cocktails",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "identifier": "https://orcid.org/0009-0001-8310-6921",
+    "sameAs": ["https://github.com/Devanik21", "https://www.linkedin.com/in/devanik"]
+  },
+  "datePublished": "2026-11-01",
+  "version": "1.0.0",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "license": "https://opensource.org/license/mit",
+  "url": "https://github.com/Devanik21/The-Invention-Archive",
+  "description": "Independent theoretical preprint proposing a conditional measured range-space formulation for antibody coverage. Mathematical bounds require a positive lower range-mass condition and finite VC dimension; numerical outputs are synthetic, not empirical or clinical validation.",
+  "keywords": ["epsilon-nets", "VC dimension", "Pfaffian functions", "o-minimality", "neutralizing antibodies", "antivenom research", "robust coverage"]
+}
