@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as an independent theoretical preprint."
+title: "Epsilon-Nets of Antigenic Space: Conditional Bounds for Broad-Spectrum Antibody Cocktails"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    orcid: "https://orcid.org/0009-0001-8310-6921"
+date-released: "2026-11-01"
+version: "1.0.0"
+type: article
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+license: MIT
+keywords:
+  - epsilon-nets
+  - VC dimension
+  - o-minimal structures
+  - Pfaffian functions
+  - neutralizing antibodies
+  - antigenic cartography
+  - antivenom research
+  - robust coverage

@@ -1,0 +1,18 @@
+{
+  "title": "Epsilon-Nets of Antigenic Space: Conditional Bounds for Broad-Spectrum Antibody Cocktails",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "publication_date": "2026-11-01",
+  "version": "1.0.0",
+  "creators": [{
+    "name": "Devanik Debnath",
+    "orcid": "0009-0001-8310-6921",
+    "affiliation": "National Institute of Technology Agartala (author-provided affiliation; not an institutional endorsement)"
+  }],
+  "description": "Independent theoretical preprint: conditional range-space formulation for passive antibody cocktail coverage using classical VC epsilon-net theory, o-minimal/Pfaffian definability, published epsilon-k-net theory, a weighted small-atom sufficient lemma, robust antigenic neighborhoods, and synthetic verification. No empirical neutralization or antivenom data were analyzed; no universal protection or clinical efficacy is claimed.",
+  "keywords": ["epsilon-nets", "VC dimension", "o-minimality", "Pfaffian functions", "neutralizing antibodies", "antigenic space", "multi-cover", "robust coverage"],
+  "license": "MIT",
+  "access_right": "open",
+  "related_identifiers": [{"identifier": "https://github.com/Devanik21/The-Invention-Archive", "relation": "isSupplementTo", "resource_type": "software"}],
+  "notes": "Metadata prepared for possible future deposition only. No Zenodo deposit was made and no DOI was minted or claimed."
+}
