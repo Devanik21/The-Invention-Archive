@@ -33,8 +33,20 @@ jobs:
         run: |
           set -euo pipefail
           test -s "$STAGING/READY"
-          cat "$STAGING"/payload-*.b64 > "$RUNNER_TEMP/epsilon.b64"
-          base64 --decode "$RUNNER_TEMP/epsilon.b64" > "$RUNNER_TEMP/epsilon.tar.gz"
+          python - <<'PY'
+          from pathlib import Path
+          import base64,re,os
+          out=Path(os.environ["RUNNER_TEMP"])/"epsilon.tar.gz"
+          shards=sorted(Path(".research-staging/epsilon-nets-antigenic").glob("payload-*.b64"))
+          assert len(shards)==11, f"expected 11 payload shards, found {len(shards)}"
+          with out.open("wb") as dst:
+              for shard in shards:
+                  data=shard.read_bytes()
+                  compact=data.strip()
+                  if re.fullmatch(rb"[A-Za-z0-9+/=]+",compact):
+                      data=base64.b64decode(compact,validate=True)
+                  dst.write(data)
+          PY
           mkdir -p "$RUNNER_TEMP/src"
           tar -xzf "$RUNNER_TEMP/epsilon.tar.gz" -C "$RUNNER_TEMP/src"
           for f in paper.tex paper.bib verify_model.py README.md CITATION.cff .zenodo.json schema_article.jsonld deploy.py; do test -s "$RUNNER_TEMP/src/$f"; done
