@@ -1,0 +1,132 @@
+{
+  "timestamp_utc": "2026-11-01T13:33:10.475214+00:00",
+  "seed": 20261101,
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "matplotlib": "3.10.8",
+    "networkx": "3.6.1"
+  },
+  "design": {
+    "antibody_candidates": 4000,
+    "target_variants": 72,
+    "epsilon": 0.2,
+    "k": 2,
+    "range": "variable-radius Euclidean disks in 2D",
+    "hill_slope": 1.4
+  },
+  "coverage": {
+    "fraction_epsilon_heavy": 1.0,
+    "mean_range_mass": 0.3591944444444445,
+    "median_range_mass": 0.361375,
+    "minimum_range_mass": 0.256
+  },
+  "greedy_finite_cover": {
+    "single": 3,
+    "double": 6,
+    "min_double_multiplicity": 2,
+    "k_1_to_4_sizes": [
+      3,
+      6,
+      9,
+      12
+    ],
+    "optimality": "not established"
+  },
+  "sampling": {
+    "trials": 250,
+    "sample_sizes": [
+      8,
+      12,
+      16,
+      24,
+      32,
+      48,
+      64,
+      96,
+      128,
+      192
+    ],
+    "hit_fractions": [
+      0.56,
+      0.872,
+      0.968,
+      0.996,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "robust_neighbourhood": {
+    "rho": [
+      0.0,
+      0.02,
+      0.04,
+      0.06,
+      0.08,
+      0.1,
+      0.12
+    ],
+    "mean_mass": [
+      0.3591944444444445,
+      0.3274444444444444,
+      0.29622569444444447,
+      0.2652951388888889,
+      0.2353263888888889,
+      0.20578819444444443,
+      0.17733333333333334
+    ],
+    "epsilon_heavy_fraction": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.9166666666666666,
+      0.5555555555555556,
+      0.1527777777777778
+    ],
+    "test": "four cardinal offsets only; not continuum worst-case"
+  },
+  "checks": [
+    {
+      "name": "Hill IC50 threshold equals 0.5",
+      "status": "PASS"
+    },
+    {
+      "name": "monotone Hill response",
+      "status": "PASS"
+    },
+    {
+      "name": "threshold equals Euclidean disk",
+      "status": "PASS"
+    },
+    {
+      "name": "finite double-cover feasibility",
+      "status": "PASS"
+    },
+    {
+      "name": "unique selected antibodies",
+      "status": "PASS"
+    },
+    {
+      "name": "range masses lie in [0,1]",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid negative-distance rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "infeasible multicover rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "deterministic seed",
+      "status": "PASS"
+    }
+  ],
+  "empirical_data": "No CATNAP or antivenom table downloaded or analyzed; all numeric outputs synthetic."
+}
