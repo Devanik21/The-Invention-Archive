@@ -4,3 +4,6 @@ shards=payload-01.b64..payload-11.b64
 branch=main
 release_path=Theoretical Research/Epsilon-Nets-of-Antigenic-Space
 version=v2026.11.01
+
+payload-normalization=per-shard
+retry=1
