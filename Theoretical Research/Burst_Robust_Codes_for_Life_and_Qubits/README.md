@@ -22,3 +22,6 @@ Holographic reconstruction is a quantum-code property, not a biological mechanis
 - [Spanning-failure figure](figures/figure1_spanning_threshold.png)
 - [Example track realization](figures/figure2_track_realization.png)
 - [Complete release bundle](../Burst_Robust_Codes_for_Life_and_Qubits_complete_bundle.zip)
+
+
+Calibration note: the Poisson track intensity is solved by bisection so the expected lattice-wide mean occupancy equals the iid probability at each sweep point. Because tracks are clipped at finite boundaries, site-specific marginals vary near the edges.
