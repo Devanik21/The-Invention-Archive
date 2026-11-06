@@ -1,1 +1,1 @@
-PASS: 10 probabilities x 4,000 trials per channel; seed 20261106
+PASS: 10 probabilities x 4,000 trials per channel; exact lattice-mean occupancy calibration; seed 20261106

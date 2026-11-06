@@ -3,86 +3,135 @@
   "model": "24x24 4-neighbour lattice connectivity surrogate",
   "seed": 20261106,
   "trials_per_probability": 4000,
+  "calibration": {
+    "method": "bisection on the exact Poisson-thinning expectation",
+    "target": "lattice-wide mean occupancy equals p",
+    "sitewise_note": "individual site marginals vary near boundaries because tracks are clipped",
+    "poisson_intensity_by_p": {
+      "0.20": 27.792073148075715,
+      "0.25": 35.85069491743518,
+      "0.30": 44.47595574297149,
+      "0.35": 53.752906689376985,
+      "0.40": 63.787236652121436,
+      "0.45": 74.71252534027639,
+      "0.50": 86.70098645431395,
+      "0.55": 99.97993032512952,
+      "0.60": 114.85803451982932,
+      "0.65": 131.76938301227977
+    },
+    "expected_mean_occupancy_by_p": {
+      "0.20": 0.19999999999999993,
+      "0.25": 0.25,
+      "0.30": 0.29999999999999993,
+      "0.35": 0.3499999999999999,
+      "0.40": 0.4000000000000001,
+      "0.45": 0.45000000000000007,
+      "0.50": 0.4999999999999998,
+      "0.55": 0.55,
+      "0.60": 0.5999999999999999,
+      "0.65": 0.6499999999999999
+    }
+  },
   "results": [
     {
       "p": 0.2,
       "iid_failures": 0,
-      "track_failures": 1,
+      "track_failures": 2,
       "trials": 4000,
       "iid_rate": 0.0,
-      "track_rate": 0.00025
+      "track_rate": 0.0005,
+      "track_poisson_intensity": 27.792073148075715,
+      "target_mean_occupancy": 0.2
     },
     {
       "p": 0.25,
       "iid_failures": 0,
-      "track_failures": 0,
+      "track_failures": 7,
       "trials": 4000,
       "iid_rate": 0.0,
-      "track_rate": 0.0
+      "track_rate": 0.00175,
+      "track_poisson_intensity": 35.85069491743518,
+      "target_mean_occupancy": 0.25
     },
     {
       "p": 0.3,
       "iid_failures": 0,
-      "track_failures": 11,
+      "track_failures": 45,
       "trials": 4000,
       "iid_rate": 0.0,
-      "track_rate": 0.00275
+      "track_rate": 0.01125,
+      "track_poisson_intensity": 44.47595574297149,
+      "target_mean_occupancy": 0.3
     },
     {
       "p": 0.35,
       "iid_failures": 0,
-      "track_failures": 61,
+      "track_failures": 224,
       "trials": 4000,
       "iid_rate": 0.0,
-      "track_rate": 0.01525
+      "track_rate": 0.056,
+      "track_poisson_intensity": 53.752906689376985,
+      "target_mean_occupancy": 0.35
     },
     {
       "p": 0.4,
       "iid_failures": 0,
-      "track_failures": 235,
+      "track_failures": 705,
       "trials": 4000,
       "iid_rate": 0.0,
-      "track_rate": 0.05875
+      "track_rate": 0.17625,
+      "track_poisson_intensity": 63.787236652121436,
+      "target_mean_occupancy": 0.4
     },
     {
       "p": 0.45,
-      "iid_failures": 18,
-      "track_failures": 658,
+      "iid_failures": 11,
+      "track_failures": 1606,
       "trials": 4000,
-      "iid_rate": 0.0045,
-      "track_rate": 0.1645
+      "iid_rate": 0.00275,
+      "track_rate": 0.4015,
+      "track_poisson_intensity": 74.71252534027639,
+      "target_mean_occupancy": 0.45
     },
     {
       "p": 0.5,
-      "iid_failures": 233,
-      "track_failures": 1446,
+      "iid_failures": 219,
+      "track_failures": 2737,
       "trials": 4000,
-      "iid_rate": 0.05825,
-      "track_rate": 0.3615
+      "iid_rate": 0.05475,
+      "track_rate": 0.68425,
+      "track_poisson_intensity": 86.70098645431395,
+      "target_mean_occupancy": 0.5
     },
     {
       "p": 0.55,
-      "iid_failures": 1251,
-      "track_failures": 2513,
+      "iid_failures": 1229,
+      "track_failures": 3497,
       "trials": 4000,
-      "iid_rate": 0.31275,
-      "track_rate": 0.62825
+      "iid_rate": 0.30725,
+      "track_rate": 0.87425,
+      "track_poisson_intensity": 99.97993032512952,
+      "target_mean_occupancy": 0.55
     },
     {
       "p": 0.6,
-      "iid_failures": 2998,
-      "track_failures": 3331,
+      "iid_failures": 2972,
+      "track_failures": 3876,
       "trials": 4000,
-      "iid_rate": 0.7495,
-      "track_rate": 0.83275
+      "iid_rate": 0.743,
+      "track_rate": 0.969,
+      "track_poisson_intensity": 114.85803451982932,
+      "target_mean_occupancy": 0.6
     },
     {
       "p": 0.65,
-      "iid_failures": 3884,
-      "track_failures": 3793,
+      "iid_failures": 3893,
+      "track_failures": 3984,
       "trials": 4000,
-      "iid_rate": 0.971,
-      "track_rate": 0.94825
+      "iid_rate": 0.97325,
+      "track_rate": 0.996,
+      "track_poisson_intensity": 131.76938301227977,
+      "target_mean_occupancy": 0.65
     }
   ],
   "limitations": [
