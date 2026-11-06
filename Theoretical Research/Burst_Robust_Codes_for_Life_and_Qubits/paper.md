@@ -76,7 +76,7 @@ and report logical failure over the full burst-profile distribution, not only an
 # 5. Track-structured biological damage
 High-LET heavy ions produce dense ionization patterns and complex DNA damage. Reviews describe clustered DSBs and non-DSB oxidative clustered lesions, with repair kinetics and pathway choice depending on lesion complexity and radiation quality [3–6]. Recent track-structure simulations across H–Fe ions quantify changes in cluster multiplicity with LET and ion species [11]. These findings motivate spatial models; they do not establish that every track overwhelms repair.
 
-The dCas9–KillerRed system offers a controllable method to generate localized ROS-associated DNA damage at targeted genomic regions. Its foundational study reports rapid light-triggered clustered oxidative damage and rapid repair under the tested conditions, with low observed mutagenesis in that setting [12]. It is a calibration and perturbation platform, not proof of a heavy-ion-equivalent track or a general repair-overload phenotype. Candidate measurements include DSB-cluster imaging, repair-factor recruitment time courses, sequencing of repair outcomes, chromosome aberrations, and clonogenic survival. These endpoints must not be conflated.
+The dCas9–KillerRed system offers a controllable method to generate localized ROS-associated DNA damage at targeted genomic regions. Its foundational study reports rapid light-triggered clustered oxidative damage and rapid repair under the tested conditions, with low observed mutagenesis in that setting [12]. A 2025 review surveys genetically encoded photosensitizers and spatially and temporally controlled ROS production, including KillerRed-based DNA-damage tools [17]. It is a calibration and perturbation platform, not proof of a heavy-ion-equivalent track or a general repair-overload phenotype. Candidate measurements include DSB-cluster imaging, repair-factor recruitment time courses, sequencing of repair outcomes, chromosome aberrations, and clonogenic survival. These endpoints must not be conflated.
 
 # 6. Neural decoding and adaptive repair allocation
 AlphaQubit 2 demonstrates high-accuracy, real-time neural decoding for topological codes under the noise settings studied [13]. This motivates training and testing decoders on measured correlated burst channels, but does not establish that AlphaQubit 2 has already been validated on the particular radiation-burst distribution proposed here. Held-out device runs and distribution-shift tests are essential.
@@ -143,6 +143,7 @@ All numerical values are generated from the included deterministic synthetic mod
 14. G. Abrahams et al., “Quantum spin resonance in engineered proteins for multimodal sensing,” *Nature* (2026).
 15. E. Aprile et al. (XENON Collaboration), “Probing the Solar 8B Neutrino Fog with XENONnT,” *Physical Review Letters* 137, 091807 (2026), DOI: 10.1103/xvpn-w3q9.
 16. Z. Tabrizi et al., “Clarity through the neutrino fog: constraining new forces in dark matter detectors,” *JHEP* (2025), DOI: 10.1007/JHEP08(2025)043.
+17. A. Dey and R. P. Barnes, “Genetic approaches for targeted oxidative stress,” *NAR Cancer* 7(4), zcaf049 (2025), DOI: 10.1093/narcan/zcaf049.
 
 
 <!-- reproducibility pipeline trigger: source audit complete -->
