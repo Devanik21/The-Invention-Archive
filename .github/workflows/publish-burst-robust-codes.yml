@@ -38,7 +38,7 @@ jobs:
           cd "$RELEASE"
           mkdir -p results figures
           python verify_model.py | tee results/verification_stdout.txt
-          pandoc paper.md -o paper.pdf --pdf-engine=xelatex -V geometry:margin=0.8in
+          pandoc --from=markdown+tex_math_single_backslash paper.md -o paper.pdf --pdf-engine=xelatex -V geometry:margin=0.8in
           pdfinfo paper.pdf
           test "$(pdfinfo paper.pdf | awk '/^Pages:/ {print $2}')" -ge 5
           test -s figures/figure1_spanning_threshold.pdf
