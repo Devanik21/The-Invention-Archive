@@ -146,3 +146,6 @@ All numerical values are generated from the included deterministic synthetic mod
 
 
 <!-- reproducibility pipeline trigger: source audit complete -->
+
+
+<!-- main-branch reproducible build trigger -->
