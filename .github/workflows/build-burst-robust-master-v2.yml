@@ -85,9 +85,9 @@ jobs:
               sheet=Image.new("RGB",(cols*210,rows*280),(232,235,240))
               for i,im in enumerate(part): sheet.paste(im,((i%cols)*210,(i//cols)*280))
               sheet.save(root/"results"/f"pdf_contact_sheet_{k//20+1}.jpg",quality=92)
-          full="\n".join(p.get_text() for p in doc)
-          intro=next(i for i,p in enumerate(doc) if "1 Introduction: reliability under spatially extended events" in p.get_text())
-          appendix=next(i for i,p in enumerate(doc) if "A Exact expected-occupancy calibration" in p.get_text())
+          page_text=[" ".join(p.get_text().split()) for p in doc]
+          intro=next(i for i,t in enumerate(page_text) if "1 Introduction: reliability under spatially extended events" in t and "The reliability of a complex system" in t)
+          appendix=next(i for i,t in enumerate(page_text) if "A Exact expected-occupancy calibration" in t)
           main_pages=appendix-intro+1
           review={
             "schema_version":"1.0","status":"RENDERED_CONTACT_SHEETS_READY_FOR_FINAL_HUMAN_PROOFREADING",
