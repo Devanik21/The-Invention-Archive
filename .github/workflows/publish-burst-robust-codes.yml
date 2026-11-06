@@ -36,6 +36,7 @@ jobs:
         run: |
           set -euo pipefail
           cd "$RELEASE"
+          mkdir -p results figures
           python verify_model.py | tee results/verification_stdout.txt
           pandoc paper.md -o paper.pdf --pdf-engine=pdflatex -V geometry:margin=0.8in
           pdfinfo paper.pdf
