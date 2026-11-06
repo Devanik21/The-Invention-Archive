@@ -3,7 +3,12 @@ on:
   push:
     branches: [research/burst-robust-codes-2026, main]
     paths:
-      - "Theoretical Research/Burst_Robust_Codes_for_Life_and_Qubits/**"
+      - "Theoretical Research/Burst_Robust_Codes_for_Life_and_Qubits/paper.md"
+      - "Theoretical Research/Burst_Robust_Codes_for_Life_and_Qubits/verify_model.py"
+      - "Theoretical Research/Burst_Robust_Codes_for_Life_and_Qubits/README.md"
+      - "Theoretical Research/Burst_Robust_Codes_for_Life_and_Qubits/CITATION.cff"
+      - "Theoretical Research/Burst_Robust_Codes_for_Life_and_Qubits/.zenodo.json"
+      - "Theoretical Research/Burst_Robust_Codes_for_Life_and_Qubits/schema_article.jsonld"
       - ".github/workflows/publish-burst-robust-codes.yml"
   workflow_dispatch:
 permissions:
@@ -13,7 +18,6 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
-    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message != 'publish(burst-robust): build manuscript and reproducible release'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
