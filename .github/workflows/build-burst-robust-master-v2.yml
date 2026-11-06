@@ -87,7 +87,7 @@ jobs:
               sheet.save(root/"results"/f"pdf_contact_sheet_{k//20+1}.jpg",quality=92)
           page_text=[" ".join(p.get_text().split()) for p in doc]
           intro=next(i for i,t in enumerate(page_text) if "1 Introduction: reliability under spatially extended events" in t and "The reliability of a complex system" in t)
-          appendix=next(i for i,t in enumerate(page_text) if "A Exact expected-occupancy calibration" in t)
+          appendix=next(i for i,t in enumerate(page_text[intro+1:],start=intro+1) if "A Exact expected-occupancy calibration" in t)
           main_pages=appendix-intro+1
           review={
             "schema_version":"1.0","status":"RENDERED_CONTACT_SHEETS_READY_FOR_FINAL_HUMAN_PROOFREADING",
