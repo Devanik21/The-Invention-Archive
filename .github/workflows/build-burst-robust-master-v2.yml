@@ -67,7 +67,7 @@ jobs:
           cd "$RELEASE"
           python - <<'PY'
           from pathlib import Path
-          import fitz, hashlib, json, datetime
+          import fitz, hashlib, json, datetime, csv
           from PIL import Image, ImageDraw
           root=Path("."); doc=fitz.open("paper.pdf")
           digest=hashlib.sha256(Path("paper.pdf").read_bytes()).hexdigest()
@@ -128,8 +128,7 @@ jobs:
                   files[p.relative_to(root).as_posix()]=hashlib.sha256(p.read_bytes()).hexdigest()
           (root/"results"/"sha256_manifest.json").write_text(json.dumps(files,indent=2)+"\n")
           PY
-          cd ..
-          zip -qr "Master_v2.0_complete_bundle.zip" "Master_v2.0"
+          zip -qr "Master_v2.0_complete_bundle.zip" . -x "./Master_v2.0_complete_bundle.zip"
       - name: Update indexes, remove staging payload, and publish
         shell: bash
         run: |
@@ -147,6 +146,6 @@ jobs:
           rm -rf ".research-staging/burst-master-v2"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$RELEASE" "Theoretical Research/Readme.md" "Theoretical Research/Burst_Robust_Codes_for_Life_and_Qubits/README.md" "Theoretical Research/Burst_Robust_Codes_for_Life_and_Qubits/Master_v2.0_complete_bundle.zip" ".research-staging/burst-master-v2"
+          git add "$RELEASE" "Theoretical Research/Readme.md" "Theoretical Research/Burst_Robust_Codes_for_Life_and_Qubits/README.md" ".research-staging/burst-master-v2"
           git commit -m "publish(burst-master-v2): publish expanded 31-page master edition"
           git push origin main
