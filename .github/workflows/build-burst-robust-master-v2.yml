@@ -67,7 +67,7 @@ jobs:
           cd "$RELEASE"
           python - <<'PY'
           from pathlib import Path
-          import fitz, hashlib, json, datetime, csv
+          import fitz, hashlib, json, datetime, csv, csv
           from PIL import Image, ImageDraw
           root=Path("."); doc=fitz.open("paper.pdf")
           digest=hashlib.sha256(Path("paper.pdf").read_bytes()).hexdigest()
