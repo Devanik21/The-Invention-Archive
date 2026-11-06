@@ -143,3 +143,6 @@ All numerical values are generated from the included deterministic synthetic mod
 14. G. Abrahams et al., “Quantum spin resonance in engineered proteins for multimodal sensing,” *Nature* (2026).
 15. E. Aprile et al. (XENON Collaboration), “Probing the Solar 8B Neutrino Fog with XENONnT,” *Physical Review Letters* 137, 091807 (2026), DOI: 10.1103/xvpn-w3q9.
 16. Z. Tabrizi et al., “Clarity through the neutrino fog: constraining new forces in dark matter detectors,” *JHEP* (2025), DOI: 10.1007/JHEP08(2025)043.
+
+
+<!-- reproducibility pipeline trigger: source audit complete -->
