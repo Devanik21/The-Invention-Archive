@@ -13,7 +13,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build:
-    if: \${{ !startsWith(github.event.head_commit.message, 'publish(burst-robust):') }}
+    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message != 'publish(burst-robust): build manuscript and reproducible release'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
