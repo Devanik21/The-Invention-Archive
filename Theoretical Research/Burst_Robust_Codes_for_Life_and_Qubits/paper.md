@@ -6,7 +6,7 @@ date: "6 November 2026"
 ---
 
 # Abstract
-Reliability models often begin with independent errors, although ionizing radiation deposits energy in spatially correlated tracks. In superconducting devices, radiation-associated phonon bursts can transiently degrade multiple qubits; in cells, high-linear-energy-transfer (LET) particles produce clustered DNA lesions whose repair differs from that of isolated lesions. We formulate a substrate-agnostic description of burst damage as a marked spatial point process coupled to finite repair capacity. The framework separates geometric code correctability, damage-generation statistics, and repair-service stability. A queue-stability condition, λ E[S] < μ, gives a necessary workload criterion for stationary repair; a code-specific erasure criterion separately determines whether a burst footprint is reconstructable. A reproducible benchmark compares iid erasures with finite straight-track bursts on a 24 × 24 lattice at approximately matched marginal site-erasure probability. Across 4,000 Monte Carlo trials per point, the track process is calibrated so expected lattice-wide mean occupancy exactly matches p (with boundary-dependent sitewise marginals). At p = 0.40, track bursts yield a 17.625% spanning-failure frequency versus zero observed iid spanning events; at p = 0.50, the rates are 68.425% and 5.475%, respectively. These are finite-size geometric-surrogate results, not logical-error rates of a physical code or measurements of biological damage. Holographic codes motivate recovery geometry, radiobiology supplies the track-structure motivation, and learned decoders suggest an inference strategy. The neutrino floor is treated only as a detector-background analogy, not as a biological mechanism.
+Reliability models often begin with independent errors, although ionizing radiation deposits energy in spatially correlated tracks. In superconducting devices, radiation-associated phonon bursts can transiently degrade multiple qubits; in cells, high-linear-energy-transfer (LET) particles produce clustered DNA lesions whose repair differs from that of isolated lesions. We formulate a substrate-agnostic description of burst damage as a marked spatial point process coupled to finite repair capacity. The framework separates geometric code correctability, damage-generation statistics, and repair-service stability. A queue-stability condition, \(\lambda \mathbb{E}[S] < \mu\), gives a necessary workload criterion for stationary repair; a code-specific erasure criterion separately determines whether a burst footprint is reconstructable. A reproducible benchmark compares iid erasures with finite straight-track bursts on a 24 × 24 lattice at approximately matched marginal site-erasure probability. Across 4,000 Monte Carlo trials per point, the track process is calibrated so expected lattice-wide mean occupancy exactly matches p (with boundary-dependent sitewise marginals). At p = 0.40, track bursts yield a 17.625% spanning-failure frequency versus zero observed iid spanning events; at p = 0.50, the rates are 68.425% and 5.475%, respectively. These are finite-size geometric-surrogate results, not logical-error rates of a physical code or measurements of biological damage. Holographic codes motivate recovery geometry, radiobiology supplies the track-structure motivation, and learned decoders suggest an inference strategy. The neutrino floor is treated only as a detector-background analogy, not as a biological mechanism.
 
 # 1. Motivation and scope
 A study published 19 October 2026 reports statistically significant reductions of up to 30.5% in both T1 and T2 immediately following dual detector events attributed to penetrating muons [1]. This is evidence of radiation-associated transient decoherence, not proof that one muon destroys an entire quantum computer. Earlier work also identifies spatially and temporally correlated errors in superconducting devices [2].
@@ -20,22 +20,22 @@ Let G=(V,E) be a finite interaction graph with |V|=n. A damage event is marked b
 \[
 Z_k=(T_k,X_k,\Theta_k,L_k,W_k,M_k),
 \]
-where T is event time, X its anchor, Θ orientation, L extent, W width, and M severity or lesion-complexity mark. It generates footprint C(Z_k) ⊆ V and repair workload S(Z_k) ≥ 0. Events have mean rate λ; Poisson arrivals are a baseline, not a universal assumption. The damaged set is
+where T is event time, X its anchor, \(\Theta\) orientation, L extent, W width, and M severity or lesion-complexity mark. It generates footprint \(C(Z_k) \subseteq V\) and repair workload \(S(Z_k) \geq 0\). Events have mean rate \(\lambda\); Poisson arrivals are a baseline, not a universal assumption. The damaged set is
 \[
 D(t)=\bigcup_{k:T_k\leq t<T_k+\tau_k}C(Z_k).
 \]
-A repair controller serves workload at total rate at most μ. Outstanding workload obeys
+A repair controller serves workload at total rate at most \(\mu\). Outstanding workload obeys
 \[
 Q(t+\Delta)\geq[Q(t)+A(t,t+\Delta)-\mu\Delta]_+.
 \]
 The burst profile is the joint law of footprint size, radius, aspect ratio, connected-component structure, and severity, not merely mean damaged-site count.
 
 ## Proposition 1 — Necessary queue-stability condition
-For a stationary ergodic single-server fluid repair queue with workload arrival rate λ E[S] and constant service rate μ, a stationary workload distribution with finite mean requires
+For a stationary ergodic single-server fluid repair queue with workload arrival rate \(\lambda \mathbb{E}[S]\) and constant service rate \(\mu\), a stationary workload distribution with finite mean requires
 \[
 \rho=\frac{\lambda\mathbb E[S]}{\mu}<1.
 \]
-**Proof.** Over an interval of length t, cumulative arriving workload divided by t converges to λ E[S]. Service removes at most μt. If mean input is at least service capacity, long-run net input is nonnegative; in the non-degenerate single-server setting a finite-mean stationary workload cannot be maintained. This is necessary, not sufficient for every correlated-arrival or priority model.
+**Proof.** Over an interval of length t, cumulative arriving workload divided by t converges to \(\lambda \mathbb{E}[S]\). Service removes at most \(\mu t\). If mean input is at least service capacity, long-run net input is nonnegative; in the non-degenerate single-server setting a finite-mean stationary workload cannot be maintained. This is necessary, not sufficient for every correlated-arrival or priority model.
 
 # 3. Correctability is not repair
 For a quantum code with code projector P and erased subsystem R, exact erasure correction is governed by the Knill–Laflamme condition. In the full-code case, one form is
@@ -51,7 +51,7 @@ No equivalent exact quantum-code condition is assumed for cells. A biological fo
 \]
 Quantum decoding, DNA repair, and cellular survival use different Φ functions and observables.
 
-Let F be the family of footprints that are uncorrectable or functionally catastrophic under a specified substrate rule, and q_F = Pr{C(Z) ∈ F}. For Poisson event arrivals, thinning gives the exact horizon risk
+Let F be the family of footprints that are uncorrectable or functionally catastrophic under a specified substrate rule, and \(q_F = \Pr\{C(Z) \in F\}\). For Poisson event arrivals, thinning gives the exact horizon risk
 \[
 P_{\rm cat}(T)=1-\exp[-\lambda q_F T]. \tag{1}
 \]
@@ -89,7 +89,7 @@ A biological repair controller could allocate finite pathway capacity by solving
 This is a proposed control problem, not a demonstrated intervention. Observability, feasible actions, safety constraints, and reward validity must be established before reinforcement learning is used.
 
 # 7. Synthetic benchmark
-We implement a finite-size geometric surrogate on a 24 × 24 square lattice. Failure is a 4-neighbour connected erased component spanning horizontally or vertically. In the iid channel, each site is erased independently with probability p. In the burst channel, a Poisson number of finite five-site line tracks are placed with horizontal, vertical, and diagonal orientations. A track anchor is uniform over the lattice and its orientation is uniform over the four directions. Because tracks are clipped at lattice boundaries, sitewise marginal probabilities are not homogeneous. For each site i, let q_i be the probability that one random track placement covers it. We choose the Poisson intensity λ by bisection so that (1/|V|) Σ_i [1 − exp(−λ q_i)] = p. Thus expected lattice-wide mean occupancy is matched exactly to the iid channel, although individual site marginals vary near boundaries. Each point uses 4,000 trials and fixed seed 20261106.
+We implement a finite-size geometric surrogate on a 24 × 24 square lattice. Failure is a 4-neighbour connected erased component spanning horizontally or vertically. In the iid channel, each site is erased independently with probability p. In the burst channel, a Poisson number of finite five-site line tracks are placed with horizontal, vertical, and diagonal orientations. A track anchor is uniform over the lattice and its orientation is uniform over the four directions. Because tracks are clipped at lattice boundaries, sitewise marginal probabilities are not homogeneous. For each site i, let q_i be the probability that one random track placement covers it. We choose the Poisson intensity \(\lambda\) by bisection so that \(\frac{1}{|V|}\sum_i [1 - \exp(-\lambda q_i)] = p\). Thus expected lattice-wide mean occupancy is matched exactly to the iid channel, although individual site marginals vary near boundaries. Each point uses 4,000 trials and fixed seed 20261106.
 
 | p | iid failures | track failures | iid rate | track rate |
 |---:|---:|---:|---:|---:|
