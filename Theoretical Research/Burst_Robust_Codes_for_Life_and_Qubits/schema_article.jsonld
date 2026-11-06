@@ -1,0 +1,12 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "name": "Burst-Robust Codes for Life and Qubits",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath"
+  },
+  "datePublished": "2026-11-06",
+  "genre": "Theory and synthetic-computation preprint",
+  "codeRepository": "https://github.com/Devanik21/The-Invention-Archive"
+}

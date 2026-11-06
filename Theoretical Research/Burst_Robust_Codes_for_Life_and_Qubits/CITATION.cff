@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "Please cite as a theory and synthetic-computation preprint."
+title: "Burst-Robust Codes for Life and Qubits: Holographic Erasure Thresholds under Cosmic-Ray Track Structure, and the Neutrino Floor of Repair"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+date-released: 2026-11-06
+type: article
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+keywords: [correlated noise, quantum error correction, holographic codes, radiation track structure, DNA damage, queueing theory]
