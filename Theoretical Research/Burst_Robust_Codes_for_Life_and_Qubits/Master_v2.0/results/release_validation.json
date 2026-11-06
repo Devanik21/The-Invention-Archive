@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "page_count": 31,
+  "main_text_pages": 26,
+  "main_text_words_in_boundary": 11016,
+  "pdf_sha256": "dce58640751898cd6c98edc271e70c679a909f2cda3ff2cdebec063400533d1b",
+  "tables": 7,
+  "figure_environments": 12,
+  "figure_classes": {
+    "plot": 8,
+    "graph": 2,
+    "flow": 2
+  },
+  "bibliography_entries": 24
+}

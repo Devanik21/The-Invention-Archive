@@ -1,0 +1,13 @@
+figure,asset,kind,description
+1,fig01_framework_flow,flow,Layered event-to-reliability framework
+2,fig02_domain_causal_graph,graph,Domain-specific causal pathways
+3,fig03_spatial_realizations,plot,IID and finite-track spatial realizations
+4,fig04_spanning_failure_curve,plot,Primary spanning-failure curves with Wilson intervals
+5,fig05_pair_covariance,plot,Analytic covariance induced by shared track placements
+6,fig06_cluster_size_distribution,plot,Empirical erased-component size distribution
+7,fig07_finite_size_sensitivity,plot,Finite-size sensitivity across lattice dimensions
+8,fig08_binomial_uncertainty,plot,Wilson confidence intervals at selected probabilities
+9,fig09_track_length_sensitivity,plot,Sensitivity to assumed finite track length
+10,fig10_workload_risk_frontier,plot,Illustrative queue workload and event-risk constraints
+11,fig11_validation_flow,flow,Proposed calibration and validation sequence
+12,fig12_validation_dependency_graph,graph,Measurement dependencies for the two validation tracks

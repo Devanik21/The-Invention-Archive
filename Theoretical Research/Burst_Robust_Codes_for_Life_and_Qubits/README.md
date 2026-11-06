@@ -25,3 +25,8 @@ Holographic reconstruction is a quantum-code property, not a biological mechanis
 
 
 Calibration note: the Poisson track intensity is solved by bisection so the expected lattice-wide mean occupancy equals the iid probability at each sweep point. Because tracks are clipped at finite boundaries, site-specific marginals vary near the edges.
+
+## Expanded master edition
+
+- [Master v2.0 — 31-page research manuscript, source, code, figures, results and review evidence](Master_v2.0/)
+- [Complete v2.0 bundle](Master_v2.0/Master_v2.0_complete_bundle.zip)

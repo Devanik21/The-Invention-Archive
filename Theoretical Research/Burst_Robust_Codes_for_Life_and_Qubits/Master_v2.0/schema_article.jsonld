@@ -1,0 +1,20 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Burst-Robust Codes for Life and Qubits: Correlated-Event Reliability, Holographic Erasure Recovery, and Finite Repair Capacity",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "affiliation": {
+      "@type": "CollegeOrUniversity",
+      "name": "National Institute of Technology Agartala"
+    }
+  },
+  "datePublished": "2026-11-06",
+  "version": "2.0",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "description": "Theoretical and synthetic-computational preprint. The shared abstraction concerns marked event statistics and constrained recovery; quantum and biological microscopic mechanisms remain distinct.",
+  "identifier": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/Burst_Robust_Codes_for_Life_and_Qubits"
+}

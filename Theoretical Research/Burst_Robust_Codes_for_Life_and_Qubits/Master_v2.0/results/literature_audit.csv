@@ -1,0 +1,25 @@
+citation_key,work,evidence_type,relevant_content,permitted_inference_and_limit,doi_or_url
+Castelli2026,Castelli et al. 2026,Primary quantum-device study,Detector-synchronized radiation events and superconducting-qubit coherence changes,Supports event-conditioned quantum disturbance; does not establish universal logical failure,https://doi.org/10.1103/ddyy-t37l
+Binney2026,Binney et al. 2026,Primary quantum-device study,Distinguishes radiation-correlated errors from vibration-associated signatures,Supports structured/correlated device noise; not a universal channel model,https://doi.org/10.1103/j235-47t6
+Hagiwara2019,Hagiwara et al. 2019,Primary radiobiology study,Clustered DNA double-strand breaks after heavy-ion irradiation,Supports track-structured clustered lesion motivation; cell/model-specific,https://doi.org/10.1093/jrr/rry096
+Shibata2022,Shibata 2022,Review/chapter,Carbon-ion radiation and clustered DNA double-strand breaks,Mechanistic context for cluster damage and repair; not quantitative validation of this model,https://doi.org/10.1016/bs.enz.2022.08.008
+Goodhead2024,Goodhead and Weinfeld 2024,Review/history,Clustered DNA damage and its complexity,Context for lesion complexity and interpretation,https://doi.org/10.1667/RADE-24-00017.1
+Wilkinson2023,Wilkinson et al. 2023,Review,Cellular response to complex ionizing-radiation damage,Context on repair pathways and outcomes; not an exposure-response estimate for the benchmark,https://doi.org/10.3390/ijms24054920
+Huang2026,"Huang, Baiocco and Kundrat 2026",Simulation database,H–Fe track-structure simulation database for DNA damage,Motivates species/energy-resolved calibration; simulation outputs need validation,https://doi.org/10.1038/s41598-026-55264-8
+House2020,House et al. 2020,Primary method study,Targeted dCas9-KillerRed localized oxidative DNA damage,Localized perturbation platform; not heavy-ion equivalence,https://doi.org/10.1371/journal.pone.0237759
+DeyBarnes2025,Dey and Barnes 2025,Review,Genetic approaches for targeted oxidative stress,Broader targeted-ROS method context,https://doi.org/10.1093/narcan/zcaf049
+Pastawski2015,Pastawski et al. 2015,Theory,Holographic quantum error-correcting toy models,"Supports code-theoretic context, not biology",https://doi.org/10.1007/JHEP06(2015)149
+Harlow2017,Harlow 2017,Theory/review,Ryu–Takayanagi formula from quantum error correction,Supports holographic/QEC relation,https://doi.org/10.1007/s00220-017-2904-z
+Harris2018,Harris et al. 2018,Theory,CSS holographic quantum error-correcting codes,"Code-family context, not an implemented radiation decoder",https://doi.org/10.1103/PhysRevA.98.052301
+Bao2022,"Bao, Cao and Zhu 2022",Theory,Deconfinement and error thresholds in holography,Holographic error-threshold literature context,https://doi.org/10.1103/PhysRevD.106.046009
+Senior2025,Senior et al. 2025,Preprint,AlphaQubit 2 real-time neural decoder for topological codes,Motivates future decoder evaluation; no validation on this burst law,https://arxiv.org/abs/2512.07737
+Abrahams2026,Abrahams et al. 2026,Primary quantum-sensing study,Engineered-protein spin resonance in living bacterial cells,Quantum biosensing only; not a fault-tolerant cellular quantum computer,https://doi.org/10.1038/s41586-025-09971-3
+XENON2026,XENON Collaboration 2026,Primary detector study,Solar 8B neutrino background and neutrino fog in direct detection,Inference analogy only; not a biological mechanism,https://doi.org/10.1103/xvpn-w3q9
+BlancoMas2025,Blanco-Mas et al. 2025,Theory/phenomenology,Neutrino fog and constraints on new forces in dark-matter detectors,Detector-background/inference context only,https://doi.org/10.1007/JHEP08(2025)043
+Billard2014,"Billard, Strigari and Figueroa-Feliciano 2014",Theory/phenomenology,Neutrino backgrounds in direct dark-matter detection,Historical neutrino-background context,https://doi.org/10.1103/PhysRevD.89.023524
+Dennis2002,Dennis et al. 2002,Theory,Topological quantum memory,Quantum code/reliability background,https://doi.org/10.1103/Journal_of_Mathematical_Physics.43.4452
+Fowler2012,Fowler et al. 2012,Review,Surface codes: towards practical large-scale quantum computation,Code-specific threshold and decoding background,https://doi.org/10.1103/PhysRevA.86.032324
+LastPenrose2017,Last and Penrose 2017,Textbook,Lectures on the Poisson Process,Point-process formalism; mathematical reference,https://doi.org/10.1017/9781316104477
+MollerWaagepetersen2004,Møller and Waagepetersen 2004,Textbook,Statistical inference and simulation for spatial point processes,Spatial point-process methods; mathematical reference,https://www.routledge.com/Statistical-Inference-and-Simulation-for-Spatial-Point-Processes/Moller-Waagepetersen/p/book/9781584882654
+GrossHarris1998,Gross et al. 1998,Textbook,Fundamentals of Queueing Theory,Queue stability and workload background,https://www.wiley.com/en-us/Fundamentals+of+Queueing+Theory%2C+4th+Edition-p-9780471791270
+Grimmett1999,Grimmett 1999,Textbook,Percolation,Connectivity/percolation background; not a QEC threshold claim,https://doi.org/10.1007/978-3-662-03981-6

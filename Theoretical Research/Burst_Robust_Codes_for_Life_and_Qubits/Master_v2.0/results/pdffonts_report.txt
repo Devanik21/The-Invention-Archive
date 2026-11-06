@@ -1,0 +1,35 @@
+name                                 type              encoding         emb sub uni object ID
+------------------------------------ ----------------- ---------------- --- --- --- ---------
+BKBNWC+LMRoman12-Bold                Type 1C           Custom           yes yes yes      6  0
+UQYBGZ+LMRoman12-Regular             Type 1C           Custom           yes yes yes      7  0
+GCJOBV+LMRoman10-Regular             Type 1C           Custom           yes yes yes      8  0
+VPIHHP+LMRoman10-Bold                Type 1C           Custom           yes yes yes      9  0
+NCETFU+LMSans10-Bold                 Type 1C           Custom           yes yes yes     14  0
+VMSGAV+LMSans10-Regular              Type 1C           Custom           yes yes yes     15  0
+DMYCRD+LMSans10-Regular              Type 1C           Custom           yes yes yes     16  0
+PZYVOB+LMRoman10-Italic              Type 1C           Custom           yes yes yes     66  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no      71  0
+AZCJST+LMMathItalic10-Regular        Type 1C           Custom           yes yes yes    137  0
+WMMAEK+LMRoman10-Regular             Type 1C           Custom           yes yes yes    138  0
+SQGJSR+LMRoman8-Regular              Type 1C           Custom           yes yes yes    144  0
+YLNVDI+LMMathSymbols10-Regular       Type 1C           Custom           yes yes yes    150  0
+ZGRCUU+LMMathItalic8-Regular         Type 1C           Custom           yes yes yes    151  0
+OYRMOM+LMMathExtension10-Regular     Type 1C           Custom           yes yes yes    152  0
+ZBUAHB+MSBM10                        Type 1C           Builtin          yes yes yes    153  0
+KAYSWS+LMMathSymbols8-Regular        Type 1C           Custom           yes yes yes    165  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     178  0
+ZSKXRD+LMMathItalic6-Regular         Type 1C           Custom           yes yes yes    239  0
+AJBQFP+LMMathItalic7-Regular         Type 1C           Custom           yes yes yes    247  0
+QLBMWI+EUFM10                        Type 1C           Builtin          yes yes yes    248  0
+KGAABX+LMMathItalic10-Bold           Type 1C           Custom           yes yes yes    252  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     270  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     325  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     382  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     429  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     481  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     540  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     589  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     645  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     701  0
+BMQQDV+DejaVuSans                    Type 3            Custom           yes yes no     753  0
+NWXROY+LMMono10-Regular              Type 1C           Custom           yes yes yes    804  0

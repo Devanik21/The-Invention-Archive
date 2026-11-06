@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this research preprint or its synthetic benchmark, please cite it as follows."
+title: "Burst-Robust Codes for Life and Qubits: Correlated-Event Reliability, Holographic Erasure Recovery, and Finite Repair Capacity"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    affiliation: National Institute of Technology Agartala, India
+version: "2.0"
+date-released: 2026-11-06
+type: article
+abstract: >-
+  A cross-domain statistical framework for marked spatial disturbance events,
+  code-specific recovery, and finite repair workload, accompanied by a
+  reproducible finite-lattice synthetic benchmark. Quantum and biological
+  mechanisms are kept distinct; no universal threshold is claimed.
+keywords:
+  - correlated errors
+  - quantum error correction
+  - high-LET radiation
+  - clustered DNA damage
+  - spatial point processes
+  - queueing theory
+  - synthetic benchmark
+repository-code: https://github.com/Devanik21/The-Invention-Archive
+license: CC-BY-4.0

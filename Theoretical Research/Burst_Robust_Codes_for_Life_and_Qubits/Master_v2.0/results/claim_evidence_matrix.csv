@@ -1,0 +1,13 @@
+claim_id,claim,evidence_class,source_or_artifact,limit_of_inference
+C01,Radiation events can correlate with superconducting-qubit error/coherence disturbances,Published observation,Castelli2026; Binney2026,Device- and setup-specific; no universal logical failure law
+C02,High-LET heavy ions can generate clustered DNA lesions,Published observation/review,Hagiwara2019; Shibata2022; Goodhead2024; Wilkinson2023,Does not imply every track overwhelms repair
+C03,Spatial and temporal event marks can be represented by a marked point process,Mathematical modelling choice,LastPenrose2017; MollerWaagepetersen2004,Model representation; calibration required
+C04,Equal one-site marginals do not determine spatial connectivity risk,Mathematical counterexample,Explicit two-site common-shock construction in paper,Exact for counterexample; not a universal quantitative risk comparison
+C05,rho < 1 is a workload-stability condition for the stated M/G/1 abstraction,Conditional mathematical result,GrossHarris1998; proof in paper,"Requires stationary arrivals, finite mean service, and stated single-server assumptions"
+C06,Poisson thinning yields 1-exp(-lambda q_F T) event risk,Conditional mathematical result,LastPenrose2017; proof in paper,Independent marks/Poisson assumptions; not a general survival model
+C07,Track bursts show more spanning events than IID in the supplied finite benchmark,Synthetic result,verify_model.py; spanning_sweep.csv,"Only 24x24 graph, 5-site track law, calibrated expected mean, seed and finite grid"
+C08,dCas9-KillerRed can generate targeted localized oxidative DNA damage,Published method study,House2020; DeyBarnes2025,Not a heavy-ion substitute; context-dependent repair response
+C09,AlphaQubit 2 is a candidate for future correlated-channel decoder tests,Published preprint capability / proposal,Senior2025,No validation on this specific radiation-burst channel is claimed
+C10,Engineered proteins can support optically detected spin resonance in bacterial cells,Published observation,Abrahams2026,"Quantum sensing, not a fault-tolerant cellular quantum processor"
+C11,Neutrino fog is an inference background in dark-matter detection,Published detector literature,XENON2026; BlancoMas2025; Billard2014,Analogy only; no biological repair floor or relevant cellular damage mechanism
+C12,A common statistical vocabulary can organize future cross-domain comparisons,Synthesis / hypothesis,This paper,Must not collapse substrate-specific mechanisms or observables

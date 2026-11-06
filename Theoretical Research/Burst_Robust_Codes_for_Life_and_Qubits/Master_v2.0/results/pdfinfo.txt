@@ -1,0 +1,21 @@
+Title:           Burst-Robust Codes for Life and Qubits: Correlated-Event Reliability, Holographic Erasure Recovery, and Finite Repair Capacity
+Subject:         Theoretical and synthetic-computational preprint
+Keywords:        correlated errors, quantum error correction, high-LET radiation, clustered DNA damage, spatial point processes, queueing theory
+Author:          Devanik Debnath
+Creator:         LaTeX with hyperref
+Producer:        xdvipdfmx (20250410)
+CreationDate:    Fri Nov  6 14:59:53 2026 UTC
+Custom Metadata: no
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           31
+Encrypted:       no
+Page size:       595.28 x 841.89 pts (A4)
+Page rot:        0
+File size:       320219 bytes
+Optimized:       no
+PDF version:     1.7

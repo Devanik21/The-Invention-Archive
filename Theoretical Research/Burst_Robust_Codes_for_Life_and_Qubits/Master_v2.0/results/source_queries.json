@@ -1,0 +1,46 @@
+{
+  "retrieval_date": "2026-11-06",
+  "purpose": "Verify publication metadata and factual scope of the core scientific references.",
+  "queries": [
+    {
+      "query": "2026 superconducting qubit radiation event correlated decoherence Castelli DOI 10.1103/ddyy-t37l",
+      "verified_work": "Castelli et al., Phys Rev Applied 26, 044052 (2026)",
+      "url": "https://doi.org/10.1103/ddyy-t37l"
+    },
+    {
+      "query": "Binney correlated errors superconducting qubit radiation DOI 10.1103/j235-47t6",
+      "verified_work": "Binney et al., Phys Rev Applied 26, 024025 (2026)",
+      "url": "https://doi.org/10.1103/j235-47t6"
+    },
+    {
+      "query": "H-Fe ion DNA damage track structure database Scientific Reports 2026",
+      "verified_work": "Huang, Baiocco and Kundrat, Sci Rep 16, 26153 (2026)",
+      "url": "https://doi.org/10.1038/s41598-026-55264-8"
+    },
+    {
+      "query": "AlphaQubit 2 scalable real-time neural decoder topological quantum codes",
+      "verified_work": "Senior et al., arXiv:2512.07737",
+      "url": "https://arxiv.org/abs/2512.07737"
+    },
+    {
+      "query": "engineered protein quantum spin resonance living bacterial cells Nature 2026",
+      "verified_work": "Abrahams et al., Nature 649, 1172-1179 (2026)",
+      "url": "https://doi.org/10.1038/s41586-025-09971-3"
+    },
+    {
+      "query": "dCas9 KillerRed site-specific localized oxidative DNA damage PLOS ONE 2020",
+      "verified_work": "House et al., PLOS ONE 15, e0237759 (2020)",
+      "url": "https://doi.org/10.1371/journal.pone.0237759"
+    },
+    {
+      "query": "clustered DNA damage high LET ion review Goodhead Weinfeld 2024",
+      "verified_work": "Goodhead and Weinfeld, Radiation Research 202, 385-407 (2024)",
+      "url": "https://doi.org/10.1667/RADE-24-00017.1"
+    },
+    {
+      "query": "XENONnT solar 8B neutrino fog 2026 Physical Review Letters",
+      "verified_work": "XENON Collaboration, Phys Rev Lett 137, 091807 (2026)",
+      "url": "https://doi.org/10.1103/xvpn-w3q9"
+    }
+  ]
+}

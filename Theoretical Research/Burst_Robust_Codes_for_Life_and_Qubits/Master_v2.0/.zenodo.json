@@ -1,0 +1,26 @@
+{
+  "title": "Burst-Robust Codes for Life and Qubits: Correlated-Event Reliability, Holographic Erasure Recovery, and Finite Repair Capacity",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "description": "Theoretical and synthetic-computational preprint. Cross-domain marked-event reliability framework with code-specific and biological recovery distinctions, plus a reproducible finite-lattice geometric benchmark. No physical quantum-code, radiation-transport, or biological validation is claimed.",
+  "creators": [
+    {
+      "name": "Devanik Debnath",
+      "affiliation": "National Institute of Technology Agartala, India"
+    }
+  ],
+  "publication_date": "2026-11-06",
+  "version": "2.0",
+  "access_right": "open",
+  "license": "cc-by-4.0",
+  "keywords": [
+    "correlated errors",
+    "quantum error correction",
+    "high-LET radiation",
+    "clustered DNA damage",
+    "spatial point processes",
+    "queueing theory",
+    "synthetic benchmark"
+  ],
+  "communities": []
+}

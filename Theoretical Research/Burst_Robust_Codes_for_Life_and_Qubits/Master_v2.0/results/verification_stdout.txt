@@ -1,0 +1,1 @@
+PASS: 11 checks; 10 probabilities x 4000 trials/channel; exact lattice-mean occupancy calibration; seed 20261106.

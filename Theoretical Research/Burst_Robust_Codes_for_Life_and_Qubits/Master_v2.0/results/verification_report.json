@@ -1,0 +1,265 @@
+{
+  "status": "PASS",
+  "model": "24x24 finite 4-neighbour geometric connectivity surrogate",
+  "seed": 20261106,
+  "trials_per_probability_per_channel": 4000,
+  "probability_grid": [
+    0.2,
+    0.25,
+    0.3,
+    0.35,
+    0.4,
+    0.45,
+    0.5,
+    0.55,
+    0.6,
+    0.65
+  ],
+  "calibration": {
+    "method": "bisection on exact Poisson-thinning expectation",
+    "target": "expected lattice-wide mean occupancy equals p",
+    "edge_note": "sitewise marginals are heterogeneous near clipped boundaries",
+    "expected_mean_occupancy": {
+      "0.20": 0.19999999999999993,
+      "0.25": 0.25,
+      "0.30": 0.29999999999999993,
+      "0.35": 0.3499999999999999,
+      "0.40": 0.4000000000000001,
+      "0.45": 0.45000000000000007,
+      "0.50": 0.4999999999999998,
+      "0.55": 0.5499999999999999,
+      "0.60": 0.6000000000000001,
+      "0.65": 0.6500000000000001
+    },
+    "poisson_intensity_by_p": {
+      "0.20": 27.792073148075715,
+      "0.25": 35.85069491743518,
+      "0.30": 44.47595574297149,
+      "0.35": 53.752906689376985,
+      "0.40": 63.787236652121436,
+      "0.45": 74.71252534027639,
+      "0.50": 86.70098645431395,
+      "0.55": 99.97993032512952,
+      "0.60": 114.85803451982935,
+      "0.65": 131.76938301227983
+    }
+  },
+  "checks_passed": 11,
+  "checks_failed": 0,
+  "checks": [
+    {
+      "name": "exact expected mean occupancy calibration",
+      "status": "PASS",
+      "detail": "{\"0.20\": 0.19999999999999993, \"0.25\": 0.25, \"0.30\": 0.29999999999999993, \"0.35\": 0.3499999999999999, \"0.40\": 0.4000000000000001, \"0.45\": 0.45000000000000007, \"0.50\": 0.4999999999999998, \"0.55\": 0.5499999999999999, \"0.60\": 0.6000000000000001, \"0.65\": 0.6500000000000001}"
+    },
+    {
+      "name": "benchmark trial count",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "ten probability grid points",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "twelve numbered vector figures",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "twelve PNG previews",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "finite-size diagnostics",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "track-length diagnostics",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "monotone calibrated track intensity",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "figure inventory classes",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Wilson interval validity",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "equal-marginal dependence counterexample",
+      "status": "PASS",
+      "detail": ""
+    }
+  ],
+  "main_results": [
+    {
+      "p": 0.2,
+      "iid_failures": 0,
+      "track_failures": 2,
+      "trials": 4000,
+      "iid_rate": 0.0,
+      "track_rate": 0.0005,
+      "iid_ci95_low": 0.0,
+      "iid_ci95_high": 0.0009594432897014865,
+      "track_ci95_low": 0.00013712874495346754,
+      "track_ci95_high": 0.0018213551014583176,
+      "track_poisson_intensity": 27.792073148075715,
+      "target_mean_occupancy": 0.2
+    },
+    {
+      "p": 0.25,
+      "iid_failures": 0,
+      "track_failures": 7,
+      "trials": 4000,
+      "iid_rate": 0.0,
+      "track_rate": 0.00175,
+      "iid_ci95_low": 0.0,
+      "iid_ci95_high": 0.0009594432897014865,
+      "track_ci95_low": 0.0008479657344337417,
+      "track_ci95_high": 0.00360811950375379,
+      "track_poisson_intensity": 35.85069491743518,
+      "target_mean_occupancy": 0.25
+    },
+    {
+      "p": 0.3,
+      "iid_failures": 0,
+      "track_failures": 45,
+      "trials": 4000,
+      "iid_rate": 0.0,
+      "track_rate": 0.01125,
+      "iid_ci95_low": 0.0,
+      "iid_ci95_high": 0.0009594432897014865,
+      "track_ci95_low": 0.008418594462484667,
+      "track_ci95_high": 0.015019261353198539,
+      "track_poisson_intensity": 44.47595574297149,
+      "target_mean_occupancy": 0.3
+    },
+    {
+      "p": 0.35,
+      "iid_failures": 0,
+      "track_failures": 224,
+      "trials": 4000,
+      "iid_rate": 0.0,
+      "track_rate": 0.056,
+      "iid_ci95_low": 0.0,
+      "iid_ci95_high": 0.0009594432897014865,
+      "track_ci95_low": 0.04929146550972554,
+      "track_ci95_high": 0.0635605201315294,
+      "track_poisson_intensity": 53.752906689376985,
+      "target_mean_occupancy": 0.35
+    },
+    {
+      "p": 0.4,
+      "iid_failures": 0,
+      "track_failures": 705,
+      "trials": 4000,
+      "iid_rate": 0.0,
+      "track_rate": 0.17625,
+      "iid_ci95_low": 0.0,
+      "iid_ci95_high": 0.0009594432897014865,
+      "track_ci95_low": 0.1647540894478042,
+      "track_ci95_high": 0.18836715008227753,
+      "track_poisson_intensity": 63.787236652121436,
+      "target_mean_occupancy": 0.4
+    },
+    {
+      "p": 0.45,
+      "iid_failures": 11,
+      "track_failures": 1606,
+      "trials": 4000,
+      "iid_rate": 0.00275,
+      "track_rate": 0.4015,
+      "iid_ci95_low": 0.001536278156460908,
+      "iid_ci95_high": 0.004917888195147221,
+      "track_ci95_low": 0.3864102700830744,
+      "track_ci95_high": 0.41677874024499695,
+      "track_poisson_intensity": 74.71252534027639,
+      "target_mean_occupancy": 0.45
+    },
+    {
+      "p": 0.5,
+      "iid_failures": 219,
+      "track_failures": 2737,
+      "trials": 4000,
+      "iid_rate": 0.05475,
+      "track_rate": 0.68425,
+      "iid_ci95_low": 0.04811772883093955,
+      "iid_ci95_high": 0.062236655418539635,
+      "track_ci95_low": 0.6696745826408869,
+      "track_ci95_high": 0.6984718625068581,
+      "track_poisson_intensity": 86.70098645431395,
+      "target_mean_occupancy": 0.5
+    },
+    {
+      "p": 0.55,
+      "iid_failures": 1229,
+      "track_failures": 3497,
+      "trials": 4000,
+      "iid_rate": 0.30725,
+      "track_rate": 0.87425,
+      "iid_ci95_low": 0.2931433531543444,
+      "iid_ci95_high": 0.3217265122338356,
+      "track_ci95_low": 0.8636143924818466,
+      "track_ci95_high": 0.8841674642158118,
+      "track_poisson_intensity": 99.97993032512952,
+      "target_mean_occupancy": 0.55
+    },
+    {
+      "p": 0.6,
+      "iid_failures": 2972,
+      "track_failures": 3876,
+      "trials": 4000,
+      "iid_rate": 0.743,
+      "track_rate": 0.969,
+      "iid_ci95_low": 0.7292294621758734,
+      "iid_ci95_high": 0.7563042483853318,
+      "track_ci95_low": 0.9631627028410427,
+      "track_ci95_high": 0.9739373393532172,
+      "track_poisson_intensity": 114.85803451982935,
+      "target_mean_occupancy": 0.6
+    },
+    {
+      "p": 0.65,
+      "iid_failures": 3893,
+      "track_failures": 3984,
+      "trials": 4000,
+      "iid_rate": 0.97325,
+      "track_rate": 0.996,
+      "iid_ci95_low": 0.9677775040942628,
+      "iid_ci95_high": 0.9778143828320348,
+      "track_ci95_low": 0.9935119313640512,
+      "track_ci95_high": 0.9975363008925648,
+      "track_poisson_intensity": 131.76938301227983,
+      "target_mean_occupancy": 0.65
+    }
+  ],
+  "additional_sensitivity": {
+    "finite_size": "700 trials per (N,p,channel); synthetic only",
+    "track_length": "900 trials per (length,p); synthetic only"
+  },
+  "limitations": [
+    "Geometric connectivity surrogate, not a surface-code or holographic decoder.",
+    "Track process is straight finite segments on a lattice, not Geant4/PARTRAC transport.",
+    "No quantum hardware, radiation biology, cells, organisms, or human data were used.",
+    "Equal expected mean occupancy is not equality of all sitewise marginals; edge clipping makes marginals heterogeneous.",
+    "Observed finite-grid rankings are model-specific and are not universal physical thresholds."
+  ],
+  "environment": {
+    "python": "3.12.16",
+    "numpy": "2.3.5",
+    "matplotlib": "3.10.8",
+    "networkx": "3.6.1"
+  }
+}

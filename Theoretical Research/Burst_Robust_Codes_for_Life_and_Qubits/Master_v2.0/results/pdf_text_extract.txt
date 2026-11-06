@@ -1,0 +1,1804 @@
+           Burst-Robust Codes for Life and Qubits
+ Correlated-Event Reliability, Holographic Erasure Recovery, and Finite
+                                       Repair Capacity
+
+    A cross-domain mathematical framework with a reproducible ﬁnite-lattice benchmark
+
+
+                                    Devanik Debnath
+                      National Institute of Technology Agartala, India
+        Research synthesis and computational development with AI-assisted research support
+
+     6 November 2026     |   Theoretical and synthetic-computational preprint     |   Version 2.0
+
+
+
+Scope boundary
+This manuscript distinguishes a shared mathematical vocabulary from shared physical mecha-
+nisms. Radiation-induced events can generate correlated disturbances in superconducting-qubit
+devices; high-LET ion tracks can generate clustered DNA lesions in cells. The two systems do
+not have the same state space, microscopic dynamics, recovery mechanism, or failure observable.
+Holographic quantum error correction is not a model of DNA repair. The numerical experi-
+ment in this paper is a deliberately limited lattice-connectivity surrogate, not a quantum-code
+decoder, a radiation-transport calculation, or a biological experiment.
+
+
+                                              Abstract
+      Average disturbance rates can conceal consequential spatial and temporal structure when faults
+  arrive in bursts and recovery resources are ﬁnite. Radiation-associated correlated errors have been
+  observed in superconducting-qubit systems, while high-linear-energy-transfer particles can create
+  clustered DNA lesions. These domains have diﬀerent microscopic mechanisms; this paper develops
+  only a shared statistical language for marked events, spatial footprints, and constrained recovery.
+  Each event carries location, orientation, extent, severity, temporal response, and a workload mark.
+  Separate substrate maps translate these marks into quantum error channels or biological lesion
+  ﬁelds, followed by code-speciﬁc decoding or biological repair.
+      We state conditional results for nonlinear failure under correlated occupancy, stability of a
+  stationary M/G/1 workload model, and Poisson thinning of catastrophic marked events. We then
+  compare independent erasures with Poisson ﬁnite-track bursts in a reproducible 24 by 24 lattice
+  surrogate. Track intensity is calibrated by bisection so expected lattice-wide mean occupancy
+  matches the independent-erasure probability; sitewise marginals remain heterogeneous near clipped
+  boundaries. Across 4,000 trials at each of ten probabilities, this particular track process has a
+  higher spanning frequency at every tested point. At target occupancy 0.40, it produces 705/4,000
+  spanning events versus 0/4,000 for independent erasures; zero observed events do not imply zero
+  risk.
+      The contribution is a testable decomposition of event statistics, substrate damage, recovery,
+  and reliability inference, plus a falsiﬁable validation programme. The benchmark is not a physical
+  decoder, radiation-transport calculation, or biological experiment. No universal quantum threshold,
+  cellular repair limit, or intervention is claimed. The neutrino fog is treated only as an inference
+  analogy from dark-matter detection.
+BURST-ROBUST CODES                                              PREPRINT • 06 NOV 2026
+
+
+
+Contents
+1 Introduction: reliability under spatially extended events                         3
+
+2 Epistemic contract and scope of inference                                         4
+
+3 Quantum reliability: radiation, correlated errors, and decoding                   5
+
+4 Radiobiology: high-LET tracks and clustered lesions                               7
+
+5 A shared mathematical language without a shared mechanism                         9
+
+6 Recovery as a ﬁnite-capacity process                                             10
+
+7 Theory: dependence, workload stability, and horizon risk                         11
+
+8 Benchmark design: a transparent geometric surrogate                              14
+
+9 Benchmark results                                                                16
+
+10 Interpreting the reliability envelope                                           18
+
+11 Measurement design: from event logs to calibrated kernels                       19
+
+12 Adaptive inference and AI-assisted recovery                                     21
+
+13 Quantum sensors in living cells: capability and boundary                        23
+
+14 The neutrino fog: an analogy about inference, not a repair ﬂoor                 23
+
+15 Limitations, failure modes, and open questions                                  25
+
+16 Falsiﬁable research programme                                                   26
+
+17 Conclusion                                                                      27
+
+A Exact expected-occupancy calibration                                             28
+
+B Statistical summaries and interval calculations                                  28
+
+C Reproducibility and execution protocol                                           29
+
+D Minimum data schema for a future calibrated event record                         29
+
+E Symbol glossary                                                                  29
+
+F Research-process disclosure and responsibility                                   30
+
+
+
+
+                                           2
+BURST-ROBUST CODES                                                               PREPRINT • 06 NOV 2026
+
+
+
+1    Introduction: reliability under spatially extended events
+The reliability of a complex system is not determined solely by how often its components are disturbed.
+The geometry of a disturbance, its duration, the dependence it induces among components, and
+the ability of the system to observe and recover from it all matter. This point is familiar in fault-
+tolerant computing: independent low-probability faults can be manageable under an appropriate
+code and decoder, whereas correlated faults may form a geometrically dangerous pattern. It is also
+familiar in radiobiology: two irradiations delivering similar macroscopic dose can produce diﬀerent
+microscopic lesion structures, and the structure and complexity of DNA damage aﬀect repair and
+biological outcomes [Dennis et al., 2002, Fowler et al., 2012, Hagiwara et al., 2019, Goodhead and
+Weinfeld, 2024, Wilkinson et al., 2023].
+   Recent measurements make this distinction timely for quantum hardware. Castelli and colleagues
+reported correlations between detected radiation events and changes in superconducting-qubit relax-
+ation and phase-coherence times, including reductions of up to 30.5% immediately following dual
+detector events attributed to penetrating muons [Castelli et al., 2026]. Binney and colleagues distin-
+guished radiation-associated correlated errors from vibration-associated errors using temporal, spatial,
+and frequency-domain signatures in superconducting-qubit devices [Binney et al., 2026]. These results
+motivate event-conditioned noise models. They do not imply that an individual muon invariably causes
+a logical failure, nor that every event is catastrophic. Their importance is that the disturbance process
+can have structure omitted by an IID approximation.
+   A parallel statistical issue appears in the response of cells to high-LET heavy ions. Dense energy
+deposition along particle tracks can produce complex and clustered DNA lesions, including clustered
+double-strand breaks, and can trigger repair pathways whose outcomes depend on lesion context and
+chromatin organization [Hagiwara et al., 2019, Shibata, 2022, Goodhead and Weinfeld, 2024]. A 2026
+track-structure simulation database spanning H–Fe ions provides a concrete example of eﬀorts to
+characterize radiation-quality-speciﬁc damage rather than represent all exposure through one scalar
+average [Huang et al., 2026]. Again, this does not imply that every track overwhelms repair. It
+motivates a model in which event geometry and repair workload remain explicit.
+   The present study asks a narrower question than a uniﬁed theory of quantum hardware and biology:
+What mathematical objects are shared by systems exposed to marked spatial bursts and ﬁnite recovery
+capacity, and which inferences remain domain-speciﬁc? The answer is a layered model. A marked
+event process generates spatial and temporal footprints. A substrate map translates those footprints
+into error channels or lesion ﬁelds. A recovery map then describes decoding or repair. Finally, an
+observable-speciﬁc loss function deﬁnes failure. The layers are coupled, but not interchangeable.
+   The term “codes for life” in the title is therefore an analogy about recoverability under constrained
+resources, not a claim that a cell implements a quantum error-correcting code. A cell has DNA repair
+pathways, chromatin organization, checkpoints, cell-cycle state, and survival constraints; a quantum
+processor has a code space, stabilizer measurements, a decoder, and logical observables. Similar
+probability and workload tools may describe selected aspects of both, while the actual state variables
+and causal mechanisms remain diﬀerent.
+   This paper makes six contributions. First, it formalizes a marked space-time representation of
+disturbance events with geometry and severity marks. Second, it separates event statistics from
+substrate-speciﬁc damage and from recovery capacity. Third, it states queue-stability and Poisson-
+thinning results with explicit assumptions. Fourth, it proves by a minimal counterexample that
+equal marginal occupancy does not determine nonlinear failure risk. Fifth, it expands the original
+ﬁnite-lattice experiment with exact expected-occupancy calibration, uncertainty summaries, spatial-
+correlation and cluster diagnostics, ﬁnite-size sensitivity, and track-length sensitivity. Sixth, it speciﬁes
+quantum and biological experiments that could falsify the proposed model components.
+
+
+                                                     3
+BURST-ROBUST CODES                                                                         PREPRINT • 06 NOV 2026
+
+
+
+
+       Marked event         Spatial / temporal     Substrate-specific     Recovery / decoder        Observable
+         process                footprint            state change             response               reliability
+
+
+
+                      Shared mathematical descriptors; no shared microscopic mechanism is assumed
+
+
+ Figure 1: Layered reliability framework. Marked events create domain-speciﬁc footprints. The physical or
+biological substrate map then feeds a code/decoder or repair response. The shared abstraction is the ordering
+                           of statistical layers, not a common microscopic process.
+
+
+   The rest of the paper is organized as follows. Sections 2–4 deﬁne the epistemic contract and review
+the relevant physical domains. Sections 5–7 develop the common statistical model and its elementary
+results. Sections 8–9 document the synthetic benchmark. Sections 10–14 discuss interpretation,
+measurement design, AI, and the neutrino-fog analogy. Sections 15–17 specify limitations, falsiﬁcation
+conditions, and conclusions. Appendices provide calibration details, statistical conventions, and a
+reproducibility protocol.
+
+
+2     Epistemic contract and scope of inference
+A long paper can be misleading if the visual scale of the document exceeds the evidential scale of
+its results. We therefore begin with a scope contract. Statements are divided into four categories:
+published observations, mathematical consequences of stated assumptions, synthetic outputs from the
+included code, and proposed experiments. These categories are never merged into a single evidence
+grade.
+
+
+2.1   Published observations
+
+The quantum-hardware literature establishes that radiation-associated quasiparticle and phonon pro-
+cesses can correlate with qubit errors and coherence changes. Castelli et al. provide detector-
+synchronized measurements of qubit parameters, while Binney et al. provide a comparative account
+of radiation and vibration error signatures [Castelli et al., 2026, Binney et al., 2026]. These are device-
+speciﬁc measurements. They are evidence for structured disturbance channels, not universal material
+constants and not a measured catastrophic-event probability for a full fault-tolerant computer.
+   The radiobiology literature establishes that high-LET radiation can generate complex, clustered
+DNA damage, and that lesion architecture can inﬂuence repair kinetics and chromosome-level out-
+comes [Hagiwara et al., 2019, Shibata, 2022, Goodhead and Weinfeld, 2024, Wilkinson et al., 2023].
+The 2026 H–Fe simulation database strengthens the availability of species- and energy-dependent
+track-structure outputs, but a simulation database does not eliminate the need for model validation
+and uncertainty accounting [Huang et al., 2026].
+
+
+2.2   Mathematical consequences
+
+The queueing and thinning results in Section 7 are conditional statements. They follow from as-
+sumptions such as Poisson arrivals, independent catastrophic marks, and a single-server workload
+abstraction. A theorem under a model is not evidence that the model is an adequate representation
+
+                                                           4
+BURST-ROBUST CODES                                                                 PREPRINT • 06 NOV 2026
+
+
+
+                        Table 1: Evidence classes used throughout the manuscript.
+
+ Class                 What it contains                                            Permitted inference
+ Published observa-    Device-synchronized radiation measurements; published       Evidence in the appara-
+ tion                  track-structure and clustered-DNA-damage ﬁndings            tus, organism, dose, and
+                                                                                   conditions studied
+ Mathematical    re-   Queue stability, thinning identities, dependence coun-      Follows from explicit
+ sult                  terexample                                                  model assumptions only
+ Synthetic computa-    Finite lattice; Poisson line-track generator; Monte Carlo   Demonstrates properties
+ tion                  spanning events                                             of the declared surrogate
+ Proposed    experi-   Calibrated event maps, code-speciﬁc decoding, lesion and    A test plan, not an
+ ment                  repair assays                                               achieved result
+
+
+of a device or cell. In particular, ρ < 1 is a stability condition for a speciﬁed queue, not a suﬃcient
+condition for logical recoverability or cell survival.
+
+
+2.3      Synthetic outputs
+
+The numerical results in this paper come from an idealized ﬁnite lattice. Each “track” is a ﬁnite
+straight line of lattice sites with a random anchor and one of four orientations. The benchmark counts
+whether an erased component spans the lattice under four-neighbour connectivity. No charge trans-
+port, phonon propagation, syndrome measurement, stabilizer decoding, DNA chemistry, chromatin
+state, lesion repair enzyme, or cell-fate dynamics is simulated. The benchmark is useful because the
+dependence structure is transparent and reproducible; its limitations are equally central to the paper.
+
+
+2.4      Proposed work
+
+Calibration from radiation detectors, Geant4 or PARTRAC track structure, quantum hardware, repair
+microscopy, or biological assays is a future programme. Neural decoders may be trained or adapted to
+measured event-conditioned noise, but no published decoder is claimed to have already been validated
+on the exact burst law used here. AlphaQubit 2 is a recent demonstration of scalable real-time neural
+decoding for topological codes under its evaluated settings; transfer to the radiation-conditioned
+channel is an open experiment [Senior et al., 2025].
+
+    Scope boundary
+    No result in the lattice benchmark is called a surface-code threshold, a holographic-code thresh-
+    old, a DNA damage threshold, a mutation probability, a lifespan estimate, or a biological repair
+    limit. No claim is made that “one muon defeats a quantum computer.” No claim is made that
+    solar neutrinos meaningfully damage cellular DNA.
+
+
+
+3     Quantum reliability: radiation, correlated errors, and decoding
+3.1      From radiation events to qubit disturbances
+
+Ionizing radiation can create energetic phonons and quasiparticles in superconducting substrates and
+circuit components. Those excitations can propagate and interact with multiple qubits, generating
+time-correlated error opportunities. The operational measurement is not simply an incoming particle
+count: it can include detector event times, detector-array coincidence patterns, qubit relaxation times,
+dephasing metrics, quasiparticle-sensitive observables, and the spatial response across a device. These
+
+
+                                                     5
+BURST-ROBUST CODES                                                             PREPRINT • 06 NOV 2026
+
+
+
+signals live at diﬀerent levels of the causal chain and should not be substituted for one another.
+   Castelli et al. synchronize microwave kinetic-inductance detector arrays with transmon measure-
+ments and report statistically signiﬁcant changes in T1 and T2 after selected detected events [Castelli
+et al., 2026]. The result supports the use of event-conditioned covariates. A disciplined statistical
+analysis would preserve the detector time stamp, coincidence multiplicity, event geometry, measure-
+ment latency, device conﬁguration, and competing explanations. The measured percentage change in
+a coherence parameter is not a logical error rate: a logical rate additionally depends on the code, the
+decoder, measurement schedule, correlations across cycles, and how often the event occurs.
+   Binney et al. demonstrate why classiﬁcation of the disturbance source matters. Radiation-related
+signatures and pulse-tube vibration signatures can both produce correlated errors, yet have diﬀerent
+temporal, spatial, and spectral ﬁngerprints [Binney et al., 2026]. A model that labels all correlations
+as radiation-induced would confound distinct physical processes. The event mark should therefore
+include source class or a posterior distribution over source classes, and the inference should retain
+uncertainty in that assignment.
+
+
+3.2   From physical faults to a quantum channel
+           ⊗
+Let HP = ni=1 Hi denote the physical-qubit Hilbert space and let C ⊂ HP be the code subspace. A
+disturbance event z induces a quantum channel Nz or, in a simpliﬁed Pauli description, a distribution
+over error operators E. A conventional IID model might assign independent error indicators Xi ∼
+Bernoulli(p). A correlated event model instead conditions local error probabilities on a shared random
+event:
+
+       P(Xi = 1 | Z = z) = ri (z),      Cov(Xi , Xj ) = E[Cov(Xi , Xj | Z)] + Cov(ri (Z), rj (Z)).     (1)
+
+The second covariance term can remain positive even when conditional faults are independent given
+the event. A shared radiation burst is one possible common cause. This construction is not limited
+to radiation; vibration, control leakage, thermal excursions, and correlated calibration failures can
+produce analogous dependence structures.
+   For a code with distance d, the familiar statement that arbitrary t = ⌊(d − 1)/2⌋ errors are cor-
+rectable is a worst-case combinatorial guarantee, not a prediction for a particular stochastic channel.
+Under a stochastic channel, logical performance depends on the distribution of error patterns and
+decoder. Under an erasure channel, the location of each erasure is known to the decoder, and cor-
+rectability is governed by whether the erased set supports an undetectable logical operator. These
+are diﬀerent channel assumptions. Radiation-associated disturbance should not automatically be rep-
+resented as a known erasure: it may be a mixture of dephasing, relaxation, leakage, measurement
+faults, and burst-induced correlations.
+
+
+3.3   Why correlations matter to decoders
+
+A decoder that assumes factorized likelihoods may score a correlated event as many independent
+faults. The same total number of single-qubit error indicators can produce radically diﬀerent geom-
+etry depending on where those errors land. If a cluster aligns with a logical operator or creates an
+ambiguous syndrome history, a code may fail at a rate not predicted by mean occupancy alone. Con-
+versely, a decoder that knows the event-conditioned likelihood may exploit the structure and improve
+performance, provided the event model is calibrated and the decoder can process the information
+within the cycle deadline.
+   A relevant operational metric is a logical failure probability per round, pL (d, η, τ ), conditioned on
+code distance d, channel parameters η, and decoder latency budget τ . Another is the probability
+that a radiation event generates a correlated fault pattern outside a decoder’s modeled support. The
+
+                                                    6
+BURST-ROBUST CODES                                                              PREPRINT • 06 NOV 2026
+
+
+
+appropriate benchmark compares independent and burst channels at matched marginal rates, the
+same code, the same decoder, identical measurement schedule, equal latency constraints, and held-out
+event traces. If event detection is used as side information, the detector latency and false-positive/false-
+negative rates must also be included.
+
+
+3.4   Holographic quantum error correction: a code-theoretic lens
+
+Holographic codes provide a particularly useful example of geometry-dependent recoverability. Tensor-
+network constructions encode bulk logical degrees of freedom into boundary degrees of freedom, and
+can represent reconstruction of a logical operator on diﬀerent boundary regions. The original HaPPY
+construction makes this relation explicit in a family of toy models [Pastawski et al., 2015]. Harlow
+showed how quantum error-correction language explains a version of the Ryu–Takayanagi relation
+and entanglement-wedge reconstruction [Harlow, 2017]. Later CSS holographic codes and threshold
+analyses have developed the code family and its erasure properties [Harris et al., 2018, Bao et al.,
+2022].
+    For a speciﬁed encoding isometry V : HL → HP and erased boundary subset E, exact erasure
+correction of a logical subsystem can be expressed through the Knill–Laﬂamme condition. If P = V V †
+is the code projector and {Ea } spans the error set supported on E, then
+
+                                      P Ea† Eb P = cab P   for all a, b.                                (2)
+
+For erasures, the locations are known and the condition can be recast through decoupling of the erased
+region from the logical subsystem. In holographic settings, reconstruction regions and entanglement
+wedges depend on the code geometry and selected logical algebra. The existence of a holographic
+code does not confer a universal tolerance to arbitrary extended bursts. A burst must be mapped
+onto the code’s physical boundary degrees of freedom and tested against the code-speciﬁc erasure or
+general-noise correctability condition.
+   A physically honest project would instantiate at least one explicit code family, publish its tensors or
+stabilizers, deﬁne the boundary placement of the physical qubits, construct burst-conditioned channels,
+run the decoder, and measure logical failure and decoding time over code sizes. The lattice experiment
+in this manuscript performs none of those code-speciﬁc steps. It oﬀers a geometric warning that an
+equal-occupancy comparison can conceal major diﬀerences in cluster structure; it is not a holographic
+threshold calculation.
+
+
+4     Radiobiology: high-LET tracks and clustered lesions
+4.1   Track structure is more informative than dose alone
+
+Absorbed dose is an energy-per-mass summary. It is an essential exposure quantity, but it does not
+uniquely specify the nanoscale or microscale spatial organization of energy deposition. High-LET
+charged particles deposit energy densely along tracks. Depending on species, energy, geometry, cell
+state, and chromatin context, the resulting damage can include single-strand breaks, double-strand
+breaks, base damage, chemically complex lesions, and clusters of lesions separated by short distances
+[Hagiwara et al., 2019, Shibata, 2022, Goodhead and Weinfeld, 2024, Wilkinson et al., 2023].
+   The scale of lesion complexity matters. A locally dense cluster may require coordinated processing
+and can pose diﬀerent risks than the same count of isolated lesions. But a lesion cluster is not
+equivalent to an unrepaired break, and an unrepaired break is not equivalent to mutation, chromosome
+aberration, or cell death. Each endpoint has a separate measurement deﬁnition and time scale. A
+model that collapses all endpoints into a single binary “cell failed” label discards the causal sequence
+that experiments are intended to resolve.
+
+                                                     7
+BURST-ROBUST CODES                                                                          PREPRINT • 06 NOV 2026
+
+
+
+                      Domain-specific causal pathways and a shared statistical layer
+         radiation          phonon / QP               qubit error          code / decoder
+           event             excitation                 field                 recovery
+
+
+
+
+                            marked point                                                             reliability
+                              process                                                                  metric
+
+
+
+
+          HZE ion          clustered DNA              repair-factor           cellular
+           track               lesions                  response             endpoint
+
+
+   Figure 2: Causal layers across the two domains. The shared marked-event process supplies statistical
+   structure; the quantum and biological causal branches remain diﬀerent. A dashed conceptual bridge is
+          represented through the common reliability metric, not through identical state dynamics.
+
+
+   Hagiwara et al. review the formation of clustered double-strand breaks and repair following heavy-
+ion irradiation, including chromosome-scale outcomes and lesion organization [Hagiwara et al., 2019].
+Shibata reviews clustered DNA damage following carbon-ion irradiation and the inﬂuence of LET and
+lesion complexity [Shibata, 2022]. Goodhead and Weinfeld trace the development of the clustered-
+damage concept across physics, chemistry, and cellular response [Goodhead and Weinfeld, 2024].
+Wilkinson, Hill, and Parsons review cellular responses to complex radiation-induced DNA damage
+[Wilkinson et al., 2023]. Together, these works justify retaining a spatial damage representation.
+They do not justify treating all tracks as equivalent or assigning one repair workload to each particle.
+
+4.2   Track-structure data and model calibration
+
+Recent H–Fe track-structure simulations provide a useful resource for species- and energy-dependent
+DNA damage distributions [Huang et al., 2026]. Such data can inform mark distributions: LET,
+radial dose, track radius, secondary-electron structure, lesion multiplicity, cluster density, and energy.
+A calibrated model should preserve the distinction between physical track variables and biological
+response variables. For example, a radial dose kernel is not itself a double-strand-break probability;
+chemistry and chromatin determine how energy deposition becomes a lesion endpoint.
+  A generic spatial lesion ﬁeld can be written as
+                                           ∑
+                            L(x, t) =          Wk Kℓ (x − Xk ; Θk , Λk ) Gk (t − Tk ),                             (3)
+                                           k
+
+where Kℓ is a domain-speciﬁc spatial kernel, Wk represents severity or expected lesion workload,
+Θk includes orientation and radiation quality, Λk includes track scale, and Gk describes temporal
+chemistry or processing. The choice of threshold for calling a lesion cluster must be tied to an assay
+and genomic scale. A point-process kernel used for a synthetic lattice is not an empirically calibrated
+DNA lesion kernel.
+
+4.3   A controllable perturbation is not a physical substitute
+
+House et al. developed a dCas9–KillerRed system that can generate transient, localized, light-
+activated oxidative DNA damage at targeted genomic regions. Their study reports site-speciﬁc ox-
+idative damage, rapid repair under tested conditions, and few detectable sequencing errors in that
+
+                                                            8
+BURST-ROBUST CODES                                                                       PREPRINT • 06 NOV 2026
+
+
+
+experimental context [House et al., 2020]. The system is valuable because it can help study local
+repair kinetics and perturb genomic regions in a controlled manner. It is not a high-LET heavy-ion
+track, does not reproduce the full secondary-particle and energy-deposition structure of an HZE ion,
+and is not evidence that targeted damage inevitably overwhelms repair.
+   The 2025 review by Dey and Barnes surveys genetically targeted oxidative-stress approaches and
+helps place such tools within a broader perturbation landscape [Dey and Barnes, 2025]. For any experi-
+mental use, light dose, guide speciﬁcity, KillerRed expression, oxygen availability, local ROS chemistry,
+oﬀ-target eﬀects, repair pathway, and assay sensitivity would need explicit controls. A benchmark
+must also distinguish initial damage induction from persistence of damage and from downstream
+functional eﬀects.
+
+
+5     A shared mathematical language without a shared mechanism
+5.1   Marked space-time events
+
+Let (Ω, F, P) be a probability space. A disturbance history is represented by a marked point process
+                                ∑
+                           Φ=        δZk ,        Zk = (Tk , Xk , Θk , Lk , Wk , Mk ).                      (4)
+                                 k
+
+Here Tk is event time, Xk is an anchor location, Θk describes orientation or morphology, Lk is an
+extent or scale parameter, Wk is severity or workload, and Mk is a source or mechanism mark. The
+location space may be a device graph, a two-dimensional chip layout, a three-dimensional cell nucleus,
+or a genomic coordinate system. Time may be continuous, discrete, or a mixed event/cycle index.
+   The event process can be homogeneous Poisson, inhomogeneous Poisson, Cox, Hawkes, renewal,
+or a physically speciﬁed transport-derived process. A homogeneous Poisson process is an analytically
+convenient baseline, not a claim that cosmic-ray events or DNA lesions are universally Poisson in every
+observed coordinate. Event clustering can arise from parent-child processes, latent environmental
+ﬂuctuations, or a common physical event that generates a multi-site footprint. The model class
+should be selected from detector and assay data rather than from mathematical convenience alone
+[Last and Penrose, 2017, Moller and Waagepetersen, 2004].
+
+
+5.2   Footprints and local burden
+
+For event mark z, deﬁne a spatial footprint C(z) ⊆ X or a nonnegative kernel K(x; z). In a binary
+model, the damaged region at time t is
+                                                        ∪
+                                               Dt =             C(Zk ),                                     (5)
+                                                      k:Tk ≤t
+
+possibly after applying a persistence or recovery rule. In a soft-burden model,
+                                      ∑
+                         B(x, t) =             Wk K(x − Xk ; Θk , Lk )G(t − Tk ; Zk ).                      (6)
+                                     k:Tk ≤t
+
+A binary state can be derived by thresholding B, but preserving the continuous ﬁeld is often preferable
+because the threshold can be assay-dependent and multiple weak exposures may accumulate.
+   The footprint need not be a contiguous disk or line. A quantum event may induce a device-speciﬁc
+correlated error map through a phonon/quasiparticle propagator; a charged-particle track may induce
+a narrow core plus a radial halo of secondary-electron damage. The same abstract mark tuple does
+not force identical kernels. In fact, the most important domain-speciﬁc work is usually the estimation
+of K, G, and the conditional map from physical event to observable disturbance.
+
+                                                         9
+BURST-ROBUST CODES                                                                    PREPRINT • 06 NOV 2026
+
+
+
+         Table 2: Correspondence between statistical abstractions and domain-speciﬁc quantities.
+
+ Abstract object          Quantum device interpretation                 Cellular/radiobiology interpretation
+ Event time Tk            Radiation detector event or burst onset       Particle traversal / energy-deposition
+                                                                        event
+ Anchor Xk                Chip coordinate or phonon-origin region       Nuclear or chromatin coordinate
+ Orientation Θk           Device geometry, propagation direction,       Particle-track direction and local geome-
+                          anisotropic response                          try
+ Extent Lk                Correlation length/time of device re-         Track length, radial scale, lesion-cluster
+                          sponse                                        extent
+ Severity Wk              Conditional channel strength, leakage or      Lesion multiplicity / complexity or re-
+                          fault weight                                  pair workload proxy
+ Recovery map             Syndrome extraction, decoder and logi-        Repair pathways, checkpoints, chro-
+                          cal recovery                                  matin and cell response
+ Failure observable       Logical error, loss of state ﬁdelity, dead-   Persistent lesion, aberration, mutation,
+                          line miss                                     loss of viability
+
+
+5.3   Substrate maps
+
+For a quantum device, let Q map a realization of Φ into a quantum channel history N0:H , potentially in-
+cluding Pauli faults, leakage, amplitude damping, correlated measurement errors, and non-Markovian
+memory. For a cell, let B map Φ into a lesion process, repair-factor response, chromatin state, and
+downstream endpoint. The common notation is
+                      Q      D                               B          R
+                  Φ−
+                   → N0:H −
+                          → logical outcome,             Φ−
+                                                          → L0:H −
+                                                                 → biological endpoint.                         (7)
+
+The maps Q, B, D, and R have separate parameters, validation standards, and failure deﬁnitions.
+
+
+5.4   Observable-speciﬁc failure
+
+Let YQ denote a quantum logical observable, such as a logical Pauli error in one correction cycle or
+a logical failure during a ﬁxed algorithmic horizon. Let YB denote a biological endpoint, such as
+persistent clustered lesions at time τ , chromosome aberration frequency, mutation burden, clonogenic
+survival, or a deﬁned functional phenotype. A generic reliability event is
+
+                                 FQ = {YQ ∈ FQ },           FB = {YB ∈ FB }.                                    (8)
+
+The failure sets are not interchangeable. A comparison is meaningful only at the level of shared
+statistical descriptors, not by equating FQ and FB .
+
+
+6     Recovery as a ﬁnite-capacity process
+6.1   Quantum recovery is not a single-server queue
+
+A quantum decoder consumes measurement outcomes and produces corrections or Pauli-frame up-
+dates. Its workload can include syndrome processing, belief updates, neural inference, communication,
+and memory movement. The cycle deadline is a real-time constraint: even an accurate correction may
+be operationally too late if it arrives after the control system requires it. Nevertheless, quantum re-
+covery is not generally reducible to one scalar repair server. A queue is at most a useful abstraction
+for a chosen processing subsystem, such as a decoder pipeline or a ﬁnite bandwidth path for event
+metadata.
+
+
+                                                       10
+BURST-ROBUST CODES                                                           PREPRINT • 06 NOV 2026
+
+
+
+   For a code, recoverability is ﬁrst a channel-and-code property. The decoder then approximates
+or implements an optimal or near-optimal inference rule under the supplied noise model. The per-
+formance metrics include logical failure probability, decoding latency, throughput, memory use, and
+degradation under distribution shift. A decoder trained on independent depolarizing noise may be
+miscalibrated under rare correlated bursts even if the marginal single-qubit error rate is unchanged.
+
+
+6.2   Biological repair workload
+
+DNA repair is distributed across multiple molecular pathways and regulated by cell state. A lesion
+may be recognized, processed, resected, ligated, bypassed, or left persistent; pathway use can depend
+on lesion chemistry, cell-cycle phase, chromatin accessibility, and local protein availability. A scalar
+service capacity µ therefore cannot represent the whole biological response. It can be a coarse aggre-
+gate for a restricted assay or a theoretical workload variable, provided its interpretation is declared
+and measured.
+   Deﬁne a repair-workload unit as an empirically calibrated quantity of pathway-speciﬁc processing
+demand. For example, an assay might estimate expected repair-factor occupancy time per lesion class,
+or infer a distribution of processing time for a deﬁned lesion type under a speciﬁed cell condition. A
+single heavy-ion event may generate a random total workload Sk , with distribution depending on
+LET, species, cell state, and cluster architecture. If repair capacity varies over time, write µ(t). If
+multiple pathways operate in parallel, the model requires a service network or vector capacity µ, not
+a scalar.
+
+
+6.3   Lindley workload recursion
+
+For a restricted single-server abstraction, let An be the interarrival time between event workloads, let
+Sn be service work, and let µ be constant service capacity measured in work units per unit time. The
+unﬁnished work immediately before event n obeys
+
+                                 Wn+1 = max{0, Wn + Sn − µAn+1 }.                                    (9)
+
+This recursion is useful because it makes recovery debt explicit. When event spacing is long relative to
+service demand, the queue empties. When multiple large workloads arrive close together, unﬁnished
+work accumulates. The recurrence also clariﬁes why identical event counts can have diﬀerent outcomes:
+the order and spacing of workloads matter.
+   A continuous-time M/G/1 approximation has Poisson arrivals at rate λ, independent identically
+distributed service requirements S, and constant service rate µ. Its traﬃc intensity is
+
+                                                   λE[S]
+                                              ρ=         .                                          (10)
+                                                     µ
+The condition ρ < 1 is the standard stability condition for this model. It is not a suﬃcient condition
+for every lesion to be repaired before a biological checkpoint, nor for every quantum fault to be
+decoded before a deadline. It says that the long-run oﬀered workload is below mean service capacity
+in the speciﬁed queue.
+
+
+7     Theory: dependence, workload stability, and horizon risk
+7.1   Equal marginals do not determine joint failure risk
+
+An average occupancy statistic can conceal radically diﬀerent dependence structures. The following
+proposition is elementary, but it is a useful guardrail for all matched-rate comparisons.
+
+                                                   11
+BURST-ROBUST CODES                                                                  PREPRINT • 06 NOV 2026
+
+
+
+                            Table 3: Recovery metrics that must remain distinct.
+
+ Metric                      Quantum system                             Biological system
+ Correctability              Whether an error set is correctable for    No direct analogue; lesion processing
+                             a code                                     depends on molecular context
+ Inference/processing de-    Decoder latency per cycle or event         Repair-factor recruitment and process-
+ lay                                                                    ing times
+ Workload accumulation       Queue in a decoder or control pipeline     Unﬁnished lesion-processing demand
+                                                                        under selected pathway abstraction
+ Failure endpoint            Logical error, leaked state, cycle dead-   Persistent lesion, aberration, mutation,
+                             line miss                                  loss of viability
+ Recovery reserve            Redundancy, code distance, decoder         Repair pathway availability, check-
+                             throughput                                 point capacity, chromatin context
+
+
+Proposition 7.1 (Two-site dependence counterexample). Consider a system that fails if both of two
+sites are disturbed. Let each site have marginal disturbance probability p ∈ (0, 1). Under independent
+disturbances, the failure probability is p2 . Under a common-shock model in which both sites are dis-
+turbed together with probability p, the marginal probabilities are still p, but the failure probability is p.
+Thus equal marginals do not determine the failure probability.
+
+Proof. For independent Bernoulli indicators X1 , X2 , P(X1 = X2 = 1) = P(X1 = 1)P(X2 = 1) = p2 .
+Under the common-shock construction, set X1 = X2 = U where U ∼ Bernoulli(p). Each marginal
+remains p, while P(X1 = X2 = 1) = P(U = 1) = p. Since p2 ̸= p for p ∈ (0, 1), the failure probabilities
+diﬀer.
+
+   This result does not say that positive correlation always increases every conceivable failure event.
+The direction depends on the event geometry, code, and observable. It says that marginal calibration
+alone does not identify a nonlinear failure functional. A matched-occupancy experiment must either
+measure relevant dependence statistics or state that its comparison is one particular channel contrast.
+
+
+7.2    Queue stability result
+
+Proposition 7.2 (M/G/1 workload stability). Assume Poisson arrivals with rate λ > 0, iid nonneg-
+ative service requirements Sk with ﬁnite mean, a work-conserving single server with constant service
+rate µ > 0, and no abandonment or feedback. The standard M/G/1 workload process admits a proper
+stationary workload distribution when ρ = λE[S]/µ < 1. When ρ ≥ 1, the oﬀered work is not below
+service capacity and a ﬁnite stationary workload distribution does not exist under the usual nondegen-
+erate assumptions.
+
+Proof. Rescale service work into time units by deﬁning B = S/µ. The server then has unit service
+speed and the M/G/1 traﬃc intensity is λE[B] = λE[S]/µ = ρ. The classical M/G/1 stability criterion
+is ρ < 1, under the stated ﬁnite-mean assumptions. The proposition is the workload version of this
+standard result; see, for example, Gross et al. [1998].
+
+   For heavy-tailed workloads, the queue can be stable while its stationary workload has a long tail and
+large quantiles. A ﬁnite mean does not guarantee a small probability of severe backlog. A practical
+study should estimate not only E[S], but also the tail, variance, possible mixture structure, and
+dependence of workload on prior events. If events arrive in clusters or if service capacity changes with
+time, the M/G/1 criterion is no longer automatically suﬃcient. A Markov-modulated, batch-arrival,
+or network-of-queues model may be required.
+
+
+                                                      12
+BURST-ROBUST CODES                                                            PREPRINT • 06 NOV 2026
+
+
+
+7.3   Catastrophic marked-event risk
+
+Suppose disturbance arrivals are Poisson with rate λ. Each arrival independently receives a mark and
+is catastrophic with probability qF , where catastrophe is deﬁned relative to a speciﬁed code/decoder
+or biological endpoint. Independent thinning implies that catastrophic events form a Poisson process
+with rate λqF .
+
+Proposition 7.3 (Poisson thinning horizon risk). Under the preceding assumptions, the probability
+of at least one catastrophic event in a horizon of length T ≥ 0 is
+
+                                     Pcat (T ) = 1 − exp(−λqF T ).                                  (11)
+
+Proof. The count of arrivals in the horizon is Poisson with mean λT . Independent marking retains
+each event with probability qF , so the retained count is Poisson with mean λqF T . The probability of
+zero retained events is exp(−λqF T ); its complement yields the result.
+
+   The quantity qF is not a universal constant. It depends on the code or biological system, the
+event mark distribution, operating conditions, recovery response, and chosen endpoint. For quantum
+hardware, it could be the conditional probability that a radiation event drives a logical failure within
+a speciﬁed correction horizon. For a cell, it could be the probability that the event causes a chosen
+biological endpoint under speciﬁed exposure and repair conditions. Those probabilities must be
+separately measured.
+
+
+7.4   A model-conditional risk envelope
+
+For a target horizon risk ϵ ∈ (0, 1), Equation (11) implies
+
+                                                 − log(1 − ϵ)
+                                         λqF ≤                .                                     (12)
+                                                      T
+Combining this with queue stability gives two distinct constraints: one on the expected workload
+oﬀered to a recovery process and one on the rate of events that individually cross a declared catas-
+trophic boundary. Neither constraint subsumes the other. A system can have ρ < 1 but still experience
+rare catastrophic events; conversely, an individual event may be non-catastrophic while the long-run
+workload is unstable.
+
+   Central result
+   The safe operating region is a function of at least the event rate, the full mark distribution,
+   footprint law, code or repair model, ﬁnite recovery capacity, observation horizon, and the ac-
+   ceptable risk. No universal scalar “burst threshold” follows from average occupancy or dose
+   alone.
+
+
+7.5   Dimensionless descriptors for cross-domain comparison
+
+Useful comparisons can be organized around dimensionless ratios, provided their domain-speciﬁc inter-
+pretation is preserved. Examples include the expected number of events per recovery time λτR , burst
+extent relative to code distance or characteristic repair-domain size L/d or L/ℓR , oﬀered workload
+ratio ρ, and the number of correlated sites per event divided by the number of active components.
+These ratios do not create a common physical unit. They help compare structural regimes such as
+isolated disturbances, overlapping bursts, and recovery backlog.
+
+
+
+
+                                                  13
+BURST-ROBUST CODES                                                            PREPRINT • 06 NOV 2026
+
+
+
+8     Benchmark design: a transparent geometric surrogate
+8.1   Why a surrogate is used
+
+A physical quantum-code simulation and a biological track-structure simulation require diﬀerent
+toolchains, parameter sets, and validation data. A surface-code study requires a speciﬁc stabilizer
+layout, measurement circuit, detector error model, decoder, and ﬁnite-size scaling. A radiobiology
+study requires physical track transport and chemical/biological response models. The present experi-
+ment isolates a narrower mathematical question: can two channels with the same expected lattice-wide
+mean occupancy have diﬀerent spanning-connectivity statistics when one channel has spatially corre-
+lated ﬁnite footprints?
+   The lattice is a ﬁnite square graph GN = (VN , EN ) with N × N sites and four-neighbour edges.
+A site is declared erased or occupied by a disturbance. Failure is deﬁned as the existence of a four-
+neighbour connected component touching opposite boundaries, either left-to-right or bottom-to-top.
+This event is a deliberately simple geometric proxy for a connected failure set; it is not an encoded
+logical failure.
+
+
+8.2   IID channel
+
+For target probability p, each lattice site is independently erased with probability p:
+                                       iid
+                                    Xi ∼ Bernoulli(p),      i ∈ VN .                               (13)
+
+This is a homogeneous baseline with identical sitewise marginals and no spatial covariance between
+distinct sites.
+
+
+8.3   Finite-track channel
+
+A track is a straight segment of ﬁve lattice sites centered at a uniformly selected anchor and oriented
+uniformly among four directions: horizontal, vertical, and the two diagonals. A Poisson number of
+tracks is superposed on the lattice. Tracks are clipped at boundaries; if several tracks cover the same
+site, it is still counted once. Let qi denote the probability that one uniformly anchored and oriented
+track covers site i. For a Poisson number of independent track placements with intensity λT , Poisson
+thinning gives
+                                       P(Xi = 1) = 1 − exp(−λT qi ).                                (14)
+Because tracks are clipped, the qi values are not constant across the lattice. The calibration target
+is not site-by-site equality with the IID model. It is exact equality of expected lattice-wide mean
+occupancy:
+                                     1 ∑
+                                            [1 − exp(−λT qi )] = p.                              (15)
+                                    N 2 i∈V
+                                             N
+
+The unique nonnegative solution is found by bisection because the left side is continuous and strictly
+increasing in λT whenever at least one site has positive hit probability. Appendix A gives the compu-
+tation and boundary discussion.
+
+
+8.4   Simulation protocol
+
+The primary experiment uses N = 24, ten probability values from 0.20 to 0.65 in increments of 0.05,
+4,000 trials per channel at each probability, and random seed 20261106. One generator produces
+the IID mask and then the track mask for each trial. The main benchmark records the number of
+spanning masks. A separate sensitivity analysis uses lattice sizes 12, 18, 24, and 32 with 700 trials
+
+                                                  14
+BURST-ROBUST CODES                                                                               PREPRINT • 06 NOV 2026
+
+
+
+                      Correlated finite-track realization                        IID realization (same target mean)
+
+                 20                                                         20
+
+                 15                                                         15
+
+   Lattice row   10                                           Lattice row   10
+
+                  5                                                          5
+
+                  0                                                          0
+                      0     5       10       15     20                           0      5      10       15   20
+                                 Lattice column                                             Lattice column
+
+ Figure 3: Illustrative independent and correlated masks with the same target lattice-wide mean occupancy.
+Individual realizations ﬂuctuate, and the track process has edge-dependent sitewise marginals due to clipping.
+                 The ﬁgure illustrates channel geometry rather than physical radiation tracks.
+
+                                   Table 4: Primary synthetic benchmark speciﬁcation.
+
+ Component                                 Declared speciﬁcation
+ Graph                                     Square lattice, N = 24, four-neighbour adjacency
+ Failure event                             Any erased component spans left–right or bottom–top
+ IID process                               Independent Bernoulli occupancy with probability p
+ Track process                             Poisson count; uniform anchor; four equally likely orientations; ﬁve-site
+                                           straight segment; clipped at boundary
+ Calibration                               Bisection solving the exact expected lattice-wide mean occupancy equa-
+                                           tion
+ Probability grid                          0.20, 0.25, . . . , 0.65 (ten points)
+ Monte Carlo                               4,000 trials per channel and probability; seed 20261106
+ Inference                                 Frequencies with Wilson 95% intervals; no claim of asymptotic threshold
+
+
+per probability and channel at p ∈ {0.30, 0.40, 0.50}. A second sensitivity analysis varies track length
+among 3, 5, and 7 sites, using 900 trials per probability and track length at p ∈ {0.30, 0.40, 0.50}.
+These additional sweeps are explicitly labelled diagnostic simulations, not evidence for a physical
+scaling law.
+
+
+8.5          Uncertainty convention
+
+For a count k in n Bernoulli trials, the sample rate is p̂ = k/n. We report Wilson score intervals with
+the 1.96 normal quantile. A zero count is not interpreted as zero probability. At k = 0, n = 4, 000, the
+rough rule-of-three upper bound is 3/4, 000 = 0.00075, or 0.075%. The Wilson interval used by the
+code is also nonzero. The intervals represent Monte Carlo uncertainty under the synthetic generator;
+they do not include model uncertainty, physical calibration error, or uncertainty about whether the
+surrogate is appropriate.
+
+
+
+
+                                                            15
+BURST-ROBUST CODES                                                                 PREPRINT • 06 NOV 2026
+
+
+
+9     Benchmark results
+9.1   Primary spanning frequencies
+
+Table 5 gives the primary outcomes. The track channel has a higher observed spanning frequency at
+every one of the ten tested grid points. At p = 0.40, the IID channel produced 0 spanning masks in
+4,000 trials, while the track process produced 705, a frequency of 17.625%. At p = 0.50, the rates were
+5.475% and 68.425%. At p = 0.60, the rates were 74.300% and 96.900%. This pattern is a property
+of the selected ﬁnite lattice, track geometry, boundary rule, and spanning deﬁnition.
+
+            Table 5: Primary 24×24 benchmark: spanning failures in 4,000 trials per channel.
+
+                      Target p   IID failures   Track failures    IID rate   Track rate
+                          0.20             0                  2    0.000%       0.050%
+                          0.25             0                  7    0.000%       0.175%
+                          0.30             0                 45    0.000%       1.125%
+                          0.35             0                224    0.000%       5.600%
+                          0.40             0                705    0.000%      17.625%
+                          0.45            11              1,606    0.275%      40.150%
+                          0.50           219              2,737    5.475%      68.425%
+                          0.55         1,229              3,497   30.725%      87.425%
+                          0.60         2,972              3,876   74.300%      96.900%
+                          0.65         3,893              3,984   97.325%      99.600%
+
+
+   The curve in Figure 4 visualizes these results with Wilson intervals. At low occupancy, the absolute
+failure rate is small in both channels, but the track channel begins producing spanning events earlier
+in the tested grid. At high occupancy, both channels approach saturation. The visual gap is largest
+in the intermediate regime where connectivity is sensitive to cluster geometry. This shape should not
+be mistaken for a sharp thermodynamic phase transition: the lattice has ﬁnite size, the channel has
+a ﬁxed synthetic track law, and the sweep samples only ten discrete probabilities.
+
+
+9.2   Spatial covariance and component-size distribution
+
+The track process induces positive spatial covariance for nearby sites because one track can cover
+more than one site. Figure 5 plots the mean covariance for horizontal separations. The covariance
+decays with separation in this ﬁnite straight-line model because a single short track is less likely to
+cover both sites when they are farther apart. Orientation and boundary clipping create anisotropy
+that a radial average would conceal. The diagnostic therefore reports horizontal separations only and
+is not presented as an isotropic correlation function.
+   Figure 6 shows the distribution of sizes of four-neighbour erased components from 1,600 additional
+realizations per channel at target occupancy p = 0.40. The comparison is descriptive. It reveals how
+the dependence law changes the component-size distribution even when the mean occupancy target is
+the same. The tail of the cluster-size distribution matters for spanning risk, but the histogram does
+not itself deﬁne logical failure for a quantum code or unrepaired damage for a cell.
+
+
+9.3   Finite-size sensitivity
+
+A ﬁnite-size experiment asks whether the qualitative relationship persists as the graph changes. Fig-
+ure 7 summarizes simulations at lattice sides N = 12, 18, 24, 32, with 700 trials per point for three
+probabilities. The observed values ﬂuctuate because the number of trials is ﬁnite. The curves are not
+suﬃcient for ﬁnite-size scaling exponents or a critical threshold estimate. A credible threshold study
+
+                                                     16
+BURST-ROBUST CODES                                                                                           PREPRINT • 06 NOV 2026
+
+
+
+                                                    Finite-size geometric failure at matched mean occupancy
+                                   1.0         IID erasures
+                                               Poisson track bursts
+
+                                   0.8
+
+
+
+
+      Spanning-failure frequency
+                                   0.6
+
+
+                                   0.4
+
+
+                                   0.2
+
+
+                                   0.0
+                                         0.2                   0.3                  0.4             0.5           0.6
+                                                                      Target lattice-wide mean occupancy p
+ Figure 4: Primary Monte Carlo spanning frequencies with Wilson 95% intervals. The ﬁgure compares two
+ synthetic channels at matched expected lattice-wide mean occupancy. It is not a physical threshold curve.
+
+
+would require more sizes, denser sampling near the transition, uncertainty propagation, a documented
+scaling ansatz, and independent validation of the channel law.
+
+
+9.4                    Binomial uncertainty
+
+Figure 8 compares intervals for p = 0.40, 0.50, 0.60. When the IID count is zero, the lower end is zero
+and the upper end remains positive. This is important because reporting “0%” without a sample-size
+statement can create a false sense of certainty. For the track channel, the intervals are narrow relative
+to the observed diﬀerences because 4,000 trials are used, but they still quantify only Monte Carlo
+sampling error.
+
+
+9.5                    Track-length sensitivity
+
+A key model assumption is the ﬁve-site track length. The sensitivity analysis changes the segment
+length to 3 and 7 sites, recalibrating the Poisson intensity separately so that expected lattice-wide
+mean occupancy remains ﬁxed. Figure 9 displays the resulting track-channel spanning frequencies.
+The analysis illustrates that track morphology is not a nuisance parameter that can be omitted: longer
+segments tend to create diﬀerent connected components, while exact direction, clipping, and anchor
+statistics also matter. The ﬁnite Monte Carlo values should not be extrapolated to a real ion track
+without physical calibration.
+
+
+9.6                    What the benchmark does and does not establish
+
+The synthetic experiment establishes that, under this declared lattice generator, a matched expected
+lattice-wide mean occupancy does not imply matched spanning frequency. It also gives a reproducible
+data set for testing code, plotting, interval calculations, and alternative cluster statistics. It does not
+show that every correlated process is worse than IID noise. A process that clusters faults in locations
+
+                                                                                   17
+BURST-ROBUST CODES                                                                                        PREPRINT • 06 NOV 2026
+
+
+
+                                                      Shared-track overlap induces spatial covariance
+                                0.040
+                                0.035
+                                0.030
+
+
+
+         Mean pair covariance
+                                0.025
+                                0.020
+                                0.015
+                                0.010
+                                0.005
+                                0.000
+                                                1         2        3          4         5           6     7          8
+                                                                  Horizontal separation (lattice sites)
+
+Figure 5: Analytic mean pair covariance under the Poisson track model at target occupancy p = 0.40. The
+   values follow from exact shared-track coverage probabilities for horizontal pairs; they are not ﬁtted to
+                                              radiation data.
+
+
+that are benign for a particular code could be less harmful than another process with the same mean.
+It does not estimate a surface-code threshold or holographic-code threshold. It does not simulate
+DNA damage, lesion chemistry, or repair. It does not infer a physical cosmic-ray rate or biological
+dose-response curve.
+
+
+10     Interpreting the reliability envelope
+The mathematical layers provide a compact way to state what must be known before a system-level
+reliability prediction can be made. First, the event process must be characterized. Second, event
+marks must be translated into a substrate-speciﬁc disturbance. Third, recovery and observation must
+be measured. Fourth, the failure event and horizon must be deﬁned. A statement such as “the average
+event rate is low” addresses only part of the problem.
+
+
+10.1   Quantum operating envelope
+
+For quantum devices, a candidate operating envelope is a set of code/decoder/channel conﬁgurations
+satisfying both logical-risk and real-time constraints:
+
+                                        AQ = {(d, η, τ ) : PL (d, η; T ) ≤ ϵL ,    P(decode latency > τ ) ≤ ϵτ } .          (16)
+
+Here PL should be measured under event-conditioned channels and include relevant correlations across
+qubits and cycles. The latency constraint accounts for the real-time nature of fault-tolerant control.
+The model could include detector-informed mitigation, shielding, material changes, and code/decoder
+co-design, but those interventions must be evaluated on the same device and benchmark protocol.
+
+
+
+
+                                                                             18
+BURST-ROBUST CODES                                                                                          PREPRINT • 06 NOV 2026
+
+
+
+                                                  Component-size distributions at matched target occupancy p = 0.40
+                                                                                                                           IID
+                                                                                                                           Track
+                                       10 1
+
+
+
+
+       Empirical density (log scale)
+                                       10 2
+
+
+                                       10 3
+
+
+                                       10 4
+
+
+                                              0           10          20            30          40             50            60
+                                                                    4-neighbour erased-component size
+
+     Figure 6: Empirical distribution of 4-neighbour erased-component sizes at matched target occupancy
+                        p = 0.40. The logarithmic vertical scale emphasizes the tail.
+
+
+10.2                  Biological operating envelope
+
+For a biological system, an operating envelope might constrain a persistent-lesion endpoint, a chromosome-
+aberration endpoint, and a viability endpoint simultaneously:
+
+  AB = {(ζ, c, τ ) : P (Lpersist (τ ) > ℓ∗ ) ≤ ϵ1 ,                        P (Yaberration = 1) ≤ ϵ2 ,   P (Yviability = 0) ≤ ϵ3 } ,   (17)
+
+where ζ denotes radiation-quality and track parameters and c denotes cellular context. These end-
+points should not be compressed into one “repair success” value without an explicit measurement
+model. A cell can repair most measured lesions yet retain a small number of critical lesions; con-
+versely, damage markers can persist without mapping one-to-one to loss of viability.
+
+
+10.3                  Why matched dose and matched occupancy are diﬀerent
+
+Dose matching is a physical exposure design choice. Occupancy matching is a statistical construc-
+tion in a simpliﬁed model. A real experiment could match absorbed dose while observing diﬀerent
+track distributions, or match the mean number of qubit error events while observing diﬀerent spatial
+correlation. The variables being matched must be stated. For a fair quantum comparison, matching
+only the average bit-ﬂip rate may still leave diﬀerent leakage rates and time correlations. For a fair
+biological comparison, matching dose may still leave diﬀerent lesion multiplicity and chemistry. In
+both cases, a richer calibration vector is needed.
+
+
+11          Measurement design: from event logs to calibrated kernels
+A realistic study should begin with measurement architecture rather than selecting a sophisticated
+model class. The objective is to capture the event, the induced spatial-temporal response, and the re-
+covery endpoint on a common time base. Without synchronized timestamps and calibration standards,
+an apparent burst may be an alignment artifact or an unmodeled confounder.
+
+
+
+                                                                              19
+BURST-ROBUST CODES                                                                                      PREPRINT • 06 NOV 2026
+
+
+
+                                                     Finite-size dependence (700 trials per point)
+                                 1.0                                                           track p=0.3     iid p=0.4
+                                                                                               iid p=0.3       track p=0.5
+                                                                                               track p=0.4     iid p=0.5
+                                 0.8
+
+
+
+
+    Spanning-failure frequency
+                                 0.6
+
+                                 0.4
+
+                                 0.2
+
+                                 0.0
+                                       12.5   15.0       17.5     20.0       22.5       25.0        27.5     30.0      32.5
+                                                                  Lattice side length N
+  Figure 7: Finite-size sensitivity for three occupancy values. Each point uses 700 trials per channel. The
+     panel is a diagnostic of the chosen surrogate, not a ﬁnite-size scaling analysis of a quantum code.
+
+
+11.1                             Quantum measurement protocol
+
+A quantum study should collect: (i) radiation detector events with calibrated spatial response and
+time stamps; (ii) qubit-resolved error or coherence measurements; (iii) device layout and material-
+stack metadata; (iv) cryogenic operating variables and pulse-tube/vibration channels; (v) stabilizer
+or syndrome outcomes; and (vi) decoder output and latency. The primary event model should be ﬁtted
+on one set of runs and evaluated on held-out runs, devices, or operating conditions. Event-triggered
+averages should be complemented by matched control windows and shuﬄed-time null models. The
+analysis should report detector eﬃciency, event association uncertainty, missing data, and false alarms.
+   A fair decoder comparison should hold ﬁxed the code family, code distance, syndrome schedule,
+decoder compute budget, logical observable, and correction deadline. Baselines should include an IID
+model, a physically motivated correlated model, and an oracle model only when the oracle information
+is deﬁned and available in the experiment. If a detector signal is used as side information, the latency
+and resource use of that detector should be counted. A decoder that achieves a lower logical error by
+consuming information that arrives too late is not an operational improvement.
+
+
+11.2                             Biological measurement protocol
+
+A biological study should combine physical track-structure estimates with lesion-sensitive microscopy
+or molecular measurements and explicit repair time courses. Radiation quality, ion species, en-
+ergy, dose, dose rate, cell type, cell-cycle distribution, oxygenation, and genomic context should
+be recorded. Candidate endpoints include clustered DSB foci, lesion complexity, repair-factor recruit-
+ment, sequencing-based repair outcomes, chromosome aberrations, and clonogenic survival. These
+endpoints should be preregistered and analysed separately.
+   Track simulations can provide a prior for the spatial deposition kernel, but the biological trans-
+formation from energy deposition to lesion complexity should be calibrated with empirical assays.
+Where possible, uncertainty from the track simulator, chemical model, image reconstruction, and cell-
+to-cell heterogeneity should be propagated into the ﬁnal repair-workload distribution. A single mean
+
+                                                                       20
+BURST-ROBUST CODES                                                                            PREPRINT • 06 NOV 2026
+
+
+
+                                                 Wilson 95% intervals for selected benchmark points
+                             1.0
+
+                             0.8
+
+
+
+
+       Failure probability
+                             0.6
+
+                             0.4
+
+                             0.2
+
+                             0.0
+                               0.4 i
+                                    id        rack              0.5 i
+                                                                     id             rack     0.6 i
+                                                                                                  id        rack
+                                         0.4 t                                 0.5 t                   0.6 t
+
+Figure 8: Wilson 95% intervals for selected primary benchmark points. The zero-failure IID observations at
+                       p = 0.40 and below have nonzero upper conﬁdence limits.
+
+
+workload is not enough when the tail of the workload distribution drives rare persistence.
+
+
+11.3             Calibration, holdout, and falsiﬁcation
+
+The validation sequence should be: deﬁne an observable; calibrate the event detector; estimate a
+spatial-temporal kernel on a training set; predict held-out event maps; compare predicted and observed
+cluster statistics; then evaluate the downstream decoder or repair endpoint. At each layer, a null
+model and a competing explanation are needed. In quantum systems, vibration and thermal drift are
+plausible confounders. In biological systems, baseline damage, cell-cycle heterogeneity, oxygenation,
+and cell-speciﬁc repair competence are plausible confounders.
+
+
+12        Adaptive inference and AI-assisted recovery
+Machine-learning methods can help estimate event-conditioned noise, decode complex syndromes,
+or allocate limited analysis resources. But an adaptive method should be introduced only after
+the observation model and control objective are deﬁned. An AI system cannot compensate for an
+unidentiﬁable event process or a biased endpoint. It can learn a powerful mapping from data while
+remaining wrong under distribution shift.
+
+
+12.1             Neural decoding under correlated bursts
+
+AlphaQubit 2 is a neural decoder for topological codes that reports high-accuracy and real-time per-
+formance under the noise models and hardware settings evaluated in its study [Senior et al., 2025]. Its
+relevance here is methodological: high-accuracy neural decoding can operate at the timescale needed
+for error correction, and it motivates testing whether event-conditioned features improve decoding of
+correlated channels. It does not establish that AlphaQubit 2 is validated on the exact radiation-event
+distribution in this manuscript.
+  A suitable experiment would compare decoder variants trained on: (a) IID channel data; (b)
+
+
+                                                                          21
+BURST-ROBUST CODES                                                                                                 PREPRINT • 06 NOV 2026
+
+
+
+                                                Sensitivity to the assumed straight-track length (900 trials/point)
+                                    1.0         p=0.3
+                                                p=0.4
+                                                p=0.5
+                                    0.8
+
+
+
+
+       Spanning-failure frequency
+                                    0.6
+
+                                    0.4
+
+                                    0.2
+
+                                    0.0
+                                          3.0           3.5       4.0       4.5       5.0          5.5      6.0        6.5      7.0
+                                                                           Track length (lattice sites)
+
+   Figure 9: Sensitivity to ﬁnite straight-track length, with occupancy recalibrated for each length. Nine
+                       hundred trials are used for each track-length/probability pair.
+
+
+event-conditioned synthetic channels; (c) calibrated device-event data; and (d) mixed domains with
+explicit distribution-shift tests. The main endpoints should include logical error per round, calibration
+error, worst-case or tail latency, memory, and robustness to event marks not seen during training.
+Train/test splits must be grouped by experimental run or device where necessary to prevent leakage
+from temporally adjacent samples.
+
+
+12.2            Repair allocation as an optimization problem
+
+A biological repair-allocation controller can be written abstractly as a constrained stochastic control
+problem:                  [                       ]
+                                                        ∑
+                                                        H−1                                                 ∑
+                                          min Eπ              c(Xt , Ut ) + γℓ(XH ) ,       Ut ∈ U (Xt ),         uj,t ≤ µt .         (18)
+                                            π
+                                                        t=0                                                   j
+
+Here Xt might encode a measured lesion burden and repair state, Ut might represent a set of feasible
+actions, c a validated resource or damage cost, and ℓ a terminal outcome. This is only a formal
+problem statement. In a real cell, many repair mechanisms are not directly actuated or even fully
+observed. The policy class, actions, state, reward, and safety constraints would have to be validated
+before reinforcement learning is appropriate.
+
+
+12.3            Observability and safe exploration
+
+A central issue is partial observability. A ﬂuorescent damage marker is not the entire lesion state.
+A detector coincidence is not the complete radiation ﬁeld. If an adaptive algorithm uses a proxy as
+though it were ground truth, it can allocate resources to the wrong event class. An oﬄine analysis
+should ﬁrst test whether the available measurements identify the state variables used by the proposed
+policy. In an experimental biological setting, exploration must be constrained by biosafety and ethics
+review, and no AI-generated schedule should be interpreted as a clinical prescription.
+
+
+
+
+                                                                                   22
+BURST-ROBUST CODES                                                                                                             PREPRINT • 06 NOV 2026
+
+
+
+                                                                               Queue stability and event-risk are different constraints
+                                                             1.0
+
+
+
+
+     Illustrative catastrophic-event probability over T=10
+                                                                         E[S]=0.5
+                                                                         E[S]=1
+                                                                         E[S]=1.5
+                                                             0.8         Queue stability boundary =1
+
+
+                                                             0.6
+
+
+                                                             0.4
+
+
+                                                             0.2
+
+
+                                                             0.0
+                                                                   0.0               0.2                0.4           0.6       0.8         1.0
+                                                                                                  Traffic intensity = E[S] /
+
+ Figure 10: Illustrative separation of queue traﬃc intensity and catastrophic-event horizon risk. Curves are
+dimensionless examples, not ﬁtted device or cell parameters. A stable queue can coexist with a non-negligible
+                                        catastrophic-event probability.
+
+
+13                             Quantum sensors in living cells: capability and boundary
+The 2026 Nature study by Abrahams and colleagues reports engineered magneto-sensitive ﬂuorescent
+proteins, including MagLOV variants, with optically detected magnetic resonance in living bacterial
+cells at room temperature and single-cell sensitivity [Abrahams et al., 2026]. The paper demonstrates a
+platform for quantum-enabled biosensing and spatial localization, using spin-dependent photophysics
+associated with a radical-pair mechanism. It is a signiﬁcant example of quantum measurement in a
+biological environment.
+   The correct interpretation is that engineered proteins can support biological quantum sensing. This
+does not establish that a bacterium is a fault-tolerant quantum computer, that living cells implement
+holographic quantum error correction, or that the reported sensor repairs radiation-induced DNA
+lesions. Sensing a magnetic or molecular environment is not the same task as encoding and protecting
+an arbitrary quantum logical state. The distinction matters because a shared vocabulary of quantum
+states, noise, or coherence can invite unjustiﬁed extrapolation across very diﬀerent experimental
+systems.
+    A possible future cross-domain measurement programme could use quantum sensors to study local
+environments in cells, while separate radiation and lesion assays quantify track-induced damage. The
+sensor’s own photophysics, excitation conditions, temperature, redox state, and cellular expression
+would require calibration. The measurement instrument must not be assumed to be a passive observer
+if its illumination or chemistry changes the cell state.
+
+
+14                             The neutrino fog: an analogy about inference, not a repair ﬂoor
+In direct dark-matter detection, coherent elastic neutrino–nucleus scattering creates a background
+that can become diﬃcult to distinguish from a weakly interacting massive particle signal. The phrase
+“neutrino fog” describes a statistical inference regime in which additional exposure yields diminishing
+
+
+                                                                                                           23
+BURST-ROBUST CODES                                                                                    PREPRINT • 06 NOV 2026
+
+
+
+
+        Instrumented             Fit marked              Validate held-out         Benchmark code /          Report reliability
+        measurements          space-time kernel            event maps               repair response          with uncertainty
+
+
+
+                          Pre-register endpoints, controls, exposure matching, latency and exclusion rules
+
+
+
+  Figure 11: Proposed calibration-to-validation workﬂow. The pipeline makes the event detector, kernel
+       estimation, holdout evaluation, recovery benchmark, and uncertainty report separate steps.
+
+                        Table 6: Proposed validation programme and minimum controls.
+
+ Workstream              Core measurement / comparison                            Minimum controls and falsiﬁcation crite-
+                                                                                  rion
+ Quantum       burst     Detector-synchronized error maps; IID                    Vibration and thermal covariates;
+ channel                 versus event-conditioned decoder at                      shuﬄed-event null; reject burst model if
+                         matched marginals                                        held-out predictive calibration fails
+ Holographic code        Explicit tensor/stabilizer code; erased-                 Compare with non-holographic baseline;
+                         region correctability; logical error and la-             hold decoder budget ﬁxed; no threshold
+                         tency across sizes                                       claim without scaling
+ Track structure         Species/energy-resolved kernels; simu-                   Track-transport benchmark; dose and ge-
+                         lated and measured cluster statistics                    ometry records; propagate simulator un-
+                                                                                  certainty
+ Repair workload         Lesion-class-speciﬁc processing-time dis-                Cell-cycle and cell-type stratiﬁcation; neg-
+                         tribution and repair-factor response                     ative controls; validate workload proxy
+                                                                                  against independent endpoint
+ Biological    conse-    Persistence, chromosome aberration, se-                  Pre-register endpoints; blinded image
+ quence                  quencing outcome, and viability sepa-                    analysis; distinguish initial damage from
+                         rately                                                   recovery outcome
+
+
+sensitivity improvements under particular background and signal models. The broader discussion of
+neutrino backgrounds in next-generation direct detection has been developed for years, including fore-
+casts for the neutrino background in dark-matter searches [Billard et al., 2014]. The 2026 XENONnT
+result reports a measurement of solar 8 B neutrino coherent scattering and discusses the eﬀect of the
+neutrino fog on dark-matter search sensitivity [XENON Collaboration et al., 2026]. Work such as
+Blanco-Mas et al. addresses how neutrino backgrounds may still constrain new forces in detector data
+[Blanco-Mas et al., 2025].
+   The analogy in this paper is narrow. In both detector inference and reliability engineering, an ob-
+served signal may be obscured by irreducible or poorly separable background processes, and improved
+exposure alone may not produce proportional information gain. This motivates explicit treatment
+of background and model uncertainty. There is no claim that solar neutrinos create a biologically
+relevant repair burden, deﬁne a cellular repair ﬂoor, or cause the types of DNA lesions discussed in
+Section 4. The neutrino fog is a detector-inference concept, not a biological mechanism.
+
+
+
+
+                                                                24
+BURST-ROBUST CODES                                                                PREPRINT • 06 NOV 2026
+
+
+
+                     Measurement dependencies for two distinct validation tracks
+        dose / LET             track               lesion              repair              survival /
+          strata             geometry            complexity           kinetics             function
+
+
+
+
+                                                  decoder                   logical
+                                                  latency                    error
+
+
+     Figure 12: Measurement dependencies for a cross-domain validation programme. The upper chain
+  represents track and repair measurements; the lower branch shows why decoder latency and logical error
+    belong to a quantum-speciﬁc pathway. The graph is a study-design aid, not a causal discovery result.
+
+
+15     Limitations, failure modes, and open questions
+The framework is intentionally broad, but its components are not yet jointly calibrated. The prin-
+cipal limitation is that the two substrate maps remain external to the synthetic benchmark. The
+lattice model measures geometric connectedness and does not contain a quantum code or biological
+mechanism. Its value is to isolate dependence eﬀects under a transparent construction.
+
+
+15.1    Model-form limitations
+
+The track law uses a ﬁxed length, four orientations, uniform anchors, Poisson-distributed event counts,
+and hard clipping. Physical tracks have energy-dependent radial dose proﬁles, secondary-electron
+structure, species-dependent ranges, and stochastic chemistry. A superconducting device’s distur-
+bance footprint depends on materials, geometry, phonon transport, quasiparticle dynamics, and mea-
+surement circuits. The common mark vector is a placeholder for these richer descriptions. The selected
+Poisson parent process is not a ﬁt to measured particle arrivals or correlated quasiparticle clusters.
+
+
+15.2    Statistical limitations
+
+The primary sweep has 4,000 trials per point and a ﬁnite grid of ten occupancy values. The Wilson
+intervals account for Monte Carlo binomial uncertainty but not uncertainty about the generator or
+calibration. The sensitivity runs have smaller sample sizes. The ﬁnite-size analysis is too coarse for
+critical-exponent estimation and should not be read as a percolation threshold result [Grimmett, 1999].
+The extra track-length study changes only one synthetic mark and leaves all other assumptions ﬁxed.
+The covariance ﬁgure is directional and conditional on the chosen track geometry.
+
+
+15.3    Queueing limitations
+
+The M/G/1 result assumes Poisson arrivals, iid service times, one work-conserving server, constant ca-
+pacity, and no interactions between jobs beyond waiting. Cells have multiple coupled repair pathways
+and active regulation; decoders are parallel pipelines with ﬁnite deadlines, not necessarily single-server
+queues. A more realistic model may require a vector service network, state-dependent arrival process,
+
+                                                    25
+BURST-ROBUST CODES                                                                PREPRINT • 06 NOV 2026
+
+
+
+                    Table 7: Failure modes and the evidence needed to resolve them.
+
+ Failure mode                   Why it matters                          Evidence needed
+ Wrong event law                Poisson or straight-track assumptions   Detector event records or validated
+                                may miss clustering and anisotropy      transport simulations
+ Wrong footprint kernel         Equal average burden can hide diﬀer-    Held-out spatial covariance and
+                                ent spatial dependence                  cluster-statistic validation
+ Wrong substrate map            Event marks may not translate to er-    Qubit-resolved response or lesion-
+                                rors or lesions as assumed              speciﬁc assay calibration
+ Wrong recovery abstraction     Scalar capacity omits pathways, par-    Service-time data, pathway/network
+                                allelism, or decoder deadlines          model, latency traces
+ Wrong endpoint                 Proxy marker may not predict logical    Independent, pre-registered down-
+                                failure or viability                    stream outcomes
+ Overﬁtted                de-   Strong training performance may not     Device/run holdouts, distribution-
+ coder/controller               generalize to new bursts                shift tests, safe evaluation
+
+
+time-varying capacity, feedback, or a nonstationary horizon. The stability inequality remains a useful
+benchmark, but a model should not be selected merely because it gives a convenient closed form.
+
+
+15.4    Causal limitations
+
+A correlation between detector events and qubit observables does not by itself identify all mediating
+mechanisms. Similarly, a lesion marker after irradiation does not isolate the chemistry, repair pathway,
+or genomic outcome. Confounding and selection eﬀects must be controlled. Proposed interventions
+such as shielding, device material modiﬁcations, targeted ROS perturbations, or repair-resource allo-
+cation are not established by the mathematical framework.
+
+
+15.5    Ethical and experimental limitations
+
+No human or animal data, patient data, live-cell intervention, radiation exposure, or quantum-
+hardware measurement were carried out for this manuscript. The proposed experimental work would
+require suitable facility access, radiation safety review, institutional biosafety oversight, ethical ap-
+proval where applicable, and qualiﬁed domain scientists. Synthetic code is not a substitute for those
+procedures.
+
+
+16     Falsiﬁable research programme
+The framework is useful only if it makes testable predictions. The following hypotheses are not
+assumed to be true; they deﬁne experiments that could reject or reﬁne the proposed abstraction.
+
+
+16.1    Quantum hypotheses
+1. Event-conditioned predictive gain. A model using detector event geometry and time marks
+   should predict held-out qubit error maps better than an IID model at matched mean error rate.
+   Falsiﬁcation occurs if the gain disappears under held-out runs or after conditioning on vibration
+   and cryogenic variables.
+2. Decoder transfer. A decoder trained on calibrated burst data should reduce logical error or
+   improve calibration under the measured correlated channel without violating latency limits. Falsi-
+   ﬁcation occurs if the advantage vanishes under device/run holdout or requires information arriving
+   too late.
+
+                                                     26
+BURST-ROBUST CODES                                                            PREPRINT • 06 NOV 2026
+
+
+
+3. Code geometry dependence. Diﬀerent code geometries should exhibit diﬀerent logical-risk
+   responses to the same measured event footprint. The claim is falsiﬁed for a particular comparison
+   if code geometry has no detectable eﬀect within uncertainty under the speciﬁed channel.
+
+
+16.2    Biological hypotheses
+1. Track-aware lesion prediction. A track-structure model should predict held-out lesion-cluster
+   statistics better than a dose-only model at matched absorbed dose. Falsiﬁcation occurs if the
+   track-aware model provides no reproducible predictive gain.
+2. Workload-tail relevance. A workload distribution including lesion complexity and pathway-
+   speciﬁc processing times should predict persistence endpoints better than lesion count alone. Fal-
+   siﬁcation occurs if the workload representation adds no information beyond simpler predictors.
+3. Perturbation transportability. dCas9–KillerRed may calibrate selected localized oxidative
+   damage and repair observables, but transfer to high-LET tracks must be tested and is not as-
+   sumed. Falsiﬁcation of transportability is expected if the lesion chemistry, cluster scale, or pathway
+   response diﬀers materially.
+
+
+16.3    Cross-domain hypothesis
+
+A restricted common statistical model may improve forecasting when it preserves event marks, foot-
+print dependence, and recovery workload. It should not be judged by whether the same ﬁtted pa-
+rameters apply to both domains. The commonality is structural: each domain supplies its own mark
+distribution, kernel, recovery model, and endpoint. If a shared representation does not improve calibra-
+tion or predictive eﬃciency over domain-speciﬁc baselines, the cross-domain layer has little practical
+value beyond exposition.
+
+
+17     Conclusion
+Spatially extended events challenge reliability models that retain only an average disturbance rate.
+This paper sets out a layered mathematical framework in which marked events generate domain-
+speciﬁc footprints, substrate maps convert those footprints into quantum errors or biological lesions,
+and recovery processes determine whether disturbances become system-level failures. The framework
+keeps event statistics, physical damage, decoding or repair, and observable-speciﬁc reliability separate.
+   The mathematical results are deliberately modest and explicit. Equal marginal occupancy does
+not determine a nonlinear failure probability. A standard M/G/1 workload model is stable when its
+traﬃc intensity is below one. Poisson thinning gives a closed-form horizon risk when catastrophic
+marks are independently assigned. These facts can help structure a reliability envelope, but none is
+a universal threshold for a quantum computer or a cell.
+   The ﬁnite-lattice benchmark reproduces the original 24×24 comparison and expands it with exact
+expected mean-occupancy calibration, uncertainty intervals, covariance and component-size diagnos-
+tics, ﬁnite-size sensitivity, and track-length sensitivity. Its central observation is speciﬁc: under the
+chosen ﬁve-site Poisson line-track generator and four-neighbour spanning criterion, the track process
+has a higher observed spanning frequency than IID erasures at every tested target occupancy. The cor-
+rect interpretation is a warning against relying on mean occupancy alone, not an empirical statement
+about actual quantum or biological systems.
+   A stronger next study must replace the synthetic track law with calibrated device or radiation-
+track data, deﬁne a concrete holographic or stabilizer code, and validate biological workloads against
+measured lesion and repair endpoints. Neural decoding and adaptive resource allocation are valuable
+research directions only after event observability, endpoint validity, latency, and safety constraints
+
+                                                   27
+BURST-ROBUST CODES                                                             PREPRINT • 06 NOV 2026
+
+
+
+have been speciﬁed. Finally, the neutrino fog remains an analogy about statistical inference under
+background limitations in dark-matter detection; it is not a cellular repair ﬂoor.
+
+    Central result
+    The defensible conclusion is methodological: reliability under burst-like disturbances is a joint
+    property of event geometry, substrate response, recovery resources, and the chosen failure end-
+    point. Average error rate, absorbed dose, or mean occupancy alone is generally not enough to
+    identify that joint property.
+
+
+
+A     Exact expected-occupancy calibration
+For a lattice with N 2 sites, there are 4N 2 equally likely anchor-orientation pairs in the primary model.
+For each pair, the ﬁve-site segment is enumerated and clipped to the lattice. Let ci be the number of
+anchor-orientation pairs whose segment covers site i. Then
+                                               ci
+                                       qi =        ,          0 ≤ qi ≤ 1.                            (19)
+                                              4N 2
+If the number of independently placed tracks is Poisson with mean λT , Poisson thinning gives the hit
+probability 1 − e−λT qi . The expected mean occupancy is therefore
+                                                 1 ∑(      −λT qi
+                                                                  )
+                                     p̄(λT ) =        1 − e         .                                (20)
+                                                 N2 i
+
+The derivative is
+                                                   1 ∑ −λT qi
+                                     p̄′ (λT ) =        qi e  >0                                     (21)
+                                                   N2 i
+for ﬁnite λT whenever some qi > 0. Also, p̄(0) = 0, and p̄(λT ) approaches the fraction of sites with
+positive qi as λT → ∞. In this construction every site has positive cover probability, so the limit is
+one. Thus each target p ∈ (0, 1) has a unique nonnegative solution to p̄(λT ) = p. The code computes
+it by deterministic bisection to an absolute expected-occupancy tolerance of 10−10 .
+   The calibration does not equalize each site marginal. Sites near edges and corners are covered
+by fewer possible clipped tracks than interior sites. The IID process has marginal p at every site;
+the track process has marginal 1 − e−λT qi . Only the lattice average is matched. This is the correct
+boundary condition for the speciﬁc comparison executed, and it should be stated in every reuse of the
+result.
+
+
+B     Statistical summaries and interval calculations
+For each condition, the estimator of the spanning probability is p̂ = k/n. The Wilson interval at
+conﬁdence level corresponding to normal quantile z is
+
+                                           p̂ + z 2 /(2n)
+                                    p̃ =                  ,                                          (22)
+                                              1 + z 2 /n
+                                                       √
+                                           z               p̂(1 − p̂)   z2
+                                    h=                                + 2,                           (23)
+                                       1 + z 2 /n              n       4n
+                                 CIW = [max(0, p̃ − h), min(1, p̃ + h)].                             (24)
+
+The interval is a binomial sampling interval conditional on a ﬁxed generator and independent Monte
+Carlo trials. It does not include the uncertainty that would arise from estimating a physical track
+
+
+                                                       28
+BURST-ROBUST CODES                                                            PREPRINT • 06 NOV 2026
+
+
+
+distribution, choosing a model class, or calibrating the mapping from physical events to faults or
+lesions. Model uncertainty is likely more consequential than Monte Carlo error in the present stage.
+  For a zero count in n trials, the classical rule-of-three approximation gives an upper 95% bound
+near 3/n. With n = 4, 000, this is 0.00075. The correct report is therefore “0/4,000 observed, with a
+nonzero conﬁdence upper bound,” not “the true failure probability is zero.”
+
+
+C      Reproducibility and execution protocol
+The main numerical entry point is verify_model.py. It generates the primary Monte Carlo sweep,
+ﬁnite-size and track-length sensitivity outputs, pair-covariance and cluster-size diagnostics, 12 num-
+bered vector ﬁgures and PNG previews, a machine-readable veriﬁcation report, and standard output.
+All random generators use NumPy’s explicit PCG64-backed default generator through default_rng
+and named ﬁxed seeds. The primary results use seed 20261106. Sensitivity analyses use derived ﬁxed
+seeds so their execution does not alter the primary benchmark sequence.
+    To reproduce the model in a Python environment with NumPy, Matplotlib, and NetworkX installed:
+
+python verify_model.py
+
+The report should state PASS, 10 primary probabilities, 4,000 trials per channel and probability, exact
+expected mean occupancy calibration, and 12 numbered ﬁgures. The PDF build is performed from
+the included paper.tex and paper.bib. The generated PDF page count and rendered-page record
+are separate checks. Reproducing the synthetic outputs does not reproduce any physical or biological
+experiment.
+
+
+D      Minimum data schema for a future calibrated event record
+A future quantum-device event record should include: event identiﬁer; UTC or synchronized mono-
+tonic timestamp; detector identity and position; event class and posterior class probability; coincidence
+multiplicity; estimated event location and uncertainty; qubit layout version; qubit-resolved response
+windows; syndrome cycle index; operating temperature and pressure; vibration and pulse-tube fea-
+tures; device materials; decoder version; decoder latency; and all exclusion ﬂags. Raw event times
+and derived features should both be retained.
+   A future radiation-track record should include: ion species; kinetic energy per nucleon; LET and its
+deﬁnition; direction; entry coordinate; dose and dose rate; track-structure simulator/version; radial
+dose proﬁle; secondary-electron statistics; nucleus and chromatin model assumptions; lesion class
+and multiplicity; assay protocol; cell type and cell-cycle state; repair observation times; endpoint
+deﬁnitions; and uncertainty or quality-control ﬂags. If a lesion workload is inferred, the transformation
+from lesion class to workload must be documented separately from the physical track record.
+
+
+E     Symbol glossary
+
+    Symbol             Meaning
+    Φ                  Marked space-time disturbance point process
+    Zk                 Mark of event k: time, location, orientation, extent, severity, source class
+    C(Zk )             Footprint associated with event k
+    K(x; Zk )          Spatial footprint kernel
+
+
+                                                   29
+BURST-ROBUST CODES                                                                PREPRINT • 06 NOV 2026
+
+
+
+    Symbol              Meaning
+    G(t; Zk )           Temporal response kernel
+    B(x, t)             Accumulated disturbance or lesion burden ﬁeld
+    Dt                  Disturbed or erased set at time t
+    λ                   Parent event arrival rate in a Poisson model
+    λT                  Mean number of synthetic track placements per lattice realization
+    qi                  Probability one random track covers site i
+    p                   Target expected lattice-wide mean occupancy in the surrogate
+    S                   Service workload associated with one event
+    µ                   Service capacity in work units per unit time
+    ρ                   Queue traﬃc intensity λE[S]/µ
+    qF                  Conditional probability a marked event meets a declared catastrophic crite-
+                        rion
+    T                   Observation or reliability horizon
+    PL                  Quantum logical failure probability for a declared code and channel
+    YB                  Biological endpoint, speciﬁed per assay
+
+
+
+F        Research-process disclosure and responsibility
+This work combines a mathematical synthesis, literature review, and synthetic computation. AI-
+assisted tools were used for research organization, code drafting, literature discovery, and editorial
+development. The author is responsible for verifying the scientiﬁc claims, model assumptions, cita-
+tions, ﬁnal manuscript, and release contents. No external peer review, journal acceptance, experimen-
+tal validation, or DOI deposit is claimed. The manuscript is a public preprint intended to make its
+assumptions, limitations, and next validation steps explicit.
+
+
+References
+Gabriel Abrahams, Ana Štuhec, Vincent Spreng, Robin Henry, Idris Kempf, Jessica James, Kirill Sechkar, Scott
+   Stacey, Vicente Trelles-Fernandez, Lewis M. Antill, Christiane R. Timmel, Jack J. Miller, Maria Ingaramo,
+   Andrew G. York, Jean-Philippe Tetienne, and Harrison Steel. Quantum spin resonance in engineered proteins
+   for multimodal sensing. Nature, 649:1172–1179, 2026. doi: 10.1038/s41586-025-09971-3.
+Ning Bao, ChunJun Cao, and Guanyu Zhu. Deconﬁnement and error thresholds in holography. Physical Review
+   D, 106:046009, 2022. doi: 10.1103/PhysRevD.106.046009.
+J. Billard, L. Strigari, and E. Figueroa-Feliciano. Implication of neutrino backgrounds on the reach of next
+   generation dark matter direct detection experiments. Physical Review D, 89:023524, 2014. doi: 10.1103/
+   PhysRevD.89.023524.
+H. Binney et al. Distinguishing types of correlated errors in superconducting qubits. Physical Review Applied,
+   26:024025, 2026. doi: 10.1103/j235-47t6.
+Pablo Blanco-Mas, Pilar Coloma, Gonzalo Herrera, Patrick Huber, Joachim Kopp, Ian M. Shoemaker, et al.
+   Clarity through the neutrino fog: constraining new forces in dark matter detectors. Journal of High Energy
+   Physics, 2025(8):043, 2025. doi: 10.1007/JHEP08(2025)043.
+Alessandro R. Castelli, Kristin M. Beck, Loren D. H. Alegria, Luis A. Martinez, Kevin R. Chaves, Sean R.
+   O’Kelley, Nicholas Materise, Jonathan L. DuBois, and Yaniv J. Rosen. Superconducting-qubit decoherence
+   correlated with detected radiation events. Physical Review Applied, 26:044052, 2026. doi: 10.1103/ddyy-t37l.
+Eric Dennis, Alexei Kitaev, Andrew Landahl, and John Preskill. Topological quantum memory. Journal of
+   Mathematical Physics, 43(9):4452–4505, 2002. doi: 10.1063/1.1499754.
+Aninda Dey and Ryan P. Barnes. Genetic approaches for targeted oxidative stress. NAR Cancer, 7(4):zcaf049,
+   2025. doi: 10.1093/narcan/zcaf049.
+Austin G. Fowler, Matteo Mariantoni, John M. Martinis, and Andrew N. Cleland. Surface codes: towards
+
+                                                     30
+BURST-ROBUST CODES                                                                 PREPRINT • 06 NOV 2026
+
+
+
+  practical large-scale quantum computation. Physical Review A, 86:032324, 2012. doi: 10.1103/PhysRevA.86.
+  032324.
+Dudley T. Goodhead and Michael Weinfeld. Clustered dna damage and its complexity: Tracking the history.
+  Radiation Research, 202(2):385–407, 2024. doi: 10.1667/RADE-24-00017.1.
+Geoﬀrey Grimmett. Percolation. Springer, 2 edition, 1999. doi: 10.1007/978-3-662-03981-6.
+Donald Gross, Carl M. Harris, John F. Shortle, and James M. Thompson. Fundamentals of Queueing Theory.
+  Wiley, 3 edition, 1998.
+Yoshihiko Hagiwara, Takahiro Oike, Atsuko Niimi, Motohiro Yamauchi, Hiro Sato, Siripan Limsirichaikul,
+  Kathryn D. Held, Takashi Nakano, and Atsushi Shibata. Clustered dna double-strand break formation and
+  the repair pathway following heavy-ion irradiation. Journal of Radiation Research, 60(1):69–79, 2019. doi:
+  10.1093/jrr/rry096.
+Daniel Harlow. The ryu–takayanagi formula from quantum error correction. Communications in Mathematical
+  Physics, 354:865–912, 2017. doi: 10.1007/s00220-017-2904-z.
+Robert J. Harris, Nathan A. McMahon, Gavin K. Brennen, and Thomas M. Stace. Calderbank-shor-steane
+  holographic quantum error-correcting codes. Physical Review A, 98:052301, 2018. doi: 10.1103/PhysRevA.
+  98.052301.
+Nealia C. M. House, Ramya Parasuram, Jacob V. Layer, and Brendan D. Price. Site-speciﬁc targeting of a
+  light activated dcas9-killerred fusion protein generates transient, localized regions of oxidative dna damage.
+  PLOS ONE, 15(12):e0237759, 2020. doi: 10.1371/journal.pone.0237759.
+Chia-Wei Huang, Giorgio Baiocco, and Pavel Kundrát. Comprehensive database of track-structure simulations
+  on dna damage by h–fe ions up to 1 gev/u for space radiation biology. Scientiﬁc Reports, 16:26153, 2026.
+  doi: 10.1038/s41598-026-55264-8.
+Gunter Last and Mathew Penrose. Lectures on the Poisson Process. Cambridge University Press, 2017. doi:
+  10.1017/9781316104477.
+Jesper Moller and Rasmus Plenge Waagepetersen. Statistical Inference and Simulation for Spatial Point Pro-
+  cesses. Chapman and Hall/CRC, 2004.
+Fernando Pastawski, Beni Yoshida, Daniel Harlow, and John Preskill. Holographic quantum error-correcting
+  codes: toy models for the bulk/boundary correspondence. Journal of High Energy Physics, 2015(6):149, 2015.
+  doi: 10.1007/JHEP06(2015)149.
+Andrew W. Senior, Thomas Edlich, Francisco J. H. Heras, Lei M. Zhang, Oscar Higgott, James S. Spencer, et al.
+  A scalable and real-time neural decoder for topological quantum codes. arXiv preprint arXiv:2512.07737,
+  2025.
+Atsushi Shibata. Carbon ion radiation and clustered dna double-strand breaks. In The Enzymes, volume 51,
+  pages 117–130. Elsevier, 2022. doi: 10.1016/bs.enz.2022.08.008.
+Beth Wilkinson, Mark A. Hill, and Jason L. Parsons. The cellular response to complex dna damage induced by
+  ionising radiation. International Journal of Molecular Sciences, 24(5):4920, 2023. doi: 10.3390/ijms24054920.
+XENON Collaboration, E. Aprile, et al. Probing the solar 8b neutrino fog with xenonnt. Physical Review
+  Letters, 137:091807, 2026. doi: 10.1103/xvpn-w3q9.
+
+
+
+
+                                                      31
+
