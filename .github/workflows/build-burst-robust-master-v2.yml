@@ -67,7 +67,7 @@ jobs:
           cd "$RELEASE"
           python - <<'PY'
           from pathlib import Path
-          import fitz, hashlib, json, datetime, csv, csv
+          import fitz, hashlib, json, datetime, csv
           from PIL import Image, ImageDraw
           root=Path("."); doc=fitz.open("paper.pdf")
           digest=hashlib.sha256(Path("paper.pdf").read_bytes()).hexdigest()
@@ -113,6 +113,9 @@ jobs:
           assert len(list((root/"figures").glob("fig*.png")))==12
           assert len(list(csv.DictReader((root/"results"/"figure_inventory.csv").open())))==12
           PY
+          # Keep the exact nine-file release root required by deploy.py.
+          rm -rf __pycache__
+          find . -maxdepth 1 -type f ! -name 'paper.tex' ! -name 'paper.bib' ! -name 'paper.pdf' ! -name 'verify_model.py' ! -name 'deploy.py' ! -name 'README.md' ! -name 'CITATION.cff' ! -name '.zenodo.json' ! -name 'schema_article.jsonld' -delete
           python deploy.py --validate-only | tee results/release_validation.json
       - name: Final manifest and complete v2.0 bundle
         shell: bash
