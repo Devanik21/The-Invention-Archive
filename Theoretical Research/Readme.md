@@ -30,3 +30,5 @@ Research preprints are stored in isolated release directories. Each release incl
 | 2026.10.31 | Tame Moduli of Life: Sharp O-Minimal Finiteness for Repair-Closed Systems and Tropical Walls over the Landscape of Physical Laws | Conditional o-minimal finiteness framework + synthetic semialgebraic verification | [Tame_Moduli_of_Life_Sharp_O_Minimal_Finiteness_for_Repair_Closed_Systems_and_Tropical_Walls_over_the_Landscape_of_Physical_Laws](Tame_Moduli_of_Life_Sharp_O_Minimal_Finiteness_for_Repair_Closed_Systems_and_Tropical_Walls_over_the_Landscape_of_Physical_Laws/) |
 
 | 2026.11.01 | Epsilon-Nets of Antigenic Space: A Diversity-Free Theory of the Minimal Universal Vaccine and Antivenom | Pfaffian VC-dimension, epsilon-net coverage, and synthetic multicover theory preprint | [Epsilon-Nets of Antigenic Space](Epsilon-Nets-of-Antigenic-Space/) |
+
+| 2026.11.06 | Burst-Robust Codes for Life and Qubits | Correlated-burst reliability theory + synthetic benchmark | [Burst-Robust Codes for Life and Qubits](Burst_Robust_Codes_for_Life_and_Qubits/) |

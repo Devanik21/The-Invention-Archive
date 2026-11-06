@@ -1,0 +1,93 @@
+{
+  "status": "PASS",
+  "model": "24x24 4-neighbour lattice connectivity surrogate",
+  "seed": 20261106,
+  "trials_per_probability": 4000,
+  "results": [
+    {
+      "p": 0.2,
+      "iid_failures": 0,
+      "track_failures": 1,
+      "trials": 4000,
+      "iid_rate": 0.0,
+      "track_rate": 0.00025
+    },
+    {
+      "p": 0.25,
+      "iid_failures": 0,
+      "track_failures": 0,
+      "trials": 4000,
+      "iid_rate": 0.0,
+      "track_rate": 0.0
+    },
+    {
+      "p": 0.3,
+      "iid_failures": 0,
+      "track_failures": 11,
+      "trials": 4000,
+      "iid_rate": 0.0,
+      "track_rate": 0.00275
+    },
+    {
+      "p": 0.35,
+      "iid_failures": 0,
+      "track_failures": 61,
+      "trials": 4000,
+      "iid_rate": 0.0,
+      "track_rate": 0.01525
+    },
+    {
+      "p": 0.4,
+      "iid_failures": 0,
+      "track_failures": 235,
+      "trials": 4000,
+      "iid_rate": 0.0,
+      "track_rate": 0.05875
+    },
+    {
+      "p": 0.45,
+      "iid_failures": 18,
+      "track_failures": 658,
+      "trials": 4000,
+      "iid_rate": 0.0045,
+      "track_rate": 0.1645
+    },
+    {
+      "p": 0.5,
+      "iid_failures": 233,
+      "track_failures": 1446,
+      "trials": 4000,
+      "iid_rate": 0.05825,
+      "track_rate": 0.3615
+    },
+    {
+      "p": 0.55,
+      "iid_failures": 1251,
+      "track_failures": 2513,
+      "trials": 4000,
+      "iid_rate": 0.31275,
+      "track_rate": 0.62825
+    },
+    {
+      "p": 0.6,
+      "iid_failures": 2998,
+      "track_failures": 3331,
+      "trials": 4000,
+      "iid_rate": 0.7495,
+      "track_rate": 0.83275
+    },
+    {
+      "p": 0.65,
+      "iid_failures": 3884,
+      "track_failures": 3793,
+      "trials": 4000,
+      "iid_rate": 0.971,
+      "track_rate": 0.94825
+    }
+  ],
+  "limitations": [
+    "Not a physical stabilizer-code decoder or holographic tensor-network simulation.",
+    "Phenomenological track generator; not Geant4/PARTRAC track structure.",
+    "Synthetic outputs, not quantum-hardware or biological measurements."
+  ]
+}
