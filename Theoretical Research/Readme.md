@@ -16,19 +16,12 @@ Research preprints are stored in isolated release directories. Each release incl
 | 2026.10.13 | Damage R₀: A Next-Generation Theory of Aging in Interdependent Living Systems | Spectral damage-threshold preprint | [Damage_R0_A_Next_Generation_Theory_of_Aging_in_Interdependent_Living_Systems](Damage_R0_A_Next_Generation_Theory_of_Aging_in_Interdependent_Living_Systems/) |
 | 2026.10.17 | Interrogating Alien Life: Adversarially Trained Reinforcement Learning for Substrate-Agnostic Detection of Self-Repair Dynamics | Adversarial active-probing synthetic benchmark | [Interrogating Alien Life](Interrogating_Alien_Life_Adversarially_Trained_Reinforcement_Learning_for_Substrate_Agnostic_Detection_of_Self_Repair_Dynamics/) |
 | 2026.10.18 | Silica Light Meters | Physics-constrained inverse-learning preprint | [Silica Light Meters](Silica_Light_Meters_Physics_Constrained_Inverse_Learning_of_Past_Underwater_Light_Regimes_from_Diatom_Frustule_Photonic_Crystals/) |
-
 | 2026.10.24 | Aging as a Decoding Threshold: Repair Scheduling Under Fixed Maintenance Throughput | Synthetic-model methods preprint | [Aging_as_a_Decoding_Threshold_Repair_Scheduling_Under_Fixed_Maintenance_Throughput](Aging_as_a_Decoding_Threshold_Repair_Scheduling_Under_Fixed_Maintenance_Throughput/) |
-
 | 2026.10.24 | Persistent Landscapes, Hodge Curl, and Schrödinger-Bridge Reinforcement Learning for Optimal Cell-Fate Control | Theory-plus-simulation preprint | [Persistent_Landscapes_Hodge_Curl_and_Schrodinger_Bridge_Reinforcement_Learning_for_Optimal_Cell_Fate_Control](Persistent_Landscapes_Hodge_Curl_and_Schrodinger_Bridge_Reinforcement_Learning_for_Optimal_Cell_Fate_Control/) |
-
 | 2026.10.25 | The Rejuvenation Mirage: Identifiability Limits of Epigenetic-Clock Reset and an Active-Design Rule for Functional Repair | Identifiability theory + synthetic active-design benchmark | [The_Rejuvenation_Mirage_Identifiability_Limits_of_Epigenetic_Clock_Reset_and_Active_Design_for_Functional_Repair](The_Rejuvenation_Mirage_Identifiability_Limits_of_Epigenetic_Clock_Reset_and_Active_Design_for_Functional_Repair/) |
-
 | 2026.10.25 | The Hodge Obstruction to Escape-Proof Therapy: A Discrete-Hodge No-Go Result and Safety-Game Benchmark | Discrete-Hodge no-go result + synthetic robust safety-game benchmark | [The_Hodge_Obstruction_to_Escape_Proof_Therapy](The_Hodge_Obstruction_to_Escape_Proof_Therapy/) |
-
 | 2026.10.30 | Beyond the Biological Bottleneck: Could Intelligence Emerge Directly from Nature? | Abiotic-computation framework + Bayesian origin-identifiability demonstration | [Beyond_the_Biological_Bottleneck_Could_Intelligence_Emerge_Directly_from_Nature](Beyond_the_Biological_Bottleneck_Could_Intelligence_Emerge_Directly_from_Nature/) |
-
 | 2026.10.31 | Tame Moduli of Life: Sharp O-Minimal Finiteness for Repair-Closed Systems and Tropical Walls over the Landscape of Physical Laws | Conditional o-minimal finiteness framework + synthetic semialgebraic verification | [Tame_Moduli_of_Life_Sharp_O_Minimal_Finiteness_for_Repair_Closed_Systems_and_Tropical_Walls_over_the_Landscape_of_Physical_Laws](Tame_Moduli_of_Life_Sharp_O_Minimal_Finiteness_for_Repair_Closed_Systems_and_Tropical_Walls_over_the_Landscape_of_Physical_Laws/) |
-
 | 2026.11.01 | Epsilon-Nets of Antigenic Space: A Diversity-Free Theory of the Minimal Universal Vaccine and Antivenom | Pfaffian VC-dimension, epsilon-net coverage, and synthetic multicover theory preprint | [Epsilon-Nets of Antigenic Space](Epsilon-Nets-of-Antigenic-Space/) |
-
 | 2026.11.06 | Burst-Robust Codes for Life and Qubits | Correlated-burst reliability theory + synthetic benchmark | [Burst-Robust Codes for Life and Qubits](Burst_Robust_Codes_for_Life_and_Qubits/) |
+| 2026.11.06 | Burst-Robust Codes for Life and Qubits — Master v2.0 | Expanded 31-page theory-plus-synthetic research release | [Master v2.0](Burst_Robust_Codes_for_Life_and_Qubits/Master_v2.0/) |
