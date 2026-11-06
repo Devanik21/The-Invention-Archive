@@ -6,7 +6,7 @@ date: "6 November 2026"
 ---
 
 # Abstract
-Reliability models often begin with independent errors, although ionizing radiation deposits energy in spatially correlated tracks. In superconducting devices, radiation-associated phonon bursts can transiently degrade multiple qubits; in cells, high-linear-energy-transfer (LET) particles produce clustered DNA lesions whose repair differs from that of isolated lesions. We formulate a substrate-agnostic description of burst damage as a marked spatial point process coupled to finite repair capacity. The framework separates geometric code correctability, damage-generation statistics, and repair-service stability. A queue-stability condition, λ E[S] < μ, gives a necessary workload criterion for stationary repair; a code-specific erasure criterion separately determines whether a burst footprint is reconstructable. A reproducible benchmark compares iid erasures with finite straight-track bursts on a 24 × 24 lattice at approximately matched marginal site-erasure probability. Across 4,000 Monte Carlo trials per point, track bursts yield a 5.875% spanning-failure frequency at marginal probability 0.40, versus zero observed iid spanning events; at 0.50, the rates are 36.15% and 5.825%. These are finite-size geometric-surrogate results, not logical-error rates of a physical code or measurements of biological damage. Holographic codes motivate recovery geometry, radiobiology supplies the track-structure motivation, and learned decoders suggest an inference strategy. The neutrino floor is treated only as a detector-background analogy, not as a biological mechanism.
+Reliability models often begin with independent errors, although ionizing radiation deposits energy in spatially correlated tracks. In superconducting devices, radiation-associated phonon bursts can transiently degrade multiple qubits; in cells, high-linear-energy-transfer (LET) particles produce clustered DNA lesions whose repair differs from that of isolated lesions. We formulate a substrate-agnostic description of burst damage as a marked spatial point process coupled to finite repair capacity. The framework separates geometric code correctability, damage-generation statistics, and repair-service stability. A queue-stability condition, λ E[S] < μ, gives a necessary workload criterion for stationary repair; a code-specific erasure criterion separately determines whether a burst footprint is reconstructable. A reproducible benchmark compares iid erasures with finite straight-track bursts on a 24 × 24 lattice at approximately matched marginal site-erasure probability. Across 4,000 Monte Carlo trials per point, the track process is calibrated so expected lattice-wide mean occupancy exactly matches p (with boundary-dependent sitewise marginals). At p = 0.40, track bursts yield a 17.625% spanning-failure frequency versus zero observed iid spanning events; at p = 0.50, the rates are 68.425% and 5.475%, respectively. These are finite-size geometric-surrogate results, not logical-error rates of a physical code or measurements of biological damage. Holographic codes motivate recovery geometry, radiobiology supplies the track-structure motivation, and learned decoders suggest an inference strategy. The neutrino floor is treated only as a detector-background analogy, not as a biological mechanism.
 
 # 1. Motivation and scope
 A study published 19 October 2026 reports statistically significant reductions of up to 30.5% in both T1 and T2 immediately following dual detector events attributed to penetrating muons [1]. This is evidence of radiation-associated transient decoherence, not proof that one muon destroys an entire quantum computer. Earlier work also identifies spatially and temporally correlated errors in superconducting devices [2].
@@ -89,21 +89,26 @@ A biological repair controller could allocate finite pathway capacity by solving
 This is a proposed control problem, not a demonstrated intervention. Observability, feasible actions, safety constraints, and reward validity must be established before reinforcement learning is used.
 
 # 7. Synthetic benchmark
-We implement a finite-size geometric surrogate on a 24 × 24 square lattice. Failure is a 4-neighbour connected erased component spanning horizontally or vertically. In the iid channel, each site is erased independently with probability p. In the burst channel, a Poisson number of finite five-site line tracks are placed with horizontal, vertical, and diagonal orientations; intensity is chosen to approximately match the same marginal site-erasure probability. Each point uses 4,000 trials and fixed seed 20261106.
+We implement a finite-size geometric surrogate on a 24 × 24 square lattice. Failure is a 4-neighbour connected erased component spanning horizontally or vertically. In the iid channel, each site is erased independently with probability p. In the burst channel, a Poisson number of finite five-site line tracks are placed with horizontal, vertical, and diagonal orientations. A track anchor is uniform over the lattice and its orientation is uniform over the four directions. Because tracks are clipped at lattice boundaries, sitewise marginal probabilities are not homogeneous. For each site i, let q_i be the probability that one random track placement covers it. We choose the Poisson intensity λ by bisection so that (1/|V|) Σ_i [1 − exp(−λ q_i)] = p. Thus expected lattice-wide mean occupancy is matched exactly to the iid channel, although individual site marginals vary near boundaries. Each point uses 4,000 trials and fixed seed 20261106.
 
-| p | iid failures | track failures | Difference |
-|---:|---:|---:|---:|
-| 0.30 | 0/4000 | 11/4000 | 0.275 pp |
-| 0.35 | 0/4000 | 61/4000 | 1.525 pp |
-| 0.40 | 0/4000 | 235/4000 | 5.875 pp |
-| 0.45 | 18/4000 | 658/4000 | 16.000 pp |
-| 0.50 | 233/4000 | 1446/4000 | 30.325 pp |
-| 0.55 | 1251/4000 | 2513/4000 | 31.525 pp |
-| 0.60 | 2998/4000 | 3331/4000 | 8.325 pp |
+| p | iid failures | track failures | iid rate | track rate |
+|---:|---:|---:|---:|---:|
+| 0.20 | 0/4000 | 2/4000 | 0.000% | 0.050% |
+| 0.25 | 0/4000 | 7/4000 | 0.000% | 0.175% |
+| 0.30 | 0/4000 | 45/4000 | 0.000% | 1.125% |
+| 0.35 | 0/4000 | 224/4000 | 0.000% | 5.600% |
+| 0.40 | 0/4000 | 705/4000 | 0.000% | 17.625% |
+| 0.45 | 11/4000 | 1606/4000 | 0.275% | 40.150% |
+| 0.50 | 219/4000 | 2737/4000 | 5.475% | 68.425% |
+| 0.55 | 1229/4000 | 3497/4000 | 30.725% | 87.425% |
+| 0.60 | 2972/4000 | 3876/4000 | 74.300% | 96.900% |
+| 0.65 | 3893/4000 | 3984/4000 | 97.325% | 99.600% |
 
-At p = 0.40, zero iid events in 4,000 trials does not mean zero probability; the rule-of-three gives an approximate 95% upper bound of 3/4000 = 0.075%. The burst frequency is 5.875%. At p = 0.50, estimates are 5.825% and 36.15%. The curves approach one another at high density; the track channel is not uniformly worse at every point.
+At p = 0.40, zero iid events in 4,000 trials does not mean zero probability; the rule-of-three gives an approximate 95% upper bound of 3/4000 = 0.075%, while the track channel records 705/4000 = 17.625%. At p = 0.50, the corresponding estimates are 5.475% and 68.425%. The track channel has a higher observed spanning frequency at all ten tested grid points in this finite benchmark. This is specific to the selected track law, graph, and finite size; it is not a universal physical threshold.
 
 ![Finite-size spanning-failure frequencies](figures/figure1_spanning_threshold.png)
+
+![Illustrative correlated track footprints](figures/figure2_track_realization.png)
 
 The benchmark shows that spatial correlation changes a geometric connectivity statistic at approximately matched marginal occupancy. It does not simulate a surface-code syndrome, holographic tensor network, quantum coherence, DNA chemistry, chromatin, or repair enzyme. Its values must not be called a quantum erasure threshold or cellular damage threshold.
 
