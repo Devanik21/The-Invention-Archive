@@ -46,7 +46,7 @@ jobs:
             'matplotlib==3.10.8' 'PyYAML==6.0.3'
           sudo apt-get update
           sudo apt-get install -y texlive-latex-base texlive-latex-recommended \
-            texlive-latex-extra texlive-fonts-recommended poppler-utils
+            texlive-latex-extra texlive-science texlive-fonts-recommended poppler-utils
 
       - name: Execute reproducibility suite and isolated deploy tests
         shell: bash
