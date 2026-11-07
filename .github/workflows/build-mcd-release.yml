@@ -83,7 +83,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - "$RELEASE_DIR" "$GITHUB_SHA" <<'PY'
+          python - "$RELEASE_DIR" "$(git rev-parse HEAD)" <<'PY'
           import hashlib, json, pathlib, sys, subprocess
           d = pathlib.Path(sys.argv[1]); source_sha = sys.argv[2]
           pdf = d / 'paper.pdf'
@@ -145,5 +145,15 @@ jobs:
             echo 'No generated artifacts changed.'
           else
             git commit -m 'build(mcd): regenerate numerical evidence, figures and PDF'
-            git push origin HEAD:main
+            pushed=0
+            for attempt in 1 2 3; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                pushed=1
+                break
+              fi
+              echo "Fast-forward push attempt $attempt raced another commit; retrying after fetch/rebase."
+            done
+            test "$pushed" -eq 1 || { echo 'Could not publish generated artifacts after three non-destructive retries.' >&2; exit 1; }
           fi

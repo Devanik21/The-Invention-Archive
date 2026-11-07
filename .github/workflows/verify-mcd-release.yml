@@ -84,6 +84,17 @@ jobs:
           export PYTHONPYCACHEPREFIX="$RUNNER_TEMP/pycache"
           mkdir -p "$PYTHONPYCACHEPREFIX"
           python -m py_compile "$D/verify_model.py" "$D/deploy.py"
+          TMP_VERIFY="$(mktemp -d)"
+          trap 'rm -rf "$TMP_VERIFY"' EXIT
+          cp "$D/verify_model.py" "$TMP_VERIFY/verify_model.py"
+          (cd "$TMP_VERIFY" && python verify_model.py > verify.log)
+          python - "$TMP_VERIFY/results/verification_report.json" <<'PY'
+          import json, pathlib, sys
+          report=json.loads(pathlib.Path(sys.argv[1]).read_text())
+          assert report.get('run_status')=='PASS'
+          assert report.get('passed')==14 and report.get('failed')==0
+          print('PASS isolated numerical replay: 14/14 checks')
+          PY
           python "$D/deploy.py" --self-test
           python "$D/deploy.py" --validate-only --skip-model
           git diff --exit-code -- "$D/results/sha256_manifest.json"
