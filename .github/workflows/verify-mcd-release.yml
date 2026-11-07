@@ -1,0 +1,90 @@
+name: Verify Morphogenetic Code Distance release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Theoretical Research/An_Operational_Morphogenetic_Code_Distance_for_Tissue_Network_Resilience/paper.pdf'
+      - 'Theoretical Research/An_Operational_Morphogenetic_Code_Distance_for_Tissue_Network_Resilience/results/sha256_manifest.json'
+  workflow_dispatch:
+    inputs:
+      target_sha:
+        description: Exact commit SHA to verify
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: morphogenetic-code-distance-verify
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      RELEASE_DIR: 'Theoretical Research/An_Operational_Morphogenetic_Code_Distance_for_Tissue_Network_Resilience'
+    steps:
+      - name: Resolve exact target commit
+        id: target
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_EVENT_NAME" = 'workflow_dispatch' ]; then
+            SHA="$(python -c 'import json,os; print(json.load(open(os.environ["GITHUB_EVENT_PATH"]))["inputs"]["target_sha"])')"
+          else
+            SHA="$GITHUB_SHA"
+          fi
+          [[ "$SHA" =~ ^[0-9a-f]{40}$ ]]
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.target.outputs.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install verification dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy==2.3.5' 'scipy==1.17.0' 'networkx==3.6.1' 'matplotlib==3.10.8' 'PyYAML==6.0.3'
+
+      - name: Verify exact release tree, manifest and PDF
+        shell: bash
+        env:
+          TARGET_SHA: ${{ steps.target.outputs.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          D="$RELEASE_DIR"
+          test -s "$D/paper.pdf"
+          test "$(find "$D" -maxdepth 1 -type f | wc -l)" -eq 9
+          test -d "$D/figures" && test -d "$D/results"
+          test -s 'Theoretical Research/Readme.md'
+          test "$(pdfinfo "$D/paper.pdf" | awk '/^Pages:/ {print $2}')" -ge 25
+          python - "$D" <<'PY'
+          import hashlib, json, pathlib, sys
+          d=pathlib.Path(sys.argv[1]); m=json.loads((d/'results/sha256_manifest.json').read_text())
+          for rel, expected in m.items():
+              p=d/rel
+              assert p.is_file(), f'manifest target missing: {rel}'
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==expected, f'hash mismatch: {rel}'
+          assert len([p for p in (d/'figures').glob('*.pdf')]) >= 8
+          assert len([p for p in (d/'figures').glob('*.png')]) >= 8
+          report=json.loads((d/'results/verification_report.json').read_text())
+          assert report['run_status']=='PASS' and report['passed']==14 and report['failed']==0
+          review=json.loads((d/'results/pdf_visual_review.json').read_text())
+          assert review['status'] in ('PENDING_REMOTE_REVIEW','PASS')
+          assert review['pdf_sha256']==hashlib.sha256((d/'paper.pdf').read_bytes()).hexdigest()
+          print(f'PASS manifest entries={len(m)}; synthetic checks=14/14; PDF SHA={review["pdf_sha256"]}; pages={review["page_count"]}')
+          PY
+          export PYTHONPYCACHEPREFIX="$RUNNER_TEMP/pycache"
+          mkdir -p "$PYTHONPYCACHEPREFIX"
+          python -m py_compile "$D/verify_model.py" "$D/deploy.py"
+          python "$D/deploy.py" --self-test
+          python "$D/deploy.py" --validate-only --skip-model
+          git diff --exit-code -- "$D/results/sha256_manifest.json"
+          echo "Verified exact release SHA: $TARGET_SHA" >> "$GITHUB_STEP_SUMMARY"

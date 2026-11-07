@@ -1,0 +1,123 @@
+{
+  "release_name": "Morphogenetic Code Distance \u2014 Tissue-Network Resilience",
+  "release_version": "1.0.0",
+  "date": "2026-11-07",
+  "repository": "Devanik21/The-Invention-Archive",
+  "release_path": "Theoretical Research/An_Operational_Morphogenetic_Code_Distance_for_Tissue_Network_Resilience",
+  "release_status": "PENDING_REMOTE_VERIFICATION",
+  "release_artifact_commit_sha": null,
+  "local_pdf_pages": 45,
+  "local_pdf_sha256": "635f1dc75d86d808bb045fe571234083eb54cfedc59c89aa1bd96b29c354083e",
+  "scientific_scope": "Mathematical theorem and synthetic graph/network inference experiments only; biological MCD not measured.",
+  "checks": [
+    {
+      "id": "workflow_read",
+      "area": "Research procedure",
+      "status": "PASS",
+      "evidence": "Full 702-line Saturday workflow retrieved from Library and read in ranges."
+    },
+    {
+      "id": "source_and_author_audit",
+      "area": "Author/source verification",
+      "status": "PASS",
+      "evidence": "Public GitHub author/repository profile checked; limitations documented."
+    },
+    {
+      "id": "literature_audit",
+      "area": "Literature",
+      "status": "PASS",
+      "evidence": "12 foundational/primary sources with DOI/primary URL and claim scope recorded."
+    },
+    {
+      "id": "topic_screen",
+      "area": "Research selection",
+      "status": "PASS",
+      "evidence": "10 candidate directions compared; scope narrowed to weighted vertex-cut MCD."
+    },
+    {
+      "id": "manuscript_length",
+      "area": "Document",
+      "status": "PASS",
+      "evidence": "45-page A4 manuscript; user minimum 25 pages exceeded."
+    },
+    {
+      "id": "mathematical_tables_figures",
+      "area": "Document",
+      "status": "PASS",
+      "evidence": "13 tables and 8 distinct figures; four plots, two structural diagrams, two flow diagrams."
+    },
+    {
+      "id": "numerical_suite",
+      "area": "Reproducibility",
+      "status": "PASS",
+      "evidence": "14/14 deterministic mathematical and synthetic checks passed; no biological outcomes claimed."
+    },
+    {
+      "id": "deployment_self_test",
+      "area": "Release validation",
+      "status": "PASS",
+      "evidence": "Fail-closed tests verify required core-file set, extra-file rejection, and missing-file rejection."
+    },
+    {
+      "id": "metadata",
+      "area": "Release metadata",
+      "status": "PASS",
+      "evidence": "CITATION.cff, .zenodo.json and schema_article.jsonld prepared; no DOI claimed."
+    },
+    {
+      "id": "pdf_visual_review",
+      "area": "PDF quality",
+      "status": "PASS",
+      "evidence": "All 45 pages rendered at 120 dpi and manually reviewed in six contact sheets; exact local PDF SHA-256 635f1dc75d86d808bb045fe571234083eb54cfedc59c89aa1bd96b29c354083e."
+    },
+    {
+      "id": "sha256_manifest",
+      "area": "Integrity",
+      "status": "PENDING",
+      "evidence": "Refreshed by deploy.py after this audit record and validation outputs are final."
+    },
+    {
+      "id": "parent_index_update",
+      "area": "GitHub archive",
+      "status": "PENDING",
+      "evidence": "The existing index will be preserved and appended during the GitHub publication commit."
+    },
+    {
+      "id": "remote_build_ci",
+      "area": "GitHub CI",
+      "status": "PENDING",
+      "evidence": "A dedicated GitHub Actions build will regenerate the 8 figure pairs, numerical outputs, manifest and paper.pdf from committed source."
+    },
+    {
+      "id": "remote_exact_sha_verification",
+      "area": "GitHub CI",
+      "status": "PENDING",
+      "evidence": "A separate GitHub Actions verifier will check the exact generated-artifact commit and final head SHA."
+    },
+    {
+      "id": "branch_protection_audit",
+      "area": "Repository controls",
+      "status": "BLOCKED",
+      "evidence": "GitHub branch-protection endpoint returned HTTP 403 Resource not accessible by integration; state is unknown."
+    },
+    {
+      "id": "semantic_tag",
+      "area": "Archival identifier",
+      "status": "NOT_RUN",
+      "evidence": "Only tag a fully reviewed exact commit; no tag has yet been created."
+    }
+  ],
+  "remote_checks": {
+    "build_workflow": "PENDING",
+    "verification_workflow": "PENDING",
+    "post_commit_sha": "PENDING",
+    "branch_protection": "BLOCKED",
+    "tag": "NOT_RUN"
+  },
+  "open_blockers": [
+    "Branch-protection/ruleset state could not be inspected because the connected GitHub integration lacks that API permission (403).",
+    "GitHub Actions build and exact-commit verification have not yet run.",
+    "The GitHub Actions-built PDF still requires a fresh SHA-bound visual review.",
+    "A semantic tag will not be created unless all required checks and repository controls can be verified."
+  ]
+}

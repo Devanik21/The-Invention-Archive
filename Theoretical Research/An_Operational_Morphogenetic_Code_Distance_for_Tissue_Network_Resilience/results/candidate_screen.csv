@@ -1,0 +1,13 @@
+<PARSED TEXT FOR SHEET: 1 / 1 TABS
+TAB NAME: candidate_screen.csv>
+index,candidate,significance_1_5,mathematical_coherence_1_5,ai_method_role_1_5,testability_1_5,falsifiability_1_5,credibility_1_5,decision
+0,Universal fault-tolerant persistence across life and spacetime,5,2,1,1,1,1,Reject: cross-domain analogy lacks common state space and shared mechanism.
+1,Literal biological quantum stabilizer code,4,3,1,1,2,1,"Reject as literal claim: no biological code space, stabilizers, logical operators, or quantum degrees of freedom specified."
+2,MCD as weighted source-target vertex cut,4,5,3,5,5,4,Select: exact finite-graph object with direct algorithms and lesion-placement falsifiers.
+3,Sheaf/Hodge residuals for heterogeneous tissue measurements,3,5,3,4,5,4,Retain as complementary mathematical diagnostics; empirical stalks/restrictions must be measured.
+4,Non-Hermitian skin effect as wound-edge repair engine,3,3,2,2,3,2,Defer: requires directional coupling and boundary operator measured in tissue.
+5,Spin-glass frustration as a quantitative ageing law,4,3,2,2,3,2,Defer: supplied code preset disorder/cohort outputs; no calibrated ageing dynamics.
+6,Anyon condensation as a cancer mechanism,5,2,1,1,2,1,Reject as mechanism: metaphor has no biological anyonic degrees of freedom or measurable condensation order parameter.
+7,AI/model-informed inverse estimation of communication weights,4,4,4,4,5,4,"Retain as enabling pipeline; standard NNLS is a baseline, not a claimed new architecture."
+8,Bioelectric optimal control of regenerative polarity,4,4,3,3,4,3,"Defer until the graph, state variables, and actuation parameters are experimentally identified."
+9,Holographic reconstruction of internal organs from epithelial boundary codes,3,2,1,1,2,1,Reject: no defensible bulk-boundary map or biological tensor-network evidence in this scope.

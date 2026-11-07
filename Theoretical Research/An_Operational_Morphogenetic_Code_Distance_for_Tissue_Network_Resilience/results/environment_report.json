@@ -1,0 +1,22 @@
+{
+  "timestamp_local": "2026-11-07 Asia/Kolkata",
+  "python": "3.13.5",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "numpy": "2.3.5",
+  "scipy": "1.17.0",
+  "networkx": "3.6.1",
+  "matplotlib": "3.10.8",
+  "PyYAML": "6.0.3",
+  "pdflatex": "pdfTeX 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian)",
+  "pdfinfo": "not available: list index out of range",
+  "pdftotext": "not available: list index out of range",
+  "seed": 20261107,
+  "build_commands": [
+    "python -m py_compile verify_model.py",
+    "python verify_model.py",
+    "pdflatex -interaction=nonstopmode -halt-on-error paper.tex (twice in clean build directory)"
+  ],
+  "limitations": [
+    "LaTeX binary/font versions may alter byte hashes across environments; validate source-to-output consistency by rebuilding and checking PDF content/page count."
+  ]
+}

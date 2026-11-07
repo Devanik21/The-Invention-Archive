@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this research preprint or its code, please cite it using these metadata."
+title: "An Operational Morphogenetic Code Distance for Tissue-Network Resilience"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    affiliation: "Electronics and Communication Engineering, National Institute of Technology Agartala, India"
+date-released: 2026-11-07
+version: 1.0.0
+license: MIT
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
+url: "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/An_Operational_Morphogenetic_Code_Distance_for_Tissue_Network_Resilience"

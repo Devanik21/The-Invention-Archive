@@ -1,0 +1,34 @@
+{
+  "title": "An Operational Morphogenetic Code Distance for Tissue-Network Resilience",
+  "upload_type": "publication",
+  "publication_type": "other",
+  "description": "A model-relative weighted vertex-cut framework for structural source–target communication resilience, with cellular-sheaf diagnostics, a pinned-Laplacian theorem, and reproducible synthetic network/inverse-estimation tests. The numerical examples are synthetic; no biological dataset or experimental results are reported. This file is prepared as metadata only and is not a Zenodo deposit or DOI claim.",
+  "creators": [
+    {
+      "name": "Devanik Debnath",
+      "affiliation": "Electronics and Communication Engineering, National Institute of Technology Agartala, India"
+    }
+  ],
+  "keywords": [
+    "morphogenesis",
+    "planarian regeneration",
+    "bioelectric signalling",
+    "cellular sheaves",
+    "spectral graph theory",
+    "minimum vertex cut",
+    "network resilience",
+    "system identification",
+    "nonnegative least squares"
+  ],
+  "license": "MIT",
+  "access_right": "open",
+  "publication_date": "2026-11-07",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Devanik21/The-Invention-Archive",
+      "relation": "isPartOf",
+      "scheme": "url"
+    }
+  ],
+  "version": "1.0.0"
+}

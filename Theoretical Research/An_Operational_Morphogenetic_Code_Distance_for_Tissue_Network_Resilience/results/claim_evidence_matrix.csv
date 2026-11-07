@@ -1,0 +1,16 @@
+<PARSED TEXT FOR SHEET: 1 / 1 TABS
+TAB NAME: claim_evidence_matrix.csv>
+index,claim,epistemic_level,evidence_or_basis,residual_requirement
+0,Weighted sheaf Laplacian is positive semidefinite,P1,Algebraic identity L0=(delta0)^T W delta0 with W positive diagonal; numerical symmetry/energy checks pass.,Valid only for stated finite-dimensional incidence/restriction maps and W >= 0.
+1,Exact coboundary has zero cohomology class,P1,"Definition of H1=ker(delta1)/im(delta0), delta1 delta0=0 and synthetic C4 projection residual ~7.34e-16.",A valid 2-complex and face maps are required; arbitrary edge discrepancies need not be exact.
+2,Node splitting computes weighted vertex cut,P1,Construction proof plus exact min-cut computation on the finite synthetic graph.,Large-scale performance and independently measured costs remain open.
+3,Pinned operator positive definite under kernel criterion,P1,Finite-dimensional kernel-intersection theorem and numerical eigenvalue checks.,"Biological dynamics may be nonlinear, directed, time-varying, or non-self-adjoint."
+4,Five relay vertices are an MCD of toy graph,P1 for toy graph,"Exact min-cut cost 5.0, relay set 30–34.",Not a claim about any biological tissue.
+5,Uniform 20-node deletions fail at ~6.53%,Synthetic statistic,"612/10,000 Monte Carlo failures vs exact hypergeometric probability 0.0653251.",Only for the toy graph and stated uniform sampling protocol.
+6,Balanced 20-node control preserves connectivity,Synthetic statistic,"0/10,000 in a control excluding relays.",Sampling design deliberately excludes the cut; not a general claim of dispersion resilience.
+7,NNLS recovers synthetic edge conductances,Synthetic numerical result,66/66 design rank and mean relative error 0 at numerical precision for noiseless data; finite errors under Gaussian noise.,"Assumes known candidate graph, correct forward model, exact derivatives, and Gaussian noise."
+8,Planarian polarity uses bioelectric/neural cues,Empirical literature,Oviedo 2010; Durant 2017; Durant 2019 primary studies.,These studies do not test MCD or cell-resolved network cuts.
+9,MCD predicts anatomical regeneration success,P3 research hypothesis,No biological data in this release.,Requires preregistered prospective perturbation/measurement and independent replication.
+10,Ageing decreases MCD or SMC reverses ageing,Not claimed,Earlier supplied simulation imposed cohort/intervention outputs; removed from this manuscript.,"Needs separate biological data, calibrated dynamics and ethics review."
+11,Cancer is anyon condensation / normalized by clamp,Not claimed,Earlier supplied simulation used preset growth/threshold outputs; removed.,No biological anyon degrees or therapeutic evidence.
+12,Tissue is literal quantum error-correcting code,Not claimed; P5 analogy only,"No biological code space, stabilizers or logical operators are defined.",Would require explicit quantum formalism and empirical observables; not a claim here.

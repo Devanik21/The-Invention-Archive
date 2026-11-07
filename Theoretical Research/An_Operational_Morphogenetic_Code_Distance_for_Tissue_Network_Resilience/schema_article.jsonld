@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "An Operational Morphogenetic Code Distance for Tissue-Network Resilience",
+  "name": "An Operational Morphogenetic Code Distance for Tissue-Network Resilience",
+  "author": {
+    "@type": "Person",
+    "name": "Devanik Debnath",
+    "url": "https://github.com/Devanik21"
+  },
+  "datePublished": "2026-11-07",
+  "version": "1.0.0",
+  "inLanguage": "en",
+  "description": "A model-relative weighted minimum vertex-cut measure for tissue-network resilience, with cellular-sheaf compatibility diagnostics, pinned diffusion theory, synthetic graph simulations, and a prospective biological validation design. No biological measurements are claimed.",
+  "keywords": [
+    "morphogenesis",
+    "planarian regeneration",
+    "bioelectric signalling",
+    "cellular sheaves",
+    "network resilience",
+    "minimum vertex cut",
+    "system identification"
+  ],
+  "isAccessibleForFree": true,
+  "license": "https://opensource.org/license/mit/",
+  "url": "https://github.com/Devanik21/The-Invention-Archive/tree/main/Theoretical%20Research/An_Operational_Morphogenetic_Code_Distance_for_Tissue_Network_Resilience",
+  "isPartOf": {
+    "@type": "Dataset",
+    "name": "The-Invention-Archive",
+    "url": "https://github.com/Devanik21/The-Invention-Archive"
+  },
+  "citation": "Devanik Debnath (2026), Version 1.0.0, GitHub research preprint. No DOI assigned."
+}
