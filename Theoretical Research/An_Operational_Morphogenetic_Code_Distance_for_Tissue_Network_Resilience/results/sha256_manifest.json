@@ -32,10 +32,10 @@
   "results/generated_outputs_sha256.json": "883a563ba88a212f51f7ebb39389a6e43072ce32c791b3b2309d668d847e8173",
   "results/literature_audit.csv": "09152ef8f22028687e2ae46e28130e179827d9d40efbd6ac1b2fd4486a5185a2",
   "results/nnls_conductance_estimation_trials.csv": "17ea887387767fb7c6393c751f9a6bf0f373c6208e2bf234130ab24fc44ccce6",
-  "results/pdf_audit.md": "37c16bf9317bdd1e6ac2b6717751703c9c860667397ec195de9c925a9b931859",
-  "results/pdf_visual_review.json": "c40fd6c5ebcd81365efc3fd68a5f0eefad108eb0ce8862b2a300bda013da1c28",
+  "results/pdf_audit.md": "0a52ea7b1f0af13313ec8e734eb29fbbaa780cda0132ca081fe7b1a33c5475d0",
+  "results/pdf_visual_review.json": "a860af77722e4edab1ef91163520f44e14c586593f04cabbcc7df671a1353af0",
   "results/pinned_diffusion_traces.csv": "3854c2a22c96b163b262dbcb0e38a9337fb1a96538448bf54ee9de9199cb5483",
-  "results/release_check_matrix.md": "3b5aea29f3600fbedbf7577baa1ba50dfd6a0841d9ee51c37634c4fde0a5c73b",
+  "results/release_check_matrix.md": "b701d3048d4b5e9e3188a1272f3ac5310c242fac22d8d4032fcc9a63282a039c",
   "results/remote_pdf_review/contact_sheet_01.png": "9bec5bc74a25e6dff8095264146875d824ac79f8bdd81cfe1fb4d833112f54e5",
   "results/remote_pdf_review/contact_sheet_02.png": "44363d801e6f392bbafc6e067f86e4bb3d3379f1b384c8dec9c5875e4d03f9ab",
   "results/remote_pdf_review/contact_sheet_03.png": "2fe6ce1a20800f54b689a66f2aae7bf45178ceeee27d9a92bb5fdab8f78013de",
@@ -45,7 +45,7 @@
   "results/verification_report.json": "e1c95e844540ba2d9e020e5cfbe76d2d5d8aa0436a7dd554d2f00ab9eb919c08",
   "results/verification_summary.txt": "5efca82061a4ff6abc3c831c0e1c650573063eb760dc03df61032edc215961f4",
   "results/weighted_mcd_sensitivity.csv": "1b2c0a8895cb12b057cd48e86c41339c27fdd3c628a784c51fe23be60e8f1438",
-  "results/workflow_log.md": "eaae445f8d0dcbf33c93630e70423849ce24c3e3c94af76cc9254d60eb4d6d2a",
+  "results/workflow_log.md": "5404d3f7ad7753b83b4d208f4f1490b3bc0fa8b0b4086f3fcf775b6a7c198793",
   "schema_article.jsonld": "8ac530be0fc87daadb199c4a298793d163af92f1a85de693e60ddd8175155044",
   "verify_model.py": "3ec460683fcc4884c627fe46898de25e1922637f30bb78efcd4c68d7c87217ab",
   "pdf_visual_review.json": "a860af77722e4edab1ef91163520f44e14c586593f04cabbcc7df671a1353af0",
@@ -54,5 +54,6 @@
   "pdf_audit.md": "0a52ea7b1f0af13313ec8e734eb29fbbaa780cda0132ca081fe7b1a33c5475d0",
   "workflow_log.md": "5404d3f7ad7753b83b4d208f4f1490b3bc0fa8b0b4086f3fcf775b6a7c198793",
   "remote_pdf_review/visual_review_report.md": "aaea2df5b0f173a4090bba55acd6583ffb2fe62eaef1f90a99d81ba7558fdf45",
-  "results/remote_pdf_review/verification_workflow_history.md": "8c31f801424df8eebf3fb6cfe2f0b10476b44705ec9063db1d55d9712b03138a"
+  "results/remote_pdf_review/verification_workflow_history.md": "8c31f801424df8eebf3fb6cfe2f0b10476b44705ec9063db1d55d9712b03138a",
+  "results/remote_pdf_review/visual_review_report.md": "aaea2df5b0f173a4090bba55acd6583ffb2fe62eaef1f90a99d81ba7558fdf45"
 }
