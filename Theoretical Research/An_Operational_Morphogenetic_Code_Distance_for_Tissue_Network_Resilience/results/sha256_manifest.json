@@ -41,13 +41,13 @@
   "results/remote_pdf_review/contact_sheet_03.png": "2fe6ce1a20800f54b689a66f2aae7bf45178ceeee27d9a92bb5fdab8f78013de",
   "results/remote_pdf_review/contact_sheet_04.png": "3b90a36c7e99eabaca0aa088375bd010813c7a6199a3d4470cb50cd3430692cd",
   "results/remote_pdf_review/contact_sheet_05.png": "aef6d8304959b2a1a32fed992f34b63d2ed87663bfa2c41e1fe15e5659fbf1d0",
+  "results/remote_pdf_review/verification_workflow_history.md": "8c31f801424df8eebf3fb6cfe2f0b10476b44705ec9063db1d55d9712b03138a",
+  "results/remote_pdf_review/visual_review_report.md": "aaea2df5b0f173a4090bba55acd6583ffb2fe62eaef1f90a99d81ba7558fdf45",
   "results/spectral_gap_vs_cut_size.csv": "d4ffa4d78dcccb04ef1b4fe5efbfb105f54b6d0d4f8e5f31471df4a61708e589",
   "results/verification_report.json": "e1c95e844540ba2d9e020e5cfbe76d2d5d8aa0436a7dd554d2f00ab9eb919c08",
   "results/verification_summary.txt": "5efca82061a4ff6abc3c831c0e1c650573063eb760dc03df61032edc215961f4",
   "results/weighted_mcd_sensitivity.csv": "1b2c0a8895cb12b057cd48e86c41339c27fdd3c628a784c51fe23be60e8f1438",
   "results/workflow_log.md": "5404d3f7ad7753b83b4d208f4f1490b3bc0fa8b0b4086f3fcf775b6a7c198793",
   "schema_article.jsonld": "8ac530be0fc87daadb199c4a298793d163af92f1a85de693e60ddd8175155044",
-  "verify_model.py": "3ec460683fcc4884c627fe46898de25e1922637f30bb78efcd4c68d7c87217ab",
-  "results/remote_pdf_review/verification_workflow_history.md": "8c31f801424df8eebf3fb6cfe2f0b10476b44705ec9063db1d55d9712b03138a",
-  "results/remote_pdf_review/visual_review_report.md": "aaea2df5b0f173a4090bba55acd6583ffb2fe62eaef1f90a99d81ba7558fdf45"
+  "verify_model.py": "3ec460683fcc4884c627fe46898de25e1922637f30bb78efcd4c68d7c87217ab"
 }
