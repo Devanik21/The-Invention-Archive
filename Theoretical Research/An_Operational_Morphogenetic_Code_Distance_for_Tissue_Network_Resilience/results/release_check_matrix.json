@@ -1,10 +1,10 @@
 {
-  "release_name": "Morphogenetic Code Distance \u2014 Tissue-Network Resilience",
+  "release_name": "Morphogenetic Code Distance — Tissue-Network Resilience",
   "release_version": "1.0.0",
   "date": "2026-11-07",
   "repository": "Devanik21/The-Invention-Archive",
   "release_path": "Theoretical Research/An_Operational_Morphogenetic_Code_Distance_for_Tissue_Network_Resilience",
-  "release_status": "PENDING_REMOTE_VISUAL_REVIEW",
+  "release_status": "PUBLISHED_WITH_CONTROL_LIMITATIONS",
   "release_artifact_commit_sha": "cb805b455863577743f8d7d2a0ebfba1f21e4a32",
   "local_pdf_pages": 45,
   "local_pdf_sha256": "635f1dc75d86d808bb045fe571234083eb54cfedc59c89aa1bd96b29c354083e",
@@ -86,52 +86,45 @@
       "id": "remote_build_ci",
       "area": "GitHub CI",
       "status": "PASS",
-      "evidence": "GitHub Actions rebuilt paper.pdf from source at 125cfde7b1bf67bdcc63e6499795f460e3c7b80e; PDF SHA-256 4c5e01fe85b0e83018f2e0fc192c840653d52de53abc164a5d0bb83125cbe4fc; pages=45."
+      "evidence": "GitHub Actions run 42357164937 rebuilt the 45-page paper from source commit 125cfde7b1bf67bdcc63e6499795f460e3c7b80e; remote PDF SHA-256 4c5e01fe85b0e83018f2e0fc192c840653d52de53abc164a5d0bb83125cbe4fc."
     },
     {
       "id": "remote_exact_sha_verification",
       "area": "GitHub CI",
       "status": "PASS",
-      "evidence": "Independent git archive verification passed against exact published artifact commit cb805b455863577743f8d7d2a0ebfba1f21e4a32; verified manifest, PDF digest/page count, nine core files, figure assets, and 14/14 numerical report."
+      "evidence": "Run 42357164937 independently archived and verified artifact commit cb805b455863577743f8d7d2a0ebfba1f21e4a32: manifest, exact PDF digest/page count, nine root files, generated figures, and 14/14 numerical report; final audit tree 0caebc40d167cdbdabccfd392749f9d08aec1797 also passed."
     },
     {
       "id": "branch_protection_audit",
       "area": "Repository controls",
       "status": "BLOCKED",
-      "evidence": "GitHub branch-protection endpoint returned HTTP 403 Resource not accessible by integration; state is unknown."
+      "evidence": "GitHub branch-protection/ruleset endpoint returned HTTP 403 Resource not accessible by integration; setting remains unknown."
     },
     {
       "id": "semantic_tag",
       "area": "Archival identifier",
       "status": "NOT_RUN",
-      "evidence": "Only tag a fully reviewed exact commit; no tag has yet been created."
+      "evidence": "No annotated tag was created; the release is identified by immutable commit SHA and the connected GitHub action set did not expose a tag-write operation."
     },
     {
       "id": "remote_pdf_visual_review",
       "area": "PDF quality",
       "status": "PENDING",
       "evidence": "GitHub-built PDF SHA-256 bfd863e8fb8568c5c1b80a2b7af5c62cfce0ca8b2e09e5b5612a134409b4376b has not yet undergone a page-render review."
-    },
-    {
-      "id": "remote_pdf_visual_review",
-      "area": "PDF quality",
-      "status": "PENDING",
-      "evidence": "GitHub-built PDF SHA-256 4c5e01fe85b0e83018f2e0fc192c840653d52de53abc164a5d0bb83125cbe4fc has not yet undergone a page-render review."
     }
   ],
   "remote_checks": {
-    "build_workflow": "PASS",
-    "verification_workflow": "PASS (same-run independent exact-commit archive verification)",
+    "build_workflow": "PASS (GitHub Actions run 42357164937)",
+    "verification_workflow": "PASS (independent exact-commit archive verification in run 42357164937)",
     "post_commit_sha": "cb805b455863577743f8d7d2a0ebfba1f21e4a32",
-    "branch_protection": "BLOCKED",
+    "branch_protection": "BLOCKED (HTTP 403; state unknown)",
     "tag": "NOT_RUN",
-    "final_audit_commit": "PENDING_FINAL_TREE_CHECK"
+    "final_audit_commit": "0caebc40d167cdbdabccfd392749f9d08aec1797",
+    "remote_pdf_visual_review": "PASS (all 45 pages inspected in five SHA-bound contact sheets)"
   },
   "open_blockers": [
-    "Branch-protection/ruleset state could not be inspected because the connected GitHub integration lacks that API permission (403).",
-    "GitHub Actions build and exact-commit verification have not yet run.",
-    "The GitHub Actions-built PDF still requires a fresh SHA-bound visual review.",
-    "A semantic tag will not be created unless all required checks and repository controls can be verified."
+    "Branch-protection/ruleset state is unknown because the connected GitHub integration returned HTTP 403 for that administrative endpoint.",
+    "No annotated semantic tag was created; use the verified artifact commit SHA as the immutable release identifier."
   ],
   "remote_build_source_sha": "125cfde7b1bf67bdcc63e6499795f460e3c7b80e",
   "remote_pdf_sha256": "4c5e01fe85b0e83018f2e0fc192c840653d52de53abc164a5d0bb83125cbe4fc",

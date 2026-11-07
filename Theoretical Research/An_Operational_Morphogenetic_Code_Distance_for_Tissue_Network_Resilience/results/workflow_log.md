@@ -36,3 +36,19 @@ The original proposal's wide scope (quantum stabilizer codes, sheaf cohomology, 
 ## Scope boundaries
 
 No biological datasets were downloaded, no laboratory work was performed, no treatments were proposed for human use, and no ageing/cancer clinical effect is claimed. The AI/data-driven contribution is a transparent physics-constrained inverse-estimation pipeline; the NNLS solver is a known baseline and no new neural architecture is claimed.
+
+## GitHub publication and final verification
+
+- Source/workflow commit: `125cfde7b1bf67bdcc63e6499795f460e3c7b80e`.
+- Successful build and verification run: [42357164937](https://github.com/Devanik21/The-Invention-Archive/actions/runs/42357164937).
+- Artifact commit: `cb805b455863577743f8d7d2a0ebfba1f21e4a32`; exact commit archive verification passed for the nine root files, manifest, PDF, figure assets, contact sheets, and 14/14 synthetic numerical checks.
+- Exact-verification audit commit: `0caebc40d167cdbdabccfd392749f9d08aec1797`; the workflow independently checked its final archive before reporting success.
+- GitHub PDF: 45 pages; SHA-256 `4c5e01fe85b0e83018f2e0fc192c840653d52de53abc164a5d0bb83125cbe4fc`.
+- Five contact sheets covering pages 1-45 were generated from the exact GitHub-built PDF and visually reviewed. No apparent clipping, overlap, or page-boundary truncation was found.
+- Earlier CI attempts exposed a missing TeX `siunitx` dependency and a concurrent-push race; both were corrected in the final successful workflow. The final build installed `texlive-science` and used a non-force-push fetch/rebase retry.
+- Separate repository workflows triggered by the parent-index commit were unrelated release jobs; their status and distinct causes were not used as evidence for this paper's validation.
+- Branch-protection/ruleset state remains unknown (HTTP 403); no annotated tag was created. The artifact commit SHA is the immutable release identifier.
+
+## Evidence limits
+
+All results remain mathematical/synthetic. No biological MCD, treatment outcome, ageing reversal, or cancer normalization was measured. The release is a preprint, not peer-reviewed, and no DOI is claimed.

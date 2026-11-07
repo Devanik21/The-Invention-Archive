@@ -25,3 +25,16 @@
 
 - Artifact commit: `cb805b455863577743f8d7d2a0ebfba1f21e4a32`.
 - The workflow independently exported this commit with `git archive` and rechecked the PDF digest, PDF page count, manifest, all nine root files, generated figure assets, and the 14/14 verification record.
+
+## GitHub-built PDF — final visual review
+
+- Build workflow: [run 42357164937](https://github.com/Devanik21/The-Invention-Archive/actions/runs/42357164937), completed successfully.
+- Source commit: `125cfde7b1bf67bdcc63e6499795f460e3c7b80e`.
+- Artifact commit: `cb805b455863577743f8d7d2a0ebfba1f21e4a32`.
+- PDF page count: 45.
+- PDF SHA-256: `4c5e01fe85b0e83018f2e0fc192c840653d52de53abc164a5d0bb83125cbe4fc`.
+- Visual review: **PASS**. All 45 pages were inspected using five SHA-bound contact sheets generated from the committed PDF and stored in `results/remote_pdf_review/`.
+- Review covered page geometry, content continuity, section hierarchy, tables, equations, figures, appendices, and references. No apparent clipping, overlap, or page-boundary truncation was found.
+- Exact commit archive, manifest, required file layout, figure set, and 14/14 synthetic verification report passed in the same successful workflow run.
+
+The local and GitHub-built PDFs have different byte hashes because they were separately compiled; this remote review is bound to the GitHub PDF SHA above, not the local PDF hash.
