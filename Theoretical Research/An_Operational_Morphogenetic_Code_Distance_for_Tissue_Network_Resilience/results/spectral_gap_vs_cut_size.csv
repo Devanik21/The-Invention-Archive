@@ -1,0 +1,7 @@
+removed_relays,remaining_relays,lambda_min_pinned_laplacian,source_sink_connected
+0,5,0.027118701132409467,True
+1,4,0.027807234160731203,True
+2,3,0.028500550861359334,True
+3,2,0.029151809465131802,True
+4,1,0.02951810360873742,True
+5,0,0.0,False

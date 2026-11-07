@@ -1,0 +1,23 @@
+MCD MODEL VERIFICATION SUMMARY
+Status: PASS
+Seed: 20261107
+Checks passed: 14; failed: 0
+
+CHECKS:
+[PASS] weighted_laplacian_symmetry: ||L-L^T||_F=0.000e+00
+[PASS] weighted_laplacian_positive_semidefinite: lambda_min=6.437e-15
+[PASS] dirichlet_energy_identity: quadratic=651.463937122; edge_sum=651.463937122
+[PASS] exact_syndrome_is_cohomologically_trivial: harmonic residual=6.002e-16
+[PASS] observed_nonexact_cochain_has_harmonic_component: harmonic residual=2.470e-02
+[PASS] cycle_rank_identity: computed dim H1=2
+[PASS] exact_minimum_vertex_cut: cut capacity=5.0; nodes=[30, 31, 32, 33, 34]
+[PASS] uniform_random_lesions_match_hypergeometric_baseline: observed=0.0612; exact=0.0653
+[PASS] balanced_module_lesions_preserve_connectivity_in_stylized_model: 0/10000 disconnected
+[PASS] targeted_minimum_cut_disconnects: all five relay vertices removed
+[PASS] pinned_laplacian_gap_collapses_only_after_all_relays_removed: lambda(4 removed)=2.952e-02; lambda(5 removed)=0.000e+00
+[PASS] nnls_recovers_clean_synthetic_conductances: relative error=8.293e-16
+[PASS] nnls_design_matrix_full_column_rank: rank=66/66; condition=4.23
+[PASS] nnls_remains_finite_under_measurement_noise: relative error at sigma=0.12: 0.011
+
+SCOPE LIMITATION: All graph and inverse-problem data in this run are synthetic.
+No organism, patient, ageing process, tumour, or therapeutic intervention was simulated.

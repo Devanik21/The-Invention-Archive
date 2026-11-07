@@ -73,26 +73,26 @@
     {
       "id": "sha256_manifest",
       "area": "Integrity",
-      "status": "PENDING",
-      "evidence": "Refreshed by deploy.py after this audit record and validation outputs are final."
+      "status": "PASS",
+      "evidence": "The build workflow regenerated the SHA-256 manifest after rebuilding PDF, figures, numerical outputs and the pending-review record."
     },
     {
       "id": "parent_index_update",
       "area": "GitHub archive",
-      "status": "PENDING",
-      "evidence": "The existing index will be preserved and appended during the GitHub publication commit."
+      "status": "PASS",
+      "evidence": "The committed parent index contains the release title and relative release-directory link."
     },
     {
       "id": "remote_build_ci",
       "area": "GitHub CI",
-      "status": "PENDING",
-      "evidence": "A dedicated GitHub Actions build will regenerate the 8 figure pairs, numerical outputs, manifest and paper.pdf from committed source."
+      "status": "PASS",
+      "evidence": "GitHub Actions rebuilt paper.pdf from source at 778a9dbb74a1c12eb25e8a60a42b86322e75d774; PDF SHA-256 bfd863e8fb8568c5c1b80a2b7af5c62cfce0ca8b2e09e5b5612a134409b4376b; pages=45."
     },
     {
       "id": "remote_exact_sha_verification",
       "area": "GitHub CI",
       "status": "PENDING",
-      "evidence": "A separate GitHub Actions verifier will check the exact generated-artifact commit and final head SHA."
+      "evidence": "A separate exact-SHA verification run must execute after the build-artifact commit."
     },
     {
       "id": "branch_protection_audit",
@@ -105,10 +105,16 @@
       "area": "Archival identifier",
       "status": "NOT_RUN",
       "evidence": "Only tag a fully reviewed exact commit; no tag has yet been created."
+    },
+    {
+      "id": "remote_pdf_visual_review",
+      "area": "PDF quality",
+      "status": "PENDING",
+      "evidence": "GitHub-built PDF SHA-256 bfd863e8fb8568c5c1b80a2b7af5c62cfce0ca8b2e09e5b5612a134409b4376b has not yet undergone a page-render review."
     }
   ],
   "remote_checks": {
-    "build_workflow": "PENDING",
+    "build_workflow": "PASS",
     "verification_workflow": "PENDING",
     "post_commit_sha": "PENDING",
     "branch_protection": "BLOCKED",
@@ -119,5 +125,8 @@
     "GitHub Actions build and exact-commit verification have not yet run.",
     "The GitHub Actions-built PDF still requires a fresh SHA-bound visual review.",
     "A semantic tag will not be created unless all required checks and repository controls can be verified."
-  ]
+  ],
+  "remote_build_source_sha": "778a9dbb74a1c12eb25e8a60a42b86322e75d774",
+  "remote_pdf_sha256": "bfd863e8fb8568c5c1b80a2b7af5c62cfce0ca8b2e09e5b5612a134409b4376b",
+  "remote_pdf_pages": 45
 }

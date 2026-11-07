@@ -1,0 +1,4 @@
+protocol,trials,failures,failure_fraction,wilson95_low,wilson95_high,exact_probability,interpretation
+20 uniformly sampled eligible vertices,10000,612,0.0612,0.05666840814896296,0.0660685888211428,0.06532510870664375,synthetic; eligible set includes relay vertices
+20 balanced module-cell lesions (10 per module),10000,0,0.0,0.0,0.00038399837067659573,0.0,synthetic; relay vertices and anchors excluded by design
+5 targeted relay-node lesions,1,1,1.0,,,1.0,deterministic removal of exact minimum cut

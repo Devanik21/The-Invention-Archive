@@ -1,0 +1,239 @@
+{
+  "run_status": "PASS",
+  "seed": 20261107,
+  "scope": "mathematical checks and synthetic graph/network experiments only",
+  "not_established": [
+    "biological MCD in any organism",
+    "planarian tissue graph structure",
+    "ageing reversal",
+    "cancer normalization",
+    "therapeutic efficacy",
+    "universal QEC principle"
+  ],
+  "environment": {
+    "python": "3.13.18",
+    "platform": "Linux-7.0.0-1019-azure-x86_64-with-glibc2.43",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "networkx": "3.6.1",
+    "matplotlib": "3.10.8"
+  },
+  "sheaf_test": {
+    "coboundary_rank": 6,
+    "first_cohomology_dimension_for_C4_trivial_R2_sheaf": 2,
+    "exact_syndrome_harmonic_residual": 6.00213699813108e-16,
+    "random_observation_harmonic_residual": 0.02470389482687424,
+    "exact_cochain_projects_to_zero_harmonic_part": true,
+    "nonexact_observation_has_nonzero_harmonic_part": true
+  },
+  "structural_metrics": {
+    "nodes": 35,
+    "edges": 360,
+    "mcd_weighted_vertex_cut": 5.0,
+    "minimum_cut_nodes": [
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "uniform_20_vertex_failures": 612,
+    "uniform_trials": 10000,
+    "uniform_20_vertex_failure_fraction": 0.0612,
+    "uniform_20_vertex_exact_failure_probability": 0.06532510870664375,
+    "uniform_20_vertex_wilson95": [
+      0.05666840814896296,
+      0.0660685888211428
+    ],
+    "balanced_module_20_vertex_failures": 0,
+    "balanced_module_failure_fraction": 0.0,
+    "balanced_module_wilson95": [
+      0.0,
+      0.00038399837067659573
+    ],
+    "targeted_cut_disconnects": true,
+    "relay_cost_sensitivity": [
+      {
+        "relay_vertex_cost": 0.25,
+        "mcd_weighted": 1.25,
+        "selected_cut_size": 5,
+        "selected_cut": [
+          30,
+          31,
+          32,
+          33,
+          34
+        ]
+      },
+      {
+        "relay_vertex_cost": 0.5,
+        "mcd_weighted": 2.5,
+        "selected_cut_size": 5,
+        "selected_cut": [
+          30,
+          31,
+          32,
+          33,
+          34
+        ]
+      },
+      {
+        "relay_vertex_cost": 1.0,
+        "mcd_weighted": 5.0,
+        "selected_cut_size": 5,
+        "selected_cut": [
+          30,
+          31,
+          32,
+          33,
+          34
+        ]
+      },
+      {
+        "relay_vertex_cost": 2.0,
+        "mcd_weighted": 10.0,
+        "selected_cut_size": 5,
+        "selected_cut": [
+          30,
+          31,
+          32,
+          33,
+          34
+        ]
+      },
+      {
+        "relay_vertex_cost": 4.0,
+        "mcd_weighted": 20.0,
+        "selected_cut_size": 5,
+        "selected_cut": [
+          30,
+          31,
+          32,
+          33,
+          34
+        ]
+      }
+    ],
+    "synthetic_only": true
+  },
+  "inverse_problem": {
+    "nodes": 15,
+    "edges": 66,
+    "design_rank": 66,
+    "design_dimension": 66,
+    "design_condition_number": 4.233755043566601,
+    "snapshots_per_fit": 80,
+    "replicates_per_noise": 5,
+    "noise_levels": [
+      0.0,
+      0.01,
+      0.03,
+      0.07,
+      0.12
+    ],
+    "relative_error_mean_by_noise": {
+      "0.0": 8.292658963255886e-16,
+      "0.01": 0.0008604662524356533,
+      "0.03": 0.002608474237185121,
+      "0.07": 0.006321219439591412,
+      "0.12": 0.011035082537261997
+    },
+    "relative_error_sd_by_noise": {
+      "0.0": 1.4707442008403162e-16,
+      "0.01": 9.198309153620478e-05,
+      "0.03": 0.0002321763470633066,
+      "0.07": 0.0005771683361417361,
+      "0.12": 0.0015143325431048696
+    },
+    "synthetic_only": true
+  },
+  "checks": [
+    {
+      "name": "weighted_laplacian_symmetry",
+      "status": "PASS",
+      "detail": "||L-L^T||_F=0.000e+00"
+    },
+    {
+      "name": "weighted_laplacian_positive_semidefinite",
+      "status": "PASS",
+      "detail": "lambda_min=6.437e-15"
+    },
+    {
+      "name": "dirichlet_energy_identity",
+      "status": "PASS",
+      "detail": "quadratic=651.463937122; edge_sum=651.463937122"
+    },
+    {
+      "name": "exact_syndrome_is_cohomologically_trivial",
+      "status": "PASS",
+      "detail": "harmonic residual=6.002e-16"
+    },
+    {
+      "name": "observed_nonexact_cochain_has_harmonic_component",
+      "status": "PASS",
+      "detail": "harmonic residual=2.470e-02"
+    },
+    {
+      "name": "cycle_rank_identity",
+      "status": "PASS",
+      "detail": "computed dim H1=2"
+    },
+    {
+      "name": "exact_minimum_vertex_cut",
+      "status": "PASS",
+      "detail": "cut capacity=5.0; nodes=[30, 31, 32, 33, 34]"
+    },
+    {
+      "name": "uniform_random_lesions_match_hypergeometric_baseline",
+      "status": "PASS",
+      "detail": "observed=0.0612; exact=0.0653"
+    },
+    {
+      "name": "balanced_module_lesions_preserve_connectivity_in_stylized_model",
+      "status": "PASS",
+      "detail": "0/10000 disconnected"
+    },
+    {
+      "name": "targeted_minimum_cut_disconnects",
+      "status": "PASS",
+      "detail": "all five relay vertices removed"
+    },
+    {
+      "name": "pinned_laplacian_gap_collapses_only_after_all_relays_removed",
+      "status": "PASS",
+      "detail": "lambda(4 removed)=2.952e-02; lambda(5 removed)=0.000e+00"
+    },
+    {
+      "name": "nnls_recovers_clean_synthetic_conductances",
+      "status": "PASS",
+      "detail": "relative error=8.293e-16"
+    },
+    {
+      "name": "nnls_design_matrix_full_column_rank",
+      "status": "PASS",
+      "detail": "rank=66/66; condition=4.23"
+    },
+    {
+      "name": "nnls_remains_finite_under_measurement_noise",
+      "status": "PASS",
+      "detail": "relative error at sigma=0.12: 0.011"
+    }
+  ],
+  "passed": 14,
+  "failed": 0,
+  "outputs": [
+    "figures/fig1_lesion_topology.png",
+    "figures/fig2_pinned_spectral_gap.png",
+    "figures/fig3_nnls_noise_sensitivity.png",
+    "figures/fig4_pinned_diffusion_traces.png",
+    "figures/fig5_structural_network.pdf",
+    "figures/fig6_sheaf_stalk_graph.pdf",
+    "figures/fig7_inference_flow.pdf",
+    "figures/fig8_validation_flow.pdf",
+    "results/dispersed_vs_targeted_lesions.csv",
+    "results/spectral_gap_vs_cut_size.csv",
+    "results/nnls_conductance_estimation_trials.csv",
+    "results/pinned_diffusion_traces.csv",
+    "results/weighted_mcd_sensitivity.csv"
+  ]
+}

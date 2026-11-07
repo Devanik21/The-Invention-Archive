@@ -7,3 +7,9 @@
 - Required visuals: Tables 1–13 (at least five distinct substantive tables); Figures 1–8 (four plots, two network/structure diagrams, two flow diagrams).
 - Inspection: all 45 pages were rendered at 120 dpi and reviewed in six contact sheets (pages 1–8, 9–16, 17–24, 25–32, 33–40, 41–45). The title page, equations, tables, plots, network diagrams, flow diagrams, disclosure, discussion, and bibliography were inspected. No clipping, missing glyphs, unresolved citations, or empty sections were observed.
 - Scope limitation: this is a review of the locally compiled PDF. A separately rebuilt GitHub Actions PDF must be fetched and reviewed against its own SHA-256 before remote visual verification can pass.
+## GitHub Actions build
+
+- Source commit: `778a9dbb74a1c12eb25e8a60a42b86322e75d774`.
+- Rebuilt PDF pages: 45.
+- Rebuilt PDF SHA-256: `bfd863e8fb8568c5c1b80a2b7af5c62cfce0ca8b2e09e5b5612a134409b4376b`.
+- Remote page-by-page visual review: **PENDING**; no remote visual pass is claimed.
