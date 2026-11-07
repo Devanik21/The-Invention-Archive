@@ -43,7 +43,7 @@ jobs:
           set -euo pipefail
           python -m pip install --disable-pip-version-check \
             'numpy==2.3.5' 'scipy==1.17.0' 'networkx==3.6.1' \
-            'matplotlib==3.10.8' 'PyYAML==6.0.3'
+            'matplotlib==3.10.8' 'PyYAML==6.0.3' 'Pillow==11.3.0'
           sudo apt-get update
           sudo apt-get install -y texlive-latex-base texlive-latex-recommended \
             texlive-latex-extra texlive-science texlive-fonts-recommended poppler-utils
@@ -79,6 +79,45 @@ jobs:
           cd "$GITHUB_WORKSPACE"
           python "$D/deploy.py" --validate-only --rebuild-pdf
 
+      - name: Render SHA-bound PDF contact sheets
+        shell: bash
+        run: |
+          set -euo pipefail
+          D="$RELEASE_DIR"
+          RENDER_DIR="$(mktemp -d)"
+          trap 'rm -rf "$RENDER_DIR"' EXIT
+          mkdir -p "$D/results/remote_pdf_review"
+          pdftoppm -png -r 72 "$D/paper.pdf" "$RENDER_DIR/page"
+          python - "$RENDER_DIR" "$D/results/remote_pdf_review" <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageOps, ImageDraw
+          import sys, math
+          src, out = Path(sys.argv[1]), Path(sys.argv[2])
+          pages = sorted(src.glob('page-*.png'), key=lambda p:int(p.stem.split('-')[-1]))
+          assert len(pages) >= 25, f'Expected >=25 rendered pages, got {len(pages)}'
+          cols, rows, per_sheet = 3, 3, 9
+          thumb_w, gutter, label_h = 360, 18, 28
+          for start in range(0, len(pages), per_sheet):
+              batch = pages[start:start+per_sheet]
+              thumbs=[]
+              for page_no, path in enumerate(batch, start+1):
+                  im=Image.open(path).convert('RGB')
+                  ratio=thumb_w/im.width
+                  im=im.resize((thumb_w, int(im.height*ratio)))
+                  tile=Image.new('RGB',(thumb_w, im.height+label_h),'white')
+                  tile.paste(im,(0,label_h))
+                  ImageDraw.Draw(tile).text((8,7),f'PDF page {page_no}',fill='black')
+                  thumbs.append(tile)
+              tile_h=max(x.height for x in thumbs)
+              sheet=Image.new('RGB',(cols*thumb_w+(cols+1)*gutter, rows*tile_h+(rows+1)*gutter),(238,240,244))
+              for k,im in enumerate(thumbs):
+                  x=gutter+(k%cols)*(thumb_w+gutter); y=gutter+(k//cols)*(tile_h+gutter)
+                  sheet.paste(im,(x,y))
+              out_path=out/f'contact_sheet_{start//per_sheet+1:02d}.png'
+              sheet.save(out_path,optimize=True)
+          print(f'Rendered {len(pages)} exact-build pages into {(len(pages)+per_sheet-1)//per_sheet} contact sheets.')
+          PY
+
       - name: Record exact build provenance and pending remote visual review
         shell: bash
         run: |
@@ -95,7 +134,7 @@ jobs:
               'status': 'PENDING_REMOTE_REVIEW', 'page_count': pages,
               'pdf_sha256': digest, 'render_dpi': 120,
               'pages_reviewed': [],
-              'contact_sheets': [],
+              'contact_sheets': [str(p.relative_to(d)) for p in sorted((d / 'results/remote_pdf_review').glob('contact_sheet_*.png'))],
               'review_method': 'The GitHub Actions PDF was rebuilt from the committed paper.tex and figures; a separate SHA-bound page render and visual review is required before closure.',
               'review_notes': ['Build succeeded from source.', 'No remote visual review is claimed by this workflow.']
           })
@@ -135,25 +174,154 @@ jobs:
           python "$RELEASE_DIR/deploy.py" --validate-only --skip-model
 
       - name: Commit generated release evidence and compiled PDF
+        id: publish
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -- "$RELEASE_DIR/paper.pdf" "$RELEASE_DIR/figures" "$RELEASE_DIR/results"
-          if git diff --cached --quiet; then
-            echo 'No generated artifacts changed.'
-          else
+          if ! git diff --cached --quiet; then
             git commit -m 'build(mcd): regenerate numerical evidence, figures and PDF'
-            pushed=0
-            for attempt in 1 2 3; do
-              git fetch origin main
-              git rebase origin/main
-              if git push origin HEAD:main; then
-                pushed=1
-                break
-              fi
-              echo "Fast-forward push attempt $attempt raced another commit; retrying after fetch/rebase."
-            done
-            test "$pushed" -eq 1 || { echo 'Could not publish generated artifacts after three non-destructive retries.' >&2; exit 1; }
           fi
+          ARTIFACT_SHA="$(git rev-parse HEAD)"
+          pushed=0
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if git merge-base --is-ancestor "$ARTIFACT_SHA" origin/main; then
+              pushed=1
+              break
+            fi
+            if ! git rebase origin/main; then
+              echo 'Rebase conflict while publishing generated artifacts; refusing destructive resolution.' >&2
+              exit 1
+            fi
+            ARTIFACT_SHA="$(git rev-parse HEAD)"
+            if git push origin HEAD:main; then
+              pushed=1
+              break
+            fi
+            echo "Fast-forward push attempt $attempt raced another commit; retrying after fetch/rebase."
+          done
+          test "$pushed" -eq 1 || { echo 'Could not publish generated artifacts after three non-destructive retries.' >&2; exit 1; }
+          git fetch origin main
+          git merge-base --is-ancestor "$ARTIFACT_SHA" origin/main
+          echo "artifact_sha=$ARTIFACT_SHA" >> "$GITHUB_OUTPUT"
+          echo "Verified published artifact commit is reachable from origin/main: $ARTIFACT_SHA"
+
+      - name: Independently verify the exact published commit
+        shell: bash
+        env:
+          ARTIFACT_SHA: ${{ steps.publish.outputs.artifact_sha }}
+        run: |
+          set -euo pipefail
+          VERIFY_DIR="$(mktemp -d)"
+          trap 'rm -rf "$VERIFY_DIR"' EXIT
+          git fetch origin main
+          git cat-file -e "$ARTIFACT_SHA^{commit}"
+          git merge-base --is-ancestor "$ARTIFACT_SHA" origin/main
+          git archive "$ARTIFACT_SHA" "$RELEASE_DIR" | tar -x -C "$VERIFY_DIR"
+          D="$VERIFY_DIR/$RELEASE_DIR"
+          test "$(find "$D" -maxdepth 1 -type f | wc -l)" -eq 9
+          test -s "$D/paper.pdf" && test -s "$D/paper.tex" && test -d "$D/figures" && test -d "$D/results"
+          PDF_SHA="$(sha256sum "$D/paper.pdf" | awk '{print $1}')"
+          PAGES="$(pdfinfo "$D/paper.pdf" | awk '/^Pages:/ {print $2}')"
+          test "$PAGES" -ge 25
+          python - "$D" <<'PY'
+          import hashlib,json,pathlib,sys
+          d=pathlib.Path(sys.argv[1]); manifest=json.loads((d/'results/sha256_manifest.json').read_text())
+          for rel,expected in manifest.items():
+              path=d/rel
+              assert path.is_file(), f'missing remote-commit file: {rel}'
+              assert hashlib.sha256(path.read_bytes()).hexdigest()==expected, f'hash mismatch: {rel}'
+          assert len(list((d/'figures').glob('*.pdf')))>=8
+          assert len(list((d/'figures').glob('*.png')))>=8
+          assert len(list((d/'results/remote_pdf_review').glob('contact_sheet_*.png')))>=5
+          report=json.loads((d/'results/verification_report.json').read_text())
+          assert report['run_status']=='PASS' and report['passed']==14 and report['failed']==0
+          review=json.loads((d/'results/pdf_visual_review.json').read_text())
+          assert review['pdf_sha256']==hashlib.sha256((d/'paper.pdf').read_bytes()).hexdigest()
+          print(f'PASS exact commit archive: files={len(manifest)}, numerical={report["passed"]}/{report["passed"]+report["failed"]}, PDF SHA={review["pdf_sha256"]}')
+          PY
+          echo "## Exact post-commit verification" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Published artifact commit: \`$ARTIFACT_SHA\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Exact-commit PDF SHA-256: \`$PDF_SHA\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Exact-commit PDF pages: $PAGES" >> "$GITHUB_STEP_SUMMARY"
+          echo '- Remote tree, manifest, 9 root files, figures, contact sheets, and 14-check numerical report: PASS' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit exact-SHA verification record
+        id: verification_record
+        shell: bash
+        env:
+          ARTIFACT_SHA: ${{ steps.publish.outputs.artifact_sha }}
+        run: |
+          set -euo pipefail
+          D="$RELEASE_DIR"
+          python - "$D" "$ARTIFACT_SHA" <<'PY'
+          import json,pathlib,sys
+          d=pathlib.Path(sys.argv[1]); artifact_sha=sys.argv[2]
+          p=d/'results/release_check_matrix.json'; m=json.loads(p.read_text())
+          m['release_artifact_commit_sha']=artifact_sha
+          m['remote_checks']['verification_workflow']='PASS (same-run independent exact-commit archive verification)'
+          m['remote_checks']['post_commit_sha']=artifact_sha
+          m['remote_checks']['final_audit_commit']='PENDING_FINAL_TREE_CHECK'
+          for item in m['checks']:
+              if item['id']=='remote_exact_sha_verification':
+                  item['status']='PASS'
+                  item['evidence']=f'Independent git archive verification passed against exact published artifact commit {artifact_sha}; verified manifest, PDF digest/page count, nine core files, figure assets, and 14/14 numerical report.'
+          m['release_status']='PENDING_REMOTE_VISUAL_REVIEW'
+          p.write_text(json.dumps(m,indent=2)+'\n')
+          md=d/'results/release_check_matrix.md'
+          md.write_text(md.read_text()+f'\n- Remote exact-commit archive verification: **PASS** (`{artifact_sha}`).\n- Remote PDF page-render review: **PENDING** (contact sheets generated from exact committed PDF).\n')
+          audit=d/'results/pdf_audit.md'
+          audit.write_text(audit.read_text()+f'\n## Exact GitHub commit verification\n\n- Artifact commit: `{artifact_sha}`.\n- The workflow independently exported this commit with `git archive` and rechecked the PDF digest, PDF page count, manifest, all nine root files, generated figure assets, and the 14/14 verification record.\n')
+          PY
+          python "$D/deploy.py" --validate-only --skip-model
+          git add -- "$D/results/release_check_matrix.json" "$D/results/release_check_matrix.md" "$D/results/pdf_audit.md" "$D/results/sha256_manifest.json"
+          if ! git diff --cached --quiet; then
+            git commit -m 'audit(mcd): record exact post-commit verification'
+          fi
+          AUDIT_SHA="$(git rev-parse HEAD)"
+          pushed=0
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if git merge-base --is-ancestor "$AUDIT_SHA" origin/main; then pushed=1; break; fi
+            if ! git rebase origin/main; then echo 'Audit commit rebase conflict; refusing unsafe rewrite.' >&2; exit 1; fi
+            AUDIT_SHA="$(git rev-parse HEAD)"
+            if git push origin HEAD:main; then pushed=1; break; fi
+            echo "Audit commit push attempt $attempt raced another commit; retrying."
+          done
+          test "$pushed" -eq 1
+          git fetch origin main
+          git merge-base --is-ancestor "$AUDIT_SHA" origin/main
+          echo "audit_sha=$AUDIT_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Verify final audit commit tree
+        shell: bash
+        env:
+          AUDIT_SHA: ${{ steps.verification_record.outputs.audit_sha }}
+        run: |
+          set -euo pipefail
+          FINAL_DIR="$(mktemp -d)"
+          trap 'rm -rf "$FINAL_DIR"' EXIT
+          git fetch origin main
+          git cat-file -e "$AUDIT_SHA^{commit}"
+          git merge-base --is-ancestor "$AUDIT_SHA" origin/main
+          git archive "$AUDIT_SHA" "$RELEASE_DIR" | tar -x -C "$FINAL_DIR"
+          D="$FINAL_DIR/$RELEASE_DIR"
+          python - "$D" <<'PY'
+          import hashlib,json,pathlib,sys
+          d=pathlib.Path(sys.argv[1]); m=json.loads((d/'results/sha256_manifest.json').read_text())
+          for rel,expected in m.items():
+              p=d/rel; assert p.is_file() and hashlib.sha256(p.read_bytes()).hexdigest()==expected, f'manifest mismatch: {rel}'
+          matrix=json.loads((d/'results/release_check_matrix.json').read_text())
+          assert matrix['remote_checks']['verification_workflow'].startswith('PASS')
+          assert matrix['checks'][[x['id'] for x in matrix['checks']].index('remote_exact_sha_verification')]['status']=='PASS'
+          assert matrix['release_status']=='PENDING_REMOTE_VISUAL_REVIEW'
+          assert len(list((d/'results/remote_pdf_review').glob('contact_sheet_*.png')))>=5
+          print(f'PASS final audit commit manifest={len(m)}, remote exact-SHA verification=PASS, visual review=PENDING')
+          PY
+          echo "## Final GitHub tree verification" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Final audit commit: \`$AUDIT_SHA\`" >> "$GITHUB_STEP_SUMMARY"
+          echo '- Final matrix, SHA-256 manifest, PDF, source and evidence directories: PASS' >> "$GITHUB_STEP_SUMMARY"
+          echo '- Remote page-by-page visual review: PENDING manual inspection of generated contact sheets' >> "$GITHUB_STEP_SUMMARY"
