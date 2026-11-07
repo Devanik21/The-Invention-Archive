@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below. Both authors contributed equally."
+title: "Thinking Linear Regression, Stress-Tested: when inference-time self-critique helps simple regression"
+type: software
+version: 1.0.0
+date-released: 2026-11-07
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    affiliation: "Independent researcher"
+  - family-names: Xylia
+    affiliation: "AI research scientist (multi-agent research system)"
+    alias: "Equal contribution with Devanik Debnath"
+keywords:
+  - linear regression
+  - extrapolation
+  - inference-time compute
+  - shrinkage
+  - reproducibility
+license: "TO-BE-CHOSEN-BY-AUTHORS"
