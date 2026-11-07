@@ -13,3 +13,5 @@
 | Semantic tag | NOT_RUN | Tagging is deferred until release verification is complete. |
 
 **Current release state: PENDING_REMOTE_VERIFICATION.** A successful local build is not evidence of successful remote publication or empirical biological validation.
+- Remote exact-commit archive verification: **PASS** (`cb805b455863577743f8d7d2a0ebfba1f21e4a32`).
+- Remote PDF page-render review: **PENDING** (contact sheets generated from exact committed PDF).

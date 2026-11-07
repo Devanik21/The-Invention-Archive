@@ -4,8 +4,8 @@
   "date": "2026-11-07",
   "repository": "Devanik21/The-Invention-Archive",
   "release_path": "Theoretical Research/An_Operational_Morphogenetic_Code_Distance_for_Tissue_Network_Resilience",
-  "release_status": "PENDING_REMOTE_VERIFICATION",
-  "release_artifact_commit_sha": null,
+  "release_status": "PENDING_REMOTE_VISUAL_REVIEW",
+  "release_artifact_commit_sha": "cb805b455863577743f8d7d2a0ebfba1f21e4a32",
   "local_pdf_pages": 45,
   "local_pdf_sha256": "635f1dc75d86d808bb045fe571234083eb54cfedc59c89aa1bd96b29c354083e",
   "scientific_scope": "Mathematical theorem and synthetic graph/network inference experiments only; biological MCD not measured.",
@@ -91,8 +91,8 @@
     {
       "id": "remote_exact_sha_verification",
       "area": "GitHub CI",
-      "status": "PENDING",
-      "evidence": "A separate exact-SHA verification run must execute after the build-artifact commit."
+      "status": "PASS",
+      "evidence": "Independent git archive verification passed against exact published artifact commit cb805b455863577743f8d7d2a0ebfba1f21e4a32; verified manifest, PDF digest/page count, nine core files, figure assets, and 14/14 numerical report."
     },
     {
       "id": "branch_protection_audit",
@@ -121,10 +121,11 @@
   ],
   "remote_checks": {
     "build_workflow": "PASS",
-    "verification_workflow": "PENDING",
-    "post_commit_sha": "PENDING",
+    "verification_workflow": "PASS (same-run independent exact-commit archive verification)",
+    "post_commit_sha": "cb805b455863577743f8d7d2a0ebfba1f21e4a32",
     "branch_protection": "BLOCKED",
-    "tag": "NOT_RUN"
+    "tag": "NOT_RUN",
+    "final_audit_commit": "PENDING_FINAL_TREE_CHECK"
   },
   "open_blockers": [
     "Branch-protection/ruleset state could not be inspected because the connected GitHub integration lacks that API permission (403).",

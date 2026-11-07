@@ -20,3 +20,8 @@
 - Rebuilt PDF pages: 45.
 - Rebuilt PDF SHA-256: `4c5e01fe85b0e83018f2e0fc192c840653d52de53abc164a5d0bb83125cbe4fc`.
 - Remote page-by-page visual review: **PENDING**; no remote visual pass is claimed.
+
+## Exact GitHub commit verification
+
+- Artifact commit: `cb805b455863577743f8d7d2a0ebfba1f21e4a32`.
+- The workflow independently exported this commit with `git archive` and rechecked the PDF digest, PDF page count, manifest, all nine root files, generated figure assets, and the 14/14 verification record.
