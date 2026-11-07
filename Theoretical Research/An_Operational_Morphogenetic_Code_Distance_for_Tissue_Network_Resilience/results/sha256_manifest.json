@@ -48,12 +48,6 @@
   "results/workflow_log.md": "5404d3f7ad7753b83b4d208f4f1490b3bc0fa8b0b4086f3fcf775b6a7c198793",
   "schema_article.jsonld": "8ac530be0fc87daadb199c4a298793d163af92f1a85de693e60ddd8175155044",
   "verify_model.py": "3ec460683fcc4884c627fe46898de25e1922637f30bb78efcd4c68d7c87217ab",
-  "pdf_visual_review.json": "a860af77722e4edab1ef91163520f44e14c586593f04cabbcc7df671a1353af0",
-  "release_check_matrix.json": "809d7e7abe05a95015e610e2556377c3a97cb4576db865295d2e5fb2f2cf519a",
-  "release_check_matrix.md": "b701d3048d4b5e9e3188a1272f3ac5310c242fac22d8d4032fcc9a63282a039c",
-  "pdf_audit.md": "0a52ea7b1f0af13313ec8e734eb29fbbaa780cda0132ca081fe7b1a33c5475d0",
-  "workflow_log.md": "5404d3f7ad7753b83b4d208f4f1490b3bc0fa8b0b4086f3fcf775b6a7c198793",
-  "remote_pdf_review/visual_review_report.md": "aaea2df5b0f173a4090bba55acd6583ffb2fe62eaef1f90a99d81ba7558fdf45",
   "results/remote_pdf_review/verification_workflow_history.md": "8c31f801424df8eebf3fb6cfe2f0b10476b44705ec9063db1d55d9712b03138a",
   "results/remote_pdf_review/visual_review_report.md": "aaea2df5b0f173a4090bba55acd6583ffb2fe62eaef1f90a99d81ba7558fdf45"
 }
