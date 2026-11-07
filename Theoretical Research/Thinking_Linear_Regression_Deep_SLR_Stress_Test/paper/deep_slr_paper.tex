@@ -1,0 +1,266 @@
+\documentclass[10pt]{article}
+\usepackage[a4paper,margin=2.1cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,graphicx,longtable,hyperref,xcolor}
+\usepackage{caption}
+\graphicspath{{../figures/}}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+\newcommand{\TLR}{\textsc{tlr}}
+
+\title{\textbf{Thinking Linear Regression, Stress-Tested}\\
+\large When does inference-time self-critique help simple regression, and when does it not?}
+\author{Devanik Debnath$^{\dagger}$ \qquad Xylia$^{\dagger}$\\[2pt]
+\small Independent researcher \qquad AI research scientist (multi-agent research system)\\
+\small $^{\dagger}$Equal contribution.}
+\date{Preprint v1.0 \quad November 2026 \quad Not peer reviewed}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study \emph{Thinking Linear Regression} (\TLR), a simple linear regressor whose prediction is refined by a budgeted, inference-time ``critic'' loop (the ``Deep SLR'' idea). We make three formal observations. The loop has a closed form. Inside the training support it is exactly ordinary least squares, to floating-point precision. And, with a fixed boundary anchor, it is a budgeted, boundary-anchored shrinkage whose weight rises across the edge of the data over a length of about $\mathrm{sd}(x)/(T\eta\kappa)$. We then test the method on five toy families with known ground truth and two bundled real datasets, with 30 seeds per dataset, nested hyperparameter tuning that never sees the extrapolation test, paired statistics and Holm correction. Relative to OLS, \TLR{} reduces extrapolation error on saturating growth ($-81\%$), a concave quadratic ($-67\%$) and the Engel food-expenditure curve ($-13\%$, better on $87\%$ of seeds). It increases error on a linear control ($+377\%$), a logistic curve ($+41\%$) and diabetes progression ($+8\%$), and it does not significantly help on a regime shift. Simple baselines (kNN, clipped OLS, a correctly specified quadratic) often beat \TLR{}. More thinking does not help: a single tuned damped step matches or beats the $T$-step loop on every dataset. The gain, where it exists, comes from damped boundary anchoring, not from iterated reasoning. We therefore reframe the proposal as a conditional, budgeted shrinkage rule and state when it should and should not be used. All code, figures and tables are reproducible from the accompanying repository.
+\end{abstract}
+
+\section{Introduction}
+Kahneman's distinction between fast, intuitive System 1 and slow, deliberate System 2 has become a useful frame for machine learning, where recent work spends extra inference-time computation to reason before answering \cite{kahneman2011,wei2022cot,snell2024}. The question behind this paper is whether the frame applies to the simplest possible model. Ordinary least squares (OLS) answers in one instant step, $\hat y = wx+b$, and it extrapolates a fitted slope without checking whether the data supports that slope. Could a short, budgeted loop that critiques the prediction before releasing it fix that failure? This is the \emph{Deep SLR} proposal.
+
+We answer with a test, not a demonstration. Three things are established by proof or exact computation: a closed form for the loop, exact recovery of OLS inside the data, and a precise description of the transition at the edge of the data. Everything else is empirical, and several of the empirical findings are negative. The motivating examples in our drafting notes (an ice-cream sales toy and a 2021 housing example) were illustrative. We do not use them as evidence; the evidence here comes from ground-truth toys and two real datasets.
+
+\paragraph{Contributions.} (i) A closed form for the critic loop and the identity $\TLR=\mathrm{OLS}$ inside the support (Section~\ref{sec:method}); (ii) an explanation of what the loop actually computes, namely a damped shrinkage toward a boundary anchor with an edge layer of width $\approx\mathrm{sd}(x)/(T\eta\kappa)$; (iii) a benchmark with nested tuning, paired tests and multiple ablations, with the negative results reported in full; (iv) a reproducible package.
+
+\section{Related work and positioning}
+\label{sec:related}
+The components are established. Robust regression \cite{huber1964} and ridge shrinkage \cite{hoerl1970} trade bias for variance in the fit. Iterative refinement in numerical linear algebra \cite{wilkinson1963} corrects a solution by repeatedly computing its residual. Damped, trust-region updates \cite{conn2000} limit how far a model may move from a reference point. Distribution shift is a standard problem with its own taxonomy \cite{quinonero2009}, and conformal prediction gives distribution-free intervals outside the training sample \cite{vovk2005,angelopoulos2021}. Gaussian processes revert to the prior mean far from data \cite{rasmussen2006}, which is the behaviour the critic tries to imitate. Test-time compute scaling \cite{snell2024,wei2022cot} applies extra inference computation to large language models; we are not aware of its application to a closed-form linear estimator.
+
+Our position is therefore narrow. We did not find this exact composition (an inference-time loop wrapped around OLS, with a support-aware critic) in the literature we consulted. Our literature search was not exhaustive, and the parts may exist elsewhere. The closed form in Section~\ref{sec:method} shows that the composition is a boundary-anchored, budgeted shrinkage, which is close to trust-region and clipping ideas. The name ``Deep SLR'' also collides with unrelated acronyms (structured low-rank MRI reconstruction, sign language recognition), so we use \TLR{} in the body.
+
+\section{Method}
+\label{sec:method}
+\subsection{Model}
+Given training pairs $(x_i,y_i)$, let $\hat w,\hat b$ be the OLS estimates, $x_{\min},x_{\max}$ the realised training range, and $s=\mathrm{sd}(x)$. For a query $x^*$ define
+\begin{align}
+y_0(x^*) &= \hat w x^* + \hat b, &
+v(x^*) &= \frac{\max(x^*-x_{\max},0)+\max(x_{\min}-x^*,0)}{s},\\
+a(x^*) &= 1-e^{-\kappa v(x^*)}\quad(\kappa=\infty:\ a=\mathbf 1[v>0]), &
+A(x^*) &= \text{anchor (below)},
+\end{align}
+and run $T$ thoughts, $y_{t+1}=y_t+\eta\,a\,(A-y_t)$, starting at $y_0$. Two anchors are used. The \emph{extrapolation} anchor is $A=\bar y_{\mathrm{side}}+\gamma\hat w(x^*-\bar x_{\mathrm{side}})$, built from the mean $y$ of the $m=\max(10,\lceil 0.05\,n\rceil)$ training points nearest the relevant boundary. The \emph{residual} anchor is $A=y_0+\bar r_{\mathrm{side}}$, using the mean OLS residual of the same boundary points. In both cases $A$ depends on $x^*$ only, not on the current thought $y_t$.
+
+\subsection{Three propositions}
+\begin{proposition}[Closed form]\label{prop:closed}
+For fixed $x^*$, let $g=\eta a(x^*)\in[0,1]$. Then $y_T=A+(1-g)^T(y_0-A)$.
+\end{proposition}
+\begin{proof}
+Since $A$ does not depend on $y_t$, $y_{t+1}-A=(1-g)(y_t-A)$. Induction from $y_0$ gives the result. $\square$
+\end{proof}
+
+\begin{proposition}[In-support identity]\label{prop:identity}
+If $x_{\min}\le x^*\le x_{\max}$ then $v=0$, so $a=0$ and $y_T=y_0$. Hence $\TLR=\mathrm{OLS}$ on the realised support for every $T$, $\eta$, $\kappa$, $\gamma$ and anchor.
+\end{proposition}
+\begin{proof}
+Immediate from Proposition~\ref{prop:closed} and $a=0$. $\square$
+\end{proof}
+
+\begin{proposition}[Effective weight and edge layer]\label{prop:edge}
+The weight on the anchor is $\lambda_T(x^*)=1-(1-\eta a)^T$. For $\eta=1$ this is exactly $\lambda_T=1-e^{-T\kappa v}$, so the anchor weight rises from $0$ to $1$ over a distance $\ell=s/(T\kappa)$ beyond the edge. For $\eta<1$ and small $v$ it is $\approx 1-e^{-T\eta\kappa v}$, with edge length $s/(T\eta\kappa)$.
+\end{proposition}
+\begin{proof}
+With $\eta=1$, $1-a=e^{-\kappa v}$, so $(1-\eta a)^T=e^{-T\kappa v}$. For $\eta<1$ and small $\kappa v$, $\log(1-\eta a)\approx-\eta\kappa v$. $\square$
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:edge} is a prediction that we checked. In the saturating toy with $T=30$, $\eta=1$, $\kappa=4$, the observed anchor weight at distances $0.001$, $0.005$, $0.010$, $0.020$ outside the edge was $0.0522$, $0.2352$, $0.4151$, $0.6579$. These match the formula $1-e^{-T\kappa v}$ to four decimals (Notebook, Section 3). The consequence is that $\TLR$ is continuous but not smooth at the edge, and more thinking makes the edge sharper rather than smoother. Figure~\ref{fig:mech} shows this boundary layer.
+\end{remark}
+
+\section{Experimental protocol}
+\subsection{Data}
+\textbf{Toys} (Table~\ref{tab:toys}). Each toy has a known noise-free mean $f(x)$, and all errors are measured against $f$. Training uses $n=200$ points drawn uniformly on the training interval. In-support evaluation uses 200 fresh points on the same interval. Extrapolation evaluation uses 200 fresh points on the extrapolation interval.
+
+\begin{table}[h]
+\centering
+\caption{Toy families. $f$ is the noise-free mean; $\sigma$ is the Gaussian noise sd.}\label{tab:toys}
+\begin{tabular}{llllr}
+\toprule
+Family & $f(x)$ & Train $x$ & Extrapolation $x$ & $\sigma$\\
+\midrule
+Linear (control) & $2x+1$ & $[0,10]$ & $(10,15]$ & 1.0\\
+Saturating & $10(1-e^{-x/3})$ & $[0,8]$ & $(8,16]$ & 0.5\\
+Logistic & $12/(1+e^{-0.8(x-6)})$ & $[0,8]$ & $(8,14]$ & 0.4\\
+Concave quadratic & $3x-0.15x^2$ & $[0,8]$ & $(8,12]$ & 0.5\\
+Regime shift & $x$ if $x\le6$; $6+0.3(x-6)$ otherwise & $[0,6]$ & $(6,12]$ & 0.3\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Real data}, both bundled offline. \texttt{engel}: food expenditure versus household income from the Engel data (\texttt{statsmodels}, $n=235$). \texttt{diabetes\_bmi}: disease progression versus standardised BMI from the scikit-learn diabetes data ($n=442$). For each real dataset, the lower 80\% of $x$ is the support and the top 20\% is the extrapolation test. Within the support, a random 80\% trains the model and 20\% is held out for in-distribution scoring. This gives $150/38/47$ (Engel) and $283/71/88$ (diabetes) samples for train/held-out/extrapolation. Real-data scores are against observed values, so they include noise. Seed variation comes only from the training subsample.
+
+\subsection{Methods and tuning}
+We compare OLS, clipped OLS (predictions clipped to the training target range), Huber regression, a quadratic polynomial, $k$-nearest neighbours ($k=10$), a Gaussian process (RBF plus white noise), and four \TLR{} variants: extrapolation anchor (the main method), residual anchor, one-shot ($T=1$), and binary critic ($\kappa=\infty$). \TLR{} hyperparameters are chosen per seed on a simulated shift inside the training data. The training data are split at the 80th percentile of $x$, the model is fitted on the lower part, and the grid is scored on the upper 20\%. The grid is $\gamma\in\{0,.25,.5,.75,1\}$, $\kappa\in\{.5,1,2,4\}$, $\eta\in\{.25,.5,1\}$, $T\in\{1,3,10,30\}$. The test data are never used for tuning, and the final model is refitted on the full training set.
+
+\subsection{Metrics and statistics}
+Primary metric: RMSE on the extrapolation test (\texttt{rmse\_ext}). Secondary: RMSE on in-support points (\texttt{rmse\_in}). For every method we report the paired difference from OLS on the same seed, a bootstrap 95\% CI on the mean difference (10{,}000 resamples), the fraction of seeds where the method beats OLS, a two-sided Wilcoxon signed-rank $p$-value, and a Holm adjustment across the methods compared within each dataset. Each dataset is run with 30 seeds.
+
+\section{Results}
+\subsection{The in-support identity holds exactly}
+Proposition~\ref{prop:identity} predicts zero difference from OLS on points inside the realised training range. Across all seven datasets and all seeds, the largest absolute difference between \TLR{} and OLS on such points was at most $1.8\times10^{-15}$ (Figure~\ref{fig:identity}). The closed form also matches the explicit loop to within $10^{-10}$ over all tested settings, and the 20{,}000-point timing run was $0.8$\,ms (vectorised closed form) and $0.5$\,ms (vectorised loop), with $16\,\mu$s per point in the pure-Python trace (Section~\ref{sec:repro}).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\linewidth]{fig8_inside_identity.png}
+\caption{Largest absolute difference between \TLR{} and OLS on test points inside the realised training range, for each dataset, across all seeds. All values are at floating-point precision.}\label{fig:identity}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.78\linewidth]{fig2_schematic.png}
+\caption{The critic loop. System 1 gives $y_0$. The critic gives the gain $a$ from the distance $v$ outside the support. The anchor $A$ is fixed for each $x^*$. The loop applies $T$ damped steps toward $A$. Inside the support $a=0$, so the output is OLS.}\label{fig:schematic}
+\end{figure}
+
+\subsection{Extrapolation: where \TLR{} helps and where it hurts}
+Table~\ref{tab:stats} gives the paired comparison for the main method and the three ablations, and Figure~\ref{fig:forest} shows the same comparison with CIs. The full benchmark, with all baselines, is in Table~\ref{tab:main} and Figure~\ref{fig:bench}.
+
+\begin{table}[h]
+\centering
+\caption{Extrapolation RMSE relative to OLS (30 seeds per dataset). Negative means better than OLS. Win is the fraction of seeds where the method beats OLS. Holm $p$ is adjusted across the methods compared within each dataset.}\label{tab:stats}
+\begin{tabular}{llrrrrr}
+\toprule
+Dataset & Method & Mean diff. & 95\% CI & Rel. & Win & Holm $p$\\
+\midrule
+Saturating & \TLR{} (main) & $-4.58$ & $[-4.77,-4.37]$ & $-81\%$ & 100\% & $<10^{-4}$\\
+Saturating & \TLR{} one-shot & $-4.80$ & $[-4.90,-4.69]$ & $-85\%$ & 100\% & $<10^{-4}$\\
+Concave & \TLR{} (main) & $-3.55$ & $[-3.70,-3.42]$ & $-67\%$ & 100\% & $<10^{-4}$\\
+Concave & \TLR{} one-shot & $-3.92$ & $[-4.13,-3.70]$ & $-74\%$ & 100\% & $<10^{-4}$\\
+Engel & \TLR{} (main) & $-33.3$ & $[-39.9,-26.0]$ & $-13\%$ & 87\% & $<10^{-4}$\\
+Engel & \TLR{} residual anchor & $-1.27$ & $[-2.78,0.14]$ & $-0.5\%$ & 73\% & $0.035$\\
+Regime shift & \TLR{} (main) & $-0.18$ & $[-0.31,-0.08]$ & $-8\%$ & 53\% & $0.33$\\
+Diabetes (BMI) & \TLR{} (main) & $+5.29$ & $[+2.71,+8.22]$ & $+8\%$ & 33\% & $0.007$\\
+Logistic & \TLR{} (main) & $+0.87$ & $[+0.83,+0.91]$ & $+41\%$ & 0\% & $<10^{-4}$\\
+Linear (control) & \TLR{} (main) & $+0.43$ & $[+0.23,+0.66]$ & $+377\%$ & 13\% & $<10^{-4}$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{fig4_forest_vs_ols.png}
+\caption{Paired difference from OLS on extrapolation RMSE, mean and 95\% bootstrap CI over 30 seeds. Points left of zero beat OLS. \TLR{} variants are coloured as in the benchmark figure.}\label{fig:forest}
+\end{figure}
+
+The pattern is consistent with the mechanism. \TLR{} helps when the true curve bends away from the boundary trend in a way the boundary anchor can see (saturating, concave, Engel). It hurts when the trend continues (linear, logistic, diabetes). Its tuned settings also cannot tell these cases apart: on the linear control, the within-support tuning picks gentle damping ($T=1$, $\gamma=1$), which still moves the prediction toward a noisy anchor. The anchor is a mean of about ten boundary points, so it carries sampling error that the critic cannot remove. The residual anchor reduces this harm, but it does not remove it.
+
+The regime-shift toy shows the most important limitation. Its kink lies at the training boundary, and nested tuning only scores points beyond the 80th percentile of the training $x$, which all lie on the initial slope. The tuner therefore cannot see the regime change and chooses an OLS-like anchor. The result is no significant gain (Holm $p=0.33$), while a hard clip reduces error by $67\%$ (Table~\ref{tab:main}). Figure~\ref{fig:shift} shows this, together with the real Engel case.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{fig7_shift_cases.png}
+\caption{(a) Regime-shift toy: the true curve bends at $x=6$, and OLS, the quadratic and TLR all continue the first slope. (b) Engel curve, seed 0: the data show concave food expenditure at high income. The seed-0 TLR curve is close to OLS. Its average advantage comes from the win rate over seeds (87\%), so the single curve understates it.}\label{fig:shift}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{fig1_mechanism.png}
+\caption{(a) Training data, the true mean, OLS and \TLR{} with $T=30$ on the saturating toy (seed 0). The shaded band is the realised support. (b) Trajectory at $x=13$. The loop reaches its fixed point in about two steps, so most of the thinking is done in the first step.}\label{fig:mech}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{fig3_benchmark.png}
+\caption{Extrapolation RMSE by method and dataset (mean and 95\% CI over 30 seeds). The bars are sorted by error within each panel.}\label{fig:bench}
+\end{figure}
+
+\subsection{Baselines often do better than \TLR{}}
+Table~\ref{tab:main} lists all methods. On the saturating toy, $k$-NN ($0.50$) and clipped OLS ($0.64$) both beat \TLR{} ($1.05$). On the concave toy, a correctly specified quadratic ($0.20$) and clipped OLS ($0.39$) beat it ($1.74$). On the logistic toy and on the regime shift, clipped OLS is best. On the Engel curve, a \TLR{} variant is the best method tested: the one-shot variant at $224.3$ and the main variant at $225.0$, ahead of the quadratic ($249.4$), Huber ($274.5$), clipped OLS ($318.2$), GPR ($333.2$) and $k$-NN ($398.2$). So the advantage of \TLR{} over the flat baselines is real but specific to the Engel-type case. It is not a general improvement over simple alternatives.
+
+\input{tables/tab_main.tex}
+
+\subsection{More thinking does not help}
+Figure~\ref{fig:budget} varies the thinking budget $T$ with the other tuned parameters held at each seed's values. On the concave toy, error falls from $2.36$ at $T=1$ to $1.71$ at $T=50$, and on the saturating toy it falls from $1.78$ to $1.03$. On the Engel curve, error is lowest at $T=2$ ($222.6$) and rises to $254.9$ at $T=50$. On the linear control, more thinking increases error monotonically (from $0.47$ at $T=1$ to $1.61$ at $T=100$). The one-shot variant, tuned fully at $T=1$, matches or beats the iterative variant on every dataset (Table~\ref{tab:oneshot}). The largest differences are on saturating ($0.83$ versus $1.05$) and concave ($1.38$ versus $1.74$). Every other dataset differs by less than $1\%$. Our interpretation is that the fixed point $A$ is reached within one or two steps at the tuned settings, and any extra steps mainly add tuning variance. This is why we call the loop ``one damped step with a budget knob'' rather than reasoning.
+
+\begin{table}[h]
+\centering
+\caption{One-shot ($T=1$) versus iterative (tuned $T$), extrapolation RMSE, mean over seeds.}\label{tab:oneshot}
+\begin{tabular}{lrr}
+\toprule
+Dataset & One-shot & Iterative (tuned $T$) \\
+\midrule
+Linear (control) & 0.544 & 0.546\\
+Saturating & 0.827 & 1.051\\
+Logistic & 2.995 & 2.989\\
+Concave & 1.376 & 1.744\\
+Regime shift & 2.251 & 2.235\\
+Engel & 224.3 & 225.0\\
+Diabetes (BMI) & 72.94 & 73.03\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\linewidth]{fig5_budget_curve.png}
+\caption{Extrapolation RMSE against thinking budget $T$ (log scale), with $\gamma$, $\kappa$ and $\eta$ held at each seed's tuned values. Curves are not monotone for every dataset.}\label{fig:budget}
+\end{figure}
+
+\subsection{What drives the gain: a sensitivity map}
+Figure~\ref{fig:heat} varies the carried slope $\gamma$ and the critic sharpness $\kappa$ on the saturating toy, with $\eta=0.5$ and $T=10$. The slope parameter dominates. With $\gamma=0$ (pure flattening) the error is $0.51$--$0.55$. With $\gamma=1$ (carry the full slope) it is $4.57$--$4.62$, close to OLS. Sharpness matters less (about $10\%$ across $\kappa$). The gain is therefore almost entirely the decision not to extend the fitted slope, which is the same decision clipping and $k$-NN make.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.6\linewidth]{fig6_heatmap_gamma_kappa.png}
+\caption{Mean extrapolation RMSE on the saturating toy as a function of the carried slope $\gamma$ and the critic sharpness $\kappa$ ($\eta=0.5$, $T=10$, 30 seeds).}\label{fig:heat}
+\end{figure}
+
+\subsection{Cost}
+Prediction is cheap. For 20{,}000 test points and $T=10$, the vectorised closed form takes $0.8$\,ms and the vectorised loop $0.5$\,ms. The per-point Python trace takes $16\,\mu$s. This is negligible next to any reasonable fitting cost, so the computational case is not the limitation. Accuracy is.
+
+\subsection{Summary of hypotheses}
+\begin{center}
+\begin{tabular}{p{0.52\linewidth}p{0.36\linewidth}}
+\toprule
+Hypothesis & Verdict\\
+\midrule
+H1. \TLR{} equals OLS inside the support & Confirmed (max difference $\le 2\times10^{-15}$)\\
+H2. The loop has a closed form & Confirmed (Proposition~\ref{prop:closed}; tested)\\
+H3. \TLR{} beats OLS on extrapolation when the curve bends & Confirmed on saturating, concave, Engel\\
+H4. \TLR{} beats OLS on extrapolation in general & Rejected (worse on linear, logistic, diabetes)\\
+H5. \TLR{} beats flat or simple baselines (clipping, $k$-NN) & Mostly rejected (Engel is the exception)\\
+H6. More thinking steps improve accuracy & Rejected (one step matches or beats $T>1$)\\
+H7. The critic detects regime shifts beyond the data & Rejected (no significant gain)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Discussion}
+What the method computes is clearer than what it was proposed to do. It is OLS, plus a shrinkage toward a boundary anchor, applied only outside the data, with a budget $T$ that controls the width of the edge layer (Proposition~\ref{prop:edge}). The ``System 2'' interpretation is a metaphor for that shrinkage. The loop itself does not contribute. The useful ingredients are the decision not to extrapolate the slope and the boundary anchor, and both are available in simpler forms (clipping, $k$-NN, a quadratic) that often do as well or better here.
+
+Where the method could be useful is narrow: a bending curve whose boundary behaviour is informative, where a flat or slope-free extrapolation is the right prior, and where the modeller can accept the risk of a wrong call on a linear trend. The Engel curve fits this description. The linear and logistic cases do not.
+
+The failure on the regime-shift toy has a general cause. A critic can only be tuned on evidence inside the data, so it cannot learn about changes beyond the data. Any real use of this idea needs out-of-support validation from a separate source, or a conformal calibration wrapper \cite{vovk2005,angelopoulos2021} that gives coverage guarantees rather than point estimates.
+
+\paragraph{What would make this a real contribution.} Three extensions would test the idea properly: multivariate inputs with a Mahalanobis or convex-hull support test; a conformal wrapper with coverage on out-of-support data; and a learned critic trained on a family of simulated shifts, with the baselines above included. Each would be a new paper, and we have not done them.
+
+\section{Limitations}
+(1) Toy families are stylised and the real data are two one-dimensional examples. The Engel result is one dataset. (2) The method is univariate. The support and the anchor are defined for one feature. (3) Nested tuning on within-support data cannot detect shifts beyond the data, which is the regime-shift failure; a different tuning protocol would change the results and we have not tested alternatives. (4) Hyperparameter selection on about 30 to 40 validation points is noisy, and this probably explains some losses. (5) Real-data variance comes from subsampling only, not from re-collection. (6) Our literature search was not systematic; novelty claims are ``to our knowledge'' and must be checked before submission. (7) The grid, the boundary size $m$ and the anchor definitions are design choices, and other choices may perform differently.
+
+\section{Reproducibility, authorship and disclosure}
+\label{sec:repro}
+All numbers in this paper come from \texttt{results/} and are generated by \texttt{scripts/run\_all.py} (30 seeds, about 40 seconds on a single CPU core). Tables and figures are generated from those results by \texttt{deep\_slr/plots.py}, so no number was typed by hand. The package tests (\texttt{tests/test\_tlr.py}) verify the in-support identity, the closed form and the monotone gap. Software versions are in \texttt{requirements.txt}. The notebook \texttt{deep\_slr\_research.ipynb} reruns the analysis with outputs embedded.
+
+\textbf{Authorship.} Devanik Debnath and Xylia contributed equally to the research question, the design, the analysis and the manuscript. Xylia is the authors' AI research scientist (multi-agent research system). \textbf{AI assistance.} Code, experiments, figures and manuscript text were produced with the assistance of Claude (Anthropic), under the direction of the authors, who define the questions and are responsible for the content. \textbf{Competing interests:} none declared. \textbf{Funding:} none.
+
+\begin{thebibliography}{99}
+\bibitem{angelopoulos2021} Angelopoulos AN, Bates S (2021). A gentle introduction to conformal prediction and distribution-free uncertainty quantification. arXiv:2107.07511.
+\bibitem{conn2000} Conn AR, Gould NIM, Toint PL (2000). \emph{Trust-Region Methods}. SIAM.
+\bibitem{efron2004} Efron B, Hastie T, Johnstone I, Tibshirani R (2004). Least angle regression. \emph{Annals of Statistics} 32:407--499.
+\bibitem{engel1857} Engel E (1857). Die Productions- und Consumptionsverhältnisse des Königreichs Sachsen. \emph{Zeitschrift des Statistischen Bureaus des Königlich Sächsischen Ministeriums des Innern} 8/9.
+\bibitem{hoerl1970} Hoerl AE, Kennard RW (1970). Ridge regression: biased estimation for nonorthogonal problems. \emph{Technometrics} 12:55--67.
+\bibitem{huber1964} Huber PJ (1964). Robust estimation of a location parameter. \emph{Annals of Mathematical Statistics} 35:73--101.
+\bibitem{kahneman2011} Kahneman D (2011). \emph{Thinking, Fast and Slow}. Farrar, Straus and Giroux.
+\bibitem{quinonero2009} Quiñonero-Candela J, Sugiyama M, Schwaighofer A, Lawrence ND (eds.) (2009). \emph{Dataset Shift in Machine Learning}. MIT Press.
+\bibitem{rasmussen2006} Rasmussen CE, Williams CKI (2006). \emph{Gaussian Processes for Machine Learning}. MIT Press.
+\bibitem{snell2024} Snell C, Lee J, Xu K, Kumar A (2024). Scaling LLM test-time compute optimally can be more effective than scaling model parameters. arXiv:2408.03314.
+\bibitem{vovk2005} Vovk V, Gammerman A, Shafer G (2005). \emph{Algorithmic Learning in a Random World}. Springer.
+\bibitem{wei2022cot} Wei J, Wang X, Schuurmans D, et al. (2022). Chain-of-thought prompting elicits reasoning in large language models. arXiv:2201.11903.
+\bibitem{wilkinson1963} Wilkinson JH (1963). \emph{Rounding Errors in Algebraic Processes}. Prentice-Hall.
+\end{thebibliography}
+\end{document}
