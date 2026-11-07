@@ -21,8 +21,8 @@
   "sheaf_test": {
     "coboundary_rank": 6,
     "first_cohomology_dimension_for_C4_trivial_R2_sheaf": 2,
-    "exact_syndrome_harmonic_residual": 6.00213699813108e-16,
-    "random_observation_harmonic_residual": 0.02470389482687424,
+    "exact_syndrome_harmonic_residual": 7.342438244567868e-16,
+    "random_observation_harmonic_residual": 0.024703894826874257,
     "exact_cochain_projects_to_zero_harmonic_part": true,
     "nonexact_observation_has_nonzero_harmonic_part": true
   },
@@ -132,18 +132,18 @@
       0.12
     ],
     "relative_error_mean_by_noise": {
-      "0.0": 8.292658963255886e-16,
-      "0.01": 0.0008604662524356533,
-      "0.03": 0.002608474237185121,
-      "0.07": 0.006321219439591412,
-      "0.12": 0.011035082537261997
+      "0.0": 7.689661063849152e-16,
+      "0.01": 0.0008604662524356653,
+      "0.03": 0.0026084742371850983,
+      "0.07": 0.0063212194395914165,
+      "0.12": 0.01103508253726197
     },
     "relative_error_sd_by_noise": {
-      "0.0": 1.4707442008403162e-16,
-      "0.01": 9.198309153620478e-05,
-      "0.03": 0.0002321763470633066,
-      "0.07": 0.0005771683361417361,
-      "0.12": 0.0015143325431048696
+      "0.0": 1.3125975606413506e-16,
+      "0.01": 9.198309153619071e-05,
+      "0.03": 0.000232176347063273,
+      "0.07": 0.0005771683361416917,
+      "0.12": 0.0015143325431048395
     },
     "synthetic_only": true
   },
@@ -156,7 +156,7 @@
     {
       "name": "weighted_laplacian_positive_semidefinite",
       "status": "PASS",
-      "detail": "lambda_min=6.437e-15"
+      "detail": "lambda_min=-5.298e-15"
     },
     {
       "name": "dirichlet_energy_identity",
@@ -166,7 +166,7 @@
     {
       "name": "exact_syndrome_is_cohomologically_trivial",
       "status": "PASS",
-      "detail": "harmonic residual=6.002e-16"
+      "detail": "harmonic residual=7.342e-16"
     },
     {
       "name": "observed_nonexact_cochain_has_harmonic_component",
@@ -206,7 +206,7 @@
     {
       "name": "nnls_recovers_clean_synthetic_conductances",
       "status": "PASS",
-      "detail": "relative error=8.293e-16"
+      "detail": "relative error=7.690e-16"
     },
     {
       "name": "nnls_design_matrix_full_column_rank",

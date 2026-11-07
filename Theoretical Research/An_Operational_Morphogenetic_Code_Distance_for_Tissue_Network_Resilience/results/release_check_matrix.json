@@ -86,7 +86,7 @@
       "id": "remote_build_ci",
       "area": "GitHub CI",
       "status": "PASS",
-      "evidence": "GitHub Actions rebuilt paper.pdf from source at 778a9dbb74a1c12eb25e8a60a42b86322e75d774; PDF SHA-256 bfd863e8fb8568c5c1b80a2b7af5c62cfce0ca8b2e09e5b5612a134409b4376b; pages=45."
+      "evidence": "GitHub Actions rebuilt paper.pdf from source at 125cfde7b1bf67bdcc63e6499795f460e3c7b80e; PDF SHA-256 4c5e01fe85b0e83018f2e0fc192c840653d52de53abc164a5d0bb83125cbe4fc; pages=45."
     },
     {
       "id": "remote_exact_sha_verification",
@@ -111,6 +111,12 @@
       "area": "PDF quality",
       "status": "PENDING",
       "evidence": "GitHub-built PDF SHA-256 bfd863e8fb8568c5c1b80a2b7af5c62cfce0ca8b2e09e5b5612a134409b4376b has not yet undergone a page-render review."
+    },
+    {
+      "id": "remote_pdf_visual_review",
+      "area": "PDF quality",
+      "status": "PENDING",
+      "evidence": "GitHub-built PDF SHA-256 4c5e01fe85b0e83018f2e0fc192c840653d52de53abc164a5d0bb83125cbe4fc has not yet undergone a page-render review."
     }
   ],
   "remote_checks": {
@@ -126,7 +132,7 @@
     "The GitHub Actions-built PDF still requires a fresh SHA-bound visual review.",
     "A semantic tag will not be created unless all required checks and repository controls can be verified."
   ],
-  "remote_build_source_sha": "778a9dbb74a1c12eb25e8a60a42b86322e75d774",
-  "remote_pdf_sha256": "bfd863e8fb8568c5c1b80a2b7af5c62cfce0ca8b2e09e5b5612a134409b4376b",
+  "remote_build_source_sha": "125cfde7b1bf67bdcc63e6499795f460e3c7b80e",
+  "remote_pdf_sha256": "4c5e01fe85b0e83018f2e0fc192c840653d52de53abc164a5d0bb83125cbe4fc",
   "remote_pdf_pages": 45
 }

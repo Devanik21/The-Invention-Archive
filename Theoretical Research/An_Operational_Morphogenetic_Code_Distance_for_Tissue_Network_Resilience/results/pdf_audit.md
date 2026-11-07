@@ -13,3 +13,10 @@
 - Rebuilt PDF pages: 45.
 - Rebuilt PDF SHA-256: `bfd863e8fb8568c5c1b80a2b7af5c62cfce0ca8b2e09e5b5612a134409b4376b`.
 - Remote page-by-page visual review: **PENDING**; no remote visual pass is claimed.
+
+## GitHub Actions build
+
+- Source commit: `125cfde7b1bf67bdcc63e6499795f460e3c7b80e`.
+- Rebuilt PDF pages: 45.
+- Rebuilt PDF SHA-256: `4c5e01fe85b0e83018f2e0fc192c840653d52de53abc164a5d0bb83125cbe4fc`.
+- Remote page-by-page visual review: **PENDING**; no remote visual pass is claimed.

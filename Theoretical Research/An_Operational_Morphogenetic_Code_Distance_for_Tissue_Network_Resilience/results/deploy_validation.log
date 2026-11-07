@@ -8,8 +8,8 @@ PASS: invalid source/sink and non-positive capacity tests
   "mcd": 5.0,
   "uniform_20_vertex_failure_fraction": 0.0612,
   "uniform_exact_probability": 0.06532510870664375,
-  "nnls_clean_relative_error": 8.292658963255886e-16,
-  "nnls_high_noise_relative_error": 0.011035082537261997,
+  "nnls_clean_relative_error": 7.689661063849152e-16,
+  "nnls_high_noise_relative_error": 0.01103508253726197,
   "figures": 8,
   "output_dir": "/home/runner/work/The-Invention-Archive/The-Invention-Archive/Theoretical Research/An_Operational_Morphogenetic_Code_Distance_for_Tissue_Network_Resilience"
 }

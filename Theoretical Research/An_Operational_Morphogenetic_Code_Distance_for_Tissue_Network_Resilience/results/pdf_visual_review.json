@@ -1,10 +1,16 @@
 {
   "status": "PENDING_REMOTE_REVIEW",
   "page_count": 45,
-  "pdf_sha256": "bfd863e8fb8568c5c1b80a2b7af5c62cfce0ca8b2e09e5b5612a134409b4376b",
+  "pdf_sha256": "4c5e01fe85b0e83018f2e0fc192c840653d52de53abc164a5d0bb83125cbe4fc",
   "render_dpi": 120,
   "pages_reviewed": [],
-  "contact_sheets": [],
+  "contact_sheets": [
+    "results/remote_pdf_review/contact_sheet_01.png",
+    "results/remote_pdf_review/contact_sheet_02.png",
+    "results/remote_pdf_review/contact_sheet_03.png",
+    "results/remote_pdf_review/contact_sheet_04.png",
+    "results/remote_pdf_review/contact_sheet_05.png"
+  ],
   "review_method": "The GitHub Actions PDF was rebuilt from the committed paper.tex and figures; a separate SHA-bound page render and visual review is required before closure.",
   "review_notes": [
     "Build succeeded from source.",
