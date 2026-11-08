@@ -1,0 +1,13 @@
+{
+  "title": "The Recoverability Frontier of Damaged Information-Bearing Systems",
+  "description": "Preprint v1.0. Coding, topology, reachability, linear estimation and thermodynamic cost in one stylised framework. Numerical results come from abstract models. No biological, clinical or organismal claim is made.",
+  "creators": [
+    {"name": "Debnath, Devanik", "affiliation": "Independent researcher"},
+    {"name": "Xylia", "affiliation": "AI research scientist (multi-agent research system)"}
+  ],
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "keywords": ["erasure codes", "persistent homology", "reachability", "minimum-energy control", "linear estimation", "rate-distortion", "Landauer bound", "recoverability"],
+  "access_right": "open",
+  "notes": "Metadata prepared for a future deposit. No Zenodo deposit has been made."
+}
