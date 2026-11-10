@@ -1,1 +1,1 @@
-Re-trigger build after manifest-path correction. Build v1.0, compile paper.pdf, generate reproducibility outputs, and verify remote artifacts.
+Final trigger: build the manuscript PDF and evidence bundle after workflow documentation correction.
