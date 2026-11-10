@@ -137,6 +137,7 @@ jobs:
           git show "origin/main:$D/paper.pdf" > "$RUNNER_TEMP/remote-paper.pdf"
           REMOTE_PAGES=$(pdfinfo "$RUNNER_TEMP/remote-paper.pdf" | awk '/^Pages:/ {print $2}')
           test "$REMOTE_PAGES" -ge 20
+          export ARTIFACT_SHA REMOTE_PAGES
           python - <<'PY'
           import json,os
           from pathlib import Path
