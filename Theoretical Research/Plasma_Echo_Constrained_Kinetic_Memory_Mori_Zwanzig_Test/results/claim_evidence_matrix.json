@@ -1,0 +1,11 @@
+{
+  "claims":[
+    {"claim":"t_e=k2*tau/(k2-k1)","class":"P1 under specified phase ansatz","evidence":"analytical phase cancellation and executable check","status":"supported within reduced assumptions"},
+    {"claim":"Bilinear pulse-amplitude scaling","class":"reduced model property","evidence":"declared formula and executable ratio test","status":"implementation property only"},
+    {"claim":"Attenuation decreases with nu and tau","class":"reduced model property","evidence":"declared factor and parameter sweep","status":"formula only"},
+    {"claim":"Delay embedding improves prediction","class":"synthetic result","evidence":"fixed-seed chronological holdout","status":"one synthetic benchmark only"},
+    {"claim":"Physical plasma memory kernel learned","class":"physical/empirical","evidence":"none","status":"NOT CLAIMED"},
+    {"claim":"Real Coulomb echo attenuation validated","class":"physical mechanism","evidence":"none","status":"NOT CLAIMED"},
+    {"claim":"MMS observational validation","class":"empirical","evidence":"none","status":"NOT CLAIMED"}
+  ]
+}
