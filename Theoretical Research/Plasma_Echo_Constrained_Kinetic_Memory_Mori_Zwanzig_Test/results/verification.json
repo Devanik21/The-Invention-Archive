@@ -1,0 +1,13 @@
+{
+  "execution_scope":"Local execution of the reduced perturbative model code; not a kinetic PDE simulation",
+  "seed":20261110,
+  "checks":[
+    {"name":"echo_rephasing_time","status":"PASS","observed":6.0,"meaning":"matches the specified kinematic identity"},
+    {"name":"bilinear_scaling","status":"PASS","observed_ratio":2.0,"meaning":"property of the reduced envelope"},
+    {"name":"attenuation_monotonicity","status":"PASS","meaning":"property of the declared attenuation formula"},
+    {"name":"proxy_normalization","status":"PASS","observed_sum":1.0,"meaning":"synthetic proxy normalization"},
+    {"name":"invalid_parameters_rejected","status":"PASS","meaning":"input guard rejects k2<=k1"},
+    {"name":"delay_embedding_beats_memoryless","status":"PASS","memoryless_rmse":0.0222991,"delay_rmse":0.0160948,"improvement_percent":27.82,"meaning":"one fixed chronological synthetic holdout only"}
+  ],
+  "not_tested":["self-consistent Vlasov-Poisson integration","collision operator accuracy","grid/time-step convergence","kinetic invariant conservation","neural operator training","laboratory validation","MMS observational validation"]
+}
