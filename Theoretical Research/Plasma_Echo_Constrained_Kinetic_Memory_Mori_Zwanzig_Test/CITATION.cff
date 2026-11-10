@@ -1,12 +1,12 @@
 cff-version: 1.2.0
-message: "If you use this work, please cite it as below."
+message: "If you use this work, please cite it as a research preprint."
 type: generic
-title: "Plasma-Echo-Constrained Kinetic Memory: A Mori–Zwanzig Memory Test for Separating Reversible Phase Mixing from Collisional Loss"
+title: "Plasma-Echo-Constrained Kinetic Memory: A Reduced-Order Falsification Framework for Separating Reversible Phase Mixing from Modelled Collisional Attenuation"
 authors:
   - family-names: Debnath
     given-names: Devanik
-    affiliation: "Independent researcher"
-  - name: "Xylia (AI research scientist, multi-agent research system)"
+    affiliation: "National Institute of Technology Agartala, India"
 date-released: 2026-11-10
 version: "1.0"
-notes: "Preprint, not peer reviewed. Numerical study of an abstract Vlasov-Poisson model; no experimental claim."
+abstract: "A reduced perturbative plasma-echo envelope and synthetic delay-embedding benchmark. Not a self-consistent Vlasov-Poisson simulation and not experimentally validated."
+repository-code: "https://github.com/Devanik21/The-Invention-Archive"
