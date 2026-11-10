@@ -1,44 +1,60 @@
-# Plasma-Echo-Constrained Kinetic Memory: A Mori–Zwanzig Memory Test for Separating Reversible Phase Mixing from Collisional Loss
+# Plasma-Echo-Constrained Kinetic Memory
 
-**Release 2026.11.10 · Preprint v1.0 · Devanik Debnath and Xylia**
+**A reduced-order falsification framework for separating reversible phase mixing from modelled collisional attenuation**
 
-Not peer reviewed. A numerical study of a one-dimensional, one-velocity Vlasov–Poisson model in normalised units. No laboratory, space or observational data are analysed. No DOI or Zenodo deposit is claimed.
+Release 2026-11-10 · v1.0 · Research preprint, not peer reviewed  
+Author: Devanik Debnath · AI research-process assistance: Xylia
 
-## Author
+> Scope: this release contains a reduced perturbative echo envelope, a synthetic delay-embedding benchmark, reproducible numerical checks and a 20+ page manuscript. It is NOT a self-consistent Vlasov-Poisson solver, does not train a neural operator on kinetic data, and does not analyse laboratory or spacecraft observations. The attenuation law and phase-mixing spectrum are declared reduced/synthetic models. No new plasma mechanism or experimental validation is claimed.
 
-Electronics and Communication Engineering graduate and independent AI researcher exploring how physical and mathematical structure can improve learning and modeling. Work spans gamma-ray burst reconstruction at the National Astronomical Observatory of Japan (NAOJ), physics-inspired signal classification, reinforcement learning, neural quantum-state methods, causal emergence, morphogenetic neural architectures, and computational artificial life. The research style combines algorithm design with explicit assumptions, code-based checks, and disclosure of unresolved limitations.
+## Research question
 
-Devanik Debnath is a Scientific Machine Learning and AI Architectures researcher; B.Tech, Electronics and Communication Engineering, National Institute of Technology Agartala (2026); Samsung Grade I Fellowship, Cohort 7. Links: github.com/Devanik21, orcid.org/0009-0001-8310-6921.
+Can an echo-centred intervention protocol distinguish a reduced state that retains recoverable phase information from one whose echo response is attenuated by a specified model?
 
-## What the study tests
+For two Fourier perturbations with first wavenumber k1, second wavenumber k2 and pulse separation tau, the phase-cancellation condition gives
 
-1. Whether a semi-Lagrangian Vlasov–Poisson solver reproduces the Landau damping benchmark (it does: fitted rate 0.1545 against 0.1533, relative error 0.8%; invariant C2 drift at most 0.1%).
-2. Whether a two-pulse density echo appears and how its amplitude scales with pulse strength (fitted log-log slope 1.72 against 2, consistent with a second-order effect).
-3. Whether weak BGK collisions suppress the echo monotonically (echo amplitude falls to 0.58 of the collisionless value at collision rate 0.1, with timing nearly unchanged).
-4. Whether a delay-embedding memory model predicts held-out echo-window behaviour better than a memoryless closure (large one-step error reduction at all three cadences; one-step only).
+$$
+k_3 = k_2-k_1.
+$$
 
-## Caveats stated in the paper
+For k2>k1>0, the rephasing time is
 
-- The echo timing is ambiguous. The difference signal has several maxima from beat structure. The reported time is the largest maximum, about two time units after 2 tau, and is not a validated echo time.
-- The memory result is for one-step prediction. Multi-step rollout, nonlinear neural operators and an observational MMS test were not carried out.
-- The collisional suppression is a property of the BGK model. It is not shown to be thermodynamic irreversibility, and no grid-convergence study at fixed collision rate was done.
-- External literature mentioned in the research note was not verified.
+$$
+t_e = \frac{k_2\tau}{k_2-k_1}.
+$$
 
-## Files
+This is a kinematic identity under the stated phase ansatz. The Gaussian envelope and attenuation factor are model definitions, not universal plasma laws.
 
-- paper/Plasma_Echo_Constrained_Kinetic_Memory.pdf (11 pages; in the release bundle)
-- code/vlasov.py, code/echo_experiments.py, code/memory_experiment.py, code/make_figures.py, code/build_paper.py (in the release bundle)
-- results/ and figures/ (in the release bundle)
-- CITATION.cff, .zenodo.json, requirements.txt (this folder)
+## Novelty boundary
 
-## Reproduce
+A directly adjacent neural-operator closure for linear and nonlinear Landau damping, using a finite history window and a Mori-Zwanzig interpretation, was published online on 30 October 2026. This work does not claim that finite-memory plasma closure is new. Its narrower contribution is an echo-centred, held-out intervention protocol and a transparent reduced benchmark that a future converged kinetic solver can replace.
 
-```bash
-pip install -r requirements.txt
-python code/echo_experiments.py
-python code/memory_experiment.py
-python code/make_figures.py
-python code/build_paper.py
-```
+## Executed synthetic benchmark
 
-No licence file is included. The authors should choose one before reuse.
+The deterministic run uses seed 20261110. The memoryless one-step RMSE is 0.0222991; the 24-lag delay-embedding RMSE is 0.0160948, a 27.82% reduction on one chronological synthetic holdout. This is a forecasting result on a constructed signal containing an echo-like pulse. It does not demonstrate learning of a physical plasma memory kernel.
+
+Six internal checks cover rephasing time, bilinear pulse-amplitude scaling, attenuation monotonicity, synthetic proxy normalization, invalid-parameter rejection and the delay-embedding baseline. Full outputs are archived under results/.
+
+## Files and reproducibility
+
+- paper.pdf: publication manuscript, 20+ pages.
+- paper.tex and paper.bib: editable manuscript and bibliography.
+- verify_model.py: reduced-model checks and figure/data generation.
+- deploy.py: isolated validation/self-test utility.
+- figures/: four plots, two structural graphs and two flow diagrams, each in PDF, SVG and PNG.
+- results/: author audit, candidate comparison, literature audit, claim/evidence matrix, numerical outputs, environment report, visual-review record and SHA-256 manifest.
+- CITATION.cff, .zenodo.json and schema_article.jsonld: metadata only; no DOI or external deposit is claimed.
+
+Reproduce with Python 3.10+, NumPy, SciPy and Matplotlib: run verify_model.py, then compile paper.tex twice with pdflatex. GitHub Actions rebuilds the PDF from the committed source when the release-ready sentinel is pushed.
+
+## Epistemic status
+
+P1: rephasing-time identity under the specified phase ansatz.  
+P2: no physical variational selection result is claimed.  
+P3: no universality or scaling-exponent claim is made.  
+P4: the memory interpretation is a structural connection to Mori-Zwanzig projection theory, not a recovered exact kernel.  
+P5: the Hermite-like proxy is qualitative visualization only.
+
+## Limitations and next validation gates
+
+A full next-stage study must implement and converge a self-consistent Vlasov-Poisson solver; verify Landau damping against a trusted kinetic benchmark; reproduce a two-pulse echo; compare collision operators; track invariants and numerical dissipation; train a memory model on kinetic trajectories; and test grouped holdouts in pulse timing, wavenumber, amplitude and collisionality. No MMS data are analysed here. No licence is specified; choose one before reuse.
