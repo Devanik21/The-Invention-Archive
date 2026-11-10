@@ -1,1 +1,1 @@
-Trigger the Plasma-Echo-Constrained Kinetic Memory v1.0 build, PDF compilation, evidence generation and remote verification. This sentinel is removed by the build workflow.
+Re-trigger build after manifest-path correction. Build v1.0, compile paper.pdf, generate reproducibility outputs, and verify remote artifacts.
