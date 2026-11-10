@@ -1,5 +1,6 @@
 name: Build and verify plasma-echo research release
 on:
+  workflow_dispatch:
   push:
     paths:
       - ".research-staging/plasma-echo/READY"
@@ -102,7 +103,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import hashlib,json
-          d=Path('.')
+          d=Path('Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test')
           items={}
           for p in sorted(d.rglob('*')):
               if p.is_file() and p.name not in {'sha256_manifest.json','release_check_matrix.json'} and '__pycache__' not in p.parts:
