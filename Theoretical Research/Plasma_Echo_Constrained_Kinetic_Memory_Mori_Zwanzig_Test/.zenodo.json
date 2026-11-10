@@ -1,13 +1,12 @@
 {
-  "title": "Plasma-Echo-Constrained Kinetic Memory: A Mori–Zwanzig Memory Test for Separating Reversible Phase Mixing from Collisional Loss",
-  "description": "Preprint v1.0. Numerical Vlasov–Poisson study: Landau damping validation, two-pulse plasma echo, collisional suppression, and a delay-embedding memory test against a memoryless closure. No experimental or observational claim.",
-  "creators": [
-    {"name": "Debnath, Devanik", "affiliation": "Independent researcher"},
-    {"name": "Xylia", "affiliation": "AI research scientist (multi-agent research system)"}
-  ],
+  "title": "Plasma-Echo-Constrained Kinetic Memory: A Reduced-Order Falsification Framework for Separating Reversible Phase Mixing from Modelled Collisional Attenuation",
+  "description": "Research preprint presenting a reduced two-pulse echo envelope, a declared phenomenological attenuation factor, synthetic phase-mixing proxy and chronological delay-embedding benchmark. Not a self-consistent Vlasov-Poisson solver; no experimental or observational data are analysed. Metadata prepared only; no deposit has been made.",
+  "creators": [{"name": "Debnath, Devanik", "affiliation": "National Institute of Technology Agartala, India"}],
   "upload_type": "publication",
   "publication_type": "preprint",
-  "keywords": ["Vlasov-Poisson", "Landau damping", "plasma echo", "Mori-Zwanzig", "memory kernel", "semi-Lagrangian", "collisional relaxation"],
+  "version": "1.0",
+  "publication_date": "2026-11-10",
+  "keywords": ["plasma echo", "phase mixing", "Vlasov-Poisson", "Mori-Zwanzig", "reduced-order modelling", "scientific machine learning"],
   "access_right": "open",
-  "notes": "Metadata prepared for a future deposit. No Zenodo deposit has been made."
+  "notes": "No DOI assigned. No Zenodo deposit performed. Xylia is disclosed as an AI research-process system, not a human creator."
 }
