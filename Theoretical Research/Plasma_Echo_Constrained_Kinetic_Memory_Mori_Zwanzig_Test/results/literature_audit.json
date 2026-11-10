@@ -1,0 +1,16 @@
+{
+  "audit_date":"2026-11-10",
+  "scope":"Plasma echoes, phase mixing, weakly collisional echo damping, nonlinear echo cascades, Mori-Zwanzig projection and neural-operator closures.",
+  "records":[
+    {"title":"Plasma Wave Echo Experiment","authors":"Malmberg, Wharton, Gould, O'Neil","year":1968,"doi":"10.1103/PhysRevLett.20.95","role":"established experimental echo"},
+    {"title":"Effects of Collisions on Temporal Plasma Wave Echoes","authors":"Ichikawa and Suzuki","year":1969,"doi":"10.1143/PTP.41.313","role":"collision-model dependence"},
+    {"title":"Plasma Echoes near Stable Penrose Data","authors":"Grenier, Nguyen, Rodnianski","year":2022,"doi":"10.1137/21M1392553","role":"nonlinear echo cascade context"},
+    {"title":"Memory Effects in Irreversible Thermodynamics","authors":"Zwanzig","year":1961,"doi":"10.1103/PhysRev.124.983","role":"projection memory foundation"},
+    {"title":"Transport, Collective Motion, and Brownian Motion","authors":"Mori","year":1965,"doi":"10.1143/PTP.33.423","role":"projection memory foundation"},
+    {"title":"Optimal prediction and the Mori-Zwanzig representation of irreversible processes","authors":"Chorin, Hald, Kupferman","year":2000,"doi":"10.1073/pnas.97.7.2968","role":"reduced-order memory"},
+    {"title":"A neural operator closure for Landau damping in electrostatic plasma","authors":"Burles, Camporeale, Pezzi","year":2026,"doi":"10.1017/S0022377826102517","role":"direct adjacent prior work; online 2026-10-30"},
+    {"title":"Statistical signatures of velocity-space turbulence in the Earth's magnetosheath","authors":"Vo et al.","year":2026,"doi":"10.1103/2ndf-sgy8","role":"observational context only"}
+  ],
+  "novelty_conclusion":"No absolute novelty claim. Finite-memory neural closure for Landau damping is directly represented in 2026 literature. This release is a reduced echo-centred validation protocol and synthetic baseline, not a new kinetic closure.",
+  "coverage_limit":"Targeted literature review, not an exhaustive systematic review or patent search."
+}
