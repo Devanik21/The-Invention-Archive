@@ -22,12 +22,12 @@
     {
       "name": "GitHub Actions build run",
       "status": "BLOCKED",
-      "evidence": "no build commit or workflow run is visible through the available GitHub status/run queries; sentinel remains present"
+      "evidence": "repeated sentinel commits did not produce an observable workflow run or artifact commit"
     },
     {
       "name": "paper.pdf remote existence",
       "status": "BLOCKED",
-      "evidence": "GitHub contents lookup returned 404"
+      "evidence": "remote contents lookup returned 404 after final trigger"
     },
     {
       "name": "20-page PDF minimum and visual inspection",
@@ -53,5 +53,7 @@
   "workflow_dispatch_available": true,
   "release_complete": false,
   "next_action": "Manually run the configured GitHub Actions workflow or enable Actions; then verify paper.pdf, figure assets, results manifest, index entry and exact final commit.",
-  "parent_index_commit_sha": "2f5488a94d3b4e2d44fb79c589381c107cac81b2"
+  "parent_index_commit_sha": "2f5488a94d3b4e2d44fb79c589381c107cac81b2",
+  "latest_build_trigger_commit": "7a28c0494025a13febe384aa0a2e730864e00fc4",
+  "workflow_observation": "No workflow run or build commit became visible after repeated sentinel pushes; sentinel still present and paper.pdf still returns 404."
 }
