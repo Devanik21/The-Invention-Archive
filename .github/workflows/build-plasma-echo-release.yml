@@ -112,6 +112,16 @@ jobs:
           PY
           python - <<'PY'
           from pathlib import Path
+          p=Path('Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/README.md')
+          s=p.read_text()
+          s=s.replace('Build status: BLOCKED','Build status: PDF built; remote checks recorded')
+          s=s.replace('- paper.pdf: publication manuscript target (not yet generated or remotely present; build is blocked).','- paper.pdf: compiled manuscript (page count and PDF integrity checked by the release workflow).')
+          s=s.replace('not yet present because the build is blocked.','generated and archived by the release workflow.')
+          s=s.replace('The configured GitHub Actions build has not produced an observable run or artifact commit: the release sentinel remains present and the remote paper.pdf path returns 404. Open the repository Actions tab and manually run **Build and verify plasma-echo research release** (workflow_dispatch), or enable Actions if disabled. The release is not complete until paper.pdf, all generated figure assets, result records and remote verification are present.','The release workflow compiled the PDF, generated figures and result records, and performed remote readback. See results/release_check_matrix.json for the exact commit and remaining branch-policy status.')
+          p.write_text(s)
+          PY
+          python - <<'PY'
+          from pathlib import Path
           p=Path('Theoretical Research/Readme.md')
           s=p.read_text()
           slug='Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test'
