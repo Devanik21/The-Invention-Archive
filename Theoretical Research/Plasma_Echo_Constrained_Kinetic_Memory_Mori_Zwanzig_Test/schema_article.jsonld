@@ -1,0 +1,11 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Plasma-Echo-Constrained Kinetic Memory: A Reduced-Order Falsification Framework for Separating Reversible Phase Mixing from Modelled Collisional Attenuation",
+  "author": {"@type": "Person", "name": "Devanik Debnath", "affiliation": {"@type": "CollegeOrUniversity", "name": "National Institute of Technology Agartala"}},
+  "datePublished": "2026-11-10",
+  "version": "1.0",
+  "genre": "Research preprint",
+  "creativeWorkStatus": "Preprint; not peer reviewed",
+  "description": "A reduced perturbative echo model and synthetic memory benchmark. Not experimentally validated."
+}
