@@ -1,0 +1,13 @@
+{
+  "title": "Plasma-Echo-Constrained Kinetic Memory: A Mori–Zwanzig Memory Test for Separating Reversible Phase Mixing from Collisional Loss",
+  "description": "Preprint v1.0. Numerical Vlasov–Poisson study: Landau damping validation, two-pulse plasma echo, collisional suppression, and a delay-embedding memory test against a memoryless closure. No experimental or observational claim.",
+  "creators": [
+    {"name": "Debnath, Devanik", "affiliation": "Independent researcher"},
+    {"name": "Xylia", "affiliation": "AI research scientist (multi-agent research system)"}
+  ],
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "keywords": ["Vlasov-Poisson", "Landau damping", "plasma echo", "Mori-Zwanzig", "memory kernel", "semi-Lagrangian", "collisional relaxation"],
+  "access_right": "open",
+  "notes": "Metadata prepared for a future deposit. No Zenodo deposit has been made."
+}
