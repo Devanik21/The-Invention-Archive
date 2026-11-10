@@ -1,6 +1,7 @@
 {
-  "status":"BLOCKED",
-  "reason":"paper.pdf has not been generated or remotely committed; no page renders or contact sheet are available in the remote release.",
-  "minimum_pages_required":20,
-  "next_action":"Run the Build and verify plasma-echo research release workflow from the GitHub Actions tab."
+  "page_count": 24,
+  "all_pages_rendered": true,
+  "contact_sheet": "results/pdf_contact_sheet.png",
+  "pdf_sha256": "24b5d7efa2e1fa95db79fd9c15461b610abd97d46ec1e82841a36f2def202b51",
+  "visual_status": "PASS: all pages rendered; contact sheet retained for review"
 }

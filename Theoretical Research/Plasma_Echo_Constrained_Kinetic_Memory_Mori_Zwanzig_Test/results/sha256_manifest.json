@@ -1,0 +1,290 @@
+{
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/.zenodo.json": {
+    "bytes": 1061,
+    "sha256": "94dccae6e07520b4bd94aa2ca953df20a3a2e76331b4b0bccd9629cac2035a50"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/CITATION.cff": {
+    "bytes": 689,
+    "sha256": "8355139b21e0af40bbbbb7e8a5cf7b890a9e8f0d0b3298ac3ff6ea70a45e5c15"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/README.md": {
+    "bytes": 4932,
+    "sha256": "912028724a1a534881cf48965cb638e3f352520919beb2383386a52b46f0d191"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/deploy.py": {
+    "bytes": 1591,
+    "sha256": "90420dbc7dc817a9c2185299f0fc5409b13a63cecb8c246402c52cf6525aaca8"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/fig1_echo_recovery.pdf": {
+    "bytes": 16686,
+    "sha256": "62418db0ea7c9875eef83352a3d92a0e8169f7b4ce8f1e705cafc31f124eb60d"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/fig1_echo_recovery.png": {
+    "bytes": 137834,
+    "sha256": "b07e80a710f590ef73b68c6485d30c41f39cbb279a19cf030c81533f5449de9d"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/fig1_echo_recovery.svg": {
+    "bytes": 46229,
+    "sha256": "1a323e7b2ff7001de73c00fbc36ec15eb8f2a0a42135a832e51ed22520921157"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/fig2_attenuation_map.pdf": {
+    "bytes": 21053,
+    "sha256": "d55803115039364d5aa4dcfcd6549b367cdab5f8d6a31eff0912a7e3e6f4e1a8"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/fig2_attenuation_map.png": {
+    "bytes": 84371,
+    "sha256": "4e5d2b029d984a7db344d572941489b65632e157228c161c165a6e1f466a1168"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/fig2_attenuation_map.svg": {
+    "bytes": 50031,
+    "sha256": "7a765ba5fbe18840a45ff745c9f3cc9eac2ee5accaf05f6d55e85c5a38442da4"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/fig3_phase_mixing_proxy.pdf": {
+    "bytes": 51619,
+    "sha256": "993a5f4af5a171402a765757118831eaa5756ca5df47305f3d74d745665d0d08"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/fig3_phase_mixing_proxy.png": {
+    "bytes": 62725,
+    "sha256": "717b12357d7f3b86a71d8e91478d70680828aa1374112b68078e72f43e99aeeb"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/fig3_phase_mixing_proxy.svg": {
+    "bytes": 99668,
+    "sha256": "3cffa8714449643edeb12189b3dd737f2c5b6e5592887d84b38ee0a24b87a12c"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/fig4_memory_forecast.pdf": {
+    "bytes": 19894,
+    "sha256": "455eb4eef4f98a007c044a60f28ce63dff750482568b3b1285aca88e5cda3a93"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/fig4_memory_forecast.png": {
+    "bytes": 126935,
+    "sha256": "8cf73cb51d359ea315ebf913417debb5053922bfe73e129011f3be25ea834f9f"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/fig4_memory_forecast.svg": {
+    "bytes": 49310,
+    "sha256": "ab54885b5d168808fedbb14caac36ce978c1350c036815bd94e1d0439ba59db3"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/flow1_pipeline.pdf": {
+    "bytes": 12098,
+    "sha256": "655740f885fad16fcd60b0ea2f29d703fc782416fa8aa3e30dfc760738c49ea3"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/flow1_pipeline.png": {
+    "bytes": 42004,
+    "sha256": "1cc6edfe1efe820949fa4deafd85fc779dc62bbc5a6d91168b0585af92500e6d"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/flow1_pipeline.svg": {
+    "bytes": 22276,
+    "sha256": "2153b2b8f460ffc5fde5cb3e998ed8dbfac567ac376282a061000a1efda58d9b"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/flow2_validation.pdf": {
+    "bytes": 11458,
+    "sha256": "6316bf21ffde0373c34f1d8b7b9ac1f88d5fe597e3c5f46f3a4ea265ae4c740a"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/flow2_validation.png": {
+    "bytes": 42123,
+    "sha256": "58ea6bc1ead3bb52e20f275ca87eeb8acf61fe21ac5854fd2534e4b6db04e6bd"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/flow2_validation.svg": {
+    "bytes": 23038,
+    "sha256": "325af29740ddf76e7e5fa1806d73c8d445a165d945b588b20e7f1816da25d7f4"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/graph1_information_flow.pdf": {
+    "bytes": 12083,
+    "sha256": "37c553984bd03aefbd5f7ebf27e677bf685c2b689434456434817c83f8b0ee0b"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/graph1_information_flow.png": {
+    "bytes": 57649,
+    "sha256": "6fc702aae1f29b33aa7bac72d3b477e4ffac760b2d3ae64bf092f8f0453ad65a"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/graph1_information_flow.svg": {
+    "bytes": 21254,
+    "sha256": "0316a154ac7f92c7e1079adcf0ec23425da1cbe75eddad25a1834280839f045a"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/graph2_echo_causality.pdf": {
+    "bytes": 10130,
+    "sha256": "15ecfebf88206965a7310188f5cdcd0312efefbab8eecef027e185b53fa8e15f"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/graph2_echo_causality.png": {
+    "bytes": 66612,
+    "sha256": "f471c239f141de7aa5408d7866f48c55e71ea83bbb46d33744b27bd9ebe9c82a"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/figures/graph2_echo_causality.svg": {
+    "bytes": 18788,
+    "sha256": "1314d3fa6e50be44cdd6a9e0f779ad043136836750f856de3e1e9d52ef32fe25"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/paper.bib": {
+    "bytes": 2133,
+    "sha256": "38e7d91bc1911159907704c5f5c3423392d57cff1d0972b660d0f5c969a123e5"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/paper.pdf": {
+    "bytes": 272105,
+    "sha256": "24b5d7efa2e1fa95db79fd9c15461b610abd97d46ec1e82841a36f2def202b51"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/paper.tex": {
+    "bytes": 9878,
+    "sha256": "cbd9c7fa5bcd0035770d23cd488a8bb06b9b3b6142db93d6ed2459ccc58c5346"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/requirements.txt": {
+    "bytes": 65,
+    "sha256": "82a9e2230ca38ec724abf428cf26f0ed97f688af9873b6c9dbbe51e711ce29bf"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/attenuation_grid.csv": {
+    "bytes": 367519,
+    "sha256": "75611d5b3dded32a949721a874004d2ccdcb1edfd59b179df96047ce3e919f39"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/author_profile_audit.json": {
+    "bytes": 665,
+    "sha256": "7ea6fd1a8f5e5fd3feb8583f9cca78aa347b98d74981aaefa202fe02bd482b6c"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/candidate_comparison.json": {
+    "bytes": 1714,
+    "sha256": "61e0eb00bf7bc18f87d116efae90748686eab5e041f610d6c59f9224588c0b75"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/claim_evidence_matrix.json": {
+    "bytes": 1074,
+    "sha256": "462e042c27be8df5e337688eacf0611ab08abc9a00fa8b1c878e9c9634b1835a"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/environment_report.json": {
+    "bytes": 112,
+    "sha256": "9bd2599bebef5f0f620b579a6b7d04f746d6e2b61cc73df156b8c74cf52d74f2"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/literature_audit.json": {
+    "bytes": 2041,
+    "sha256": "dcb607ec2c8a7407277b761b607cce9cb14f5e3ea9046bebb63287f856f81e95"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/memory_predictions.csv": {
+    "bytes": 54611,
+    "sha256": "108493649a21fe01f1d0b9c4b9f9696a623922870eedb008f462e30c76188476"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/pdf_contact_sheet.png": {
+    "bytes": 105879,
+    "sha256": "9f6f5f70beceddadb001d9b83345c680e2e2053fcd0a4cfbac0327607b2282da"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/pdf_visual_review.json": {
+    "bytes": 271,
+    "sha256": "f71ee9ad28206955eef627a2220d899a78c11d8e6ff1f5e4892cae4d4a59da9c"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/release_check_summary.md": {
+    "bytes": 1060,
+    "sha256": "05c61c78a33baf9f592de426aeb10c7b72df4d24c394a53314c6e0b1bc41caa4"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-01.png": {
+    "bytes": 23677,
+    "sha256": "62fe2d4b33c93000ad790412f0d9c9b69ef7452a0d407bddf7a662c41ca07c3f"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-02.png": {
+    "bytes": 14928,
+    "sha256": "9e13235a0e4629c316c5f7ee5b829b20a383c8d08e0e7ee2ed3dc39bbf9043ea"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-03.png": {
+    "bytes": 14567,
+    "sha256": "e101af11b0091ef83f3da51acd343ce11613663187aa8d4c07ac5adab64b17f6"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-04.png": {
+    "bytes": 18904,
+    "sha256": "7537c38dac55953b0e85fbaaf5e7b4171a680eb4d7b401188feeed49028bc6b2"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-05.png": {
+    "bytes": 16139,
+    "sha256": "f9894138f96c053e8dae587ef84a715d9e36701aa77742dd28a4be60d5f7e752"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-06.png": {
+    "bytes": 16226,
+    "sha256": "2f1fc6842da70bedaa9f67591479a1705bd9f2b3ae0b5cd6ee82f6879e76f3c5"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-07.png": {
+    "bytes": 13504,
+    "sha256": "1526ca8ebf88c0ef5e2e42e6dd1315f297a3939cb11b55b1a299d2a61e46c559"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-08.png": {
+    "bytes": 13814,
+    "sha256": "bc0d3e76bba686b1e0ba00de9910915326660622111daf529e752d59669fc98a"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-09.png": {
+    "bytes": 14975,
+    "sha256": "f2276853b19135c94b4aa59e0ab5fa472643ccc6eea1a07cb43abd95d6cef524"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-10.png": {
+    "bytes": 13710,
+    "sha256": "afeb2cd9940a3cc55c8ee7ca0dff4271b7626b9093d78060162e4575f73d640f"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-11.png": {
+    "bytes": 15221,
+    "sha256": "530e866981c020890cc71b21efddbb4abe66511b8fb9eb28f50f7d4388d2b71b"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-12.png": {
+    "bytes": 13564,
+    "sha256": "50803c2215c0599a0bdb3870f1849b480bd1966ce9b812ba8abb3e401ab276bf"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-13.png": {
+    "bytes": 11886,
+    "sha256": "a8fe7ab005666483ef8ae3984491d7f6911903e876a069240e12e0be35863c6b"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-14.png": {
+    "bytes": 14097,
+    "sha256": "eb386f19fc97283d809a5c2e18ab46fd306f3455077ffb91596b0a8c92963de3"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-15.png": {
+    "bytes": 13105,
+    "sha256": "829786086c368598fc6eeb23b6dcb45c4df9776b28b11d6d0d335645d42b4aee"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-16.png": {
+    "bytes": 13553,
+    "sha256": "e7405ab521f46d6fd1134ebe2def49eb9fbc3d099c88e30928cca8845c837210"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-17.png": {
+    "bytes": 12962,
+    "sha256": "70100378baf9cc8c6656de665aa2e0b16479125d0828cabfe8ddfd0a2724a93e"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-18.png": {
+    "bytes": 4202,
+    "sha256": "c46f158269684e4e4b33bba60db1f0c08c5109f7f0ed469aa2f55e01c84245eb"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-19.png": {
+    "bytes": 12241,
+    "sha256": "53743dcfe2acc72690b05b4c14434cd7daf6c8b59440ad49519c3e75d4c3b51f"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-20.png": {
+    "bytes": 46174,
+    "sha256": "975fee87d45de36a42a02b351141717ba4caf36ff5716e0972e2b0beb47c0920"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-21.png": {
+    "bytes": 36802,
+    "sha256": "c4ab1d575d498943b37b2416f331f033d8bf37a2ba53885ebf068c13e3cd0f0f"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-22.png": {
+    "bytes": 15156,
+    "sha256": "ca6dda0024a79803ad674037bdbf43a8e78d22b5c710966bdc10383787dc1947"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-23.png": {
+    "bytes": 12880,
+    "sha256": "fa69d73dd03cb50e5f37c42c58cfff2c9c6bb8e31b5a875ecb67beea32157402"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/rendered_pages/page-24.png": {
+    "bytes": 30278,
+    "sha256": "1faa83234ae534688ea46c75e98d97be6e5cde7759cb8e9db2318a02059a24f5"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/research_log.md": {
+    "bytes": 1364,
+    "sha256": "921805e445f51fe29fd9cdcbb0a9af1c3cb727a1f2c4920104f332843e643e3c"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/verification.json": {
+    "bytes": 1450,
+    "sha256": "650be53f2fd62b92afc8bdd4109a490b158300fd302d9d280861082514897518"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/verification_stdout.txt": {
+    "bytes": 1450,
+    "sha256": "650be53f2fd62b92afc8bdd4109a490b158300fd302d9d280861082514897518"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/schema_article.jsonld": {
+    "bytes": 662,
+    "sha256": "cce868e877e07e427746d046b2d9f0c17f8fb86a2571ba46a368fd87a3d71cc9"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/test_tmp.tex": {
+    "bytes": 62,
+    "sha256": "88e1fe987448bf89afdb753f9aa0b6b6b33f92a8feac701648349c822f6d5bc6"
+  },
+  "Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/verify_model.py": {
+    "bytes": 7261,
+    "sha256": "896ff58a291cbe9409efda1d30308585bf38ad5df31af1de3cfea71564515bc5"
+  }
+}

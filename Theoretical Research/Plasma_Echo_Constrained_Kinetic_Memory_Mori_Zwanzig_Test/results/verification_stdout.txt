@@ -1,0 +1,64 @@
+{
+  "model_scope": "reduced perturbative free-streaming echo model; not self-consistent Vlasov-Poisson",
+  "seed": 20261110,
+  "checks": [
+    {
+      "name": "echo_rephasing_time",
+      "passed": true,
+      "observed": 6.0
+    },
+    {
+      "name": "bilinear_scaling",
+      "passed": true,
+      "observed": 2.0
+    },
+    {
+      "name": "attenuation_monotonicity",
+      "passed": true,
+      "observed": [
+        0.0016,
+        0.0013364323382580353,
+        0.0011162821217136497,
+        0.0007788036095359546
+      ]
+    },
+    {
+      "name": "proxy_normalization",
+      "passed": true,
+      "observed": 1.0
+    },
+    {
+      "name": "invalid_parameters_rejected",
+      "passed": true,
+      "observed": "k2<=k1"
+    },
+    {
+      "name": "delay_embedding_beats_memoryless",
+      "passed": true,
+      "observed": {
+        "memoryless_rmse": 0.02229908247308127,
+        "delay_rmse": 0.016094782025990677,
+        "improvement_fraction": 0.27823119873116864,
+        "train_n": 1662,
+        "test_n": 713,
+        "lag": 24,
+        "seed": 20261110
+      }
+    }
+  ],
+  "memory_metrics": {
+    "memoryless_rmse": 0.02229908247308127,
+    "delay_rmse": 0.016094782025990677,
+    "improvement_fraction": 0.27823119873116864,
+    "train_n": 1662,
+    "test_n": 713,
+    "lag": 24,
+    "seed": 20261110
+  },
+  "environment": {
+    "python": "3.12.16",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.2"
+  }
+}

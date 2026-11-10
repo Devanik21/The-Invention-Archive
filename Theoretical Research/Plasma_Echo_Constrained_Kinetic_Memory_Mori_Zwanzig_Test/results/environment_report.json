@@ -1,5 +1,7 @@
 {
-  "local_validation_environment":{"python":"3.13.5","numpy":"2.3.5","scipy":"1.17.0","matplotlib":"3.10.8"},
-  "execution_date":"2026-11-10",
-  "note":"These versions describe the local validation environment. GitHub Actions build environment remains unobserved because no workflow run is visible."
+  "python": "3.12.16",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "matplotlib": "3.11.2",
+  "pdf_pages": 24
 }
