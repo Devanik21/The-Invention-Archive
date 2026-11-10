@@ -1,0 +1,14 @@
+{
+  "selection_date":"2026-11-10",
+  "scale":"1-5 qualitative internal screening; not objective bibliometrics",
+  "candidates":[
+    {"topic":"Echo-conditioned memory validation for reduced kinetic models","importance":5,"gap":4,"plausibility":5,"math":5,"AI_role":4,"validation":5,"falsifiability":5,"decision":"SELECT, narrowed"},
+    {"topic":"Neural closure for Landau damping","importance":5,"gap":1,"plausibility":5,"math":5,"AI_role":5,"validation":5,"falsifiability":4,"decision":"REJECT as primary; direct recent precedent"},
+    {"topic":"Hermite-cascade inversion","importance":4,"gap":3,"plausibility":3,"math":5,"AI_role":4,"validation":3,"falsifiability":4,"decision":"DEFER; needs converged kinetic solver"},
+    {"topic":"Collision-operator identification","importance":5,"gap":4,"plausibility":3,"math":4,"AI_role":4,"validation":3,"falsifiability":5,"decision":"DEFER; needs validated collision models"},
+    {"topic":"MMS velocity-space diagnostics","importance":4,"gap":3,"plausibility":4,"math":4,"AI_role":3,"validation":3,"falsifiability":4,"decision":"DEFER; no controlled echo intervention"},
+    {"topic":"Nonlinear echo-cascade forecasting","importance":5,"gap":4,"plausibility":3,"math":5,"AI_role":4,"validation":2,"falsifiability":5,"decision":"DEFER; broad nonlinear scope"},
+    {"topic":"Memory-kernel identifiability theorem","importance":4,"gap":3,"plausibility":3,"math":5,"AI_role":3,"validation":2,"falsifiability":4,"decision":"DEFER; no new theorem established"},
+    {"topic":"Coulomb-collision echo digital twin","importance":5,"gap":4,"plausibility":2,"math":4,"AI_role":4,"validation":1,"falsifiability":4,"decision":"REJECT for v1; no physical parameter mapping"}
+  ]
+}
