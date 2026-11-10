@@ -1,0 +1,6 @@
+{
+  "status":"BLOCKED",
+  "reason":"paper.pdf has not been generated or remotely committed; no page renders or contact sheet are available in the remote release.",
+  "minimum_pages_required":20,
+  "next_action":"Run the Build and verify plasma-echo research release workflow from the GitHub Actions tab."
+}
