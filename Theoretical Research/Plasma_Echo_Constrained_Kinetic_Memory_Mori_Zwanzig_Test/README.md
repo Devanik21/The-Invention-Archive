@@ -2,7 +2,7 @@
 
 **A reduced-order falsification framework for separating reversible phase mixing from modelled collisional attenuation**
 
-Release 2026-11-10 · v1.0 · Research preprint, not peer reviewed  
+Release 2026-11-10 · v1.0 · Research preprint, not peer reviewed · Build status: BLOCKED  
 Author: Devanik Debnath · AI research-process assistance: Xylia
 
 > Scope: this release contains a reduced perturbative echo envelope, a synthetic delay-embedding benchmark, reproducible numerical checks and a 20+ page manuscript. It is NOT a self-consistent Vlasov-Poisson solver, does not train a neural operator on kinetic data, and does not analyse laboratory or spacecraft observations. The attenuation law and phase-mixing spectrum are declared reduced/synthetic models. No new plasma mechanism or experimental validation is claimed.
@@ -37,7 +37,7 @@ Six internal checks cover rephasing time, bilinear pulse-amplitude scaling, atte
 
 ## Files and reproducibility
 
-- paper.pdf: publication manuscript, 20+ pages.
+- paper.pdf: publication manuscript target (not yet generated or remotely present; build is blocked).
 - paper.tex and paper.bib: editable manuscript and bibliography.
 - verify_model.py: reduced-model checks and figure/data generation.
 - deploy.py: isolated validation/self-test utility.
@@ -58,3 +58,7 @@ P5: the Hermite-like proxy is qualitative visualization only.
 ## Limitations and next validation gates
 
 A full next-stage study must implement and converge a self-consistent Vlasov-Poisson solver; verify Landau damping against a trusted kinetic benchmark; reproduce a two-pulse echo; compare collision operators; track invariants and numerical dissipation; train a memory model on kinetic trajectories; and test grouped holdouts in pulse timing, wavenumber, amplitude and collisionality. No MMS data are analysed here. No licence is specified; choose one before reuse.
+
+## Publication status
+
+The LaTeX manuscript, bibliography, reduced-model code, release validator and research audits have been committed. The configured GitHub Actions build has not produced an observable run or artifact commit: the release sentinel remains present and the remote paper.pdf path returns 404. Open the repository Actions tab and manually run **Build and verify plasma-echo research release** (workflow_dispatch), or enable Actions if disabled. The release is not complete until paper.pdf, all generated figure assets, result records and remote verification are present.
