@@ -1,10 +1,10 @@
 {
-  "release_status": "PENDING",
+  "release_status": "BLOCKED",
   "workflow": "build-plasma-echo-release.yml",
   "workflow_run_id": "42849572128",
   "workflow_run_url": "https://github.com/Devanik21/The-Invention-Archive/actions/runs/42849572128",
   "source_head_sha": "67e076fa9259877ed63e9cbe9d5c9f4c1521c25b",
-  "artifact_commit_sha": "PENDING_POST_COMMIT",
+  "artifact_commit_sha": "5e793a0ea4959a15fca783a70964d4b315f7e647",
   "local_checks": {
     "py_compile": "PASS",
     "reduced_model": "PASS",
@@ -14,6 +14,7 @@
     "pdf_render": "PASS",
     "isolated_deploy_self_test": "PASS"
   },
-  "remote_readback": "PENDING",
-  "branch_protection": "BLOCKED_UNINSPECTED"
+  "remote_readback": "PASS",
+  "branch_protection": "BLOCKED_UNINSPECTED",
+  "remote_pdf_page_count": 24
 }
