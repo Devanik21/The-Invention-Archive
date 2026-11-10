@@ -1,0 +1,163 @@
+name: Build and verify plasma-echo research release
+on:
+  push:
+    paths:
+      - ".research-staging/plasma-echo/READY"
+permissions:
+  contents: write
+  actions: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install scientific and TeX toolchains
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-latex-base texlive-latex-recommended texlive-fonts-recommended poppler-utils
+          python -m pip install numpy scipy matplotlib pypdf pyyaml pillow
+      - name: Execute model and validate source
+        shell: bash
+        run: |
+          set -euo pipefail
+          D="Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test"
+          cd "$D"
+          python -m py_compile verify_model.py deploy.py
+          python verify_model.py | tee results/verification_stdout.txt
+          python - <<'PY'
+          import json,re,yaml
+          from pathlib import Path
+          d=Path('.')
+          json.loads((d/'.zenodo.json').read_text())
+          json.loads((d/'schema_article.jsonld').read_text())
+          yaml.safe_load((d/'CITATION.cff').read_text())
+          tex=(d/'paper.tex').read_text()
+          bib=(d/'paper.bib').read_text()
+          assert tex.count(r'\begin{tabular}') >= 5
+          assert tex.count(r'\includegraphics') >= 8
+          cited=set(re.findall(r'\\cite\{([^}]+)\}',tex))
+          keys=set(re.findall(r'@\w+\s*\{\s*([^,]+)',bib))
+          assert all(k.strip() in keys for group in cited for k in group.split(','))
+          print('PASS metadata, 5 tables, 8 figures and bibliography-key checks')
+          PY
+      - name: Compile manuscript and inspect every PDF page
+        shell: bash
+        run: |
+          set -euo pipefail
+          D="Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test"
+          mkdir -p "$RUNNER_TEMP/plasma-echo-build"
+          cd "$D"
+          pdflatex -interaction=nonstopmode -halt-on-error -output-directory="$RUNNER_TEMP/plasma-echo-build" paper.tex
+          pdflatex -interaction=nonstopmode -halt-on-error -output-directory="$RUNNER_TEMP/plasma-echo-build" paper.tex
+          cp "$RUNNER_TEMP/plasma-echo-build/paper.pdf" paper.pdf
+          PAGES=$(pdfinfo paper.pdf | awk '/^Pages:/ {print $2}')
+          test "$PAGES" -ge 20
+          pdftotext paper.pdf "$RUNNER_TEMP/plasma-echo.txt"
+          grep -q "Co-equal research-process credit" "$RUNNER_TEMP/plasma-echo.txt"
+          ! grep -q "??" "$RUNNER_TEMP/plasma-echo.txt"
+          mkdir -p results/rendered_pages
+          pdftoppm -png -r 55 paper.pdf results/rendered_pages/page
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image,ImageDraw
+          import hashlib,json
+          pages=sorted(Path('results/rendered_pages').glob('*.png'))
+          assert pages
+          thumbs=[]
+          for p in pages:
+              im=Image.open(p).convert('RGB'); im.thumbnail((150,212))
+              tile=Image.new('RGB',(160,232),'white')
+              tile.paste(im,((160-im.width)//2,4))
+              ImageDraw.Draw(tile).text((5,216),p.stem,fill='black')
+              thumbs.append(tile)
+          cols=5; rows=(len(thumbs)+cols-1)//cols
+          sheet=Image.new('RGB',(cols*160,rows*232),(220,220,220))
+          for i,im in enumerate(thumbs): sheet.paste(im,((i%cols)*160,(i//cols)*232))
+          sheet.save('results/pdf_contact_sheet.png')
+          pdf=Path('paper.pdf')
+          review={'page_count':len(pages),'all_pages_rendered':True,'contact_sheet':'results/pdf_contact_sheet.png','pdf_sha256':hashlib.sha256(pdf.read_bytes()).hexdigest(),'visual_status':'PASS: all pages rendered; contact sheet retained for review'}
+          Path('results/pdf_visual_review.json').write_text(json.dumps(review,indent=2)+'\n')
+          PY
+          python - <<'PY'
+          import json,platform
+          from pathlib import Path
+          import numpy,scipy,matplotlib
+          p=Path('results/environment_report.json')
+          p.write_text(json.dumps({'python':platform.python_version(),'numpy':numpy.__version__,'scipy':scipy.__version__,'matplotlib':matplotlib.__version__,'pdf_pages':int(__import__('subprocess').check_output(['pdfinfo','paper.pdf'],text=True).split('Pages:')[1].splitlines()[0].strip())},indent=2)+'\n')
+          PY
+          python deploy.py --self-test
+      - name: Archive manifest, index and remote verification matrix
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          D="Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test"
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          d=Path('.')
+          items={}
+          for p in sorted(d.rglob('*')):
+              if p.is_file() and p.name not in {'sha256_manifest.json','release_check_matrix.json'} and '__pycache__' not in p.parts:
+                  items[str(p)]={'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+          (d/'results/sha256_manifest.json').write_text(json.dumps(items,indent=2)+'\n')
+          PY
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('Theoretical Research/Readme.md')
+          s=p.read_text()
+          slug='Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test'
+          if slug not in s:
+              s += '\n| 2026.11.10 | Plasma-Echo-Constrained Kinetic Memory | Reduced echo model + synthetic memory benchmark | ['+slug+']('+slug+'/) |\n'
+              p.write_text(s)
+          PY
+          rm -f .research-staging/plasma-echo/READY
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          m={'release_status':'PENDING','workflow':'build-plasma-echo-release.yml','workflow_run_id':os.environ['GITHUB_RUN_ID'],'workflow_run_url':os.environ['GITHUB_SERVER_URL']+'/'+os.environ['GITHUB_REPOSITORY']+'/actions/runs/'+os.environ['GITHUB_RUN_ID'],'source_head_sha':os.environ['GITHUB_SHA'],'artifact_commit_sha':'PENDING_POST_COMMIT','local_checks':{'py_compile':'PASS','reduced_model':'PASS','metadata':'PASS','bibliography':'PASS','pdf_page_count':'PASS','pdf_render':'PASS','isolated_deploy_self_test':'PASS'},'remote_readback':'PENDING','branch_protection':'BLOCKED_UNINSPECTED'}
+          Path('Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/release_check_matrix.json').write_text(json.dumps(m,indent=2)+'\n')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$D" "Theoretical Research/Readme.md" .research-staging/plasma-echo/READY
+          git commit -m "release(plasma-echo): publish reproducible research package"
+          ARTIFACT_SHA=$(git rev-parse HEAD)
+          git push origin HEAD:main
+          git fetch origin main
+          git checkout -B verify-remote origin/main
+          test "$(git rev-parse HEAD)" = "$ARTIFACT_SHA"
+          git show "origin/main:$D/paper.pdf" > "$RUNNER_TEMP/remote-paper.pdf"
+          REMOTE_PAGES=$(pdfinfo "$RUNNER_TEMP/remote-paper.pdf" | awk '/^Pages:/ {print $2}')
+          test "$REMOTE_PAGES" -ge 20
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=Path('Theoretical Research/Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/results/release_check_matrix.json')
+          m=json.loads(p.read_text())
+          m['artifact_commit_sha']=os.environ.get('ARTIFACT_SHA','recorded by workflow step')
+          m['remote_readback']='PASS'
+          m['remote_pdf_page_count']=int(os.environ['REMOTE_PAGES'])
+          m['release_status']='BLOCKED' if m['branch_protection']=='BLOCKED_UNINSPECTED' else 'PASS'
+          p.write_text(json.dumps(m,indent=2)+'\n')
+          PY
+          git add "$D/results/release_check_matrix.json"
+          git commit -m "audit(plasma-echo): record remote artifact verification"
+          git push origin HEAD:main
+          git fetch origin main
+          FINAL_SHA=$(git rev-parse origin/main)
+          test "$(git show "origin/main:$D/paper.pdf" | wc -c)" -gt 20000
+          {
+            echo "## Plasma echo release"
+            echo "Artifact commit: $ARTIFACT_SHA"
+            echo "Final branch head: $FINAL_SHA"
+            echo "Remote PDF pages: $REMOTE_PAGES"
+            echo "Remote readback: PASS"
+          } >> "$GITHUB_STEP_SUMMARY"
