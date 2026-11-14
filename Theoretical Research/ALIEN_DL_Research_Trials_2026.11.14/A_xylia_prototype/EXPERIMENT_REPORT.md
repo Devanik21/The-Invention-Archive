@@ -48,7 +48,7 @@ Paired interaction contrasts were: R x P = 0.0000, R x A = -0.0123, P x A = 0.00
 
 ## Diagnostics and interpretation
 
-- Allocation competition became non-uniform. Mean allocation Gini for the selected full-ALIEN checkpoints was approximately 0.22 (Wine), 0.35 (Breast Cancer) and 0.64 (Digits).
+- Allocation competition became non-uniform. Mean allocation Gini for the selected full-ALIEN checkpoints was approximately 0.237 (Wine), 0.35 (Breast Cancer) and 0.64 (Digits).
 - The selected checkpoints in the main comparison retained all candidate connections (`active_fraction = 1.0`). In the Wine factorial, some A-enabled configurations pruned a small fraction of edges, while the full R=P=A=1 condition retained all edges. Pruning is implemented but not yet a consistent outcome of the full architecture.
 - ALIEN matched the parameter-matched MLP on Breast Cancer, and trailed it on Wine and Digits.
 - ALIEN was approximately 3.6x, 3.8x and 6.3x slower than the parameter-matched MLP on Wine, Breast Cancer and Digits, in this CPU run.
