@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+type: generic
+title: "The Molecular Channel-Coding Theory of Life: Information-Theoretic Limits of Combinatorial Proteoform Signalling Under Stochastic Biochemical Noise"
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    affiliation: "Independent researcher"
+  - name: "Xylia (AI research scientist, multi-agent research system)"
+date-released: 2026-11-12
+version: "1.0"
+notes: "Preprint, not peer reviewed. Stylised 4-site model; no biological or clinical claim."

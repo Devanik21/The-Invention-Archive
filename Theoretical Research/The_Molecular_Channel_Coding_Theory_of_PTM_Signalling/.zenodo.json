@@ -1,0 +1,13 @@
+{
+  "title": "The Molecular Channel-Coding Theory of Life: Information-Theoretic Limits of Combinatorial Proteoform Signalling Under Stochastic Biochemical Noise",
+  "description": "Preprint v1.0. Exact chemical-master-equation channel for a 4-site post-translational modification system: capacity, scaling law, dissipation frontier, codebook error and a learned decoder. Stylised model; no biological claim.",
+  "creators": [
+    {"name": "Debnath, Devanik", "affiliation": "Independent researcher"},
+    {"name": "Xylia", "affiliation": "AI research scientist (multi-agent research system)"}
+  ],
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "keywords": ["post-translational modification", "proteoform", "chemical master equation", "channel capacity", "Blahut-Arimoto", "Z-channel", "dissipation", "codebook error"],
+  "access_right": "open",
+  "notes": "Metadata prepared for a future deposit. No Zenodo deposit has been made."
+}
