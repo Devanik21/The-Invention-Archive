@@ -41,8 +41,8 @@ Neither trial shows that coupling the three mechanisms through one budget helps.
 ## Corrections found on review (2026-11-14)
 
 - Wine gap to the parameter-matched MLP is -7.4 points (0.852 vs 0.926). An earlier draft said -0.8; that was wrong.
-- Wine full-ALIEN allocation Gini averages 0.24 across seeds (0.217, 0.203, 0.292), not 0.22.
+- Wine full-ALIEN allocation Gini averages 0.237 across seeds (0.217, 0.203, 0.292), conventionally rounded to 0.24.
 - EXPERIMENT_REPORT.md states pruned active fractions of about 0.962 and 0.936 in the Wine factorial. The factorial CSV shows 0.885 (R=0, P=0, A=1, seed 42) and 0.808 (R=1, P=0, A=1, seed 42). The CSV is authoritative.
 - The first push of benchmark_summary.csv was header-only. The corrected full file is in this commit.
 
-The complete bundle (both trials, all uploaded files, the original zip, and the JSON results and logs) is ALIEN_DL_Research_Trials.zip, which is binary and must be uploaded separately.
+The complete bundle is ALIEN_DL_Research_Trials.zip. The extracted directories are the convenient human-readable view; when modifying experiments, update the extracted files and regenerate the bundle so they remain synchronized.
