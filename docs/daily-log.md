@@ -238,3 +238,4 @@
 | [2026-11-12](sessions/2026-11-12_construct_topology.md) | `IA-2026-316-T0` | Information-Theoretic Construct Topology: Jaccard Simil... |
 | [2026-11-13](sessions/2026-11-13_harmonic_interference.md) | `IA-2026-317-T1` | Harmonic Series and Wave Interference Analysis: Resonan... |
 | [2026-11-14](sessions/2026-11-14_genomic_information_theory.md) | `IA-2026-318-T2` | Genomic Information Theory: Shannon Entropy Bounds, Hay... |
+| [2026-11-15](sessions/2026-11-15_evolutionary_dynamics.md) | `IA-2026-319-T3` | Evolutionary Dynamics and Dual-State Stability: Fisher'... |
