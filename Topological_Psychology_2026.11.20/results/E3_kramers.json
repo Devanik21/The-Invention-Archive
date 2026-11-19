@@ -1,0 +1,37 @@
+{
+  "rows": [
+    {
+      "D": 0.1,
+      "inv_D": 10.0,
+      "mfpt": 47.4217,
+      "censored_fraction": 0.0
+    },
+    {
+      "D": 0.125,
+      "inv_D": 8.0,
+      "mfpt": 27.8642,
+      "censored_fraction": 0.0
+    },
+    {
+      "D": 0.15,
+      "inv_D": 6.666666666666667,
+      "mfpt": 19.02045,
+      "censored_fraction": 0.0
+    },
+    {
+      "D": 0.2,
+      "inv_D": 5.0,
+      "mfpt": 11.885050000000001,
+      "censored_fraction": 0.0
+    },
+    {
+      "D": 0.25,
+      "inv_D": 4.0,
+      "mfpt": 8.3415,
+      "censored_fraction": 0.0
+    }
+  ],
+  "fitted_slope": 0.2872284200374607,
+  "barrier_analytic": 0.25,
+  "relative_error": 0.14891368014984274
+}

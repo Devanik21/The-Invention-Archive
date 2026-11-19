@@ -1,0 +1,8 @@
+{
+  "a": -1.0,
+  "b_fold_analytic": 0.3849001794597505,
+  "b_jump_up_sim": 0.40929002083151667,
+  "b_jump_down_sim": -0.4111375416929235,
+  "hysteresis_width_sim": 0.8204275625244402,
+  "hysteresis_width_analytic": 0.769800358919501
+}

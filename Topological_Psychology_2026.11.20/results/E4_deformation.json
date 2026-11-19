@@ -1,0 +1,29 @@
+{
+  "b_fold": 0.3849001794597505,
+  "rows": [
+    {
+      "ramp_speed": 0.0005,
+      "t_jump": 1943.6200000000001,
+      "b_jump": 0.39445973081037433,
+      "overshoot_past_fold": 0.009559551350623807
+    },
+    {
+      "ramp_speed": 0.002,
+      "t_jump": 496.89,
+      "b_jump": 0.41642973081037427,
+      "overshoot_past_fold": 0.03152955135062374
+    },
+    {
+      "ramp_speed": 0.008,
+      "t_jump": 130.32,
+      "b_jump": 0.4652097308103742,
+      "overshoot_past_fold": 0.08030955135062368
+    },
+    {
+      "ramp_speed": 0.032,
+      "t_jump": null,
+      "b_jump": null,
+      "overshoot_past_fold": null
+    }
+  ]
+}
