@@ -243,3 +243,4 @@
 | [2026-11-17](sessions/2026-11-17_cross_paradigm_bridges.md) | `IA-2026-321-T5` | Cross-Paradigm Formal Bridges: Mathematical Isomorphism... |
 | [2026-11-18](sessions/2026-11-18_spectral_encoding_capacity.md) | `IA-2026-322-T6` | Spectral Decomposition and Encoding Capacity: FFT Analy... |
 | [2026-11-19](sessions/2026-11-19_construct_topology.md) | `IA-2026-323-T0` | Information-Theoretic Construct Topology: Jaccard Simil... |
+| [2026-11-20](sessions/2026-11-20_harmonic_interference.md) | `IA-2026-324-T1` | Harmonic Series and Wave Interference Analysis: Resonan... |
