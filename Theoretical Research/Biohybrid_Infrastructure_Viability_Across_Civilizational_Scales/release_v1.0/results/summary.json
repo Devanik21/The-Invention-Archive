@@ -1,0 +1,312 @@
+{
+  "paper": "Biohybrid Infrastructure Viability Across Civilizational Scales v1.0",
+  "passed": 38,
+  "total": 38,
+  "checks": [
+    {
+      "check": "Type II requirement eta*f_cov",
+      "value": 0.2612330198537095,
+      "expected": 0.2612,
+      "tolerance": 5e-05,
+      "pass": true,
+      "source": "Prop. 1, Sec. 6"
+    },
+    {
+      "check": "Type III in solar luminosities (x1e-9)",
+      "value": 2.6123301985370952,
+      "expected": 2.612,
+      "tolerance": 0.0005,
+      "pass": true,
+      "source": "Sec. 6.2"
+    },
+    {
+      "check": "Sagan K for present power 1.9e13 W",
+      "value": 0.7278753600952829,
+      "expected": 0.728,
+      "tolerance": 0.005,
+      "pass": true,
+      "source": "Sec. 6.3"
+    },
+    {
+      "check": "1 AU sphere area (x1e23 m^2)",
+      "value": 2.8122937915980515,
+      "expected": 2.81,
+      "tolerance": 0.005,
+      "pass": true,
+      "source": "Sec. 6.4"
+    },
+    {
+      "check": "Type II collector area, eta=0.20 (x1e23 m^2)",
+      "value": 3.6733199994749888,
+      "expected": 3.67,
+      "tolerance": 0.005,
+      "pass": true,
+      "source": "Sec. 6.4"
+    },
+    {
+      "check": "Collector area / sphere ratio",
+      "value": 1.3061650992685474,
+      "expected": 1.31,
+      "tolerance": 0.005,
+      "pass": true,
+      "source": "Sec. 6.4"
+    },
+    {
+      "check": "PDF bare black body T at 1 AU (K)",
+      "value": 278.3299145589313,
+      "expected": 278.3,
+      "tolerance": 0.1,
+      "pass": true,
+      "source": "Prop. 2 (as printed)"
+    },
+    {
+      "check": "PDF shell T, eta=0.26 (K)",
+      "value": 261.6604537513744,
+      "expected": 261.7,
+      "tolerance": 0.1,
+      "pass": true,
+      "source": "Prop. 2 (as printed)"
+    },
+    {
+      "check": "Corrected shell T, n=1, eta=0 (K)",
+      "value": 393.61793998338544,
+      "expected": 393.6,
+      "tolerance": 0.2,
+      "pass": true,
+      "source": "Sec. 7.3 (corrected)"
+    },
+    {
+      "check": "Corrected shell T, n=2, eta=0 (K)",
+      "value": 330.9919147115806,
+      "expected": 331.0,
+      "tolerance": 0.2,
+      "pass": true,
+      "source": "Sec. 7.3 (corrected)"
+    },
+    {
+      "check": "Corrected shell T, n=1, eta=0.26 (K)",
+      "value": 370.0437624318917,
+      "expected": 370.0,
+      "tolerance": 0.5,
+      "pass": true,
+      "source": "Sec. 7.3 (corrected)"
+    },
+    {
+      "check": "Corrected shell T, n=2, eta=0.26 (K)",
+      "value": 311.1684733159749,
+      "expected": 311.2,
+      "tolerance": 0.5,
+      "pass": true,
+      "source": "Sec. 7.3 (corrected)"
+    },
+    {
+      "check": "Scaling T(2 AU)/T(1 AU) = 2^(-1/2)",
+      "value": 0.7071067811865475,
+      "expected": 0.7071067811865476,
+      "tolerance": 1e-12,
+      "pass": true,
+      "source": "Sec. 7.1 scaling"
+    },
+    {
+      "check": "Scaling (1-eta)^(1/4): T(eta=0.5)/T(eta=0)",
+      "value": 0.8408964152537146,
+      "expected": 0.8408964152537145,
+      "tolerance": 1e-12,
+      "pass": true,
+      "source": "Sec. 7.1 scaling"
+    },
+    {
+      "check": "Radiator area 1 GW at 300 K (x1e6 m^2)",
+      "value": 2.4191386890579936,
+      "expected": 2.42,
+      "tolerance": 0.005,
+      "pass": true,
+      "source": "Eq. (11), Sec. 7.4"
+    },
+    {
+      "check": "Petela limit",
+      "value": 0.9307023632314397,
+      "expected": 0.9307,
+      "tolerance": 5e-05,
+      "pass": true,
+      "source": "Sec. 9.1"
+    },
+    {
+      "check": "Round-trip light time 1 AU (min)",
+      "value": 16.633074349566378,
+      "expected": 16.6,
+      "tolerance": 0.05,
+      "pass": true,
+      "source": "Sec. 8.1"
+    },
+    {
+      "check": "Minimum control period 6*tau_rt (h)",
+      "value": 1.663307434956638,
+      "expected": 1.66,
+      "tolerance": 0.01,
+      "pass": true,
+      "source": "Prop. 6, Sec. 8.2"
+    },
+    {
+      "check": "Murray exponent (fitted)",
+      "value": 0.3333398923501368,
+      "expected": 0.3333333333333333,
+      "tolerance": 0.002,
+      "pass": true,
+      "source": "Prop. 4 (paper: 0.3334)"
+    },
+    {
+      "check": "Murray closed form (2a/b)^(1/6) at a=b=1",
+      "value": 1.122462048309373,
+      "expected": 1.1225,
+      "tolerance": 0.001,
+      "pass": true,
+      "source": "Prop. 4"
+    },
+    {
+      "check": "Lifespan exponent Phi",
+      "value": 0.08957679977209304,
+      "expected": 0.0896,
+      "tolerance": 5e-05,
+      "pass": true,
+      "source": "Prop. 3, Table 5"
+    },
+    {
+      "check": "H2 work floor (MJ/kg)",
+      "value": 117.60912698412699,
+      "expected": 117.6,
+      "tolerance": 0.05,
+      "pass": true,
+      "source": "Table 5a"
+    },
+    {
+      "check": "H2 work floor (kWh/kg)",
+      "value": 32.66920194003527,
+      "expected": 32.7,
+      "tolerance": 0.05,
+      "pass": true,
+      "source": "Table 5a"
+    },
+    {
+      "check": "Glucose work floor (MJ/kg, magnitude)",
+      "value": 15.98023978685613,
+      "expected": 15.98,
+      "tolerance": 0.01,
+      "pass": true,
+      "source": "Table 5a"
+    },
+    {
+      "check": "O2 work floor (MJ/kg)",
+      "value": 14.81875,
+      "expected": 14.8,
+      "tolerance": 0.05,
+      "pass": true,
+      "source": "Table 5a"
+    },
+    {
+      "check": "CH4 work floor (MJ/kg, magnitude)",
+      "value": 51.00374064837906,
+      "expected": 51.0,
+      "tolerance": 0.05,
+      "pass": true,
+      "source": "Table 5a"
+    },
+    {
+      "check": "Ideal PV at 20% (x1e5 mW m^-2)",
+      "value": 2.7223329308171507,
+      "expected": 2.72,
+      "tolerance": 0.005,
+      "pass": true,
+      "source": "Sec. 9.3"
+    },
+    {
+      "check": "BPV gap, best reported (1e3 mW m^-2)",
+      "value": 272.2332930817151,
+      "expected": 272.0,
+      "tolerance": 1.0,
+      "pass": true,
+      "source": "Sec. 9.3"
+    },
+    {
+      "check": "MICP prefactor 2*erfc^-1(0.05)",
+      "value": 2.7718076486993564,
+      "expected": 2.772,
+      "tolerance": 0.0005,
+      "pass": true,
+      "source": "Prop. 7"
+    },
+    {
+      "check": "Time to 10 cm at D=1e-9 (days)",
+      "value": 15.064685858044307,
+      "expected": 15.1,
+      "tolerance": 0.05,
+      "pass": true,
+      "source": "Sec. 12.3"
+    },
+    {
+      "check": "Crew water demand (kg/yr)",
+      "value": 3650.0,
+      "expected": 3650.0,
+      "tolerance": 1e-09,
+      "pass": true,
+      "source": "Sec. 10.3"
+    },
+    {
+      "check": "Replacement at 98% recovery (kg/yr)",
+      "value": 73.00000000000007,
+      "expected": 73.0,
+      "tolerance": 1e-06,
+      "pass": true,
+      "source": "Table 3b"
+    },
+    {
+      "check": "Replacement at 99.9% recovery (kg/yr)",
+      "value": 3.650000000000003,
+      "expected": 3.65,
+      "tolerance": 1e-06,
+      "pass": true,
+      "source": "Table 3b"
+    },
+    {
+      "check": "Abiotic gravity penalty from rounded means",
+      "value": 13.409090909090908,
+      "expected": 13.4,
+      "tolerance": 0.05,
+      "pass": true,
+      "source": "Sec. 11.1 (paper: 13.4 from rounded means; 13.6 reported)"
+    },
+    {
+      "check": "Fungal / abiotic microgravity ratio",
+      "value": 5.409090909090909,
+      "expected": 5.4,
+      "tolerance": 0.05,
+      "pass": true,
+      "source": "Sec. 11.1"
+    },
+    {
+      "check": "Concepts with an E tag",
+      "value": 18.0,
+      "expected": 18.0,
+      "tolerance": 0.0,
+      "pass": true,
+      "source": "Table 9 (E=18 tags)"
+    },
+    {
+      "check": "Concepts with an L tag",
+      "value": 6.0,
+      "expected": 6.0,
+      "tolerance": 0.0,
+      "pass": true,
+      "source": "Table 9 (L=6 tags)"
+    },
+    {
+      "check": "Concepts with E or L tag",
+      "value": 24.0,
+      "expected": 24.0,
+      "tolerance": 0.0,
+      "pass": true,
+      "source": "Sec. 16.2"
+    }
+  ],
+  "note": "Analytic and small-scale checks only. Monte Carlo, swarm and viability-kernel results are in analysis.py / results.json."
+}
