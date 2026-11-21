@@ -12,5 +12,6 @@
 - validation/ (pre-registration, parameter and claim registers)
 - figures/ (editable conceptual SVG sources)
 - results/ (research log and status records)
+- release_v1.0/ (completed paper v1.0, nine-core-file standard; see its MANIFEST.md)
 
-This is a research-programme workspace, not a final paper-release tree. The eventual publication release will follow the archive's nine-core-file standard separately.
+The programme workspace remains a research-programme record. The completed preprint v1.0 is in release_v1.0/. Its full research README, PDF, figures, source scripts and results are in the release bundle (Biohybrid_release_v1.0_full_bundle.zip), with text files pushed directly.
