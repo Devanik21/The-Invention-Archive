@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+  <rect width="1200" height="680" fill="#ffffff"/>
+  <text x="600" y="50" text-anchor="middle" font-family="Arial" font-size="28" font-weight="bold" fill="#172033">Bioengineering Across Infrastructure Scenarios</text>
+  <text x="600" y="80" text-anchor="middle" font-family="Arial" font-size="15" fill="#46536b">Scenario map, not a development forecast or technology-readiness scale</text>
+  <line x1="105" y1="570" x2="1095" y2="570" stroke="#475467" stroke-width="3"/>
+  <g font-family="Arial" fill="#172033">
+    <rect x="90" y="160" width="190" height="330" rx="16" fill="#e9f4eb" stroke="#44724b" stroke-width="2"/>
+    <text x="185" y="205" text-anchor="middle" font-size="22" font-weight="bold">Planetary</text>
+    <text x="185" y="238" text-anchor="middle" font-size="16">Life support</text>
+    <text x="185" y="270" text-anchor="middle" font-size="16">Fermentation</text>
+    <text x="185" y="302" text-anchor="middle" font-size="16">Water recovery</text>
+    <text x="185" y="334" text-anchor="middle" font-size="16">Biomaterials</text>
+    <text x="185" y="445" text-anchor="middle" font-size="14">B / H / A</text>
+    <rect x="315" y="160" width="190" height="330" rx="16" fill="#e8f1fb" stroke="#3e6d9a" stroke-width="2"/>
+    <text x="410" y="205" text-anchor="middle" font-size="22" font-weight="bold">Orbital</text>
+    <text x="410" y="238" text-anchor="middle" font-size="16">Regenerative</text>
+    <text x="410" y="270" text-anchor="middle" font-size="16">habitats</text>
+    <text x="410" y="302" text-anchor="middle" font-size="16">Bio-ISRU</text>
+    <text x="410" y="334" text-anchor="middle" font-size="16">Biomanufacture</text>
+    <text x="410" y="445" text-anchor="middle" font-size="14">B / H / M / A</text>
+    <rect x="540" y="160" width="190" height="330" rx="16" fill="#fff1df" stroke="#a36b35" stroke-width="2"/>
+    <text x="635" y="205" text-anchor="middle" font-size="22" font-weight="bold">Solar system</text>
+    <text x="635" y="238" text-anchor="middle" font-size="16">Asteroid industry</text>
+    <text x="635" y="270" text-anchor="middle" font-size="16">Local factories</text>
+    <text x="635" y="302" text-anchor="middle" font-size="16">Robotic logistics</text>
+    <text x="635" y="334" text-anchor="middle" font-size="16">Modular habitats</text>
+    <text x="635" y="445" text-anchor="middle" font-size="14">B localized; M/A exposed</text>
+    <rect x="765" y="160" width="190" height="330" rx="16" fill="#f1ecfa" stroke="#7054a3" stroke-width="2"/>
+    <text x="860" y="205" text-anchor="middle" font-size="22" font-weight="bold">Stellar</text>
+    <text x="860" y="238" text-anchor="middle" font-size="16">Collector swarms</text>
+    <text x="860" y="270" text-anchor="middle" font-size="16">Radiators</text>
+    <text x="860" y="302" text-anchor="middle" font-size="16">Local biorefineries</text>
+    <text x="860" y="334" text-anchor="middle" font-size="16">Autonomous repair</text>
+    <text x="860" y="445" text-anchor="middle" font-size="14">M / A dominant outside</text>
+    <rect x="990" y="160" width="150" height="330" rx="16" fill="#f2f4f7" stroke="#667085" stroke-width="2"/>
+    <text x="1065" y="205" text-anchor="middle" font-size="22" font-weight="bold">Galactic+</text>
+    <text x="1065" y="238" text-anchor="middle" font-size="16">Causal limits</text>
+    <text x="1065" y="270" text-anchor="middle" font-size="16">Latency</text>
+    <text x="1065" y="302" text-anchor="middle" font-size="16">Deep time</text>
+    <text x="1065" y="334" text-anchor="middle" font-size="16">Speculation</text>
+    <text x="1065" y="445" text-anchor="middle" font-size="14">M / S</text>
+  </g>
+  <g font-family="Arial" font-size="14" fill="#475467">
+    <text x="185" y="610" text-anchor="middle">K &lt; 1</text>
+    <text x="410" y="610" text-anchor="middle">K ≈ 1</text>
+    <text x="635" y="610" text-anchor="middle">K ≈ 1–2</text>
+    <text x="860" y="610" text-anchor="middle">K ≈ 2</text>
+    <text x="1065" y="610" text-anchor="middle">K &gt; 3</text>
+  </g>
+  <text x="600" y="650" text-anchor="middle" font-family="Arial" font-size="14" fill="#667085">K is a scenario coordinate; extensions above Type III are nonstandard extrapolations.</text>
+</svg>

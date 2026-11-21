@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
+  <rect width="1200" height="760" fill="#ffffff"/>
+  <text x="600" y="52" text-anchor="middle" font-family="Arial" font-size="28" font-weight="bold" fill="#172033">Biohybrid Infrastructure Architecture — Conceptual Model</text>
+  <text x="600" y="82" text-anchor="middle" font-family="Arial" font-size="15" fill="#46536b">Illustrative structure only; no empirical performance values are encoded</text>
+  <rect x="55" y="145" width="300" height="190" rx="18" fill="#e8f3e9" stroke="#44724b" stroke-width="2"/>
+  <text x="205" y="180" text-anchor="middle" font-family="Arial" font-size="21" font-weight="bold" fill="#234b2b">Biological modules (B)</text>
+  <text x="85" y="222" font-family="Arial" font-size="16" fill="#234b2b">• microbial / algal reactors</text>
+  <text x="85" y="255" font-family="Arial" font-size="16" fill="#234b2b">• metabolism and bioprocesses</text>
+  <text x="85" y="288" font-family="Arial" font-size="16" fill="#234b2b">• biomineralization / mycelium</text>
+  <rect x="450" y="145" width="300" height="190" rx="18" fill="#e8f1fb" stroke="#3e6d9a" stroke-width="2"/>
+  <text x="600" y="180" text-anchor="middle" font-family="Arial" font-size="21" font-weight="bold" fill="#234968">Biohybrid modules (H)</text>
+  <text x="480" y="222" font-family="Arial" font-size="16" fill="#234968">• microbe–semiconductor interfaces</text>
+  <text x="480" y="255" font-family="Arial" font-size="16" fill="#234968">• living materials + sensors</text>
+  <text x="480" y="288" font-family="Arial" font-size="16" fill="#234968">• biological catalyst + equipment</text>
+  <rect x="845" y="145" width="300" height="190" rx="18" fill="#fff2e4" stroke="#a36b35" stroke-width="2"/>
+  <text x="995" y="180" text-anchor="middle" font-family="Arial" font-size="21" font-weight="bold" fill="#704516">Abiotic / mimic (A/M)</text>
+  <text x="875" y="222" font-family="Arial" font-size="16" fill="#704516">• extraction and separation</text>
+  <text x="875" y="255" font-family="Arial" font-size="16" fill="#704516">• collectors and radiators</text>
+  <text x="875" y="288" font-family="Arial" font-size="16" fill="#704516">• robotics and structural systems</text>
+  <path d="M355 240 L425 240" stroke="#334155" stroke-width="3" fill="none"/><path d="M415 230 L425 240 L415 250" stroke="#334155" stroke-width="3" fill="none"/>
+  <path d="M750 240 L820 240" stroke="#334155" stroke-width="3" fill="none"/><path d="M810 230 L820 240 L810 250" stroke="#334155" stroke-width="3" fill="none"/>
+  <rect x="180" y="420" width="840" height="125" rx="18" fill="#f2f4f7" stroke="#667085" stroke-width="2"/>
+  <text x="600" y="457" text-anchor="middle" font-family="Arial" font-size="22" font-weight="bold" fill="#172033">Shared physical accounting and network model</text>
+  <text x="600" y="493" text-anchor="middle" font-family="Arial" font-size="17" fill="#344054">Mass • energy/exergy • heat • reliability • safety • lifecycle • uncertainty</text>
+  <path d="M205 335 L205 390 L350 420" stroke="#44724b" stroke-width="2.5" fill="none"/>
+  <path d="M600 335 L600 420" stroke="#3e6d9a" stroke-width="2.5" fill="none"/>
+  <path d="M995 335 L995 390 L850 420" stroke="#a36b35" stroke-width="2.5" fill="none"/>
+  <rect x="300" y="620" width="600" height="86" rx="16" fill="#eaf0f8" stroke="#506a8a" stroke-width="2"/>
+  <text x="600" y="653" text-anchor="middle" font-family="Arial" font-size="21" font-weight="bold" fill="#213b5a">Pareto-feasible architecture and operating policy</text>
+  <text x="600" y="682" text-anchor="middle" font-family="Arial" font-size="15" fill="#344054">Tested against matched baselines and falsification criteria</text>
+  <path d="M600 545 L600 605" stroke="#334155" stroke-width="3" fill="none"/><path d="M590 595 L600 605 L610 595" stroke="#334155" stroke-width="3" fill="none"/>
+</svg>

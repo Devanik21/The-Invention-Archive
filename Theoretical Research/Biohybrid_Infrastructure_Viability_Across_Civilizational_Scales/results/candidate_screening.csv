@@ -1,0 +1,11 @@
+candidate,importance,gap_evidence,interdisciplinary_depth,plausibility,math_core,AI_role,human_benefit,first_validation,falsifiability,safety,total_out_of_50,screen_status
+Biohybrid infrastructure viability theory,5,4,5,4,5,4,5,5,5,5,47,selected preliminary
+Microbial ISRU and asteroid biomining,5,4,4,4,4,3,5,5,5,4,43,core subsystem
+Regenerative extraterrestrial ecosystems,5,4,5,4,5,4,5,5,5,4,46,core subsystem
+Adaptive engineered living materials,4,4,5,4,4,4,4,5,5,4,43,core subsystem
+Photosynthetic biohybrid energy conversion,5,5,5,4,5,4,5,5,5,4,47,core subsystem
+Bio-derived extraterrestrial construction,4,4,5,3,4,3,4,4,5,4,40,core subsystem
+Space biomanufacturing,5,4,4,4,4,4,5,5,5,4,44,core subsystem
+Bio-inspired thermal management,4,3,4,5,4,3,4,5,4,5,41,include
+Distributed autonomous megastructure construction,4,3,5,3,5,5,4,4,5,4,42,include
+Planetary-scale biological climate intervention,5,2,4,2,3,3,3,2,3,1,28,exclude from core

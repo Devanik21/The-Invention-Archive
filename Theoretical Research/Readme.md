@@ -29,3 +29,5 @@ Research preprints are stored in isolated release directories. Each release incl
 | 2026.11.08 | The Recoverability Frontier of Damaged Information-Bearing Systems | Information-theoretic and control-theoretic framework preprint with synthetic verification (12 pages) | [Recoverability Frontier](Recoverability_Frontier_of_Damaged_Information_Systems/) |
 
 | 2026.11.10 | Plasma-Echo-Constrained Kinetic Memory | Reduced echo model + synthetic memory benchmark (PDF build blocked) | [Release source](Plasma_Echo_Constrained_Kinetic_Memory_Mori_Zwanzig_Test/) |
+
+| 2026.11.21 | Biohybrid Infrastructure Viability Across Civilizational Scales | Research programme and 110-concept engineering atlas (pre-manuscript) | [Biohybrid Infrastructure programme](Biohybrid_Infrastructure_Viability_Across_Civilizational_Scales/) |

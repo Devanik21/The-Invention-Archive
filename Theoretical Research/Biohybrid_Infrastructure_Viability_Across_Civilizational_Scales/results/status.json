@@ -1,0 +1,22 @@
+{
+  "project": "Biohybrid Infrastructure Viability Across Civilizational Scales",
+  "stage": "programme_architecture",
+  "as_of": "2026-11-21",
+  "concepts_total": 110,
+  "detailed_modules": 10,
+  "disciplines": 18,
+  "literature_records": 13,
+  "validation_status": "not_run",
+  "empirical_results": "none",
+  "claims_of_novelty": "not_established",
+  "final_manuscript": "not_started",
+  "compiled_pdf": "not_created",
+  "verification_script": "not_created",
+  "limitations": [
+    "This is a programme-stage workspace, not a completed paper release.",
+    "110 concepts are hypotheses for triage, not 110 validated technologies.",
+    "No numerical experiment or biological experiment has been executed.",
+    "Type IV–VI Kardashev extensions are nonstandard speculative labels."
+  ],
+  "next_gate": "Complete primary-literature audit and pre-register a matched regenerative-life-support benchmark."
+}

@@ -1,0 +1,13 @@
+parameter_id,quantity,unit,initial_value,status,source_or_method,uncertainty,notes
+P001,crew_water_demand,kg_per_crew_day,NOT_SET,unresolved,primary life-support source required,NOT_SET,Define potable and non-potable boundaries
+P002,crew_oxygen_demand,kg_per_crew_day,NOT_SET,unresolved,primary life-support source required,NOT_SET,Specify metabolic and operational load
+P003,crew_food_energy,kJ_per_crew_day,NOT_SET,unresolved,nutritional requirement source required,NOT_SET,Food mass and edible fraction are distinct
+P004,water_recovery_fraction,dimensionless,NOT_SET,unresolved,system-specific measured value required,NOT_SET,Must match quality and system boundary
+P005,photobioreactor_areal_productivity,kg_per_m2_day,NOT_SET,unresolved,primary photobioreactor study required,NOT_SET,Organism spectrum and reactor geometry specific
+P006,biomining_rate,kg_per_kg_feedstock_day,NOT_SET,unresolved,BioAsteroid and terrestrial primary-data extraction,NOT_SET,Element-specific; no global coefficient
+P007,biomineralization_strength,MPa,NOT_SET,unresolved,simulant mechanical test required,NOT_SET,Use for a declared structural function only
+P008,mycelium_thermal_conductivity,W_per_m_K,NOT_SET,unresolved,material-specific source data required,NOT_SET,Moisture and density dependent
+P009,biological_repair_rate,damage_per_day,NOT_SET,unresolved,controlled damage-repair experiment required,NOT_SET,Set credited repair to zero until measured
+P010,space_radiator_emissivity,dimensionless,NOT_SET,unresolved,material spectral measurement required,NOT_SET,Effective grey value only if justified
+P011,robot_failure_hazard,1_per_hour,NOT_SET,unresolved,reliability data required,NOT_SET,Task and environment specific
+P012,imported_material_mass,kg_per_crew_day,NOT_SET,unresolved,mission system boundary calculation required,NOT_SET,Include replacement and reserve mass
