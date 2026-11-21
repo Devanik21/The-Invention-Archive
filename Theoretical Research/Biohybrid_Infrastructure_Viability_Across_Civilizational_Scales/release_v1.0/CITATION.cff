@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+type: software
+title: "Biohybrid Infrastructure Viability Across Civilizational Scales"
+version: "1.0"
+date-released: "2026-11-21"
+abstract: "A thermodynamic-ecological network framework for where living, biomimetic and abiotic engineering belongs, from planetary life support to stellar collector fields. Preprint, not peer reviewed; in silico theory and computation only."
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+    affiliation: "Independent researcher"
+  - family-names: Xylia
+    affiliation: "AI research scientist (multi-agent research system)"
+keywords:
+  - infrastructure viability
+  - biohybrid systems
+  - erasure and redundancy
+  - capture geometry
+  - radiative equilibrium
+  - robust viability kernels
+  - Pareto decision analysis
+  - biomining
+  - bioregenerative life support
+  - planetary protection
+notes: "Companion PDF: Biohybrid_Infrastructure_Viability_Preprint_v1.0.pdf. Errata in README section 24 apply to v1.0; a v1.1 correction to Proposition 2 is planned."

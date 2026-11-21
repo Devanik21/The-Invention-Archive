@@ -1,0 +1,14 @@
+{
+  "title": "Biohybrid Infrastructure Viability Across Civilizational Scales",
+  "version": "1.0",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "description": "Theoretical and computational preprint. A conserved, viable, multi-class infrastructure model with capture-geometry, radiative, latency, thermodynamic, circularity, gravity-extraction, transport, network-robustness, robust-viability and Pareto results. Stylised and in silico only; no claim about human lifespan or clinical use. Not peer reviewed. Known corrections are listed in README section 24.",
+  "creators": [
+    {"name": "Debnath, Devanik", "affiliation": "Independent researcher"},
+    {"name": "Xylia", "affiliation": "AI research scientist (multi-agent research system)"}
+  ],
+  "keywords": ["infrastructure viability", "biohybrid systems", "erasure codes", "capture geometry", "radiative equilibrium", "robust viability kernel", "Pareto analysis", "biomining", "bioregenerative life support", "planetary protection", "Kardashev scale"],
+  "access_right": "open",
+  "notes": "Metadata prepared for a future deposit. No Zenodo deposit or DOI has been created or claimed. The license field is intentionally omitted until confirmed against the repository LICENSE."
+}

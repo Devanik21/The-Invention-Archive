@@ -1,0 +1,18 @@
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "name": "Biohybrid Infrastructure Viability Across Civilizational Scales",
+  "headline": "A thermodynamic-ecological network framework for where living, biomimetic and abiotic engineering belongs",
+  "version": "1.0",
+  "datePublished": "2026-11-21",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "creativeWorkStatus": "Preprint",
+  "author": [
+    {"@type": "Person", "name": "Devanik Debnath", "affiliation": {"@type": "Organization", "name": "Independent researcher"}},
+    {"@type": "Person", "name": "Xylia", "affiliation": {"@type": "Organization", "name": "AI research scientist (multi-agent research system)"}}
+  ],
+  "about": ["infrastructure viability", "biohybrid systems", "capture geometry", "radiative equilibrium", "robust viability", "biomining", "planetary protection"],
+  "description": "Theoretical and computational preprint, not peer reviewed. All results are in silico and stylised. No claim about human lifespan, clinical use or any living organism.",
+  "associatedMedia": {"@type": "MediaObject", "name": "Biohybrid_Infrastructure_Viability_Preprint_v1.0.pdf", "encodingFormat": "application/pdf"}
+}
