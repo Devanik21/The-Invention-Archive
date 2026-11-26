@@ -1,0 +1,10 @@
+{
+    "id": "TH-2026-END-0001",
+    "kind": "solution",
+    "title": "Sub-Extremal Kerr Stability: Theorems 1-4 and Papers 5-8",
+    "fields": ["general relativity", "PDE analysis", "mathematical physics"],
+    "status": "self-reviewed; not peer-reviewed; gaps 2A, 2B and trapping gauge open",
+    "authors": ["Devanik Debnath", "Xylia (AI Scientist)", "Gemini 4 Neon High"],
+    "created": "2026-11-26",
+    "links": {"addresses": [], "supports": [], "refutes": []}
+}
