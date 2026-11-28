@@ -1,0 +1,99 @@
+{
+  "release_status": "BLOCKED",
+  "release_date": "2026-11-28",
+  "version": "1.0.0",
+  "repository": "https://github.com/Devanik21/The-Invention-Archive",
+  "branch": "main",
+  "local_pdf_sha256": "d179ec32184a26cab205faf96206f20e7f94d3f02f9377c4a0acb3041fff2f0f",
+  "core_root_file_count": 9,
+  "figures_pdf_count": 8,
+  "research_scope": "Research architecture and synthetic software verification; not empirical biosignature inference.",
+  "checks": [
+    {
+      "gate": "local_root_manifest",
+      "status": "PASS",
+      "evidence": "deploy.py --no-compile; results/local_preflight.json"
+    },
+    {
+      "gate": "latex_compile",
+      "status": "PASS",
+      "evidence": "latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex; results/latex_build_stdout.txt"
+    },
+    {
+      "gate": "pdf_page_count_text_integrity",
+      "status": "PASS",
+      "evidence": "results/pdfinfo.txt; results/paper_extracted.txt"
+    },
+    {
+      "gate": "pdf_visual_publication_quality",
+      "status": "PASS",
+      "evidence": "results/pdf_visual_review.json; results/publication_quality_report.json"
+    },
+    {
+      "gate": "font_embedding",
+      "status": "PASS",
+      "evidence": "results/pdffonts_report.txt"
+    },
+    {
+      "gate": "synthetic_model_code_execution",
+      "status": "PASS",
+      "evidence": "results/verification_run.log; results/verification_report.json"
+    },
+    {
+      "gate": "deployment_script_negative_self_test",
+      "status": "PASS",
+      "evidence": "results/deploy_self_test.log"
+    },
+    {
+      "gate": "CITATION_CFF_Zenodo_JSONLD_syntax",
+      "status": "PASS",
+      "evidence": "deploy.py preflight; local_preflight.json"
+    },
+    {
+      "gate": "targeted_literature_and_citation_audit",
+      "status": "PASS",
+      "evidence": "results/literature_audit.csv; paper.bib; manuscript bibliography; targeted audit is not systematic"
+    },
+    {
+      "gate": "real_MS2_graph_reconstruction",
+      "status": "BLOCKED",
+      "evidence": "No real MS/MS dataset, trained graph model, or instrument likelihood implemented in this release."
+    },
+    {
+      "gate": "exact_molecular_assembly_calculation",
+      "status": "BLOCKED",
+      "evidence": "assemblytheorytools not installed and no pinned exact solver is bundled; no molecular graph MA was computed."
+    },
+    {
+      "gate": "independent_abiotic_biotic_empirical_validation",
+      "status": "NOT_RUN",
+      "evidence": "No samples, authenticated standards, or blinded environmental controls were available."
+    },
+    {
+      "gate": "flight_hardware_energy_latency_memory_validation",
+      "status": "NOT_RUN",
+      "evidence": "Only dimensionless synthetic acquisition-cost and downlink assumptions were tested."
+    },
+    {
+      "gate": "author_identity_exhaustive_audit",
+      "status": "BLOCKED",
+      "evidence": "Zenodo, OpenAIRE and Google Scholar identity matches not independently established; see author_profile_audit.md."
+    },
+    {
+      "gate": "github_branch_protection_inspection",
+      "status": "BLOCKED",
+      "evidence": "GitHub API returned 403 Resource not accessible by integration for branch-protection endpoint."
+    },
+    {
+      "gate": "github_remote_release_commit_and_checks",
+      "status": "NOT_RUN",
+      "evidence": "No release commit, tag, or workflow run was created in this local artifact build."
+    }
+  ],
+  "blocking_reasons": [
+    "No empirical MS/MS graph reconstruction or molecular assembly calculation was executed.",
+    "Remote GitHub release and exact-SHA workflow verification were not performed.",
+    "Branch-protection settings could not be inspected through the connected integration."
+  ],
+  "next_action": "Obtain a suitable real-MS/MS benchmark and a pinned exact molecular-assembly solver, then run a scaffold/instrument-disjoint molecular validation; execute remote publication and exact-SHA workflow verification after remote staging is available."
+}

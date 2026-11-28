@@ -1,0 +1,337 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=0.79in,headheight=14pt]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,mathtools,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,array,multirow}
+\usepackage{float,placeins}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[backend=biber,style=numeric,sorting=none,maxbibnames=8]{biblatex}
+\addbibresource{paper.bib}
+\graphicspath{{figures/}}
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!45!black,pdftitle={Database-Free Agnostic Biosignature Inference via Neuro-Symbolic Assembly Theory},pdfauthor={Devanik Debnath}}
+\captionsetup{font=small,labelfont=bf,skip=5pt}
+\setlength{\parskip}{0.34em}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\setlist{itemsep=0.1em,topsep=0.2em,leftmargin=1.4em}
+\setcounter{secnumdepth}{3}
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\newcommand{\MA}{\mathrm{MA}}
+\newcommand{\MS}{\mathrm{MS/MS}}
+\newcommand{\BF}{\mathrm{BF}}
+\newcommand{\TV}{\mathrm{TV}}
+\newcommand{\calC}{\mathcal{C}}
+\newcommand{\calG}{\mathcal{G}}
+\newcommand{\calS}{\mathcal{S}}
+\newcommand{\calT}{\mathcal{T}}
+\newcommand{\calE}{\mathcal{E}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Prb}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\title{\vspace{-1.2em}\bfseries Database-Free Agnostic Biosignature Inference via Neuro-Symbolic Assembly Theory\\[0.35em]\large Posterior Molecular-Graph Reconstruction, Uncertainty-Aware Assembly Evidence, and Resource-Bounded Spectral Interrogation}
+\author{Devanik Debnath\\\small Electronics and Communication Engineering, National Institute of Technology Agartala, India\\\small \href{https://orcid.org/0009-0001-8310-6921}{ORCID: 0009-0001-8310-6921} \quad \href{https://github.com/Devanik21}{GitHub: Devanik21}}
+\date{Research preprint \;|\; 28 November 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+A mass-spectrometric life detector that retrieves only against a database of terrestrial molecules is structurally unable to return candidates outside that library. Yet de novo structure inference from tandem mass spectra is itself ill-posed: isomers and distinct fragmentation mechanisms can yield observationally indistinguishable peaks, formula conditioning is not chemistry-agnostic, and learned confidence can be badly miscalibrated under instrumental shift. We formulate a reference-library-free-at-inference architecture that treats molecular structure, fragmentation history, and the admissible chemical grammar as latent variables. A neuro-symbolic graph encoder proposes a posterior ensemble of precursor graphs and fragmentation directed acyclic graphs; formula- and valence-constrained graph diffusion supplies candidates; physical mass-balance, charge, isotope, and fragmentation checks reject infeasible paths; and a graph-level assembly solver returns exact values or defensible bounds where its search budget permits. Crucially, assembly evidence is propagated as a posterior distribution rather than collapsed to a point estimate or a universal threshold. We define an environmental abiotic null, an evidence ratio, and a resource-aware active-acquisition objective for selecting further collision-energy, MS\textsuperscript{n}, polarity, or isotope measurements. We prove a spectrum-only non-identifiability result and specify when the engine must abstain. A deterministic synthetic abstraction tests posterior normalization, uncertainty degradation, calibration summaries, and acquisition utility; it is not an empirical MS/MS benchmark, a molecular assembly calculation, or evidence of life. The defensible contribution is a falsifiable inference and mission-compression framework, not a demonstrated universal life detector.
+\end{abstract}
+\textbf{Keywords:} astrobiology; agnostic biosignatures; molecular assembly; tandem mass spectrometry; de novo structure elucidation; graph diffusion; neuro-symbolic AI; Bayesian model averaging; onboard autonomy; uncertainty calibration
+
+\section{Research posture and contribution boundary}
+The target setting is an autonomous chemical-analysis payload operating on an ocean-world sample or a terrestrial extreme-environment analogue. The instrument may encounter molecules absent from terrestrial spectral repositories, and the spacecraft may be unable to return every raw scan. The motivating bottleneck is real, but the supplied premise needs two refinements. First, library-free candidate generation is not equivalent to knowledge-free inference: a model can avoid querying a compound or spectrum library at inference while still relying on learned Earth chemistry, a fixed elemental alphabet, and a training distribution. Second, an assembly index above 15 is not a theorem that abiotic formation is impossible. The original 2021 study reported an empirical separation around 15 for its sample set and a model-dependent probability under a specified random-assembly model; it also reported biological samples below the threshold. Later work both extends mass-spectral assembly estimation and disputes how much biosignature specificity the index alone provides \cite{Marshall2021,Uthamacumaran2024,Rutter2026}.
+
+The closest current work is not one paper but three intersecting lines. Marshall et al. used MS/MS fragment counts to estimate molecular assembly in mixtures; Rutter et al. (2026) trained an MS\textsuperscript{1}-based model to predict assembly without first elucidating structures, reporting lower prediction error than their baselines and sensitivity to instrument variation; and DiffMS (2025) introduced formula-restricted graph diffusion conditioned on mass spectra \cite{Marshall2021,Rutter2026,Bohde2025}. MSNovelist already generates ranked de novo candidates without retrieving candidate structures from a structure database at inference, although its workflow uses predicted fingerprints and learned Earth-compound priors \cite{Stravs2022}. Thus neither “de novo MS/MS” nor “mass-spectral assembly biosignature” is a new claim here.
+
+\textbf{Bounded contribution.} We propose a unified probabilistic architecture with four specific design choices: (i) infer a posterior over molecular graphs and fragmentation trees instead of emitting a single structure; (ii) treat the admissible elemental/valence grammar as an explicit model variable or declared assumption; (iii) propagate graph and assembly-search uncertainty into a sample- and environment-conditioned abiotic evidence calculation; and (iv) select additional measurements according to expected information gain per instrument cost, while transmitting a compact uncertainty-bearing evidence packet. The synthetic code tests only a reduced Bayesian abstraction. The graph transformer, graph diffusion, physical fragmentation model, exact molecular assembly backend, and space-qualified instrument have not been implemented or validated in this release.
+
+\begin{table}[H]
+\centering\small
+\caption{Closest related methods and what the present proposal does not claim.}
+\label{tab:related}
+\begin{tabularx}{\linewidth}{p{0.19\linewidth}p{0.36\linewidth}X}
+\toprule
+Work & Established capability & Boundary motivating this proposal \\
+\midrule
+Marshall et al. (2021) & Molecular assembly estimated from MS/MS fragment counts; reported a sample-set separation near 15. & Does not establish universal abiotic impossibility; biological false negatives occur. \\
+Rutter et al. (2026) & ML predicts MA from standardized MS\textsuperscript{1}; reports instrument sensitivity in simulated MS\textsuperscript{n}. & Predicts a scalar assembly measure; does not provide a posterior over candidate precursor graphs and fragmentation histories. \\
+MSNovelist (2022) & De novo ranked candidates from MS\textsuperscript{2} using fingerprints and a generative structure model. & Learned molecular priors remain tied to training chemistry; candidate confidence and alien-element transfer remain open. \\
+DiffMS (2025) & Transformer-conditioned discrete graph diffusion under a known molecular formula. & Formula conditioning and benchmark chemistry are assumptions; formula-free or unfamiliar-element inference is not established. \\
+MassSpecGym (2024) & Standardized MS/MS retrieval, de novo generation, and spectrum-simulation tasks. & Its labeled benchmark cannot itself demonstrate transfer to non-terrestrial chemistry. \\
+Present proposal & Joint posterior over graph, fragmentation DAG, and chemistry grammar; posterior MA bounds; active resource-aware measurement. & A research architecture plus a synthetic inference abstraction, not a trained or flight-ready detector. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Problem formulation}
+\subsection{Observations and latent variables}
+Let a measurement episode be
+\[
+D=\{s_0,s_1,\ldots,s_K,c,e,u\},
+\]
+where $s_k=\{(m_{ki}/z_{ki},I_{ki})\}_i$ is the $k$th tandem spectrum acquired at a declared collision energy or MS\textsuperscript{n} stage, $c$ contains calibrant and instrument-state observations, $e$ denotes environmental context (solvent, pH or its analogue, salinity, temperature, pressure, redox regime, and sample handling), and $u$ contains acquisition metadata. A scan may be positive- or negative-ion mode; charge, adduct identity, isotope pattern, and precursor isolation uncertainty must be represented rather than silently fixed.
+
+A candidate precursor is a labeled graph $G=(V,E,\ell_V,\ell_E)$ with atom labels, bond orders, charges, and optional isotope annotations. A fragmentation history is a directed acyclic graph $T$ whose vertices are precursor or product-ion subgraphs and whose edges represent allowed fragmentation or rearrangement transitions. A chemistry hypothesis $C$ declares an elemental alphabet $\mathcal{A}_C$, admissible valence/charge states, isotope masses, bond types, and a transition grammar. The environmental context $e$ informs rates and plausible reaction families but is not itself proof of life.
+
+\begin{definition}[Reference-library-free inference]
+Inference is reference-library-free at the point of analysis if candidate generation and scoring do not retrieve a named compound or match an observed spectrum to an indexed compound/spectrum entry. It may still use physical constants, isotope masses, declared chemical rules, learned model weights, synthetic fragmentation simulations, and a pretrained distribution. A claim of strict database independence additionally requires a provenance audit of all training and pretraining data.
+\end{definition}
+
+This definition prevents a category error: a generator may be database-free at inference while remaining distribution-dependent. For truly unfamiliar chemistry, the elemental/valence hypothesis itself must be broadened, and the engine must report when the data do not distinguish alternatives. A fixed CHNOPS formula space cannot support a universal non-terrestrial chemistry claim.
+
+\begin{table}[H]
+\centering\small
+\caption{Core latent variables, observable constraints, and failure modes.}
+\label{tab:variables}
+\begin{tabularx}{\linewidth}{p{0.17\linewidth}p{0.31\linewidth}X}
+\toprule
+Variable & Constraint source & Failure mode \\
+\midrule
+$G$ & Elemental counts, graph connectivity, bond order, valence and charge feasibility. & Isomeric graphs may remain observationally indistinguishable. \\
+$T$ & Precursor-product mass balance, neutral losses, ion chemistry, multistage nesting. & Rearrangements, co-isolation, radical pathways, and missing fragments. \\
+$C$ & Element/isotope masses and declared chemical grammar. & Misspecified alphabet or valence rules exclude the true substrate. \\
+$\theta$ & Calibrants, instrument logs, collision energy, polarity, resolution. & Drift, detector saturation, matrix effects, and unmodelled ionization. \\
+$e$ & Sample context, geochemical priors, contamination controls. & Context can be mismeasured or overused as a prior toward life. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Joint posterior}
+For candidate graph $G$, fragmentation DAG $T$, chemistry hypothesis $C$, and nuisance parameters $\theta$ (mass offset, resolving power, ionization/adduct state, collision-energy response, intensity scale, and censoring), the target posterior is
+\begin{equation}
+ p(G,T,C,\theta\mid D) \propto p(D\mid G,T,C,\theta,e)\,p(T\mid G,C,\theta)\,p(G\mid C)\,p(C\mid e)\,p(\theta\mid c,u).
+ \label{eq:joint}
+\end{equation}
+The spectral likelihood should combine precursor mass error, fragment mass error, isotope envelopes, intensity patterns, neutral losses, collision-energy trends, and consistency across stages. A factorized working model may be used for computation, but its conditional-independence assumptions must be stated and stress-tested. Candidate graphs are not assigned prior probability merely because a familiar database contains them.
+
+\section{Neuro-symbolic molecular graph inference}
+\subsection{Fragment graph transformer}
+A spectrum encoder maps each peak to an embedding built from continuous $m/z$, relative intensity, isotope evidence, collision-energy label, charge/adduct uncertainty, and scan ancestry. A permutation-invariant set or graph transformer creates contextual peak embeddings. Candidate fragment relationships are proposed when mass differences admit a neutral-loss or rearrangement hypothesis within calibrated tolerance. The resulting peak graph is not asserted to be a molecular graph: it is a measurement graph that constrains a separate molecular-structure graph.
+
+A decoder proposes a distribution over graph edits and atom/bond assignments. The formula-conditioned case follows the general paradigm of DiffMS, where a transformer encodes spectral features and discrete graph diffusion is restricted by a known formula \cite{Bohde2025}. In the present extension, formula hypotheses are enumerated or inferred under candidate chemical grammars; the model must not assume a uniquely correct formula when the precursor assignment is ambiguous. A graph diffusion step is constrained by the current hypothesis $C$, so that impossible valence, charge, disconnected precursor graphs, and inconsistent isotope labels receive zero probability or an explicit penalty.
+
+\subsection{Symbolic feasibility layer}
+The symbolic checker evaluates a proposed graph and transition DAG using hard and soft constraints. Hard constraints include atom-mass consistency, total charge, connectivity of the precursor, local valence feasibility under $C$, conservation of nuclei across a fragmentation transition (subject to explicitly represented adducts and neutral species), and precursor/product mass balance within calibrated uncertainty. Soft constraints include plausible rearrangement priors, collision-energy-dependent transition likelihoods, expected isotope-envelope agreement, and cross-stage consistency. Chemical feasibility is conditional on $C$: a graph rejected under terrestrial valence rules is not necessarily impossible under every hypothetical chemistry, but a hypothetical alternative must itself specify measurable elemental and bonding assumptions.
+
+\begin{figure}[H]
+\centering\includegraphics[width=0.98\linewidth]{fig05_architecture_graph.pdf}
+\caption{Proposed architecture graph. The instrument graph, candidate molecular graph, and symbolic checker are distinct objects; arrows describe proposed information flow, not a trained model.}
+\label{fig:arch}
+\end{figure}
+
+\subsection{Fragmentation trees as explanatory witnesses}
+For each candidate $G$, a fragmentation DAG $T$ must explain observed product ions. Each transition is assigned a residual based on predicted and observed mass difference, charge/adduct assignment, and collision-energy dependence. A tree with a good fit but chemically implausible cleavage is downweighted by the symbolic layer. Multiple trees may explain the same spectrum; marginalizing over $T$ avoids treating a single hand-selected fragmentation story as certain. Established fragmentation prediction work such as CFM-ID provides a relevant physical-chemistry-informed comparator \cite{Djoumbou2021}; it is not itself a solution to unfamiliar chemical alphabets.
+
+\begin{figure}[H]
+\centering\includegraphics[width=0.77\linewidth]{fig06_fragment_dag.pdf}
+\caption{Abstract precursor-to-fragment DAG. Nodes are labels for an illustrative graph topology; no atom identities, formulae, masses, or measured fragmentation pathways are asserted.}
+\label{fig:frag}
+\end{figure}
+
+\section{Assembly evidence under structural uncertainty}
+\subsection{Graph-level assembly index}
+For a declared graph $G$ and a declared building-block/assembly convention $B_C$, let $\MA(G;B_C)$ be the minimum number of joining operations in a valid assembly pathway that constructs $G$ while allowing reuse of previously constructed subobjects. The convention matters: hydrogen handling, node and bond labels, admissible subgraphs, and elementary joining rules must match the assembly algorithm used for comparison. Exact assembly computation can be combinatorial. Recent graph algorithms accelerate exact calculations using duplicate-subgraph discovery, dynamic programming, and branch-and-bound, but they do not remove the need to verify that the input graph and convention are correct \cite{Seet2025Assembly}.
+
+When an exact calculation exceeds its computational budget, return a verified lower bound $L(G)$ and a valid pathway upper bound $U(G)$, not an unjustified point estimate. For any candidate posterior, uncertainty has two sources: uncertainty about which graph is supported by the spectrum and uncertainty in the assembly solver's result for that graph.
+
+\subsection{Posterior assembly distribution}
+Let $q(G,T,C,\theta)=p(G,T,C,\theta\mid D)$. The posterior probability of exceeding a declared score $\tau$ is
+\begin{equation}
+ q_{\tau}(D)=\sum_{G,T,C,\theta}q(G,T,C,\theta)\,\Prb\!\left(\MA(G;B_C)\geq\tau\mid G,\text{solver}\right).
+ \label{eq:qthreshold}
+\end{equation}
+where the inner probability is degenerate for an exact solver and represents a bound-aware uncertainty statement for approximate calculations. In continuous nuisance spaces, the sum is replaced by integration. A practical output is a credible interval for $\MA$, the posterior mass above one or more predeclared cut points, and the posterior weight assigned to each chemistry hypothesis.
+
+\begin{proposition}[Spectrum-only non-identifiability]
+If two distinct candidate states $z_1=(G_1,T_1,C_1,\theta_1)$ and $z_2=(G_2,T_2,C_2,\theta_2)$ satisfy $p(D\mid z_1)=p(D\mid z_2)$ for every available measurement in the current acquisition design, then no decision rule based only on those measurements can distinguish $z_1$ from $z_2$ with a likelihood ratio different from one. With equal prior odds, the posterior odds remain one.
+\end{proposition}
+\begin{proof}
+Bayes' rule gives $p(z_1\mid D)/p(z_2\mid D)=[p(D\mid z_1)/p(D\mid z_2)] [p(z_1)/p(z_2)]$. Under the stated equality the likelihood ratio is one, so the data leave the prior odds unchanged. This is an identifiability statement, not a limitation specific to neural networks. An additional measurement is useful only if its outcome distributions differ under the competing states.
+\end{proof}
+
+This proposition has a direct operational consequence: the system must preserve multiple candidates or return an abstention when isomeric or cross-chemistry explanations are not separated by the observed channels. A single highest-scoring graph is not sufficient evidence for an exact molecular identification.
+
+\subsection{Why a universal threshold is not justified}
+The 2021 assembly-biosignature paper reported that its examined living samples produced values above approximately 15 while some living or biologically altered samples did not; its random-assembly model mapped values around 15--20 to extremely small probabilities under its specific unconstrained construction assumptions \cite{Marshall2021}. Those results motivate a diagnostic statistic but do not establish the probability of every possible abiotic process in every environment. A later critique questioned whether assembly index adds biosignature specificity beyond simpler coding or algorithmic-probability measures \cite{Uthamacumaran2024}. The 2026 PNAS study provides a new MS\textsuperscript{1}-based assembly predictor and highlights calibration sensitivity, but its result is not evidence that every chemistry hypothesis is covered \cite{Rutter2026}.
+
+We therefore distinguish a complexity statistic from an origin inference. Let $H_1$ denote a specified directed/templated chemical-selection family and $H_0(e)$ a specified family of abiotic synthesis and preservation mechanisms under environment $e$. The evidential quantity is
+\begin{equation}
+ \BF(D;e)=\frac{\int p(D\mid z,H_1,e)\,p(z\mid H_1,e)\,dz}
+ {\int p(D\mid z,H_0,e)\,p(z\mid H_0,e)\,dz}.
+ \label{eq:bf}
+\end{equation}
+The graph-assembly posterior is one feature in this comparison, not a substitute for the abiotic model. A positive result means evidence favors the specified $H_1$ over the specified $H_0(e)$; it does not establish life against every conceivable nonliving mechanism. The null family must include plausible mineral catalysis, hydrothermal synthesis, photochemistry, concentration cycles, polymerization, contamination, and instrument artefacts relevant to the sample context.
+
+\section{Resource-aware active spectral interrogation}
+\subsection{Choosing the next measurement}
+Let $a$ be an acquisition action such as changing collision energy, acquiring deeper MS\textsuperscript{n}, switching polarity, increasing isotope resolution, or repeating a scan after a calibration check. Given current evidence $D_t$, define the action value
+\begin{equation}
+ U(a\mid D_t)=I(Z;Y_{t+1}\mid D_t,a)-\lambda_E E(a)-\lambda_T T(a)-\lambda_S S(a),
+ \label{eq:utility}
+\end{equation}
+where $Z=(G,T,C)$, $Y_{t+1}$ is the potential measurement, $I$ is conditional mutual information, $E(a)$ is energy cost, $T(a)$ is elapsed time, $S(a)$ is sample disturbance or destructive-risk cost, and the $\lambda$ terms convert resource costs to a common utility scale. The next measurement is selected from actions with positive value, subject to hard instrument and sample budgets. The costs must be measured or engineering-estimated for the actual payload; the toy benchmark below uses arbitrary dimensionless costs only.
+
+\begin{figure}[H]
+\centering\includegraphics[width=0.98\linewidth]{fig07_inference_flow.pdf}
+\caption{Flow A: the proposed inference pipeline from calibrated spectra to posterior graph and assembly evidence.}
+\label{fig:flowa}
+\end{figure}
+
+\begin{figure}[H]
+\centering\includegraphics[width=0.98\linewidth]{fig08_active_flow.pdf}
+\caption{Flow B: adaptive acquisition continues only when another scan is expected to resolve an identifiable uncertainty within the mission budget; unresolved alternatives are preserved in the downlink packet.}
+\label{fig:flowb}
+\end{figure}
+
+\subsection{Onboard evidence packet}
+A spacecraft should not downlink an unqualified life/no-life bit. A compact packet should retain: top-$k$ candidate graph hashes or encodings; posterior probabilities; chemistry-hypothesis weights; assembly point estimates or lower/upper bounds with solver status; key precursor and fragment peaks; calibration and instrument-state metadata; the abiotic null family and its coverage; and an abstention flag. Raw spectra and calibration scans should remain in local storage where possible, with prioritized excerpts requested by ground teams. NASA/JPL's Ocean Worlds Life Surveyor already motivates autonomous analysis and substantial data reduction for ocean-world investigations, so the proposed synopsis aligns with an existing mission-design concern rather than inventing the bandwidth bottleneck \cite{JPL_OWLS}.
+
+\begin{table}[H]
+\centering\small
+\caption{Proposed evidence packet fields and their epistemic purpose.}
+\label{tab:packet}
+\begin{tabularx}{\linewidth}{p{0.22\linewidth}p{0.31\linewidth}X}
+\toprule
+Field & Content & Why retained \\
+\midrule
+Candidate set & Graph IDs/encodings and posterior weights. & Prevents a point prediction from hiding isomer ambiguity. \\
+Chemistry space & Elemental alphabet, valence rules, isotope table, prior weights. & Makes the scope of “agnostic” inference auditable. \\
+Assembly evidence & $\MA$ value or $[L,U]$ bound, solver budget, convention. & Distinguishes exact from approximate complexity. \\
+Evidence ratio & $\BF$ plus explicit $H_0(e)$ definition and coverage. & Prevents an unqualified biosignature label. \\
+Instrument state & Calibration residuals, polarity, collision energy, detector flags. & Allows ground-side recalibration and artifact diagnosis. \\
+Raw evidence pointers & Selected spectra, top peaks, optional complete scan references. & Preserves the ability to challenge the onboard conclusion. \\
+Decision state & Continue, stop, or abstain; reason and remaining budget. & Keeps uncertainty visible under bandwidth constraints. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Synthetic verification: what was and was not tested}
+\subsection{Reduced abstraction}
+The included deterministic script tests a five-hypothesis Bayesian classification abstraction. Each hypothesis has an abstract four-feature signature and a toy score label $\{9,12,16,19,23\}$. The labels are not derived from chemical graphs and are not molecular assembly index values. A synthetic common-mode instrument shift and measurement noise perturb the feature vector; a separate calibrant reading is used in the likelihood. The posterior is normalized over candidate hypotheses, and the reported $q_{15}$ is the posterior mass on toy labels at or above 15. This experiment tests uncertainty propagation and software behavior, not a real mass spectrum or chemical interpretation.
+
+The script sweeps four synthetic noise levels, computes balanced accuracy, AUC, Brier score, and a ten-bin expected calibration error, estimates expected information gain for four hypothetical acquisition actions, and draws an illustrative downlink-size curve. Its seed is 20261128. The costs, action signatures, packet size, and abstract candidate features are declared in the code and archived as CSV/JSON. They are chosen to expose the behavior of the inference equations and should not be interpreted as estimates for a flight instrument.
+
+\begin{table}[H]
+\centering\small
+\caption{Synthetic posterior benchmark outputs regenerated by \texttt{verify\_model.py}. Values are generated at build time and copied into the manuscript only after the run.}
+\label{tab:synthetic}
+\begin{tabularx}{\linewidth}{p{0.20\linewidth}rrrr}
+\toprule
+Synthetic noise SD & Balanced accuracy & AUC & Brier score & ECE (10 bins) \\
+\midrule
+0.080 & 0.996 & 1.000 & 0.002 & 0.003 \\
+0.120 & 0.977 & 0.999 & 0.013 & 0.014 \\
+0.180 & 0.949 & 0.991 & 0.036 & 0.017 \\
+0.260 & 0.890 & 0.960 & 0.077 & 0.024 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering\includegraphics[width=0.79\linewidth]{fig01_noise_robustness.pdf}
+\caption{Synthetic noise sensitivity. All values arise from the abstract candidate-signature generator, not from MS/MS acquisition.}
+\label{fig:noise}
+\end{figure}
+
+\begin{figure}[H]
+\centering\includegraphics[width=0.73\linewidth]{fig02_reliability.pdf}
+\caption{Reliability diagram for the synthetic posterior score. Calibration on this simulator does not establish calibration on real spectra.}
+\label{fig:calibration}
+\end{figure}
+
+\begin{figure}[H]
+\centering\includegraphics[width=0.77\linewidth]{fig03_action_utility.pdf}
+\caption{Expected information gain per arbitrary cost unit for the synthetic acquisition-action model. The ranking is an illustration of \cref{eq:utility}, not an instrument recommendation.}
+\label{fig:utility}
+\end{figure}
+
+\begin{figure}[H]
+\centering\includegraphics[width=0.77\linewidth]{fig04_downlink_budget.pdf}
+\caption{Illustrative raw-to-synopsis bit-count ratio under an explicitly assumed 1 KiB evidence packet and 32-bit measurements. This is not a measured spacecraft compression result.}
+\label{fig:downlink}
+\end{figure}
+
+\subsection{Verification interpretation}
+The code asserts that posterior vectors are finite, nonnegative, and normalized, and that the figure and result outputs are created. The outputs permit a reproducible discussion of how a posterior behaves when an abstract measurement channel becomes noisier. No graph diffusion model is trained; no fragmentation tree is inferred from a measured spectrum; no exact MA is computed; and no false-positive rate against real abiotic chemistry is estimated. These are explicit open validation tasks, not omitted details disguised as a successful experiment.
+
+\begin{table}[H]
+\centering\small
+\caption{P1--P5 epistemic classification of the principal claims.}
+\label{tab:epistemic}
+\begin{tabularx}{\linewidth}{p{0.10\linewidth}p{0.34\linewidth}X}
+\toprule
+Level & Claim in this paper & Status \\
+\midrule
+P1 & Bayesian posterior normalization; equal likelihoods preserve prior odds; graph feasibility constraints are conditional on the declared grammar. & Mathematical consequences of definitions. \\
+P2 & Acquisition maximizes expected information gain minus declared resource costs. & Decision rule; physical benefit depends on correct action models and costs. \\
+P3 & Posterior calibration or error rates transfer across samples/instruments. & Not established; requires blinded, multi-instrument validation and uncertainty intervals. \\
+P4 & Joint graph/fragmentation/chemistry posterior plus assembly bounds improves agnostic inference. & Proposed structural synthesis; not demonstrated empirically. \\
+P5 & A high assembly posterior is a universal, chemistry-independent sign of life. & Not claimed; an unsafe inference without a validated abiotic null and chemistry coverage. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Validation programme and falsification}
+A credible evaluation has staged gates. First, reproduce known terrestrial benchmark tasks with leakage-resistant splits and a fixed training/inference provenance record. MassSpecGym offers retrieval, de novo generation, and spectrum simulation tasks; recent reviews warn that test-split leakage can substantially inflate apparent de novo accuracy and report low exact-match performance on stricter splits \cite{Bushuiev2024,Schneider2026}. Results should be separated into formula-known and formula-unknown conditions, known versus withheld elements, scaffold-disjoint splits, and instrument-held-out splits. A model that only works when an oracle formula is supplied must not be described as chemistry-agnostic.
+
+Second, compare against formula-based enumeration, MSNovelist-like de novo generation, DiffMS-style formula-restricted graph diffusion, and scalar MA-from-MS\textsuperscript{1} prediction. Report exact graph recovery, formula recovery, top-$k$ candidate coverage, posterior log score, calibration, validity rate, graph-edit distance, fragmentation-tree coverage, MA error/bounds, runtime, energy estimate, and downlink size. Candidate-ranking metrics must be separated from exact identification; isomeric structures should be grouped in sensitivity analyses.
+
+Third, construct blinded abiotic controls spanning mineral catalysis, hydrothermal reaction products, UV and radiolysis chemistry, concentration/drying cycles, atmospheric photochemistry analogues, and contamination blanks. Biological controls should span organisms and molecules with varied abundance and preservation histories, without assuming Earth biomolecules are the target distribution. An experiment should include independent instrument calibration perturbations, sample matrix shifts, ionization changes, and destructive-scan controls. All training, model-selection, and test splits must be grouped by molecular scaffold, source sample, and instrument as appropriate.
+
+\begin{table}[H]
+\centering\small
+\caption{Falsification and go/no-go criteria for the proposed research programme.}
+\label{tab:falsify}
+\begin{tabularx}{\linewidth}{p{0.25\linewidth}p{0.37\linewidth}X}
+\toprule
+Failure mode & Observable result & Consequence \\
+\midrule
+Graph non-identifiability & Distinct graph/chemistry candidates retain equal likelihood under all allowed scans. & Abstain; propose a new measurement only if expected outcomes differ. \\
+Grammar misspecification & Correct synthetic/known controls are rejected under the declared element or valence set. & Expand or report the chemistry hypothesis; do not relabel as absent life. \\
+Calibration collapse & Posterior coverage or $q_\tau$ calibration fails on a held-out instrument. & Recalibrate and withhold life-attribution score. \\
+Abiotic mimicry & Blinded abiotic samples yield high assembly evidence and comparable posterior odds. & Reject the life-specific interpretation for that null family. \\
+Biological false negatives & Known biological samples fall below the chosen threshold. & Treat the score as non-necessary; combine independent evidence. \\
+Resource infeasibility & Active scans exceed power, time, memory, or sample-disturbance budget. & Reduce acquisition plan or return a lower-confidence synopsis. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{A minimum experimental sequence}
+\begin{enumerate}
+\item Validate the forward fragmentation likelihood on authenticated standards under controlled collision-energy, polarity, and resolution settings.
+\item Run scaffold-disjoint and instrument-disjoint evaluations against MassSpecGym and additional independently generated spectra; keep the spectral reference library unavailable to the inference stage.
+\item Calibrate graph posterior confidence using held-out structural families and report abstention coverage versus error.
+\item Compute assembly values using a version-pinned exact solver where feasible and verified bounds otherwise; lock the hydrogen, atom, bond, and reuse conventions.
+\item Conduct blinded, environmentally relevant abiotic/biotic mixture tests and include preservation, contamination, and ionization controls.
+\item Only after those gates, port a reduced model to a hardware-in-the-loop payload and test energy, latency, memory, radiation tolerance, and downlink priorities.
+\end{enumerate}
+
+\section{Limitations and scope of the word ``agnostic''}
+The proposal is agnostic only with respect to named compound lookup and, conditionally, the chemistry grammar. It is not independent of elemental masses, ionization physics, detector response, or the prior over allowed bonding rules. If an unknown life form uses a nonstandard chemical system that is not represented in the candidate grammar, no graph generator can recover it from a model whose support excludes it. Unknown elemental composition is also underdetermined from mass measurements alone when isotope evidence, charge state, and adduct information are missing.
+
+Mass spectra are indirect measurements. A fragment peak does not label a unique subgraph; neutral losses can involve rearrangements, co-isolated ions can create mixed spectra, and mass accuracy can be confounded by calibration drift. Formula inference and topology inference must remain separate uncertainty sources. A single spectrum may not contain enough information to identify a unique isomer or its assembly pathway. The correct result can be a set-valued posterior or an abstention.
+
+Assembly theory itself requires a specified construction alphabet and a concrete graph. Assembly index is not a convention-free life detector independent of the graph representation. It can be computationally expensive; exact algorithms can be budgeted and return only proven bounds when stopped early. High assembly may be evidence against a restricted abiotic null but cannot, by itself, prove biological production. Abiotic synthesis, human contamination, or technological chemistry can produce complex compounds; preservation and abundance also affect observations.
+
+The current verification code uses abstract feature prototypes and toy score labels only. It contains no chemical structures, no mass-to-charge calculations, no elemental formulas, no trained neural network, no diffusion model, no fragmentation simulation, and no authentic standards. The experiment is a reproducible software-level smoke test for an uncertainty-aware inference abstraction. It cannot validate the proposed molecular model or its performance.
+
+\section{Conclusion}
+We have specified a reference-library-free-at-inference architecture for molecular graph inference from tandem mass spectra, together with a posterior treatment of chemical grammar, fragmentation explanations, graph assembly, and mission constraints. The core design principle is to carry uncertainty all the way from peak calibration to graph identity to assembly evidence and to the final sample-origin comparison. The second is to preserve alternative chemistry hypotheses rather than declaring the system universal by assumption. The third is to let the instrument acquire only those additional scans that can resolve an identifiable uncertainty within resource limits.
+
+The scientifically meaningful next step is not an onboard alien-life claim. It is a benchmark programme that tests graph recovery, calibration, abstention, assembly-bound accuracy, and abiotic false positives under strict held-out conditions. Until that programme is completed, the proposed engine is a research architecture with a synthetic software abstraction, not a validated life detector.
+
+\section*{Research-process credit and AI disclosure}
+Co-equal research-process credit is given to Devanik Debnath and Xylia, the autonomous multi-model research engine coordinating AI-assisted discovery, synthesis, and verification. Devanik Debnath retains responsibility for the final manuscript, scientific claims, citations, and released artifacts.
+
+\printbibliography
+\end{document}
