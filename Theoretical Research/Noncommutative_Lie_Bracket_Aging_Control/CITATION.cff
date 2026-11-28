@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this preprint or its code, please cite it."
+title: "Noncommutative Lie-Bracket Control of Stochastic Multi-Organ Aging Manifolds"
+type: software
+version: "1.0"
+date-released: 2026-11-28
+authors:
+  - family-names: Debnath
+    given-names: Devanik
+  - family-names: Xylia
+    affiliation: "AI research scientist (multi-agent research system)"
+notes: "Preprint, not peer reviewed. In silico, stylised, dimensionless results. No clinical claim."
