@@ -1,0 +1,565 @@
+\documentclass[10.5pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[a4paper,margin=0.82in,headheight=14pt,footskip=26pt]{geometry}
+\usepackage{amsmath,amssymb,mathtools,bm}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,longtable,array,multirow}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage{url}
+\usepackage[backend=biber,style=numeric-comp,sorting=none]{biblatex}
+\addbibresource{paper.bib}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\definecolor{ink}{HTML}{203345}
+\definecolor{accent}{HTML}{286A80}
+\definecolor{muted}{HTML}{657786}
+\hypersetup{colorlinks=true,linkcolor=accent,citecolor=accent,urlcolor=accent,pdftitle={Inverse Design of Disordered Dielectric Metastructures for Broadband QCD Axion Dark Matter Haloscopes},pdfauthor={Devanik Debnath}}
+\setstretch{1.13}
+\setlist[itemize]{leftmargin=1.5em,itemsep=2pt,topsep=4pt}
+\setlist[enumerate]{leftmargin=1.7em,itemsep=2pt,topsep=4pt}
+\titleformat{\section}{\Large\bfseries\color{ink}}{\thesection}{0.65em}{}
+\titleformat{\subsection}{\large\bfseries\color{accent}}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{ink}}{\thesubsubsection}{0.55em}{}
+\captionsetup{font=small,labelfont=bf,justification=raggedright,singlelinecheck=false}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{muted}DISORDERED DIELECTRIC AXION HALOSCOPES}
+\fancyhead[R]{\small\color{muted}INVERSE-DESIGN FRAMEWORK}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.35pt}\renewcommand{\footrulewidth}{0pt}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\eV}{\,\mathrm{eV}}
+\newcommand{\um}{\,\mu\mathrm{m}}
+\newcommand{\nm}{\,\mathrm{nm}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\Efield}{\mathbf E}
+\newcommand{\Bfield}{\mathbf B}
+\newcommand{\Jfield}{\mathbf J}
+\newcommand{\Real}{\operatorname{Re}}
+\newcommand{\CVaR}{\operatorname{CVaR}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\argmin}{\operatorname*{arg\,min}}
+\newcommand{\argmax}{\operatorname*{arg\,max}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\begin{document}
+\begin{titlepage}
+\vspace*{0.25in}
+{\small\color{accent}\textsc{Theoretical Research Publisher\quad |\quad Research design study\quad |\quad 28 November 2026}}\\[1.2em]
+{\Huge\bfseries\color{ink} Inverse Design of Disordered Dielectric Metastructures for Broadband QCD \mbox{Axion} Dark Matter Haloscopes\par}
+\vspace{0.7em}
+{\Large\color{accent} A detector-aware, disorder-robust framework linking interface conversion, photon transport, and differentiable electromagnetics\par}
+\vspace{1.8em}
+{\large\bfseries Devanik Debnath (Devanik21)}\\[0.35em]
+Department of Electronics and Communication Engineering\\
+National Institute of Technology Agartala, India\\
+ECE '26\\[1.4em]
+\begin{minipage}{0.94\textwidth}
+\textbf{Manuscript status.} Technical preprint / theoretical and reduced-order computational design study. This document is not peer reviewed. It reports no hardware demonstration, no full-wave Maxwell optimization, no experimentally measured material response, and no revised axion coupling exclusion or discovery reach.
+\end{minipage}
+\vfill
+\begin{abstract}
+Light axion dark matter in the approximate 10 meV--1 eV mass interval corresponds to photons from the far-infrared/terahertz through near-infrared bands, where conventional high-$Q$ cavity searches face severe geometric and scaling challenges. A recently established interface-conversion paradigm, developed for disordered dielectric absorbers, makes broadband targets with large internal material area a plausible alternative. Yet maximizing interface area alone is not a sufficient design rule: the same dielectric structure controls scattering, absorption, photon escape, collection into a sensor, and sensitivity to fabrication disorder. We formulate a detector-aware inverse-design problem for disordered dielectric metastructures. The full-wave layer is written as a parameter-dependent Maxwell operator with an axion-induced interface source; an adjoint formulation is derived that explicitly retains the design derivative of that source. A risk-sensitive objective combines frequency-band performance, disorder-realization statistics, finite collection, material loss, and fabrication constraints through an upper-tail conditional-value-at-risk penalty. To make the design logic executable without overstating the available numerics, we implement a transparent reduced-order screening surrogate using the published Rayleigh/geometric sphere asymptotes, a diffusion-length transport proxy, and explicit porosity and detector-efficiency assumptions. In the reproducible 10 meV--1 eV screening example, the optimizer returns a median-radius parameter of 5237.3 nm, lognormal width 0.3608, and dielectric volume fraction 0.3119; the normalized band-integrated response proxy is 0.0090654 for a reference design and 0.019154 for the screened design (a factor 2.113 in this model only). Ninety-six seeded process/disorder draws are archived. These numbers are not electromagnetic simulations, absolute powers, material characterizations, or predicted experimental sensitivities. The main contribution is a falsifiable optimization architecture and a clear validation ladder for a future differentiable FDTD/FEM implementation.
+\end{abstract}
+\vspace{0.8em}
+\noindent\textbf{Keywords:} QCD axion; dielectric haloscope; disordered photonics; inverse design; adjoint electromagnetics; broadband conversion; photon transport; robust optimization; conditional value-at-risk; fabrication tolerance.
+\vfill
+\textcolor{muted}{\small Prepared with an auditable distinction between established interface physics, derived optimization identities, reduced-order numerical illustrations, and untested device-level hypotheses.}
+\end{titlepage}
+\setcounter{tocdepth}{1}
+\tableofcontents
+\clearpage
+
+\section{Executive scope and contribution}
+The research question is not whether a disordered dielectric absorber can convert light dark matter into photons. That forward-physics direction has already been developed and investigated in two- and three-dimensional disordered targets, including a proposed detector architecture in the 2026 study by Koppell and collaborators \parencite{Koppell2026}. The open engineering question addressed here is narrower and more demanding: \emph{how should the internal dielectric geometry, size distribution, packing fraction, material assignment, and photon-collection boundary be chosen jointly so that a broadband target remains useful after disorder, optical loss, sensor coupling, and fabrication tolerances are included?}
+
+This distinction matters. A large interfacial area can enhance conversion in the geometric-optics regime, but it can also shorten the transport mean free path, increase absorption opportunities, create long-lived localized optical modes, or suppress the flux reaching the sensor. A structure that is optimal for generated photon power need not maximize detected photon rate or scan sensitivity. The design must therefore optimize an end-to-end observable, not an isolated conversion term.
+
+\subsection{Scope}
+The primary target is QCD axion dark matter coupled to electromagnetism in an externally applied magnetic field. Dark-photon conversion is included as a structurally related but physically distinct extension. The model covers the mass/energy interval $m_a c^2\in[10^{-2},1]\eV$. In units with $c=1$, the corresponding photon wavelength is approximately $124\um$ to $1.24\um$, and the frequency is approximately 2.42 to 242 THz. This interval spans far-infrared/terahertz through near-infrared operation; it is not one interchangeable detector band.
+
+The proposed structure is a finite three-dimensional target region populated by dielectric inclusions or connected dielectric features with a deliberately controlled distribution of length scales. It may be implemented as a powder, a porous ceramic, an inverse-designed random network, or a hybrid scaffold-plus-inclusion architecture. These are design parameterizations, not claims that any specific fabrication route already achieves the target loss, roughness, or packing tolerance.
+
+\subsection{Contributions and epistemic status}
+\begin{enumerate}
+\item We define a detector-aware inverse-design objective that separates conversion, transport, absorption, collection, sensor efficiency, and measurement noise.
+\item We derive an adjoint sensitivity expression for a Maxwell system whose axion-induced source depends on the dielectric geometry. The derivative of the source term is retained; omitting it would be inconsistent when an interface is moved or created.
+\item We introduce a disorder-robust, band-aggregated objective with an upper-tail risk term and explicit fabrication constraints.
+\item We implement and test a dimensionless reduced-order surrogate to expose trade-offs and generate reproducible figures. It uses asymptotic response envelopes and phenomenological transport assumptions, not a full-wave solver.
+\item We specify a staged validation programme that can distinguish a mathematical optimization result from full-wave evidence, measured optical constants, cryogenic detector performance, and an actual axion search.
+\end{enumerate}
+
+\begin{table}[H]
+\centering\small
+\caption{Claim classes and evidence boundary used throughout this paper.}
+\begin{tabularx}{\textwidth}{p{0.17\textwidth}YY}
+\toprule
+Class & What is asserted & Evidence/status in this release\\
+\midrule
+Prior art & Interface-mediated axion/dark-photon conversion and disordered dielectric targets are an existing research direction. & Supported by the 2025 preprint / 2026 PRD publication \parencite{Koppell2026}; not claimed as new here.\\
+Math identity & Polydisperse-sphere specific area and the adjoint derivative follow from stated definitions and a linear forward operator. & Derived in Sections 4--6 and Appendices A--B.\\
+Surrogate result & A specified screening objective has a numerical optimum and reproducible seeded ensemble statistics. & Verified by the released Python script; valid only for the surrogate assumptions.\\
+Proposed method & Full-wave source-aware adjoint optimization with disorder-risk and detector constraints may produce more useful geometries. & Hypothesis and research programme; not yet tested with Maxwell FDTD/FEM.\\
+Device-level claim & A fabricated target reaches a given QCD axion coupling or experimental sensitivity. & Not asserted; requires independent material, sensor, background, cryogenic, and full-wave validation.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Physical setting: axions, interfaces, and the mass gap}
+\subsection{Axion--photon interaction}
+A QCD axion field $a$ couples to electromagnetism through the pseudoscalar interaction
+\begin{equation}
+\mathcal L_{a\gamma}= -\frac{1}{4}g_{a\gamma\gamma}a F_{\mu\nu}\widetilde F^{\mu\nu}
+= g_{a\gamma\gamma}a\,\Efield\cdot\Bfield,
+\label{eq:axionlag}
+\end{equation}
+where the final equality uses the conventional natural-unit sign convention. In a static applied field $\Bfield_0$, the coherent non-relativistic dark-matter axion acts as an effective electromagnetic source. A convenient field scale used in the disordered-absorber literature is
+\begin{equation}
+E_0 = g_{a\gamma\gamma} a_0 B_0,
+\label{eq:e0}
+\end{equation}
+with $a_0$ the oscillation amplitude and with the unit convention made explicit when converting to SI. The exact observable power also depends on geometry, dielectric response, coherence, losses, and the readout channel \parencite{Koppell2026,Baryakhtar2018}.
+
+A dielectric boundary changes the electromagnetic response to the effective axion source. In a suitable broadband regime, the radiation generated at many material interfaces can add incoherently after ensemble and frequency averaging. The 2026 disordered-absorber paper derives and numerically studies this effect for 2D and 3D targets, and discusses collection into a low-noise sensor \parencite{Koppell2026}. This provides the physical starting point for the present inverse-design problem.
+
+\subsection{Axion and dark-photon sources are not interchangeable}
+For a QCD axion, the coupling in \cref{eq:axionlag} is proportional to the external magnetic field in the standard haloscope arrangement. Dark photons instead couple through kinetic mixing, conventionally parameterized by $\epsilon_\gamma$ in a term proportional to $F_{\mu\nu}X^{\mu\nu}$; their conversion mechanism does not require the same externally applied magnetic field. The two candidates can share aspects of material-interface electrodynamics, but their source terms, polarization structure, and coupling normalization differ. Accordingly, all primary objectives in this paper are written for the axion source; a dark-photon implementation must replace $b_a$ and the relevant prior over polarizations rather than simply reuse the axion coupling parameter.
+
+\subsection{Frequency and length scales}
+The boson rest energy fixes the leading photon frequency: $h\nu\simeq m_a c^2$ for a non-relativistic halo, up to a fractional kinetic correction of order $v^2/c^2$. The conversion formulae are
+\begin{equation}
+\nu = \frac{m_a c^2}{h},\qquad
+\lambda = \frac{hc}{m_a c^2}.
+\label{eq:massfreq}
+\end{equation}
+The target band therefore spans a factor of 100 in frequency and inverse wavelength. A single narrowband resonator is not automatically an efficient way to cover it, while an unstructured broad absorber can lose photons before they reach its readout. The inverse-design task is to distribute spatial scales and material boundaries so that the full chain remains efficient over the band.
+
+\begin{table}[H]
+\centering\small
+\caption{Energy-to-photon conversion across the target interval. Values are kinematic conversions, not measured device performance.}
+\begin{tabularx}{\textwidth}{p{0.19\textwidth}p{0.19\textwidth}p{0.22\textwidth}Y}
+\toprule
+Boson energy & Frequency & Vacuum wavelength & Spectral region (approximate)\\
+\midrule
+$10\,\mathrm{meV}$ & $2.418\,\mathrm{THz}$ & $123.98\um$ & Far infrared / low-THz edge\\
+$100\,\mathrm{meV}$ & $24.18\,\mathrm{THz}$ & $12.40\um$ & Mid-infrared\\
+$500\,\mathrm{meV}$ & $120.9\,\mathrm{THz}$ & $2.480\um$ & Short-wave infrared\\
+$1\,\mathrm{eV}$ & $241.8\,\mathrm{THz}$ & $1.240\um$ & Near infrared\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Why surface area is necessary but insufficient}
+For a population of non-overlapping spheres of radii $R_i$ in a target volume $V$, define the dielectric volume fraction
+\begin{equation}
+\phi = \frac{1}{V}\sum_i \frac{4\pi}{3}R_i^3,
+\qquad
+\frac{A_{\mathrm{int}}}{V}=\frac{1}{V}\sum_i4\pi R_i^2.
+\label{eq:surface}
+\end{equation}
+For a large statistically representative ensemble with a common radius distribution, this yields
+\begin{equation}
+\boxed{\frac{A_{\mathrm{int}}}{V}=3\phi\,\frac{\mathbb E[R^2]}{\mathbb E[R^3]}.}
+\label{eq:polydispersearea}
+\end{equation}
+In the monodisperse limit, $A_{\mathrm{int}}/V=3\phi/R$. This exact geometric identity shows why smaller inclusions can provide more interface area at fixed solid fraction. It does not show that detected power grows without limit as $R$ decreases: the Rayleigh regime suppresses conversion, while scattering, absorption, and collection enter separately.
+
+\section{Prior work and the defensible research gap}
+\subsection{From resonant dielectric stacks to disordered targets}
+The dielectric-haloscope concept predates the disordered-absorber proposal. Multilayer optical haloscopes exploit dielectric discontinuities and interference to enhance axion-induced radiation in a controlled stack \parencite{MADMAX2017,Baryakhtar2018}. Such structures provide a strong precedent for material-interface conversion, but their response relies on deliberately engineered periodic or layered interference conditions.
+
+Koppell et al. broadened the geometry: a target volume filled with dielectric powder can provide a large total interface area without requiring a single precisely tuned resonator. Their study includes semi-analytical and numerical treatments of disordered 2D and 3D structures, and proposes DPHaSE, a dielectric-powder haloscope concept with a veto, photon-collection cavity, and superconducting nanowire single-photon detector readout \parencite{Koppell2026}. The published projected reach is a design projection, not a demonstrated experimental limit or observation. The present study adopts the interface-conversion and disordered-target foundation rather than claiming it.
+
+\subsection{Inverse design and adjoint electromagnetics}
+Inverse design seeks a structure from a desired functional response rather than evaluating a fixed geometry alone. Foundational nanophotonic work surveys topology optimization, adjoint methods, and algorithmic design spaces \parencite{Molesky2018}. The adjoint method is especially attractive when many geometry variables affect one or a few figures of merit: under a linear forward operator, one adjoint solve can yield sensitivities with respect to many design parameters, with details depending on the discretization and objective \parencite{LalauKeraly2013}. Recent reviews emphasize the move toward large-scale three-dimensional photonic inverse design and practical fabrication constraints \parencite{Schul2026}. Differentiable time-domain tools such as FDTDX make automatic differentiation in FDTD increasingly accessible, although integration into an axion-source, cryogenic, and detector-aware objective remains a distinct implementation task \parencite{Mahlau2026}.
+
+\subsection{Gap statement}
+The literature establishes (i) dielectric interface conversion, (ii) disordered dielectric targets, and (iii) general-purpose photonic inverse design. The specific synthesis proposed here is an inverse-design formulation in which the source term itself depends on the moving material interfaces and the performance objective is detector-facing and disorder-robust. It simultaneously accounts for broadband conversion, transport to the collection port, dielectric loss, a band-dependent sensor model, and manufacturing constraints. A targeted literature audit did not establish that this full problem has already been solved for disordered axion haloscopes; nor does it justify claiming absolute novelty or priority. The contribution is therefore positioned as a proposed framework and an executable reduced-order study, pending a deeper specialist search and full-wave implementation.
+
+\begin{table}[H]
+\centering\small
+\caption{Relevant prior art and the distinct question left for this project.}
+\begin{tabularx}{\textwidth}{p{0.23\textwidth}p{0.35\textwidth}Y}
+\toprule
+Prior work & Established contribution & Present paper's boundary\\
+\midrule
+Layered disks \parencite{MADMAX2017} & Interface conversion using a controlled stack of dielectric disks. & Does not by itself solve 3D stochastic powder optimization with finite detector collection.\\
+Multilayers \parencite{Baryakhtar2018} & Broad theoretical treatment of axion/hidden-photon detection with layered dielectric media. & Periodic/layered response is not equivalent to disordered transport.\\
+Powder haloscope \parencite{Koppell2026} & Semi-analytical and 2D/3D numerical investigation of powder targets; proposed DPHaSE readout. & The inverse-design objective proposed here is not claimed as part of that paper.\\
+Nanophotonics \parencite{Molesky2018,LalauKeraly2013} & Adjoint and topology methods for optimizing electromagnetic functions. & Axion-source shape derivative and detector-aware stochastic objective require adaptation.\\
+Scalable 3D optics \parencite{Schul2026,Mahlau2026} & 3D inverse-design scalability and differentiable FDTD tooling. & Does not itself validate an axion-haloscopes full-wave pipeline.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Forward model and design variables}
+\subsection{Maxwell operator with an axion-induced source}
+Let $p$ denote a finite-dimensional or field-valued design parameterization: inclusion centers, radii, local dielectric assignment, support geometry, packing density, and collection-port layout. Let $\xi$ describe a stochastic realization, such as particle placement, size deviations, orientation, or fabrication perturbations. At angular frequency $\omega$, a frequency-domain discretization can be written abstractly as
+\begin{equation}
+A(p,\omega,\xi)E(p,\omega,\xi)=b_a(p,\omega,\xi).
+\label{eq:forward}
+\end{equation}
+For a non-magnetic dielectric and the $e^{-i\omega t}$ convention, a representative operator is
+\begin{equation}
+A(p,\omega,\xi)=\nabla\times\mu_0^{-1}\nabla\times-\omega^2\eps_0\eps_r(\mathbf r;p,\xi,\omega),
+\label{eq:maxwellop}
+\end{equation}
+with boundary conditions, absorbing layers, and source convention chosen consistently by the solver. The right-hand side $b_a$ represents the effective axion-induced electromagnetic source obtained from the modified Maxwell equations. Crucially, it depends on $p$ because the dielectric boundaries and material profiles determine the spatial source and boundary conditions. In this paper $b_a$ is kept abstract to avoid conflating the axion source with an ordinary incident plane wave.
+
+The electromagnetic problem must include dispersive complex permittivity, anisotropy when relevant, finite target boundaries, and the collection port. In the high-loss or strongly scattering regime, the simple diffusion proxy used later is not a substitute for solving \cref{eq:forward}. The operator representation is chosen because it exposes the correct differentiation structure and is compatible with frequency-domain FEM, FDFD, or time-domain adjoint implementations.
+
+\subsection{Design vector and constraints}
+A tractable hierarchical design vector is
+\begin{equation}
+p=\bigl(\bar R,\sigma_{\ln R},\phi,\mathcal G,\mathcal M,\mathcal C\bigr),
+\label{eq:designvector}
+\end{equation}
+where $\bar R$ is a characteristic inclusion radius, $\sigma_{\ln R}$ controls a polydisperse size distribution, $\phi$ is solid volume fraction, $\mathcal G$ parameterizes geometry and spatial correlations, $\mathcal M$ assigns material classes, and $\mathcal C$ specifies the photon-collection boundary. The design variables may instead be a density field or level-set representation for topology optimization. The hierarchy allows initial exploration with a small number of meaningful variables before releasing the full 3D shape degrees of freedom.
+
+\begin{table}[H]
+\centering\small
+\caption{Design variables and explicit admissibility constraints. Bounds are proposed screening ranges, not fabrication specifications.}
+\begin{tabularx}{\textwidth}{p{0.20\textwidth}p{0.29\textwidth}Y}
+\toprule
+Variable & Role & Constraint / interpretation\\
+\midrule
+$\bar R$ & Median or characteristic inclusion scale. & Positive; bounded by the relevant wavelength range and minimum reproducible feature size.\\
+$\sigma_{\ln R}$ & Polydispersity and broadband scale coverage. & Bounded distribution; upper tail must not violate minimum-gap or maximum-particle constraints.\\
+$\phi$ & Dielectric volume fraction. & Packing feasibility, open-void connectivity, structural support, and measured fill tolerance.\\
+$\mathcal G$ & Centers, correlations, topology, and connected pathways. & No overlap, minimum gap, finite-volume bounds, and a prescribed correlation-length range.\\
+$\mathcal M$ & Material and spatial assignment. & Measured complex permittivity over the full band and temperature range; no extrapolated loss data treated as measurements.\\
+$\mathcal C$ & Collection cavity/port geometry. & Sensor bandwidth, coupling aperture, field compatibility, thermal anchoring, and stray-light control.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Generated power versus detected power}
+The interface-conversion mechanism determines an outgoing electromagnetic field and a conversion power $P_{\mathrm{conv}}$. The detector does not generally measure all of that power. A useful decomposition is
+\begin{equation}
+P_{\mathrm{det}}(\omega,p,\xi)=P_{\mathrm{conv}}(\omega,p,\xi)\,\eta_{\mathrm{transport}}\,\eta_{\mathrm{port}}\,\eta_{\mathrm{sensor}},
+\label{eq:pdet}
+\end{equation}
+where $\eta_{\mathrm{transport}}$ accounts for losses and propagation through the disordered medium, $\eta_{\mathrm{port}}$ for coupling from the target into the collection channel, and $\eta_{\mathrm{sensor}}$ for the band- and temperature-dependent photon detection efficiency. The factors should be computed from one coupled simulation when possible; the decomposition is primarily an accounting device to prevent omissions.
+
+For a real search, $P_{\mathrm{det}}$ must be translated into an analysis statistic or signal-to-noise ratio that includes the halo line shape, observation time, sensor noise, dark counts, veto efficiency, and background rejection. In the current surrogate, this calibration is deliberately absent. We therefore optimize a normalized dimensionless response, not a physically calibrated signal-to-noise ratio or scan rate.
+
+\section{Source-aware adjoint inverse design}
+\subsection{Derivative of a parameter-dependent source problem}
+Consider a differentiable scalar objective $J(E,p)$ for one frequency and one disorder realization, with the forward constraint $A(p)E=b(p)$. A perturbation $p\mapsto p+\delta p$ gives
+\begin{equation}
+A\,\delta E = \delta b-(\delta A)E,
+\qquad
+\delta J = \partial_pJ\,\delta p + 2\Real\!\left[\left(\frac{\partial J}{\partial E}\right)^\dagger\delta E\right],
+\label{eq:deltaj}
+\end{equation}
+where the complex derivative convention is fixed by the real-valued objective. Define the adjoint state $\lambda$ by
+\begin{equation}
+A^\dagger\lambda = \frac{\partial J}{\partial E}.
+\label{eq:adjoint}
+\end{equation}
+Substituting $\delta E=A^{-1}(\delta b-\delta A E)$ yields
+\begin{equation}
+\boxed{\delta J=\partial_pJ\,\delta p+2\Real\!\left[\lambda^\dagger\bigl(\delta b-(\delta A)E\bigr)\right].}
+\label{eq:adjointgradient}
+\end{equation}
+This identity is the central methodological point. In ordinary photonic design, the external illumination may be independent of the geometry; here the axion-induced source is tied to the dielectric interfaces. Therefore the derivative $\delta b$ is generally nonzero when a boundary moves or when the dielectric profile is varied. Dropping that term can give a systematically incomplete gradient.
+
+\subsection{Level-set and density-filter implementation}
+For topology optimization, let $s(\mathbf r;p)$ be a signed-distance or smooth density field and map it to a complex dielectric profile
+\begin{equation}
+\eps_r(\mathbf r;p)=\eps_{\mathrm{void}}+\bigl(\eps_{\mathrm{diel}}-\eps_{\mathrm{void}}\bigr)\,\Pi_\beta[s(\mathbf r;p)],
+\label{eq:epsmap}
+\end{equation}
+where $\Pi_\beta$ is a differentiable projection whose sharpness is increased gradually. A spatial filter imposes a minimum length scale; a separate projection or level-set constraint enforces minimum gap and minimum solid feature size. Since the axion source is associated with the interface, the source discretization must be regularized consistently with the dielectric boundary representation. An implementation should compare the gradient from the coupled source-plus-Maxwell model against finite differences on small meshes before attempting large 3D optimization.
+
+\subsection{Multi-frequency and multi-output adjoints}
+For $K$ frequencies, a direct method may require one forward/adjoint pair per frequency, with reuse or frequency continuation where justified. If the objective is an integral over a continuous band, a quadrature rule gives
+\begin{equation}
+J_{\mathrm{band}}(p,\xi)=\sum_{k=1}^{K}w_k\,\mathcal F\bigl(E(p,\omega_k,\xi),\omega_k\bigr),\qquad \sum_kw_k=1,
+\label{eq:bandobj}
+\end{equation}
+where $w_k$ are band weights chosen from the intended scan strategy, expected prior, or uniform-in-log-mass coverage. A flat frequency weight is not automatically appropriate for an axion search: the detector background and required dwell time can vary substantially with energy. A multi-output objective can include outgoing flux through the collection port while penalizing parasitic radiation, absorption, and fields that remain trapped in the target.
+
+\section{Disorder-robust, detector-aware objective}
+\subsection{Ensemble and risk term}
+Let $\xi_j$, $j=1,\ldots,N$, be independently sampled or deliberately adversarial design realizations. A normalized performance score $q_{jk}(p)$ may be chosen as detected signal power divided by a reference noise scale at frequency $\omega_k$. It is important that the noise scale be measured or modeled independently in a real haloscope. Define realization loss
+\begin{equation}
+L_j(p)=-\sum_{k=1}^{K}w_k\log\bigl(\epsilon_q+q_{jk}(p)\bigr).
+\label{eq:loss}
+\end{equation}
+The logarithm prevents a very strong narrow band from masking a near-zero response elsewhere and turns multiplicative spectral variation into an additive aggregate. To control poor-tail disorder realizations, define the upper-tail conditional value at risk
+\begin{equation}
+\CVaR_\alpha(L)=\min_{t\in\mathbb R}\left[t+\frac{1}{1-\alpha}\mathbb E\bigl[(L-t)_+\bigr]\right],
+\label{eq:cvar}
+\end{equation}
+with confidence level $\alpha$ near one. The robust design objective is
+\begin{equation}
+\boxed{\min_{p\in\mathcal P}\quad \mathbb E_\xi[L(p,\xi)]
++\lambda_{\mathrm{risk}}\CVaR_\alpha(L(p,\xi))
++\lambda_{\mathrm{fab}}\,C_{\mathrm{fab}}(p).}
+\label{eq:robustobj}
+\end{equation}
+The first term rewards average performance; the second penalizes a lower tail of bad realizations; and the final term penalizes manufacturing complexity or violation risk. This is a proposed design criterion, not a theorem that a particular value of $\lambda_{\mathrm{risk}}$ is universally optimal. The hyperparameters must be set through sensitivity analysis and engineering requirements.
+
+\subsection{Fabrication and process uncertainty}
+The random variable $\xi$ should represent uncertainties that are physically meaningful for a chosen fabrication route: radius dispersion, position error, agglomeration, void fraction, roughness, material inclusions, support deformation, thermal contraction, and frequency-dependent permittivity variation. A useful robust study separates aleatoric disorder (intrinsic stochastic packing) from epistemic uncertainty (unknown material parameters or incomplete physical models). They should not be combined into a single arbitrary noise term without sensitivity attribution.
+
+A manufacturing penalty can include
+\begin{equation}
+C_{\mathrm{fab}}=c_1\int \!\bigl|\nabla \rho(\mathbf r)\bigr|^2\dd V
++c_2\,\Psi_{\mathrm{minfeat}}(p)+c_3\,\Psi_{\mathrm{gap}}(p)+c_4\,\Psi_{\mathrm{support}}(p),
+\label{eq:fab}
+\end{equation}
+where the terms penalize excessive interface complexity, minimum-feature violations, insufficient gaps, and mechanically unsupported structures. These terms should be tied to the selected manufacturing process. For loose dielectric powder, the relevant constraints differ from those for a stereolithographic scaffold or a sintered porous monolith.
+
+\subsection{Transport and localization}
+The disordered absorber paper emphasizes a competition between interface conversion and photon transport, with the transport mean free path and absorption length controlling the diffusion regime; strong scattering can create localization or prevent efficient transport to the collector \parencite{Koppell2026}. A common diffusion estimate in three dimensions is
+\begin{equation}
+\ell_s^*=\frac{\ell_s}{1-g},\qquad
+\ell_d=\sqrt{\frac{\ell_a\ell_s^*}{3}},
+\label{eq:diffusion}
+\end{equation}
+where $\ell_s$ is the scattering mean free path, $g=\langle\cos\theta\rangle$ is the anisotropy factor, and $\ell_a$ is the absorption length. These are approximate transport descriptors; they do not replace a radiative-transfer or full-wave calculation in regimes where coherence, recurrent scattering, or near-field coupling is important.
+
+A target with very small inclusions may increase $A_{\mathrm{int}}/V$ but reduce $\ell_s$; a high filling fraction may increase conversion area while reducing accessible void pathways and increasing multiple scattering. Conversely, particles that are too large can reduce area per unit volume and leave the low-mass edge in the Rayleigh regime. The inverse-design objective should discover this trade-off from the forward model instead of imposing a universal rule such as “maximize area” or “minimize radius.”
+
+\begin{figure}[H]\centering\includegraphics[width=.93\linewidth]{figures/06_transport_network_graph.pdf}\caption{Coarse-grained transport graph. Nodes indicate representative scattering regions and edges indicate possible optical transfer. The graph is illustrative; it is not derived from a measured packing or a solved Maxwell field.}\label{fig:transportgraph}\end{figure}
+
+\subsection{Sensor-aware collection}
+The target and detector should be designed as a coupled system. Important variables include collection-port location and aperture, sensor coupling, spectral response, dark-count rate, thermal environment, background-rejection strategy, and the probability that a generated photon leaves the disordered target before absorption. The same detector technology need not be optimal across the entire 2.4--242 THz interval. Band segmentation or multiple readout channels may be needed. The SNSPD-based DPHaSE concept provides a motivating architecture, but sensor efficiency and noise must be established at the relevant photon energies and cryogenic conditions before any sensitivity claim is made \parencite{Koppell2026}.
+
+\begin{figure}[H]\centering\includegraphics[width=.97\linewidth]{figures/08_detection_pathway.pdf}\caption{Signal and readout chain. The path explicitly separates axion-specific magnetic-field sourcing, interface conversion, disordered transport, and detector response.}\label{fig:pathway}\end{figure}
+
+\section{Reduced-order numerical screening model}
+\subsection{Purpose and scope}
+The numerical study in this release is deliberately a first-stage screening model. It tests whether an inverse-design objective can expose the competing trends and whether the optimization and figure-generation pipeline is reproducible. It is not a discretized Maxwell solver and it cannot establish the electromagnetic field distribution in an actual powder bed.
+
+The mass band is sampled logarithmically over 32 points from 0.01 to 1 eV. Spherical inclusions are represented by a lognormal radius distribution with 64 deterministic quantile nodes. The refractive index is fixed to $n'=1.70$ and the extinction coefficient to $\kappa=10^{-6}$ as explicit illustrative scenario values; they are not assigned to a named material or claimed as cryogenic measurements. A nominal detector efficiency of 0.65 and a target path length of 0.50 mm are used only to illustrate the objective's structure.
+
+\subsection{Interface-response envelope}
+For a dielectric sphere, let $x=2\pi R/\lambda$. The geometric-optics and Rayleigh asymptotes in the published disordered-absorber analysis imply a ratio of the form
+\begin{equation}
+\frac{P_R}{P_G}=\frac{C_R}{C_G}x^4,\qquad
+C_R=\left(\frac{n'^2-1}{n'^2+2}\right)^2,\qquad
+C_G=\left(1-\frac1{n'}\right)\left(1-\frac1{n'^2}\right),
+\label{eq:asymptoteratio}
+\end{equation}
+within the stated averaged geometric and small-particle limits \parencite{Koppell2026}. We use the smooth screening envelope
+\begin{equation}
+F_{\mathrm{int}}(x)=\frac{\Gamma x^4}{1+\Gamma x^4},\qquad \Gamma=C_R/C_G,
+\label{eq:kernel}
+\end{equation}
+which has the correct $x^4$ leading suppression and saturates at unity. This interpolation is not the exact Mie solution, does not capture oscillatory resonances, and does not encode multiparticle near-field coupling. It is included to screen length scales, not to predict a physical conversion spectrum.
+
+\subsection{Transport proxy}
+The code uses the Rayleigh scattering efficiency envelope
+\begin{equation}
+Q_s(x)=\min\!\left[2,\frac{8}{3}C_Rx^4\right],
+\label{eq:qs}
+\end{equation}
+a phenomenological anisotropy proxy $g(x)=0.8x^2/(1+x^2)$, and the standard independent-scatterer estimate $\ell_s=\langle V_p\rangle/(\phi\langle\sigma_s\rangle)$. With $\ell_a=\lambda/(4\pi\kappa)$, the diffusion length is computed from \cref{eq:diffusion}. The escape factor is approximated as $\exp(-L/\ell_d)$ for a nominal path $L$. A further accessibility prior $(1-\phi)^2$ is included to penalize designs that fill the target with solid material and leave less open volume for transport. This is a transparent heuristic, not a universal law of random packing. The complete collection proxy is
+\begin{equation}
+\eta_{\mathrm{col}}^{\mathrm{proxy}}=\eta_{\mathrm{sensor}}(1-\phi)^2\exp(-L/\ell_d).
+\label{eq:etaproxy}
+\end{equation}
+The normalized response proxy combines this with the polydisperse interface area density and area-weighted $F_{\mathrm{int}}$. The baseline is $\bar R=1800\nm$, $\sigma_{\ln R}=0.25$, and $\phi=0.30$. The design variables are searched over $\bar R\in[100,8000]\nm$, $\sigma_{\ln R}\in[0.05,0.45]$, and $\phi\in[0.12,0.50]$.
+
+\begin{table}[H]\centering\small
+\caption{Reduced-order model terms and their epistemic status.}
+\begin{tabularx}{\textwidth}{p{0.24\textwidth}p{0.32\textwidth}Y}
+\toprule
+Term & Implementation & Status / caveat\\
+\midrule
+Interface area & $3\phi\mathbb E[R^2]/\mathbb E[R^3]$ & Exact for the stated non-overlapping sphere population in the large-ensemble limit.\\
+Conversion envelope & $\Gamma x^4/(1+\Gamma x^4)$ & Smooth interpolation of asymptotic trends; not Mie theory.\\
+Scattering & Rayleigh $Q_s$ capped at 2 & Screening envelope; neglects correlated and recurrent scattering.\\
+Anisotropy & $g=0.8x^2/(1+x^2)$ & Phenomenological assumption, not measured.\\
+Diffusion length & $\sqrt{\ell_a\ell_s^*/3}$ & Diffusion approximation; requires regime checks.\\
+Void-access prior & $(1-\phi)^2$ & Heuristic penalty to expose collection trade-offs; not a packing theorem.\\
+Sensor & Fixed $\eta=0.65$ & Illustrative; not a band-dependent detector characterization.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Risk objective and optimization}
+The implemented objective evaluates seven deterministic process scenarios: median-radius perturbations of up to $\pm10\%$, fill-fraction changes bounded by $\pm0.03$, and collection-path changes of up to $\pm10\%$. It minimizes the mean band-averaged negative log response plus 0.35 times the empirical upper-tail average of the scenario losses, with a weak quadratic size-distribution regularizer. A differential-evolution optimizer is seeded and deterministic. This small scenario set is an optimization demonstration, not a statistical guarantee; the separate 96-draw ensemble is a descriptive robustness check.
+
+\begin{figure}[H]\centering\includegraphics[width=.94\linewidth]{figures/07_inverse_design_flow.pdf}\caption{Proposed full-wave inverse-design loop. The release's numerical optimizer executes only the reduced-order stage; the Maxwell/adjoint and hold-out full-wave stages remain future work.}\label{fig:workflow}\end{figure}
+
+\section{Numerical results and interpretation}
+\subsection{Optimized screening parameters}
+The seeded differential-evolution search terminated successfully after 16 iterations and 499 objective evaluations. It selected a median-radius parameter of 5237.3 nm, a lognormal width $\sigma_{\ln R}=0.3608$, and a dielectric fill fraction $\phi=0.3119$. These parameter values are conditional on the illustrative constants and regularization stated above. They should not be interpreted as a material recipe, a fabrication target, or a prediction of a full Maxwell optimization.
+
+The geometric-mean normalized response proxy over the band was 0.019154 for the screened design and 0.0090654 for the reference design, a ratio of 2.113. In the same proxy model, the mean interface-conversion fraction increased from 0.4752 to 0.7263, while the mean collection proxy changed from 0.2454 to 0.2593. The optimization therefore improved the joint product because conversion increased more strongly than the collection proxy changed. This is precisely why the objective should include the detector pathway rather than maximizing interface area alone.
+
+\begin{table}[H]\centering\small
+\caption{Baseline and robust-screened design results from the released reduced-order code. All responses are dimensionless proxies.}
+\begin{tabularx}{\textwidth}{p{0.38\textwidth}rr}
+\toprule
+Metric & Reference & Screened design\\
+\midrule
+Median radius (nm) & 1800 & 5237.3\\
+Lognormal width $\sigma_{\ln R}$ & 0.250 & 0.3608\\
+Dielectric volume fraction $\phi$ & 0.300 & 0.3119\\
+Band geometric-mean response proxy & 0.0090654 & 0.019154\\
+Mean interface conversion fraction proxy & 0.4752 & 0.7263\\
+Mean detector-collection proxy & 0.2454 & 0.2593\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]\centering\includegraphics[width=.96\linewidth]{figures/01_band_response.pdf}\caption{Band response from the reduced-order model over 10 meV--1 eV. The y-axis is a normalized detection proxy; it is not power, photon counts, SNR, or sensitivity.}\label{fig:band}\end{figure}
+
+\subsection{Design-space and conversion--collection trade-off}
+The radius--fill-fraction landscape shows how the risk-adjusted objective varies for the selected polydispersity. It should be read as the topology of the chosen proxy, not as a validated optimum in the physical design space. The conversion--collection plot exposes the fact that candidate structures populate a trade-off region: a larger conversion fraction need not produce a proportional increase in the photons available to the sensor. The selected point is the objective's optimum under the chosen priors and constraints.
+
+\begin{figure}[H]\centering\includegraphics[width=.96\linewidth]{figures/02_design_landscape.pdf}\caption{Risk-adjusted objective landscape over median radius and fill fraction with the selected size-distribution width held fixed. Values are dimensionless negative losses from the screening model.}\label{fig:landscape}\end{figure}
+\begin{figure}[H]\centering\includegraphics[width=.96\linewidth]{figures/03_conversion_collection_pareto.pdf}\caption{Candidate conversion--collection trade space. The color encodes the normalized joint response proxy; the graph is generated from the same reduced-order assumptions and is not empirical data.}\label{fig:pareto}\end{figure}
+
+\subsection{Seeded disorder/process ensemble}
+A separate Monte Carlo check used 96 deterministic draws per design, with size-scale, fill-fraction, and collection-path perturbations. The reference response proxy had a median of 0.0090481 and a 5th--95th percentile interval of [0.0080862, 0.010828]. The screened design had a median of 0.019062 and a 5th--95th percentile interval of [0.018509, 0.019594]. The intervals describe this specific synthetic process model; they are not confidence intervals for an actual detector. They do not incorporate material-property uncertainty, sensor dark counts, non-spherical inclusions, correlated agglomeration, or mesoscopic electromagnetic resonances.
+
+\begin{figure}[H]\centering\includegraphics[width=.94\linewidth]{figures/04_robustness_distribution.pdf}\caption{Distribution of the integrated response proxy across 96 seeded synthetic disorder/process draws for the reference and screened designs.}\label{fig:robustness}\end{figure}
+
+\begin{table}[H]\centering\small
+\caption{Seeded ensemble summary generated by the verification script.}
+\begin{tabularx}{\textwidth}{p{0.36\textwidth}rr}
+\toprule
+Statistic & Reference & Screened design\\
+\midrule
+5th percentile & 0.0080862 & 0.018509\\
+Median & 0.0090481 & 0.019062\\
+Mean & 0.0092018 & 0.019064\\
+95th percentile & 0.010828 & 0.019594\\
+Number of draws & 96 & 96\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Interpretation}
+Three limited conclusions follow from the implementation. First, the area term and the spectral crossover cannot be collapsed into a single geometric optimization: the best radius distribution depends on the entire target band. Second, a collection penalty can move the selected fill fraction away from its upper bound, even when the interface-area term alone would favor increasing $\phi$. Third, robust objective design is not equivalent to optimizing a nominal realization; the selected design depends on how the designer weights low-tail process realizations and manufacturing complexity. These are conclusions about the mathematics of the surrogate itself. Their quantitative transfer to a real structure remains untested.
+
+\section{Structural interpretation of a disordered metastructure}
+The term \emph{metastructure} is used here in a broad engineering sense: a dielectric target whose spatial statistics and collection geometry are deliberately designed. It need not be a periodic photonic crystal, and it need not be a single connected metamaterial. A feasible architecture could combine three nested scales: (i) inclusions whose radii set the conversion response, (ii) mesoscopic correlations that control transport and suppress undesirable trapping, and (iii) a macroscopic collection boundary that directs escaping photons to a detector.
+
+\begin{figure}[H]\centering\includegraphics[width=.78\linewidth]{figures/05_disordered_target_geometry.pdf}\caption{Conceptual cross-section of a disordered dielectric target. The drawing is schematic and not a generated packing file or manufacturable geometry.}\label{fig:geometry}\end{figure}
+
+A two-stage design may be more robust than optimizing every particle location independently. The first stage selects a distribution family, fill fraction, and spatial-correlation model. The second stage applies topology or shape optimization to a representative finite-volume realization while constraining its statistics to remain within the selected family. This can reduce overfitting to one random seed. It also creates a natural separation between design variables that are controllable in fabrication and nuisance variables that should be averaged over.
+
+A useful multiscale graph representation can treat each inclusion or correlated cluster as a node and optical transfer channels as edges. A detector-collection node receives probability flux from the target boundary. Edge weights must ultimately be computed from wave simulations or radiative transfer and should not be assigned solely from Euclidean proximity. The conceptual graph in \cref{fig:transportgraph} illustrates the data structure, not a physical solution.
+
+\section{Full-wave validation programme}
+A credible next-stage implementation requires a sequence of validation gates. The first is a unit cell or isolated-sphere benchmark against analytical Mie scattering and the asymptotic expressions used in the prior work. The second is a small multiparticle target benchmark against a trusted frequency-domain solver. The third adds a finite collection chamber and outgoing-flux integration. Only after these tests should one turn on the source-aware adjoint and stochastic objective.
+
+\begin{table}[H]\centering\small
+\caption{Validation ladder and the evidence required before making a device-level claim.}
+\begin{tabularx}{\textwidth}{p{0.15\textwidth}p{0.35\textwidth}Y}
+\toprule
+Gate & Test & Evidence required\\
+\midrule
+V0 & Isolated sphere and planar interface. & Agreement with analytic limits, Mie solver, dimensional checks, and convergence under mesh refinement.\\
+V1 & Two and few-particle targets. & Independent full-wave benchmarks, energy conservation, boundary-condition and PML checks.\\
+V2 & Finite random target volumes. & Multiple disorder seeds, ensemble confidence intervals, transport statistics, and reproducibility.\\
+V3 & Source-aware adjoint. & Gradient finite-difference checks including $\partial b_a/\partial p$ and boundary perturbations.\\
+V4 & Detector collection geometry. & Collected Poynting flux, absorption partition, sensor coupling and band-dependent efficiency.\\
+V5 & Fabricated material coupons. & Cryogenic complex permittivity, surface roughness, pore distribution, and thermal-cycle measurements.\\
+V6 & Integrated background-limited prototype. & Calibrated photon throughput, dark counts, veto efficiency, background model, and blind-analysis protocol.\\
+V7 & Axion search. & Independent calibration and a statistically valid coupling/mass interpretation; no reach claim before this gate.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Full-wave solver requirements}
+The solver must preserve the geometry and the source discretization consistently. At a minimum, it should report mesh convergence for conversion power, collected flux, and absorption; test boundary-condition and perfectly matched layer (PML) sensitivity; and verify global energy balance. Random structures should be evaluated across many realizations, including adversarial cases with agglomerates or rare large voids. The adjoint gradient should be checked against central finite differences for randomly selected design degrees of freedom and then against directional derivatives for larger systems.
+
+\subsection{Ablations and baselines}
+Relevant baselines include a monodisperse powder, a lognormal powder, a periodic multilayer/disk target, a deliberately correlated random packing, and a collection-optimized but conversion-suboptimal geometry. The comparison must hold fixed the target volume, available dielectric mass, material losses, sensor geometry, frequency weighting, and computational budget where possible. Ablations should remove, one at a time, source-dependent gradients, CVaR, fabrication filtering, port optimization, and material-dispersion modeling. A method that produces a higher proxy only because it is allowed more surface area or a more favorable detector boundary has not demonstrated an algorithmic improvement.
+
+\section{Failure modes, falsification, and limitations}
+\subsection{Physical failure modes}
+The proposal would be weakened or falsified in its current form by any of the following outcomes:
+\begin{itemize}
+\item Full-wave calculations show that the surface-area scaling does not translate to increased collected flux in the relevant size and density regime.
+\item Multiple scattering, absorption, or localization suppresses transport so strongly that the best detector-facing objective is no better than a simpler target of equal volume and material mass.
+\item The source-dependent shape derivative fails finite-difference verification or proves negligible compared with other terms over the allowed geometry family.
+\item Fabrication perturbations erase the optimized advantage, or the required minimum-feature and void constraints cannot be met by a practical manufacturing process.
+\item Measured cryogenic dielectric loss, dispersion, or surface contamination is materially worse than the assumed values, eliminating the nominal collection advantage.
+\item Sensor coupling, dark counts, or background rejection dominate the total uncertainty so that target optimization offers little improvement in scan sensitivity.
+\end{itemize}
+
+\subsection{Model limitations}
+The reduced-order numerical model has intentionally severe limitations. It treats inclusions as independent spheres, uses a smooth asymptotic crossover rather than exact Mie coefficients, caps the scattering efficiency, assumes a phenomenological anisotropy factor, applies a diffusion-length escape approximation, and uses a heuristic void-accessibility penalty. It does not model coherent multiple scattering, vector field polarization, near-field coupling, correlated particle positions, non-spherical shapes, anisotropic materials, thermal contraction, real cryogenic optical constants, SNSPD spectral response, veto performance, or ambient backgrounds. Its output is a normalized screening objective, not a predicted power.
+
+\subsection{Limits on claims}
+The numerical result is not an improvement in axion coupling reach. No value of $g_{a\gamma\gamma}$ is excluded or projected in this manuscript. No signal count rate is computed. No claim is made that one selected particle size, filling fraction, or material is experimentally optimal. The optimizer's parameters are conditional on explicit illustrative assumptions and should be used only to guide the next simulation stage.
+
+\section{Research programme and practical sequence}
+A practical development programme should proceed in order:
+\begin{enumerate}
+\item Measure complex dielectric constants for candidate materials across the full frequency range and at relevant cryogenic temperatures; measure powder-size and shape distributions rather than relying only on supplier nominal values.
+\item Build an independent forward solver for a single interface and isolated sphere, validate it against analytical benchmarks, and add the axion effective source with consistent units.
+\item Validate small disordered systems against a second solver or semi-analytical approximation and quantify finite-size variation.
+\item Implement source-aware adjoints and directional-derivative tests before optimizing large design fields.
+\item Add photon collection boundaries, explicit sensor response, band-specific noise, and a realistic experimental background model.
+\item Optimize over disorder ensembles and process uncertainty; reserve independent seeds and configurations for hold-out validation.
+\item Fabricate simple coupons before committing to a complex optimized target. Measure actual conversion/transport proxies, thermal-cycle stability, and optical loss.
+\item Build a band-specific prototype only after the sensor and material characterization demonstrate an end-to-end advantage.
+\end{enumerate}
+
+\section{Conclusion}
+Disordered dielectric interface conversion creates a promising broadband haloscope design space, but the design objective must be end-to-end. A large interface area is only one factor in the chain from axion-induced radiation to a photon registered by a sensor. The correct optimization target combines source-aware Maxwell conversion, disorder-dependent transport, dielectric absorption, detector collection, spectral background, and fabrication feasibility. We derive the corresponding source-aware adjoint identity and propose a CVaR-based robust objective. The executable reduced-order study demonstrates the optimization workflow and reveals how collection and porosity penalties alter the design, while carefully limiting its claims to a synthetic screening model. The next decisive milestone is not a stronger title or a larger optimizer: it is a full-wave, source-consistent, gradient-verified implementation supported by cryogenic material measurements and an independently characterized detector chain.
+
+\subsection*{Research-process credit and responsibility}
+Co-equal research-process credit is given to Devanik Debnath and Xylia, the autonomous multi-model research engine coordinating AI-assisted discovery, synthesis, and verification. Devanik Debnath retains responsibility for the final manuscript, scientific claims, citations, and released artifacts.
+
+\appendix
+\section{Adjoint derivative: expanded derivation}
+Starting from $A(p)E(p)=b(p)$, differentiate with respect to a scalar design component $p_q$:
+\begin{equation}
+A\frac{\partial E}{\partial p_q}=\frac{\partial b}{\partial p_q}-\frac{\partial A}{\partial p_q}E.
+\end{equation}
+For a real-valued objective $J(E,E^*,p)$ and a consistent Wirtinger derivative convention,
+\begin{equation}
+\frac{\mathrm dJ}{\mathrm dp_q}=\frac{\partial J}{\partial p_q}+2\Real\!\left[\left(\frac{\partial J}{\partial E}\right)^\dagger\frac{\partial E}{\partial p_q}\right].
+\end{equation}
+Introduce $\lambda$ satisfying $A^\dagger\lambda=\partial J/\partial E$. Then
+\begin{align}
+\frac{\mathrm dJ}{\mathrm dp_q}&=\frac{\partial J}{\partial p_q}+2\Real\!\left[\lambda^\dagger A\frac{\partial E}{\partial p_q}\right]\\
+&=\frac{\partial J}{\partial p_q}+2\Real\!\left[\lambda^\dagger\left(\frac{\partial b}{\partial p_q}-\frac{\partial A}{\partial p_q}E\right)\right].
+\end{align}
+This gives one adjoint solve for all scalar design components sharing the same objective and frequency. For multiple frequencies, each distinct operator generally requires its own adjoint field, although factorization reuse, frequency-domain continuation, or reduced-order surrogates may lower the computational cost. If the source itself depends on a boundary distribution, $\partial b/\partial p_q$ must be computed using a consistent shape derivative or regularized-interface representation. In a finite-element implementation, the discrete source vector and its derivative should be derived from the same weak form and mesh mapping as the forward problem.
+
+\section{Geometric interface area for polydisperse spheres}
+For a large population sampled from a radius distribution $R\sim f_R$, the total particle volume and surface area per unit target volume converge, under standard moment assumptions, to
+\begin{equation}
+\phi=\frac{4\pi}{3}\,n_p\,\mathbb E[R^3],\qquad
+\frac{A_{\mathrm{int}}}{V}=4\pi n_p\,\mathbb E[R^2],
+\end{equation}
+where $n_p=N/V$ is number density. Eliminating $n_p$ yields \cref{eq:polydispersearea}. This makes the second and third moments of the size distribution central design variables. In particular, two distributions with identical median radius and fill fraction can have different interface area if their higher moments differ. This also creates sensitivity to large-radius tails, which may be difficult to control in powder manufacturing.
+
+\section{Risk objective and finite-sample CVaR}
+For losses $L_1,\ldots,L_N$ from sampled disorder realizations, an empirical CVaR objective can be computed by minimizing over threshold $t$:
+\begin{equation}
+\widehat{\CVaR}_\alpha(L)=\min_t\left[t+\frac{1}{(1-\alpha)N}\sum_{j=1}^{N}\max(L_j-t,0)\right].
+\end{equation}
+The finite-sample estimate is noisy when $N(1-\alpha)$ is small; a high confidence level therefore requires many disorder realizations or a carefully justified distributional model. The release's optimizer uses seven deterministic stress scenarios and a two-scenario upper-tail average. The 96 random draws are used only as a separate descriptive check, not to estimate an asymptotically reliable CVaR.
+
+\section{Release reproducibility and data availability}
+All reduced-order parameters, random seeds, generated figures, CSV data, optimization metrics, and executed verification summaries are included in the accompanying release directory. Execute:
+\begin{verbatim}
+python verify_model.py
+\end{verbatim}
+The script requires NumPy, SciPy, and Matplotlib. It regenerates the vector figures and the primary numerical output under \texttt{results/}. The reported outputs are reproducible under the documented seed and package environment. The full-wave Maxwell model, real material data, and experimental sensor data are not included because no such calculations or measurements were executed in this cycle. This distinction is part of the result, not an omission concealed by the packaging.
+
+\printbibliography
+\end{document}

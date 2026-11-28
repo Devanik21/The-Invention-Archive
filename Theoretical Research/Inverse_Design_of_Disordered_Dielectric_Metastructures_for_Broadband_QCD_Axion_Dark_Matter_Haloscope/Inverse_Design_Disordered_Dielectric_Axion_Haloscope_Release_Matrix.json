@@ -1,0 +1,163 @@
+{
+  "release_name": "Inverse Design of Disordered Dielectric Metastructures for Broadband QCD Axion Dark Matter Haloscopes",
+  "release_version": "1.0.0",
+  "date": "2026-11-28",
+  "execution_timestamp_ist": "2026-11-28T12:19:21+05:30",
+  "repository": "Devanik21/The-Invention-Archive",
+  "target_directory": "Theoretical Research/Inverse_Design_of_Disordered_Dielectric_Metastructures_for_Broadband_QCD_Axion_Dark_Matter_Haloscope/",
+  "requested_delivery": "Local folder and downloadable package for manual upload by the author; no remote write requested or performed",
+  "tested_pdf": {
+    "path": "paper.pdf",
+    "sha256": "22539cb246d4c67f3e88132644b98518b5a7211200fa15ea2ecb60d1dc468053",
+    "pages": 21
+  },
+  "checks": [
+    {
+      "id": "workflow_read",
+      "name": "Complete current Xylia workflow read (790 lines)",
+      "status": "PASS",
+      "evidence": "Library file Xylia_Research_Workflow_Publication_Grade.md read in full; current 9-core-file architecture applied"
+    },
+    {
+      "id": "author_audit",
+      "name": "Author/profile identity audit",
+      "status": "PASS_WITH_LIMITATIONS",
+      "evidence": "Identity matched to workflow and GitHub profile/repository; ORCID value supplied by workflow, direct ORCID record not independently fetched; Google Scholar/OpenAIRE/Zenodo author records not confirmed"
+    },
+    {
+      "id": "literature_audit",
+      "name": "Targeted primary and adjacent literature audit",
+      "status": "PASS_WITH_LIMITATIONS",
+      "evidence": "Primary 2026 disordered dielectric absorber paper and adjacent haloscope/inverse-design sources recorded; search explicitly not systematic or exhaustive"
+    },
+    {
+      "id": "novelty_boundary",
+      "name": "Prior-art boundary and novelty restraint",
+      "status": "PASS",
+      "evidence": "Disordered absorber and interface conversion credited to Koppell et al.; contribution restricted to proposed detector-aware, source-aware, risk-robust inverse-design synthesis; no priority claim"
+    },
+    {
+      "id": "mathematical_formulation",
+      "name": "Mathematical formulation and source-aware adjoint derivation",
+      "status": "PASS_WITH_LIMITATIONS",
+      "evidence": "Derivation and assumptions in manuscript; independent peer/specialist review not obtained"
+    },
+    {
+      "id": "surrogate_model",
+      "name": "Reduced-order model execution and assertions",
+      "status": "PASS",
+      "evidence": "verify_model.py executed with fixed seed 20261128; optimizer succeeded; area identity, Rayleigh x^4 leading order, positivity/bounds and reproducible 96-draw ensemble assertions passed"
+    },
+    {
+      "id": "full_wave",
+      "name": "Maxwell FDTD/FEM full-wave solver and adjoint-gradient finite-difference validation",
+      "status": "NOT_TESTED",
+      "evidence": "No full-wave solver implemented or executed in this release; proposed next stage only"
+    },
+    {
+      "id": "material_data",
+      "name": "Measured dielectric optical constants at target cryogenic conditions",
+      "status": "NOT_TESTED",
+      "evidence": "Refractive index and extinction coefficient are explicit illustrative scenario inputs"
+    },
+    {
+      "id": "sensor_model",
+      "name": "Band-dependent detector efficiency, dark counts and background model",
+      "status": "NOT_TESTED",
+      "evidence": "Constant illustrative detector efficiency only; no measured sensor/noise model"
+    },
+    {
+      "id": "experimental_validation",
+      "name": "Fabricated device or axion search experimental validation",
+      "status": "NOT_TESTED",
+      "evidence": "No apparatus, hardware, measured signal, photon count, SNR or coupling reach claimed"
+    },
+    {
+      "id": "latex_build",
+      "name": "LaTeX/Biber build from current source",
+      "status": "PASS",
+      "evidence": "latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error; clean temporary build; 21-page A4 PDF; bibliography rendered"
+    },
+    {
+      "id": "pdf_integrity",
+      "name": "PDF parsing, page count and fonts",
+      "status": "PASS",
+      "evidence": "pdfinfo: 21 pages, A4; pdffonts confirms embedded fonts; text extraction inspected"
+    },
+    {
+      "id": "pdf_visual_review",
+      "name": "Full-page visual review and repair loop",
+      "status": "PASS_WITH_LIMITATIONS",
+      "evidence": "results/pdf_visual_review.json; all 21 final pages rendered; contact sheet and per-page visual inspections; identified layout defects corrected and rebuilt"
+    },
+    {
+      "id": "visual_inventory",
+      "name": "Minimum manuscript visual inventory",
+      "status": "PASS",
+      "evidence": "8 table captions and 8 figure captions; 8 figure pairs (PDF+PNG): 4 quantitative plots, 2 structural/transport visuals, 2 flow diagrams"
+    },
+    {
+      "id": "metadata",
+      "name": "CFF, Zenodo JSON and Schema.org JSON-LD syntax/consistency",
+      "status": "PASS",
+      "evidence": "CFF YAML and both JSON documents parse; ORCID synchronized across metadata; MIT license matches the destination repository LICENSE; no DOI asserted"
+    },
+    {
+      "id": "source_consistency",
+      "name": "BibTeX key and manuscript citation consistency",
+      "status": "PASS",
+      "evidence": "All manuscript citation keys found in paper.bib; bibliography produced by Biber"
+    },
+    {
+      "id": "python_syntax",
+      "name": "Python syntax checks",
+      "status": "PASS",
+      "evidence": "verify_model.py and deploy.py compile with py_compile using temporary bytecode cache"
+    },
+    {
+      "id": "deploy_helper_selftest",
+      "name": "Fail-closed deploy helper self-test",
+      "status": "PASS",
+      "evidence": "deploy.py self-test rejects a deliberately malformed temporary fixture"
+    },
+    {
+      "id": "package_validation",
+      "name": "Local release package validation",
+      "status": "PASS",
+      "evidence": "deploy.py validate confirms 9 root core files, evidence directories, PDF, figure inventory, metadata and source consistency"
+    },
+    {
+      "id": "parent_index",
+      "name": "Parent research index update",
+      "status": "NOT_RUN",
+      "evidence": "User requested manual upload; an append-ready line is supplied at results/parent_index_entry.md for manual insertion after upload"
+    },
+    {
+      "id": "remote_commit",
+      "name": "GitHub commit and remote artifact verification",
+      "status": "NOT_RUN",
+      "evidence": "No GitHub write performed; user requested manual upload"
+    },
+    {
+      "id": "remote_ci",
+      "name": "GitHub Actions and required remote status checks",
+      "status": "NOT_RUN",
+      "evidence": "No remote commit or tag created; no release-triggered CI run to reconcile"
+    },
+    {
+      "id": "zenodo_deposit",
+      "name": "Zenodo deposition / DOI assignment",
+      "status": "NOT_RUN",
+      "evidence": ".zenodo.json is draft metadata only; no deposit or DOI claimed"
+    },
+    {
+      "id": "final_local_validation",
+      "name": "Final local validation after metadata/license alignment",
+      "status": "PASS",
+      "evidence": "python deploy.py validate completed successfully after the final source, metadata and PDF build"
+    }
+  ],
+  "release_status": "BLOCKED_FOR_FULL_PUBLISHER_CLOSURE",
+  "release_status_explanation": "Local research package is complete and validated for manual upload. Full-wave adjoint electromagnetics, measured material constants, sensor-noise characterization and experiments remain untested; remote commit/CI verification is intentionally not run because the author requested manual upload.",
+  "next_research_gate": "Implement source-term-consistent Maxwell FDTD/FEM with adjoint gradients; benchmark isolated spheres against Mie/analytic limits; verify gradients by finite differences; add measured cryogenic dielectric constants and a sensor-specific noise/collection model; then test a disorder ensemble and hold-out geometries."
+}
