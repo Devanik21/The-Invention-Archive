@@ -1,0 +1,641 @@
+\documentclass[10pt,twoside]{article}
+\usepackage[a4paper,inner=25mm,outer=23mm,top=23mm,bottom=24mm,headheight=15pt,headsep=8mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage{microtype}
+\usepackage{amsmath,mathtools,bm}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,array,multirow}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage[nameinlink,noabbrev]{cleveref}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{placeins}
+\usepackage{needspace}
+\usepackage{multicol}
+\usepackage{url}
+
+\definecolor{ink}{HTML}{18374B}
+\definecolor{teal}{HTML}{287D86}
+\definecolor{muted}{HTML}{566672}
+\definecolor{pale}{HTML}{EAF1F4}
+\hypersetup{colorlinks=true,linkcolor=ink,citecolor=teal,urlcolor=teal,pdftitle={Risk-Budgeted Belief-Space Floquet Control for Open Quantum Systems},pdfauthor={Devanik Debnath}}
+\titleformat{\section}{\Large\bfseries\color{ink}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries\color{ink}}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{teal}}{\thesubsubsection}{0.5em}{}
+\setlist{nosep,leftmargin=1.5em}
+\setlength{\parskip}{3pt plus 1pt}
+\setlength{\parindent}{1em}
+\setlength{\emergencystretch}{2em}
+\setcounter{tocdepth}{2}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\small\thepage}
+\fancyhead[LO]{\small\slshape Risk-budgeted Floquet control}
+\fancyhead[RE]{\small\slshape Devanik Debnath}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\newenvironment{proof}{\par\noindent\textit{Proof.}\ }{\hfill$\square$\par}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\CVaR}{CVaR}
+\DeclareMathOperator{\argmin}{argmin}
+\newcommand{\D}{\mathcal D}
+\newcommand{\Lind}{\mathcal L}
+\newcommand{\Uset}{\mathcal U_{\rm hw}}
+\newcommand{\Fcode}{F_{\rm code}}
+\newcommand{\R}{\mathbb R}
+\newcommand{\E}{\mathbb E}
+\newcommand{\dd}{\,\mathrm d}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\cvar}{\operatorname{CVaR}}
+
+\begin{document}
+\begin{titlepage}
+\thispagestyle{empty}
+\vspace*{9mm}
+\noindent{\color{teal}\rule{\textwidth}{1.3pt}}\\[7mm]
+{\large\color{muted}\textsc{Theoretical research preprint \quad | \quad Version 1.0}}\\[15mm]
+{\Huge\bfseries\color{ink} Risk-Budgeted Belief-Space\\Floquet Control for Open\\Quantum Systems}\par
+\vspace{5mm}
+{\LARGE\color{teal} Physics-Constrained Learning, Neural Stochastic Dynamics, and a Propagator-Robustness Certificate}\par
+\vspace{13mm}
+{\large\bfseries Devanik Debnath}\par
+Department of Electronics and Communication Engineering\\
+National Institute of Technology Agartala, India\\
+\href{https://orcid.org/0009-0001-8310-6921}{ORCID: 0009-0001-8310-6921}\\
+\href{https://github.com/Devanik21/The-Invention-Archive}{Research archive: Devanik21/The-Invention-Archive}
+\vfill
+\begin{minipage}{0.91\textwidth}
+\small
+\textbf{Scope statement.} This paper proposes a risk-budgeted architecture for learning Floquet controls in open quantum systems. Its central mathematical statement is a model-error bound for finite-dimensional time-dependent Lindblad propagators. A small open-qubit computation provides a reproducible test of hardware-admissible multi-tone controls under detuning uncertainty and Markovian decoherence. The experiment does \emph{not} implement a reinforcement-learning agent, a Neural SDE, a bosonic code, a many-body time crystal, or a quantum-hardware demonstration.
+\end{minipage}
+\vspace{8mm}
+\begin{center}
+\textcolor{teal}{\rule{0.91\textwidth}{0.6pt}}\\[4mm]
+{\large 28 November 2026}\\
+{\small Research preprint; not presented as peer reviewed or experimentally validated}
+\end{center}
+\end{titlepage}
+
+\pagenumbering{roman}
+\begin{abstract}
+Periodic driving can synthesize effective interactions and phases that are absent in a static Hamiltonian, but the same drive can inject energy, amplify model mismatch, and accelerate decoherence. Learning control waveforms in an open quantum system is therefore not merely a high-dimensional optimization problem: it is a constrained decision problem under uncertain drift, partial observation, finite actuator bandwidth, and a limited heating and error budget. Recent work has already demonstrated reinforcement-learning-assisted Floquet preparation of bosonic codes, while separate quantum-control benchmarks show that physical constraints can be encoded into learning policies. Repeating either result as a generic proposal would not be a defensible contribution.
+
+We formulate a complementary design programme: \emph{risk-budgeted belief-space Floquet control}. A Neural-SDE world model tracks latent hardware and environment variables; a physics-constrained policy proposes coefficients in a finite Fourier control family; an explicit actuator transfer model maps the command into the realized field; and a risk-sensitive objective penalizes logical infidelity, leakage, drive-induced work, and tail risk over posterior uncertainty. We state a propagator perturbation bound for time-dependent Lindblad models and explain how it converts an integrated generator-error budget into a bound on channel deviation. We then separate the objectives for bosonic-code preparation, prethermal heating suppression, and dissipative time-crystalline order rather than treating them as interchangeable rewards.
+
+A deterministic synthetic qubit benchmark implements only the hardware-admissible Fourier-control component. Across 29 held-out static detunings, the risk-weighted two-harmonic candidate changes mean final-state fidelity from 0.89001 to 0.89103 and worst-grid fidelity from 0.73405 to 0.73613. These small gains are reported as such. The computation verifies trace preservation, Hermiticity, positive semidefiniteness to numerical tolerance, actuator envelopes, and time-step convergence; it does not validate the proposed Neural-SDE/RL architecture or establish a many-body or bosonic-code advantage.
+\end{abstract}
+
+\noindent\textbf{Keywords:} Floquet engineering; open quantum systems; reinforcement learning; Neural SDE; bosonic quantum error correction; prethermalization; dissipative time crystals; risk-sensitive control; quantum hardware constraints.
+
+\vspace{5mm}
+\begin{multicols}{2}
+\small
+\tableofcontents
+\end{multicols}
+\clearpage
+\pagenumbering{arabic}
+
+\section{Introduction}
+
+A periodically driven quantum system is described by a Hamiltonian or generator satisfying $H(t+T)=H(t)$ or $\Lind(t+T)=\Lind(t)$. Its one-period evolution, the Floquet map, can encode effective couplings, quasienergy bands, and dynamical phases not visible in a static description. The opportunity comes with a cost: because a generic driven interacting system does not conserve its bare energy, repeated driving can heat it toward a featureless state. High-frequency regimes can delay this process through prethermalization, but the delay is finite and the useful window must also accommodate dissipation and control error \citep{abanin2017effective,ho2023floquetprethermal}.
+
+Open-system engineering adds another layer. For a Markovian finite-dimensional model, the density operator evolves under a time-local Lindblad generator. Photon loss, dephasing, imperfect nonlinear interactions, and actuator imperfections can erode the encoded state while the drive is still preparing it. At the same time, the drive itself may be used to stabilize useful behavior. Dissipation is therefore neither simply an enemy nor a resource to maximize: the relevant question is which dissipative channels, at which rates, support a specified target observable over a specified operating window.
+
+Machine learning has started to address this problem class. Wu \emph{et al.} reported autonomous reinforcement-learning design of Floquet waveforms for bosonic-code preparation, with simulated evolution times around one percent of a conventional adiabatic reference under their studied conditions \citep{wu2026autonomous}. Separately, physics-constrained reinforcement learning has incorporated timescale priors and hardware control limits in several quantum-control benchmarks, reporting fidelities above 0.999 in those benchmark systems \citep{ernst2025physicsconstraints}. These are distinct results. The latter number must not be attributed to the former bosonic Floquet study, and neither result implies room-temperature operation or general superiority across platforms.
+
+This paper asks a narrower, complementary question:
+\begin{quote}
+\emph{How should an autonomous controller choose periodic multi-frequency waveforms when the quantum dynamics are open, the hardware response is bandwidth-limited, and the latent detuning and dissipation parameters are uncertain and time varying?}
+\end{quote}
+We call the proposed answer \emph{risk-budgeted belief-space Floquet control} (RBB-FC). The proposal combines three elements that should be kept conceptually distinct: (i) a quantum plant model whose generator remains in Lindblad form; (ii) a learned stochastic model of latent classical drift, for which Neural SDEs provide a flexible representation of continuous-time uncertainty \citep{kidger2021neuralsde}; and (iii) a constrained policy whose actions live in a physically admissible, finite-bandwidth waveform family.
+
+\subsection{Contributions and claim boundary}
+
+The contribution is a control architecture and a model-error certificate, not a claim that all of the constituent methods are new. The paper makes four concrete contributions:
+\begin{enumerate}
+\item It defines a belief-space control problem in which the quantum state, latent hardware variables, actuator state, logical leakage, and drive-work budget appear explicitly.
+\item It gives a finite Fourier parameterization with sufficient amplitude and slew constraints and an actuator filter, so that a policy cannot silently request an unrealizable waveform.
+\item It proves a Duhamel-type bound: integrated error between two time-dependent Lindblad generators controls the diamond-norm deviation of their propagators. This is a model-robustness statement, not a quantum-control performance guarantee.
+\item It supplies a fully reproducible open-qubit benchmark. Its modest numerical improvement is deliberately treated as a feasibility check, not evidence of scalable RL performance.
+\end{enumerate}
+
+The paper does not claim a new theorem of Floquet prethermalization, a new time-crystal phase, a new bosonic code, or a first demonstration of RL-based Floquet control. The closest prior work already covers RL-based bosonic Floquet preparation and physics-constrained quantum RL. The proposed distinction is the explicit integration of posterior uncertainty, tail-risk objectives, actuator dynamics, and a propagator-level error budget in one design specification.
+
+\Needspace{8\baselineskip}
+\section{Physical setting and neighboring frontiers}
+
+\subsection{Open quantum dynamics}
+
+Let $\mathcal H_d$ be a finite-dimensional Hilbert space. The density operator $\rho_t$ satisfies
+\begin{equation}
+\dot\rho_t=\Lind_{t,\theta_t}^{u}(\rho_t)
+=-i[H(t,u_t,\theta_t),\rho_t]
++\sum_{j=1}^{J}\gamma_j(\theta_t)\D[L_j](\rho_t),
+\label{eq:lindblad}
+\end{equation}
+where $\hbar=1$, $\theta_t$ denotes latent classical parameters, the rates obey $\gamma_j(\theta_t)\geq0$, and
+\begin{equation}
+\D[L](\rho)=L\rho L^\dagger-\tfrac12\{L^\dagger L,\rho\}.
+\end{equation}
+At each time, this is a Gorini--Kossakowski--Sudarshan--Lindblad generator under the stated positivity and finite-dimensional assumptions \citep{gorini1976semigroup,lindblad1976generators}. The corresponding propagator $\Phi_{t,s}$ is completely positive and trace preserving (CPTP) for $t\geq s$.
+
+The latent process $\theta_t$ may include detuning, drive gain, loss rate, cavity frequency drift, and slowly varying calibration offsets. The quantum density operator is not replaced by a neural state: the physical state remains governed by \cref{eq:lindblad}. The learned stochastic model estimates the distribution of classical variables that select the generator.
+
+\subsection{Floquet maps and the heating window}
+
+For fixed $\theta$ and a $T$-periodic control, the one-period propagator is
+\begin{equation}
+\mathcal F_\theta=\mathcal T\exp\!\left(\int_0^T\Lind_{t,\theta}^{u}\dd t\right),
+\label{eq:floquetmap}
+\end{equation}
+where $\mathcal T$ denotes time ordering. For a closed system, a Floquet Hamiltonian may be defined through the one-period unitary, up to quasienergy-branch choices. For an open system, the one-period object is generally a quantum channel, and a logarithm of that channel need not be a unique or numerically benign effective Lindbladian.
+
+In high-frequency local many-body systems, a quasi-conserved effective Hamiltonian can describe dynamics for an exponentially long prethermal window under appropriate assumptions; eventual heating is not thereby removed \citep{abanin2017effective,ho2023floquetprethermal}. A 2026 experiment on a 78-qubit superconducting processor reported long-lived prethermal plateaus under structured random multipolar driving, with tunable heating rates across more than one thousand cycles \citep{liu2026multipolar}. This provides a timely reminder that heating control is a measurable dynamical objective, not merely a regularizer added to a reward function.
+
+\subsection{Three distinct target families}
+
+The term ``Floquet control'' can refer to quite different physical tasks. RBB-FC therefore treats the target as a task-specific output map rather than a universal scalar reward.
+
+\paragraph{Bosonic-code preparation.} For a code projector $P_{\rm C}$ and a target logical state or channel, the controller should maximize logical fidelity while suppressing population outside the code manifold. One leakage measure is
+\begin{equation}
+L_{\rm leak}(t)=1-\Tr(P_{\rm C}\rho_t).
+\end{equation}
+For channel preparation, a logical entanglement fidelity is preferable to a single-state overlap because it tests preservation of logical coherence on an entangled reference. For a logical dimension $d_L$, let $|\Phi_L\rangle=d_L^{-1/2}\sum_{k=1}^{d_L}|k\rangle_R|k\rangle_C$ and let $\mathcal E_L$ be the realized logical channel; then $F_{\rm code}=\langle\Phi_L|(\mathrm{id}_R\otimes\mathcal E_L)(|\Phi_L\rangle\langle\Phi_L|)|\Phi_L\rangle$. Cat, binomial, and Gottesman--Kitaev--Preskill encodings have different error channels and hardware requirements; a control objective must specify which code and which logical noise model are used \citep{brady2024gkp}.
+
+\paragraph{Prethermal engineering.} The target is a long-lived regime with controlled energy absorption and stable observables. A drive-work diagnostic is
+\begin{equation}
+W_{+}(t_f)=\int_0^{t_f}\left[\Tr\!\left(\rho_t\,\partial_t H(t)\right)\right]_{+}\dd t,
+\label{eq:work}
+\end{equation}
+where $[x]_+=\max(x,0)$. This is positive drive work, not the total heat dumped into a bath. The latter also depends on dissipative energy currents, $\Tr(H\mathcal L_{\rm diss}(\rho))$. In weak perturbative regimes, a Floquet-Fermi-golden-rule estimate can relate energy absorption to drive harmonics and transition spectral weight; strong-drive cases require the appropriate Floquet-dressed treatment \citep{ikeda2021floquetfgr}.
+
+\paragraph{Dissipative time-crystalline order.} A time-crystal task requires an observable with robust subharmonic or other persistent temporal order, not simply a high terminal state fidelity. Dissipation-stabilized period doubling has been observed in a driven atom--cavity system \citep{kessler2021dissipativetimecrystal}; metastability can also support time-crystalline behavior in open interacting systems \citep{gambetta2019openDTC}. A useful finite-window indicator for period-$p$ response is
+\begin{equation}
+Q_p(N)=\left|\frac{1}{N}\sum_{n=1}^{N}e^{2\pi i n/p}\,\langle O(nT)\rangle\right|.
+\label{eq:orderparameter}
+\end{equation}
+A nonzero finite-$N$ value alone is insufficient to establish a phase: robustness to perturbations, lifetime scaling, finite-size behavior, and exclusion of a transient response must be analyzed. The modern status of discrete time crystals is reviewed in \citep{yao2023colloquium}.
+
+\begin{table}[t]
+\centering\small
+\caption{Target-dependent objectives. These tasks share control machinery but should not be collapsed into one universal reward.}
+\label{tab:targets}
+\begin{tabularx}{\textwidth}{p{0.18\textwidth}XX}
+\toprule
+Target & Primary output & Essential failure indicators \\
+\midrule
+Bosonic code & Logical entanglement fidelity, code-space leakage, photon-loss exposure & Leakage, logical Pauli error, sensitivity to loss/dephasing, truncation artefacts \\
+Prethermal regime & Heating rate, prethermal lifetime, conserved-observable drift & Rapid energy absorption, loss of quasi-conserved structure, uncontrolled high harmonics \\
+Dissipative time crystal & Subharmonic order, lifetime, robustness across a parameter region & Finite-time transient, explicit drive-synchronous response, collapse under weak perturbation \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Hardware-admissible Floquet controls}
+
+\subsection{Finite Fourier action space}
+
+Let $\Omega=2\pi/T$ and define a $K$-harmonic command
+\begin{equation}
+u(t;c)=c_0+\sum_{m=1}^{K}\left[a_m\cos(m\Omega t)+b_m\sin(m\Omega t)\right].
+\label{eq:fourier}
+\end{equation}
+The action is the coefficient vector $c=(c_0,a_1,b_1,\ldots,a_K,b_K)$. Restricting $K\Omega\leq\omega_{\rm max}$ enforces a declared command bandwidth. The simple sufficient bounds
+\begin{align}
+|c_0|+\sum_{m=1}^{K}\sqrt{a_m^2+b_m^2}&\leq u_{\max},\label{eq:ampbound}\\
+\Omega\sum_{m=1}^{K}m\sqrt{a_m^2+b_m^2}&\leq s_{\max},\label{eq:slewbound}
+\end{align}
+ensure conservative amplitude and slew envelopes for the command. These inequalities are sufficient, not necessary: a feasible waveform may be rejected by the conservative bound. The coefficient set is convex because each harmonic term is a Euclidean norm.
+
+A hardware transfer function is part of the plant. For a first-order low-pass actuator,
+\begin{equation}
+\tau_h\dot v(t)=-v(t)+u(t),\qquad v(0)=v_0.
+\label{eq:actuator}
+\end{equation}
+For a steady-state harmonic at frequency $m\Omega$, its amplitude is multiplied by
+$|H_m|=[1+(m\Omega\tau_h)^2]^{-1/2}$ and its phase is shifted by $-\arctan(m\Omega\tau_h)$. The controller must optimize against $v(t)$, not pretend that the commanded $u(t)$ is applied instantaneously. A more realistic identified state-space transfer model can replace \cref{eq:actuator} without changing the architecture.
+
+\subsection{Projection layer and policy interface}
+
+A policy network should not emit raw samples of an unconstrained waveform. It emits an unconstrained latent proposal $z_t$, which is mapped to the feasible action set by a differentiable or approximately differentiable projection,
+\begin{equation}
+c_t=\Pi_{\mathcal U_{\rm hw}}(z_t)
+=\argmin_{c\in\mathcal U_{\rm hw}}\|c-z_t\|_2^2.
+\label{eq:projection}
+\end{equation}
+The policy may update coefficients once per drive block or once per Floquet period. An independent safety monitor checks the actual filtered waveform, amplifier limits, calibration range, heating budget, and emergency-stop conditions before applying the next block. The projection is an action constraint; it is not a proof that the physical plant exactly matches the model.
+
+\begin{table}[t]
+\centering\small
+\caption{Control constraints and what they do (and do not) guarantee.}
+\label{tab:constraints}
+\begin{tabularx}{\textwidth}{p{0.22\textwidth}XX}
+\toprule
+Constraint & Mathematical implementation & Interpretation / limitation \\
+\midrule
+Bandlimit & $K\Omega\leq\omega_{\max}$ & No commanded harmonic above the declared cutoff; does not model all parasitic modes \\
+Amplitude & \cref{eq:ampbound} & Conservative bound on commanded amplitude; actual transfer response is also checked \\
+Slew & \cref{eq:slewbound} & Conservative command derivative bound; not a calibration of amplifier distortion \\
+Actuator dynamics & Stable filter or identified state-space model & Separates command from applied drive; transfer-model error remains \\
+Dissipation & $\gamma_j(\theta)\geq0$ and Lindblad form & Preserves the model's CPTP structure, not correctness of estimated rates \\
+Heating / work & $W_+\leq W_{\max}$ or a rate budget & Bounds a declared work diagnostic; not universal bath thermodynamics \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Neural-SDE belief model and risk-sensitive policy}
+
+\subsection{Latent environment dynamics}
+
+Let $z_t$ be a latent state encoding uncertain calibration and environment variables. A Neural SDE is proposed for its evolution,
+\begin{equation}
+\dd z_t=f_\psi(z_t,e_t)\dd t+G_\psi(z_t,e_t)\dd W_t,
+\label{eq:neuralsde}
+\end{equation}
+where $e_t$ contains known settings such as programmed carrier frequency, actuator temperature, or recent control history. A constrained decoder maps $z_t$ to physical parameters,
+\begin{equation}
+\theta_t=\Theta(z_t),\qquad \gamma_j(\theta_t)=\operatorname{softplus}(r_j(z_t)),
+\end{equation}
+so the inferred dissipative rates remain nonnegative. Bounded transforms can likewise enforce allowed detuning and gain ranges. Neural SDEs provide continuous-time stochastic generative models for temporal paths, but the particular use as a quantum-hardware drift model is a proposal to be tested, not an established result \citep{kidger2021neuralsde}.
+
+The measurement process is partial. Denote the available record by $\mathcal H_t=\{y_s:s\leq t\}$, with $y_t$ assembled from physically accessible summaries: homodyne quadratures, parity, sideband response, stabilizer or syndrome outcomes, and calibration pilots. The belief state is
+\begin{equation}
+b_t(\theta)=p_\psi(\theta_t=\theta\mid\mathcal H_t).
+\label{eq:belief}
+\end{equation}
+In a practical implementation, this posterior may be represented by particles, a conditional SDE sampler, or a parametric distribution. It is not necessary to reconstruct the full many-body density matrix from measurements at every time step. Rather, the belief is an uncertainty summary for latent plant parameters and predicted future measurements.
+
+\subsection{Physics-constrained policy}
+
+The actor receives a compact belief representation, a task state, and a remaining risk budget,
+\begin{equation}
+z_t^{\pi}=\pi_\varphi\!\left(\operatorname{enc}(b_t),\,s_t^{\rm task},\,B_t\right),
+\qquad c_t=\Pi_{\mathcal U_{\rm hw}}(z_t^{\pi}).
+\end{equation}
+The critic estimates the return distribution rather than only its mean. Posterior samples of $\theta$ propagate through the quantum model, actuator model, and task-specific output map. The policy is trained in randomized digital twins with held-out parameter ranges and then evaluated in shadow mode before it is allowed to control hardware.
+
+A generic episode cost is
+\begin{align}
+C(\pi,\theta)=&\;w_F\bigl(1-\Fcode\bigr)+w_L L_{\rm leak}
++w_W\frac{W_+}{W_{\max}}\\
+&+w_U\int_0^{t_f}\|v(t)\|^2\dd t
++w_T\frac{t_f}{T_{\rm ref}}
++w_S C_{\rm safety},
+\label{eq:cost}
+\end{align}
+where weights are nonnegative and task-dependent. The heating term can be replaced with a prethermal lifetime estimator, while a time-crystal task should add an order parameter and perturbation-robustness term. The risk-sensitive objective is
+\begin{equation}
+\min_{\pi}\quad \E_{\theta\sim b}[C(\pi,\theta)]
++\lambda_{\rm tail}\,\CVaR_{\alpha}\bigl(C(\pi,\theta)\bigr),
+\label{eq:riskobjective}
+\end{equation}
+subject to the physical constraints, a maximum work budget, and a hard safety envelope. Conditional value-at-risk penalizes the upper tail of episode cost rather than hiding rare high-loss trajectories inside an average \citep{rockafellar2000cvar}.
+
+\subsection{Training without confusing simulation with physics}
+
+A credible training pipeline needs more than a high reward in one nominal simulator. A defensible staged protocol is:
+\begin{enumerate}
+\item \textbf{Identify the plant.} Estimate coherent parameters and dissipative rates using calibration experiments that are independent of the target preparation episode.
+\item \textbf{Fit uncertainty dynamics.} Train the Neural SDE on time-ordered calibration residuals and drift records. Hold out complete acquisition sessions, not random points from the same trace.
+\item \textbf{Randomize the digital twin.} Sample model parameters, actuator transfer functions, colored-noise spectra, and measurement delays from calibrated uncertainty sets.
+\item \textbf{Train constrained policies.} Apply the projection layer at every action, retain posterior samples, and optimize both expected and tail risk.
+\item \textbf{Stress-test out of distribution.} Test unseen drift paths, altered loss rates, saturation, delay, and abrupt calibration jumps. Reject an agent that exploits simulator artefacts.
+\item \textbf{Shadow and interlock.} Run proposed controls without applying them, compare predicted and observed measurement summaries, and use a hardware safety layer to authorize execution.
+\end{enumerate}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/fig01_architecture.png}
+\caption{Proposed RBB-FC architecture. The Neural-SDE module models latent classical drift and uncertainty; the quantum plant remains governed by a physically constrained open-system generator. The hardware filter acts between the command and the realized waveform.}
+\label{fig:architecture}
+\end{figure}
+
+\Needspace{20\baselineskip}
+\section{A propagator-robustness certificate}
+
+A learned model is useful only if its mismatch can be connected to the final control objective. This section gives a simple certificate for finite-dimensional Markovian dynamics.
+
+\begin{theorem}[Integrated Lindblad-generator error bounds channel error]
+\label{thm:duhamel}
+Let $\Lind_t$ and $\widetilde{\Lind}_t$ be measurable, bounded, time-dependent Lindblad generators on a finite-dimensional system over $[0,T]$. Let $\Phi_{t,s}$ and $\widetilde\Phi_{t,s}$ be their CPTP propagators. Then
+\begin{equation}
+\|\Phi_{T,0}-\widetilde\Phi_{T,0}\|_\diamond
+\leq\int_0^T\|\Lind_s-\widetilde{\Lind}_s\|_\diamond\dd s.
+\label{eq:diamondbound}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Variation of constants gives the Duhamel identity
+\begin{equation}
+\Phi_{T,0}-\widetilde\Phi_{T,0}
+=\int_0^T\Phi_{T,s}\bigl(\Lind_s-\widetilde{\Lind}_s\bigr)
+\widetilde\Phi_{s,0}\dd s.
+\label{eq:duhamel}
+\end{equation}
+The diamond norm is submultiplicative under composition; a CPTP map has diamond norm one (see, e.g., \citealp{watrous2018theory}), so
+\begin{align*}
+\|\Phi_{T,0}-\widetilde\Phi_{T,0}\|_\diamond
+&\leq\int_0^T\|\Phi_{T,s}\|_\diamond
+\|\Lind_s-\widetilde{\Lind}_s\|_\diamond
+\|\widetilde\Phi_{s,0}\|_\diamond\dd s\\
+&=\int_0^T\|\Lind_s-\widetilde{\Lind}_s\|_\diamond\dd s.
+\end{align*}
+This proves the claim.
+\end{proof}
+
+\begin{corollary}[Task-probability deviation]
+\label{cor:probability}
+For any input state, including one entangled with an arbitrary reference system, and any final two-outcome measurement effect $0\leq E\leq I$, the difference in outcome probability under the two propagators obeys
+\begin{equation}
+|p_E-\widetilde p_E|\leq\tfrac12\|\Phi_{T,0}-\widetilde\Phi_{T,0}\|_\diamond
+\leq\tfrac12\int_0^T\|\Lind_s-\widetilde{\Lind}_s\|_\diamond\dd s.
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+The trace distance between the two output states is at most one half of their trace-norm difference. The diamond norm upper-bounds that trace-norm difference after adjoining a reference system. The measurement probability difference is bounded by trace distance.
+\end{proof}
+
+\subsection{Interpretation as a risk budget}
+
+If calibration and Neural-SDE posterior samples provide a high-confidence upper envelope
+\begin{equation}
+\int_0^T\|\Lind_s-\widetilde{\Lind}_s\|_\diamond\dd s\leq\eps_{\rm dyn},
+\end{equation}
+then every predicted measurement probability is uncertain by at most $\eps_{\rm dyn}/2$ under the assumptions of the theorem. This converts a model-quality diagnostic into a conservative allowance for terminal success probability. For a target with many measurements or an observable aggregate, the budget must account for the actual decision rule and cannot be reused blindly as a full logical-error bound.
+
+The certificate is deliberately limited. It does not say the Neural SDE is correctly trained, that the posterior envelope has correct coverage, that the generator error is small, or that the chosen control is optimal. Those are empirical and algorithmic questions. It also assumes a finite-dimensional Markovian description; non-Markovian memory, leakage outside a chosen truncation, or an unmodeled bath may invalidate the assumed generator class. In those settings, the model must be enlarged or the certificate weakened.
+
+\section{Floquet heating, dissipation, and phase objectives}
+
+\subsection{Heating diagnostics are not all the same}
+
+For $H(t)$ and a dissipative generator $\Lind_{\rm diss}$, the open-system energy balance is
+\begin{equation}
+\frac{\dd}{\dd t}\Tr(H\rho)
+=\Tr(\rho\,\partial_t H)+\Tr(H\,\Lind_{\rm diss}(\rho)).
+\label{eq:energybalance}
+\end{equation}
+The first term is work supplied by the external control; the second is the energy current due to the environment. A controller that penalizes only $\|u\|^2$ may miss resonant spectral weight that drives heating, while a controller that penalizes only instantaneous energy may mistake a reversible exchange for irreversible heating. The objective should therefore include at least one experimentally observable heating diagnostic and state whether it estimates drive work, bath heat, energy absorption, or a prethermal lifetime.
+
+In a perturbative regime, the drive spectrum can be weighted by a system-dependent transition spectrum. A schematic multi-tone functional is
+\begin{equation}
+\mathcal H_{\rm FGR}(c)=\sum_{m=1}^{K}|c_m|^2 S_{VV}(m\Omega),
+\label{eq:heatingproxy}
+\end{equation}
+where $c_m:=a_m-i b_m$ is the complex amplitude associated with harmonic $m$ and $S_{VV}$ is the relevant spectral density of the operator coupled to the drive. This is a model-dependent proxy, not a universal heating formula. In strongly driven settings, Floquet-dressed matrix elements and a suitable Floquet Fermi golden rule are required \citep{ikeda2021floquetfgr}. In high-frequency local systems, prethermal theory can provide a longer-time structure, but the final heating time can be limited by bath coupling and hardware noise \citep{abanin2017effective,ho2023floquetprethermal}.
+
+\subsection{Why dissipation can stabilize temporal order}
+
+A common mistake is to optimize every task by minimizing dissipation. For dissipative time-crystal phases, dissipation and interactions may be part of the stabilization mechanism. The atom--cavity experiment of Ke{\ss}ler \emph{et al.} observed robust period-doubled switching, while open-system theory connects metastability to discrete time-crystalline behavior under suitable conditions \citep{kessler2021dissipativetimecrystal,gambetta2019openDTC}. A 2024 analysis of a driven nonlinear quantum oscillator further studied nonequilibrium transitions between dissipative discrete and incommensurate time-crystal regimes, including distinct fluctuation and lifetime mechanisms \citep{cabot2024nonequilibrium}.
+
+For this target, the reward must penalize loss channels that destroy the order but should not automatically suppress the dissipation required by the target attractor. The relevant tests include (i) a finite parameter region with subharmonic locking, (ii) robustness to drive perturbations and measurement noise, (iii) lifetime scaling with system size or a justified metastable model, and (iv) a comparison with a transient response synchronized directly to the applied drive. RBB-FC provides an optimization interface for these tests; it does not establish time-crystal order by itself.
+
+\subsection{Bosonic codes and the cryogenic boundary}
+
+The 2026 bosonic Floquet-RL study provides a concrete motivation for waveform learning, but it does not eliminate the physical requirements of the platform. The reported setup is a simulated bosonic oscillator model with dissipative and dephasing channels, and its proposed implementation context is a superconducting-cavity platform. The work's approximately hundredfold preparation-time reduction is tied to the paper's model and reference adiabatic protocol; it should not be reinterpreted as a general experimental speedup. Its reported high-noise fidelity is around 0.998 in the described regime, rather than a blanket claim of greater than 0.999 \citep{wu2026autonomous}.
+
+Likewise, the greater-than-0.999 benchmark appearing in the quantum-control literature is associated with a separate study of constrained RL in selected few-level platforms \citep{ernst2025physicsconstraints}. A room-temperature sensing pathway is a separate platform question. Floquet waveform design alone does not remove cryogenic requirements, cavity-loss constraints, material limitations, or thermal-noise constraints of a superconducting processor. Room-temperature operation is therefore a long-term, platform-specific research direction, not an outcome established by this framework.
+
+\section{Reproducible synthetic benchmark}
+
+\subsection{Purpose and model}
+
+The numerical study tests one narrow proposition: whether a bounded multi-tone waveform can be optimized in the presence of a simple actuator filter and a finite ensemble of static detunings without violating declared command envelopes. It is not a surrogate for a bosonic code or a many-body Floquet phase.
+
+The plant is a two-level system in a rotating frame,
+\begin{equation}
+H(t)=\tfrac12\delta\sigma_z+\tfrac12 v(t)\sigma_x,
+\end{equation}
+with relaxation and pure dephasing,
+\begin{equation}
+\dot\rho=-i[H(t),\rho]+\gamma_1\D[\sigma_-](\rho)
++\frac{\gamma_\phi}{2}(\sigma_z\rho\sigma_z-\rho).
+\label{eq:qubitmodel}
+\end{equation}
+The command uses two Fourier harmonics plus a constant component. The applied field follows \cref{eq:actuator}. The state starts in $|0\rangle$ and the target is $|1\rangle$. A constant resonant pulse with total area $\pi$ is the baseline. The candidate pulse is found by offline optimization of the Fourier coefficients over five detuning values; no RL agent is trained.
+
+\begin{table}[t]
+\centering\small
+\caption{Synthetic benchmark parameters. These are dimensionless model units and are not device parameters.}
+\label{tab:parameters}
+\begin{tabular}{ll}
+\toprule
+Parameter & Value \\
+\midrule
+Floquet period $T$ & $2.0$ \\
+Number of cycles & $3$ \\
+Total simulation time & $6.0$ \\
+Carrier angular frequency $\Omega$ & $\pi$ \\
+Hardware filter time constant $\tau_h$ & $0.075$ \\
+Relaxation rate $\gamma_1$ & $0.004$ \\
+Pure-dephasing rate $\gamma_\phi$ & $0.006$ \\
+RK4 time step & $0.005$ \\
+Training detunings & $\{-0.18,-0.09,0,0.09,0.18\}$ \\
+Held-out detunings & 29 uniform points on $[-0.28,0.28]$ \\
+Fourier coefficient bounds & $|a_m|,|b_m|\leq0.09$ \\
+Command amplitude / slew limits & $1.0$ / $1.5$ \\
+Risk objective & mean loss $+0.6\,\CVaR_{0.8}$ $+0.015\|c\|_2^2$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Numerical outcomes}
+
+The constrained optimizer returned the coefficient vector
+\begin{equation}
+(a_1,b_1,a_2,b_2)=(-0.090,-0.090,0.0642,-0.090).
+\end{equation}
+Its conservative envelope bounds are $0.7614$ for command amplitude and $1.0944$ for command slew, below the specified limits of $1.0$ and $1.5$. On the dense numerical waveform grid, the observed command peak is $0.6882$ and the peak derivative is $1.0553$. The applied waveform is further smoothed by the first-order actuator.
+
+Across the 29 held-out detunings, the constant-pulse mean final population is $0.89001$, while the two-harmonic candidate reaches $0.89103$. The worst values on this finite grid are $0.73405$ and $0.73613$, respectively. The differences are approximately $0.10$ and $0.21$ percentage points. This is a small effect and does not justify a claim of robust quantum-control advantage. It does show that the constrained optimization loop is executable and that the tested candidate respects the declared envelope. It also shows why the framework needs strong baselines and ablations: the risk-aware search did not produce an order-of-magnitude improvement in this small model.
+
+At zero detuning, the final target population is $0.98252$ for the candidate. Increasing pure dephasing from $0$ to $0.04$ lowers its final target population from $0.99137$ to $0.93524$. The constant-pulse baseline changes from $0.99105$ to $0.93494$. The small separation persists across this synthetic sweep. The half-step RK4 check changes the nominal candidate fidelity by $1.1\times10^{-12}$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig02_filtered_waveform.png}
+\caption{Commanded two-harmonic waveform and first-order filtered hardware output for the optimized synthetic control. The displayed trace is generated from the verification script.}
+\label{fig:waveform}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig03_robustness.png}
+\caption{Final target-state population across held-out static detunings. The two-harmonic candidate slightly improves the finite-grid mean and worst value; the absolute gain is small.}
+\label{fig:detuning}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig04_dephasing_sweep.png}
+\caption{Final target-state population across a pure-dephasing sweep at zero detuning. The plotted curves are synthetic outputs of the Lindblad qubit model, not laboratory measurements.}
+\label{fig:dephasing}
+\end{figure}
+
+\subsection{Verification checks}
+
+The released script independently checks generator trace preservation and Hermiticity preservation, state normalization, final-state Hermiticity, positive semidefiniteness up to numerical tolerance, command amplitude and slew envelopes, optimizer finiteness, and time-step convergence. All nine implemented checks pass on the recorded run. The script writes the metric record and CSV inputs to the results directory and regenerates the figures. A successful test of this low-dimensional code path does not validate the Neural-SDE world model, the RL policy, the dissipative many-body model, or the accuracy of an experimental actuator calibration.
+
+\begin{table}[t]
+\centering\small
+\caption{Actual numerical checks from the released run.}
+\label{tab:results}
+\begin{tabularx}{\textwidth}{p{0.44\textwidth}p{0.18\textwidth}X}
+\toprule
+Check / metric & Result & Interpretation \\
+\midrule
+Generator trace preservation & PASS & $|\Tr(\dot\rho)|<10^{-12}$ on the diagnostic state \\
+Generator Hermiticity preservation & PASS & Hermitian input gives Hermitian derivative to numerical tolerance \\
+Final-state positivity & PASS & Minimum eigenvalue $0.01741$ in the reference run \\
+Command amplitude & PASS & Dense-grid peak $0.6882<1.0$ \\
+Command slew & PASS & Dense-grid peak $1.0553<1.5$ \\
+Time-step convergence & PASS & Absolute fidelity difference $1.11\times10^{-12}$ \\
+Mean held-out target population & $0.89001\rightarrow0.89103$ & Small finite-grid gain; no statistical significance claim \\
+Worst held-out target population & $0.73405\rightarrow0.73613$ & Small finite-grid gain \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Evaluation design for the full architecture}
+
+A full test of RBB-FC would require a separate experimental or high-fidelity numerical programme. The following design is intended to prevent a policy from winning by exploiting a favorable model or a narrow validation set.
+
+\subsection{Baselines and ablations}
+
+The baseline set should include: (i) a fixed calibrated pulse; (ii) a conventional adiabatic ramp; (iii) open-loop Fourier optimization without posterior feedback; (iv) RL without the physics projection; (v) constrained RL with a stationary parameter model; (vi) the full Neural-SDE belief model without tail-risk optimization; and (vii) the full architecture. All baselines must receive comparable simulation budgets, measurement access, and control bandwidth. Report wall-clock training cost, sample efficiency, inference latency, and the number of hardware calibration experiments.
+
+Ablations should separately remove the hardware filter, the slew constraint, the stochastic drift model, the posterior uncertainty, the CVaR term, and the work budget. If performance is unchanged when a component is removed, the paper should not claim that component is essential. If a component improves simulated fidelity but violates a hardware constraint or increases rare failure probability, the result should be reported as a trade-off rather than a success.
+
+\subsection{Out-of-distribution stress tests}
+
+The test suite should include unseen detuning trajectories, colored phase noise, nonstationary loss rates, measurement delay, actuator saturation, amplitude calibration error, spectral sidebands, truncation changes, and model mismatch between the training digital twin and a higher-fidelity simulator. For bosonic codes, the Fock cutoff must be increased until the desired metrics converge. For many-body prethermal tasks, finite-size scaling and heating-time extrapolations must be separated from finite-system plateaus. For time crystals, finite observation time and finite system size must be treated as central uncertainties.
+
+\begin{table}[t]
+\centering\small
+\caption{Proposed full-system acceptance tests and falsification conditions.}
+\label{tab:falsification}
+\begin{tabularx}{\textwidth}{p{0.21\textwidth}XX}
+\toprule
+Claim under test & Positive evidence required & Falsifier / rejection condition \\
+\midrule
+Neural-SDE improves drift tracking & Better held-out predictive log score and calibrated intervals on unseen sessions & No predictive improvement over a stationary or classical state-space filter \\
+Constraints matter physically & Lower measured saturation, out-of-band power, or pulse distortion at equal target performance & Constraint layer has no measurable hardware benefit or systematically blocks feasible controls \\
+Risk objective reduces tail failures & Lower high-quantile logical error over independent drift episodes & Mean improves but worst-tail failures increase or CVaR estimates are miscalibrated \\
+Heating-aware design extends prethermal window & Lower measured energy-absorption rate and longer robust plateau at matched task quality & Only the reward changes; measured heating and plateau lifetime do not \\
+DTC target is stabilized & Robust subharmonic response, perturbation tolerance, and justified scaling/lifetime evidence & Signal follows drive imperfection, decays as a transient, or lacks finite-parameter robustness \\
+Bosonic code preparation improves & Higher logical channel fidelity / lower leakage on an independently validated model or device & Improvement vanishes with higher Fock cutoff or realistic loss / calibration uncertainty \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Metrics and statistical protocol}
+
+Report distributions over independent seeds, drift episodes, and device calibrations, rather than only the best run. Provide confidence intervals for the primary differences and pre-register the held-out perturbation distribution. Distinguish the performance of the learned world model from the performance of the control policy. A calibrated uncertainty interval is not automatically a robust guarantee; coverage must be measured on held-out sessions. The propagator certificate in \cref{thm:duhamel} is useful only when its generator-error integral has a justified bound.
+
+\Needspace{10\baselineskip}
+\section{Epistemic classification and limitations}
+
+\subsection{P1--P5 classification}
+
+The following classification separates mathematical statements from proposed engineering mappings and visual or strategic intuitions.
+
+\begin{table}[t]
+\centering\small
+\caption{Epistemic status of the principal claims.}
+\label{tab:pclassification}
+\begin{tabularx}{\textwidth}{p{0.10\textwidth}p{0.32\textwidth}X}
+\toprule
+Class & Claim & Status in this paper \\
+\midrule
+P1 & Lindblad propagators are CPTP; the Duhamel identity and \cref{thm:duhamel} hold under stated finite-dimensional bounded-generator assumptions & Mathematical consequence, proved in the text \\
+P1 & Fourier coefficient envelopes imply the stated sufficient amplitude and slew bounds & Algebraic inequality; conservative by construction \\
+P2 & The risk objective selects a policy minimizing mean plus tail cost within a feasible action family & Defined optimization problem; no global optimization claim for a trained agent \\
+P3 & A broad scaling law or universal improvement in prethermal lifetime / code fidelity & Not claimed; requires multi-size, multi-platform data \\
+P4 & A Neural-SDE posterior can act as a belief state for latent hardware drift in a quantum-control loop & Proposed structural correspondence; must be validated against measured drift records \\
+P5 & An autonomous controller as a self-calibrating quantum-lab operator & Metaphor only; not a literal capability claim \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Limitations}
+
+First, the benchmark is a two-level Lindblad model with quasi-static detuning uncertainty. It is not a many-body calculation, and it does not resolve the exponential state-space issue that motivates learning-based quantum control. Second, the offline optimizer is a surrogate for constrained policy search; no deep reinforcement-learning training loop is implemented in the released code. Third, the Neural SDE is architecturally specified but not fitted to device time series. Fourth, the actuator model is a first-order low-pass filter. Real hardware can exhibit nonlinear transfer functions, cross-talk, hysteresis, latency, quantization, and state-dependent gain.
+
+Fifth, the robustness theorem assumes two generators within the same finite-dimensional Markovian model class. If the chosen truncation omits leakage levels, the bath has memory, or the physical dynamics are not well described by a time-local Lindblad equation, the theorem does not repair that model error. Sixth, a finite-grid worst-case metric is not a worst-case guarantee over a continuum of drift trajectories. Seventh, the distinct objectives for bosonic-code preparation, prethermal plateaus, and time-crystalline order require different observables and cannot be compared by a single score.
+
+Finally, this framework does not remove cryogenic requirements from superconducting hardware, does not demonstrate room-temperature quantum sensing, and does not establish fault-tolerant computation. Such outcomes depend on the physical platform, materials, noise channels, encoding, and system-level integration.
+
+\section{Conclusion}
+
+Floquet driving is a powerful route to engineered quantum dynamics, but a useful control waveform must survive the entire chain from policy output to physical field to open-system evolution. A policy that optimizes an ideal simulator while ignoring bandwidth, slew, uncertainty, or heating may be fast in software and unusable in the laboratory. RBB-FC makes these constraints explicit: a Neural-SDE belief model tracks latent classical drift, a constrained policy acts in a finite Fourier space, a measured actuator model transforms the command, and a risk-sensitive objective penalizes tail failures as well as average infidelity.
+
+The mathematical certificate connects integrated generator mismatch to a bound on channel deviation, giving a precise route from model uncertainty to task-probability uncertainty when the Lindblad assumptions hold. The synthetic benchmark demonstrates that the constrained waveform loop is executable and numerically stable, while its small performance change cautions against inflated claims. The main open problem is now empirical: determine whether calibrated stochastic beliefs and tail-risk-aware policies produce measurable improvements over strong constrained-control baselines on actual driven quantum platforms.
+
+\section*{Research-process and AI disclosure}
+
+Theoretical research-process credit is given to Devanik Debnath and Xylia, the autonomous research-orchestration system coordinating AI-assisted literature discovery, synthesis, drafting, and verification. Devanik Debnath retains responsibility for the final manuscript, scientific claims, citations, and released artifacts. AI assistance does not imply endorsement by any external AI provider, institution, or cited researcher. Any future submission must comply with the target venue's current authorship and AI-use policies.
+
+\appendix
+\section{Derivation of the Fourier envelope constraints}
+
+For \cref{eq:fourier}, the triangle inequality gives
+\begin{align}
+|u(t)|&\leq|c_0|+\sum_{m=1}^{K}\left(|a_m||\cos(m\Omega t)|+|b_m||\sin(m\Omega t)|\right)\\
+&\leq |c_0|+\sum_{m=1}^{K}(|a_m|+|b_m|).
+\end{align}
+The Euclidean-norm version in \cref{eq:ampbound} follows by representing each harmonic as a single sinusoid with amplitude $\sqrt{a_m^2+b_m^2}$, which is a sharper bound than separately summing the two coefficient magnitudes. Differentiating gives
+\begin{equation}
+\dot u(t)=\sum_{m=1}^{K}m\Omega\left[-a_m\sin(m\Omega t)+b_m\cos(m\Omega t)\right],
+\end{equation}
+so another triangle inequality yields \cref{eq:slewbound}. These bounds are sufficient and become exact only in special phase alignments. If the actuator has an identified transfer function, the same procedure can be applied to the filtered harmonic amplitudes.
+
+\section{Minimal algorithm specification}
+
+\begin{enumerate}[label=\textbf{Step \arabic*:},leftmargin=2.4em]
+\item Calibrate coherent Hamiltonian parameters, Lindblad rates, actuator response, and measurement delay; attach uncertainty intervals to each estimate.
+\item Fit a Neural SDE to chronological calibration residuals and drift records; test posterior coverage on disjoint sessions.
+\item Sample latent parameter trajectories from the belief model and propagate the open-system dynamics using a valid CPTP solver.
+\item Have the actor propose Fourier coefficients, project them into the feasible hardware set, and compute the filtered waveform.
+\item Evaluate task-specific fidelity, leakage, heating/work, and safety diagnostics for each sampled trajectory.
+\item Update the policy using a risk-sensitive return objective; retain a hard interlock that can reject actions regardless of the learned reward.
+\item Run held-out perturbation tests and shadow-mode device tests. Release no performance claim until source code, raw summaries, uncertainty calculations, and calibration metadata are archived.
+\end{enumerate}
+
+\section{Reproducibility record}
+
+The release includes \texttt{verify\_model.py} (Python 3.10 or later; NumPy, SciPy, and Matplotlib). Reproduce the run with \texttt{python -m py\_compile verify\_model.py} followed by \texttt{python verify\_model.py}. The recorded environment was Python 3.13.5, NumPy 2.3.5, SciPy 1.17.0, and Matplotlib 3.10.8.
+\clearpage
+\begin{thebibliography}{99}
+\bibitem{wu2026autonomous} Z. Wu, L. Guo, H. Shi, and W.-W. Zhang, ``Autonomous Floquet engineering of bosonic codes via reinforcement learning,'' \emph{Communications Physics} (2026). doi:10.1038/s42005-026-02875-2.
+\bibitem{ernst2025physicsconstraints} J. O. Ernst, A. Chatterjee, T. Franzmeyer, and A. Kuhn, ``Reinforcement learning for quantum control under physical constraints,'' in \emph{Proceedings of the 42nd International Conference on Machine Learning}, PMLR 267, 15463--15489 (2025).
+\bibitem{kidger2021neuralsde} P. Kidger, J. Foster, X. Li, and T. J. Lyons, ``Neural SDEs as infinite-dimensional GANs,'' in \emph{Proceedings of the 38th International Conference on Machine Learning}, PMLR 139, 5453--5463 (2021).
+\bibitem{ho2023floquetprethermal} W. W. Ho, T. Mori, D. A. Abanin, and E. G. Dalla Torre, ``Quantum and classical Floquet prethermalization,'' \emph{Annals of Physics} 454, 169297 (2023). doi:10.1016/j.aop.2023.169297.
+\bibitem{abanin2017effective} D. A. Abanin, W. De Roeck, W. W. Ho, and F. Huveneers, ``Effective Hamiltonians, prethermalization, and slow energy absorption in periodically driven many-body systems,'' \emph{Physical Review B} 95, 014112 (2017). doi:10.1103/PhysRevB.95.014112.
+\bibitem{ikeda2021floquetfgr} T. N. Ikeda and A. Polkovnikov, ``Fermi's golden rule for heating in strongly driven Floquet systems,'' \emph{Physical Review B} 104, 134308 (2021). doi:10.1103/PhysRevB.104.134308.
+\bibitem{kessler2021dissipativetimecrystal} H. Ke{\ss}ler, P. Kongkhambut, C. Georges, L. Mathey, J. G. Cosme, and A. Hemmerich, ``Observation of a dissipative time crystal,'' \emph{Physical Review Letters} 127, 043602 (2021). doi:10.1103/PhysRevLett.127.043602.
+\bibitem{gambetta2019openDTC} F. M. Gambetta, F. Carollo, M. Marcuzzi, J. P. Garrahan, and I. Lesanovsky, ``Discrete time crystals in the absence of manifest symmetries or disorder in open quantum systems,'' \emph{Physical Review Letters} 122, 015701 (2019). doi:10.1103/PhysRevLett.122.015701.
+\bibitem{yao2023colloquium} N. Y. Yao and C. Nayak, ``Colloquium: Quantum and classical discrete time crystals,'' \emph{Reviews of Modern Physics} 95, 031001 (2023). doi:10.1103/RevModPhys.95.031001.
+\bibitem{cabot2024nonequilibrium} A. Cabot, G. L. Giorgi, and R. Zambrini, ``Nonequilibrium transition between dissipative time crystals,'' \emph{PRX Quantum} 5, 030325 (2024). doi:10.1103/PRXQuantum.5.030325.
+\bibitem{liu2026multipolar} Z.-H. Liu, Y. Liu, G.-H. Liang, C.-L. Deng, et al., ``Prethermalization by random multipolar driving on a 78-qubit processor,'' \emph{Nature} 650, 79--85 (2026). doi:10.1038/s41586-025-09977-x.
+\bibitem{brady2024gkp} A. J. Brady, A. Eickbusch, S. Singh, J. Wu, and Q. Zhuang, ``Advances in bosonic quantum error correction with Gottesman--Kitaev--Preskill codes: Theory, engineering and applications,'' \emph{Progress in Quantum Electronics} 93, 100496 (2024). doi:10.1016/j.pquantelec.2023.100496.
+\bibitem{gorini1976semigroup} V. Gorini, A. Kossakowski, and E. C. G. Sudarshan, ``Completely positive dynamical semigroups of N-level systems,'' \emph{Journal of Mathematical Physics} 17, 821--825 (1976). doi:10.1063/1.522979.
+\bibitem{lindblad1976generators} G. Lindblad, ``On the generators of quantum dynamical semigroups,'' \emph{Communications in Mathematical Physics} 48, 119--130 (1976). doi:10.1007/BF01608499.
+\bibitem{rockafellar2000cvar} R. T. Rockafellar and S. Uryasev, ``Optimization of conditional value-at-risk,'' \emph{The Journal of Risk} 2(3), 21--41 (2000). doi:10.21314/JOR.2000.038.
+\bibitem{watrous2018theory} J. Watrous, \emph{The Theory of Quantum Information} (Cambridge University Press, 2018). doi:10.1017/9781316848142.
+\end{thebibliography}
+
+\end{document}
