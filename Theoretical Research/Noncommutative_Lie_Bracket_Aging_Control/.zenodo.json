@@ -1,0 +1,14 @@
+{
+  "title": "Noncommutative Lie-Bracket Control of Stochastic Multi-Organ Aging Manifolds",
+  "description": "Preprint v1.0 with analysis and typesetting code. Stylised, dimensionless, in-silico model of senolysis and partial reprogramming as control vector fields. Not peer reviewed. No human or clinical claim. No Zenodo deposit or DOI is claimed by this release.",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "creators": [
+    {"name": "Debnath, Devanik", "affiliation": "Independent researcher"},
+    {"name": "Xylia", "affiliation": "AI research scientist (multi-agent research system)"}
+  ],
+  "keywords": ["aging", "partial reprogramming", "senolysis", "Lie brackets", "Baker-Campbell-Hausdorff", "Chow rank", "stochastic control", "first passage"],
+  "license": "other-open",
+  "access_right": "open",
+  "version": "1.0"
+}
